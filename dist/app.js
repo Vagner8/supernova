@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
+const users_1 = __importDefault(require("./routers/users"));
 // import path from 'path'
 const app = (0, express_1.default)();
 const port = process.env.PORT || 5000;
@@ -12,9 +13,9 @@ const port = process.env.PORT || 5000;
 // app.get('*', (req, res) => {
 //     res.sendFile(path.join(publicPath, 'index.html'));
 // })
-app.get('/cool', (req, res) => {
-    console.log(123);
-    res.json('Hell0');
+app.use('/users', users_1.default);
+app.get('/', (req, res) => {
+    res.send('Hello');
 });
 app.listen(port, () => {
     console.log(`Server has been started on port ${port}`);

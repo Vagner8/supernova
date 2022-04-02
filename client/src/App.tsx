@@ -4,7 +4,7 @@ import './App.css';
 
 function App() {
   async function fetchData() {
-    const res = await fetch('/cool')
+    const res = await fetch('/users')
     console.log(await res.json())
   }
 
