@@ -1,19 +1,30 @@
 import { useEffect, useState } from "react"
 
-export function useFetch<T>(url: string) : T | null {
-    const [data, setData] = useState<T | null>(null)
+export enum Status {
+    Idle = 'idle',
+    Pending = "pending",
+    Fulfilled = 'fulfilled',
+    Error = 'error'
+}
+
+export function useFetch<T>(trigger: number, url: string) {
+    const [data, setData] = useState<T>()
+    const [status, setStatus] = useState<Status>(Status.Idle)
 
     useEffect(() => {
         async function fetchData() {
-            const res = await fetch(url)
-            const json = await res.json()
-            setData(json)
+            setStatus(Status.Pending)
+            try {
+                const res = await fetch(url)
+                const json = await res.json()
+                setData(json)
+                setStatus(Status.Fulfilled)
+            } catch (err) {
+                setStatus(Status.Error)
+            }
         }
         fetchData()
-    }, [url])
+    }, [trigger, url])
     
-    if (data) {
-        return data
-    }
-    return null
+    return {data, status}
 }

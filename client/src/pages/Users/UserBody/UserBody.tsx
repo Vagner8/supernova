@@ -1,17 +1,29 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { List } from "../../../components/List/list"
 import { User } from "../../../types/userType"
 
 interface PropsUserBody {
     users: User[]
+    checkedAll: boolean
 }
 
 export interface OnChangeCheckbox {
     (id: string): () => void
 }
 
-export function UserBody({users} : PropsUserBody) {
+export function UserBody({users, checkedAll} : PropsUserBody) {
     const [adjustedUsers, setAdjustedUsers] = useState(users)
+    
+    useEffect(() => {
+        setAdjustedUsers(prev => {
+            return prev.map(user => {
+                return {
+                    ...user,
+                    checked: checkedAll
+                }
+            })
+        })
+    }, [checkedAll])
 
     function onChangeCheckbox(id: string) {
         return function() {
@@ -30,11 +42,9 @@ export function UserBody({users} : PropsUserBody) {
     }
 
     return (
-        <>
-            <List
-                items={adjustedUsers}
-                onChangeCheckbox={onChangeCheckbox}
-            />
-        </>
+        <List
+            items={adjustedUsers}
+            onChangeCheckbox={onChangeCheckbox}
+        />
     )
 }
