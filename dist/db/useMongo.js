@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.usersDB = void 0;
+exports.settingsDB = exports.usersDB = void 0;
 const mongodb_1 = require("mongodb");
 const types_1 = require("./types");
 class UseMongo {
@@ -34,8 +34,13 @@ class UseMongo {
     find() {
         return __awaiter(this, void 0, void 0, function* () {
             const col = yield this.connection();
-            const cursor = col.find();
-            return yield cursor.toArray();
+            return col.find();
+        });
+    }
+    findOne() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const col = yield this.connection();
+            return col.findOne();
         });
     }
     close() {
@@ -45,4 +50,5 @@ class UseMongo {
     }
 }
 exports.usersDB = new UseMongo(types_1.Clusters.ServerSuperAdmin, types_1.Collections.Users);
+exports.settingsDB = new UseMongo(types_1.Clusters.ServerSuperAdmin, types_1.Collections.Settings);
 //# sourceMappingURL=useMongo.js.map

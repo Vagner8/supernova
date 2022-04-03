@@ -4,7 +4,8 @@ import { usersDB } from '../db/useMongo'
 const router = express.Router()
 
 router.get('/', async (req, res) => {
-    const users = await usersDB.find()
+    const cursor = await usersDB.find()
+    const users = await cursor.toArray()
     res.json(users)
     await usersDB.close()
 })

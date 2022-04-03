@@ -1,35 +1,19 @@
-import React, { useEffect } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from 'react';
+import './App.sass';
+import { AppRouter } from './components/AppRouter/AppRouter';
+import { Menu } from './components/Menu/Menu';
 
 function App() {
-  async function fetchData() {
-    const res = await fetch('/users')
-    console.log(await res.json())
-  }
-
-  useEffect(() => {
-    fetchData() 
-  })
-
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    return (
+        <div className="app">
+            <div className="app__menu">
+                <Menu />
+            </div>
+            <div className="app__pages">
+                <AppRouter />
+            </div>
+        </div>
+    );
 }
 
 export default App;

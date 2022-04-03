@@ -24,8 +24,12 @@ class UseMongo {
 
     public async find() {
         const col = await this.connection()
-        const cursor = col.find()
-        return await cursor.toArray()
+        return col.find()
+    }
+
+    public async findOne() {
+        const col = await this.connection()
+        return col.findOne()
     }
 
     public async close() {
@@ -34,3 +38,4 @@ class UseMongo {
 }
 
 export const usersDB = new UseMongo(Clusters.ServerSuperAdmin, Collections.Users)
+export const settingsDB = new UseMongo(Clusters.ServerSuperAdmin, Collections.Settings)

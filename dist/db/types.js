@@ -8,5 +8,6 @@ var Clusters;
 var Collections;
 (function (Collections) {
     Collections["Users"] = "users";
+    Collections["Settings"] = "settings";
 })(Collections = exports.Collections || (exports.Collections = {}));
 //# sourceMappingURL=types.js.map

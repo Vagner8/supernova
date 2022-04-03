@@ -16,16 +16,9 @@ const express_1 = __importDefault(require("express"));
 const useMongo_1 = require("../db/useMongo");
 const router = express_1.default.Router();
 router.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const cursor = yield useMongo_1.usersDB.find();
-    const users = yield cursor.toArray();
-    res.json(users);
-    yield useMongo_1.usersDB.close();
+    const settings = yield useMongo_1.settingsDB.findOne();
+    res.json(settings);
+    yield useMongo_1.settingsDB.close();
 }));
-// router.post('/post', (req, res) => {
-// })
-// router.put('/put', (req, res) => {
-// })
-// router.delete('/delete', (req, res) => {
-// })
 exports.default = router;
-//# sourceMappingURL=users.js.map
+//# sourceMappingURL=settings.js.map

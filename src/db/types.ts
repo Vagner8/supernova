@@ -3,7 +3,8 @@ export enum Clusters {
 }
 
 export enum Collections {
-    Users = 'users'
+    Users = 'users',
+    Settings = 'settings'
 }
 
 export interface User {
