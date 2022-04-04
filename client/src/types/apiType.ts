@@ -1,5 +1,5 @@
 export enum UserAPI {
-    All = '/users'
+    FetchAllUsers = '/users'
 }
 
 export enum SettingsAPI {

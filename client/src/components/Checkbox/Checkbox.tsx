@@ -1,14 +1,14 @@
-import { OnChangeCheckbox } from '../../pages/Users/UserBody/UserBody'
+import { ChangeCheckbox } from '../../pages/Users/usersTypes'
 import styles from './Checkbox.module.sass'
 
 interface PropsCheckbox {
     id: string
     label?: string
     checked: boolean
-    onChangeCheckbox: OnChangeCheckbox
+    changeCheckbox: ChangeCheckbox
 }
 
-export function Checkbox({id, label, checked, onChangeCheckbox} : PropsCheckbox) {
+export function Checkbox({id, label, checked, changeCheckbox} : PropsCheckbox) {
     return (
         <label
             data-action="selected"
@@ -17,7 +17,7 @@ export function Checkbox({id, label, checked, onChangeCheckbox} : PropsCheckbox)
             <input
                 type="checkbox"
                 checked={checked}
-                onChange={onChangeCheckbox(id)}
+                onChange={changeCheckbox(id)}
             />
             <span>{ label }</span>
         </label>

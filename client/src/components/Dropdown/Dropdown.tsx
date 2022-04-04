@@ -1,13 +1,24 @@
 import { useEffect, useRef } from "react"
-import M from 'materialize-css'
+import { ClickDropdown } from "../../pages/Users/usersTypes"
+import { DropdownItem } from "../../reducers/usersReducer/usersReducerTypes"
 
+import M from 'materialize-css'
 import './Dropdown.module.sass'
+
 
 interface PropsDropdown {
     title: string
+    items: DropdownItem[]
+    clickDropdown: ClickDropdown
 }
 
-export function Dropdown({title} : PropsDropdown) {
+export function Dropdown(
+    {
+        title,
+        items,
+        clickDropdown
+    } : PropsDropdown
+) {
     const ref = useRef<HTMLButtonElement>(null)
 
     useEffect(() => {
@@ -26,13 +37,16 @@ export function Dropdown({title} : PropsDropdown) {
                 id="dropdown1"
                 className='dropdown-content'
             >
-                <li data-action="edit">
-                    <a href="#!">Edit</a>
-                </li>
-                <li className="divider"></li>
-                <li data-action="delete">
-                    <a href="#!">Delete</a>
-                </li>
+                {items.map(item => {
+                    if (item.disabled) return null
+                    return (
+                        <li key={item.action} onClick={clickDropdown(item.action)}>
+                            <a href="#!">
+                                {item.title}
+                            </a>
+                        </li>
+                    )
+                })}
             </ul>
         </>
     )
