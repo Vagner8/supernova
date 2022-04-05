@@ -1,14 +1,23 @@
 import { Reducer } from "react"
-import { Action, StateUsers, UsersActionTypes, } from "./usersReducerTypes"
+import { Action, Actionlist, ActionType, StateUsers, UsersActionTypes, } from "./usersReducerTypes"
 
 export const initialState: StateUsers = {
     users: [],
-    checkedAll: false,
-    dropdownlist: [
-        {title: 'New', action: 'new', disabled: true, actionType: 'always'},
-        {title: 'Edit', action: 'edit', disabled: true, actionType: 'single'},
-        {title: 'Delete', action: 'delete', disabled: true, actionType: 'bulk'}
+    selectAllUsers: false,
+    actionlist: [
+        {title: 'New', action: 'new', disabled: true, actionType: [ActionType.Always]},
+        {title: 'Edit', action: 'edit', disabled: true, actionType: [ActionType.Single]},
+        {title: 'Delete', action: 'delete', disabled: true, actionType: [ActionType.Balk, ActionType.Single]}
     ]
+}
+
+function showActions(actionType: ActionType, actionlist: Actionlist[]): Actionlist[] {
+    return actionlist.map(action => {
+        if (action.actionType.includes(ActionType.Always) || action.actionType.includes(actionType)) {
+            return { ...action, disabled: false }
+        }
+        return { ...action, disabled: true }
+    })
 }
 
 export const usersReducer: Reducer<StateUsers, Action> = (state, action) => {
@@ -18,76 +27,66 @@ export const usersReducer: Reducer<StateUsers, Action> = (state, action) => {
                 ...state,
                 users: action.payload
             }
-        case UsersActionTypes.Check:
+        case UsersActionTypes.SelectUsers:
             if (action.payload === 'all') {
                 return {
                     ...state,
-                    checkedAll: !state.checkedAll,
+                    selectAllUsers: !state.selectAllUsers,
                     users: state.users?.map(user => {
                         return {
                             ...user,
-                            checked: !state.checkedAll
+                            selected: !state.selectAllUsers
                         }
                     })
                 }
             }
             return {
                 ...state,
-                checkedAll: false,
+                selectAllUsers: false,
                 users: state.users?.map(user => {
                     if (user._id === action.payload) {
                         return {
                             ...user,
-                            checked: !user.checked
+                            selected: !user.selected
                         }
                     }
                     return user
                 })
             }
-        case UsersActionTypes.ShowDropItems:
+        case UsersActionTypes.SelectOneUser:
+            return {
+                ...state,
+                users: state.users.map(user => {
+                    if (user._id === action.payload) {
+                        return {
+                            ...user,
+                            selected: user.selected = true
+                        }
+                    }
+                    return {
+                        ...user,
+                        selected: user.selected = false
+                    }
+                }),
+                selectAllUsers: false
+            }
+        case UsersActionTypes.ShowUsersActions:
             if (action.payload === 0) {
                 return {
                     ...state,
-                    dropdownlist: state.dropdownlist.map(user => {
-                        if (user.actionType === 'always') {
-                            return {
-                                ...user,
-                                disabled: false
-                            }
-                        }
-                        return {
-                            ...user,
-                            disabled: true
-                        }
-                    })
+                    actionlist: showActions(ActionType.Always, state.actionlist)
                 }
             }
             if (action.payload > 1) {
                 return {
                     ...state,
-                    dropdownlist: state.dropdownlist.map(user => {
-                        if (user.actionType === 'always' || user.actionType === 'bulk') {
-                            return {
-                                ...user,
-                                disabled: false
-                            }
-                        }
-                        return {
-                            ...user,
-                            disabled: true
-                        }
-                    })
+                    actionlist: showActions(ActionType.Balk, state.actionlist)
                 }
             }
             
             return {
                 ...state,
-                dropdownlist: state.dropdownlist.map(user => {
-                    return {
-                        ...user,
-                        disabled: false
-                    }
-                })
+                actionlist: showActions(ActionType.Single, state.actionlist)
             }
         default:
             return state

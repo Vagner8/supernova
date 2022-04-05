@@ -1,13 +1,19 @@
-import { User } from "../../types/userType"
+import { User } from "../../pages/Users/usersTypes"
 
 export enum UsersActionTypes {
     SetData = 'SetData',
-    Check = 'Check',
-    ShowDropItems = 'ShowDropItems'
+    SelectUsers = 'SelectUsers',
+    SelectOneUser = 'SelectOneUser',
+    ShowUsersActions = 'ShowUsersActions',
 }
 
-export interface ShowDropItems {
-    type: UsersActionTypes.ShowDropItems
+export interface SelectOneUser {
+    type: UsersActionTypes.SelectOneUser
+    payload: string
+}
+
+export interface ShowUsersActions {
+    type: UsersActionTypes.ShowUsersActions
     payload: number
 }
 
@@ -17,24 +23,31 @@ export interface SetDataAction {
 }
 
 export interface CheckAction {
-    type: UsersActionTypes.Check
+    type: UsersActionTypes.SelectUsers
     payload: string
 }
 
-export interface DropdownItem {
+export enum ActionType {
+    Balk = 'bulk',
+    Single = 'single',
+    Always = 'always'
+}
+
+export interface Actionlist {
     title: string
     action: 'edit' | 'delete' | 'new'
     disabled: boolean
-    actionType: 'bulk' | 'single' | 'always'
+    actionType: ActionType[]
 }
 
 export type Action =
 | SetDataAction
 | CheckAction
-| ShowDropItems
+| ShowUsersActions
+| SelectOneUser
 
 export interface StateUsers {
     users: User[]
-    checkedAll: boolean
-    dropdownlist: DropdownItem[]
+    selectAllUsers: boolean
+    actionlist: Actionlist[]
 }

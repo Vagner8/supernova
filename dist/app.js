@@ -14,6 +14,7 @@ const port = process.env.PORT || 5000;
 // app.get('*', (req, res) => {
 //     res.sendFile(path.join(publicPath, 'index.html'));
 // })
+app.use(express_1.default.json());
 app.use('/users', users_1.default);
 app.use('/settings', settings_1.default);
 app.get('/', (req, res) => {

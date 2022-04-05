@@ -1,62 +1,82 @@
-import { createContext, useEffect, useReducer } from "react"
+import { createContext, useCallback, useEffect, useReducer } from "react"
 import { Header } from "../../components/Header/Header"
 import { Preloader } from "../../components/Preloader/Preloader"
-import { Table } from "../../components/Table/Table"
-import { useFetch } from "../../hooks/useFetch"
+import { Table } from "./Table/Table"
+import { FetchStatus, useFetch } from "../../hooks/useFetch"
 import { initialState, usersReducer } from "../../reducers/usersReducer/usersReducer"
-import { DropdownItem, UsersActionTypes } from "../../reducers/usersReducer/usersReducerTypes"
-import { UserAPI } from "../../types/apiType"
-import { User } from "../../types/userType"
-import { Content } from "./usersTypes"
+import { Actionlist, UsersActionTypes } from "../../reducers/usersReducer/usersReducerTypes"
+import { Method, UserURL } from "../../api/apiType"
+import { Content, User, UserProfileContext } from "./usersTypes"
+import { fetchRequest } from "../../api/api"
+import { Outlet, useOutletContext, useParams } from "react-router-dom"
 
 const UserContext = createContext({})
 
 export function Users() {
-  const data = useFetch<User[]>(UserAPI.FetchAllUsers)
+  const users = useFetch<User[]>(UserURL.FetchAllUsers)
+  const {userId} = useParams()
   const [state, dispatch] = useReducer(usersReducer, initialState)
 
   useEffect(() => {
-    if (Array.isArray(data)) {
-      dispatch({ type: UsersActionTypes.SetData, payload: data })
+    if (users.data) {
+      dispatch({ type: UsersActionTypes.SetData, payload: users.data })
     }
-  }, [data])
+  }, [users.data])
 
   useEffect(() => {
-    const amountCheckedUsers = state.users.filter(item => item.checked).length
-    dispatch({ type: UsersActionTypes.ShowDropItems, payload: amountCheckedUsers})
+    const amountCheckedUsers = state.users.filter(item => item.selected).length
+    dispatch({ type: UsersActionTypes.ShowUsersActions, payload: amountCheckedUsers})
   }, [state.users])
 
   function changeCheckbox(id: string) {
     return function () {
-      dispatch({ type: UsersActionTypes.Check, payload: id })
+      dispatch({ type: UsersActionTypes.SelectUsers, payload: id })
     }
   }
 
-  function clickDropdown(action: DropdownItem['action']) {
+  function clickDropdown(action: Actionlist['action']) {
+    const checkedUsers = state.users.filter(user => user.selected)
     return function () {
-      console.log(action)
+      if (action === 'new') {
+        fetchRequest<User[]>(Method.POST, UserURL.PostUser, checkedUsers)
+      }
     }
   }
 
-  const Content: Content = {
-    Preloader: <Preloader/>,
-    Table: <Table items={state.users} changeCheckbox={changeCheckbox} />
-  }
+  const selectUserByProfile = useCallback(function (userId: string) {
+    dispatch({ type: UsersActionTypes.SelectOneUser, payload: userId })
+  }, [])
 
-  function showContent(Content: Content) {
-    if (typeof data === 'string') return Content.Preloader
+  function showContent() {
+    const Content: Content = {
+      Preloader: <Preloader/>,
+      UserProfile: <Outlet context={{selectUserByProfile}} />,
+      Table: (
+        <Table
+          items={state.users}
+          selectAllUsers={state.selectAllUsers}
+          changeCheckbox={changeCheckbox}
+        />
+      )
+    }
+    if (userId) {
+      return Content.UserProfile
+    }
+    if (users.status !== FetchStatus.Fulfilled) return Content.Preloader
     return Content.Table
   }
 
   return (
     <UserContext.Provider value={state}>
         <Header
-          dropdownlist={state.dropdownlist}
-          checkedAll={state.checkedAll}
-          changeCheckbox={changeCheckbox}
+          actionlist={state.actionlist}
           clickDropdown={clickDropdown}
         />
-        {showContent(Content)}
+        {showContent()}
     </UserContext.Provider>
   )
+}
+
+export function useUserProfileContext() {
+  return useOutletContext<UserProfileContext>()
 }

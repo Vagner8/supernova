@@ -21,11 +21,20 @@ router.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     res.json(users);
     yield useMongo_1.usersDB.close();
 }));
-// router.post('/post', (req, res) => {
-// })
+router.get('/profile', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { userId } = req.query;
+    const user = yield useMongo_1.usersDB.findOne(userId);
+    res.json(user);
+    yield useMongo_1.usersDB.close();
+}));
+router.post('/post', (req, res) => {
+    console.log(req.body);
+    res.json('ok');
+});
 // router.put('/put', (req, res) => {
 // })
 // router.delete('/delete', (req, res) => {
+//     console.log(req.body)
 // })
 exports.default = router;
 //# sourceMappingURL=users.js.map

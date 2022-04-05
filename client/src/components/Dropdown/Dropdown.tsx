@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react"
 import { ClickDropdown } from "../../pages/Users/usersTypes"
-import { DropdownItem } from "../../reducers/usersReducer/usersReducerTypes"
+import { Actionlist } from "../../reducers/usersReducer/usersReducerTypes"
 
 import M from 'materialize-css'
 import './Dropdown.module.sass'
@@ -8,7 +8,7 @@ import './Dropdown.module.sass'
 
 interface PropsDropdown {
     title: string
-    items: DropdownItem[]
+    items: Actionlist[]
     clickDropdown: ClickDropdown
 }
 

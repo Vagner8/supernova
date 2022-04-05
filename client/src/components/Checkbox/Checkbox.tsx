@@ -4,11 +4,11 @@ import styles from './Checkbox.module.sass'
 interface PropsCheckbox {
     id: string
     label?: string
-    checked: boolean
+    selected: boolean
     changeCheckbox: ChangeCheckbox
 }
 
-export function Checkbox({id, label, checked, changeCheckbox} : PropsCheckbox) {
+export function Checkbox({id, label, selected, changeCheckbox} : PropsCheckbox) {
     return (
         <label
             data-action="selected"
@@ -16,7 +16,7 @@ export function Checkbox({id, label, checked, changeCheckbox} : PropsCheckbox) {
         >
             <input
                 type="checkbox"
-                checked={checked}
+                checked={selected}
                 onChange={changeCheckbox(id)}
             />
             <span>{ label }</span>

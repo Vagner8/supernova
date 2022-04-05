@@ -1,7 +1,9 @@
-import React from 'react';
-import './App.sass';
-import { AppRouter } from './components/AppRouter/AppRouter';
-import { Menu } from './components/Menu/Menu';
+import React from 'react'
+import { Outlet } from 'react-router-dom'
+import { Menu } from './components/Menu/Menu'
+
+import './App.sass'
+
 
 function App() {
     return (
@@ -10,7 +12,7 @@ function App() {
                 <Menu />
             </div>
             <div className="app__pages">
-                <AppRouter />
+                <Outlet />
             </div>
         </div>
     );

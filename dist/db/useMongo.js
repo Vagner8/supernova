@@ -37,10 +37,10 @@ class UseMongo {
             return col.find();
         });
     }
-    findOne() {
+    findOne(query) {
         return __awaiter(this, void 0, void 0, function* () {
             const col = yield this.connection();
-            return col.findOne();
+            return col.findOne({ _id: new mongodb_1.ObjectId(query) });
         });
     }
     close() {

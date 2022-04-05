@@ -7,9 +7,14 @@ export enum FetchStatus {
     Error = 'error'
 }
 
-export function useFetch<T>(url: string) : T | FetchStatus {
+export function useFetch<T>(url: string)  {
     const [data, setData] = useState<T>()
     const [status, setStatus] = useState<FetchStatus>(FetchStatus.Idle)
+    const [num, setNum] = useState(0)
+
+    function reset() {
+        setNum(Math.random())
+    }
 
     useEffect(() => {
         async function fetchData() {
@@ -24,8 +29,10 @@ export function useFetch<T>(url: string) : T | FetchStatus {
             }
         }
         fetchData()
-    }, [url])
-    
-    if (!data) return status
-    return data
+    }, [url, num])
+    return {
+        data,
+        status,
+        reset
+    }
 }

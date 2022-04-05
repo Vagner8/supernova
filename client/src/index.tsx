@@ -1,13 +1,31 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { BrowserRouter } from 'react-router-dom'
-import App from './App'
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import { Home } from './pages/Home/Home'
+import { Settings } from './pages/Settings/Settings'
+import { UserProfile } from './pages/Users/UserProfile/UserProfile'
+import { Users } from './pages/Users/Users'
 import reportWebVitals from './reportWebVitals'
+import App from './App'
+
+export enum Path {
+  Users = 'users',
+  UserProfile = ':userId',
+  Settings = 'settings'
+}
 
 ReactDOM.render(
   <React.StrictMode>
     <BrowserRouter>
-      <App />
+      <Routes>
+        <Route path='/' element={<App />} >
+            <Route index element={<Home/>} />
+            <Route path={Path.Users} element={<Users/>} >
+              <Route path={Path.UserProfile} element={<UserProfile/>} /> 
+            </Route>
+            <Route path={Path.Settings} element={<Settings/>} />   
+        </Route>
+      </Routes>
     </BrowserRouter>
   </React.StrictMode>,
   document.getElementById('root')

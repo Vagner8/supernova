@@ -1,4 +1,4 @@
-import { MongoClient } from 'mongodb'
+import { MongoClient, ObjectId } from 'mongodb'
 import { Clusters, Collections } from './types'
 
 class UseMongo {
@@ -27,9 +27,9 @@ class UseMongo {
         return col.find()
     }
 
-    public async findOne() {
+    public async findOne(query?: string) {
         const col = await this.connection()
-        return col.findOne()
+        return col.findOne({_id: new ObjectId(query)})
     }
 
     public async close() {
