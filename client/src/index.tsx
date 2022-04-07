@@ -1,35 +1,32 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
-import { Home } from './pages/Home/Home'
-import { Settings } from './pages/Settings/Settings'
-import { UserProfile } from './pages/Users/UserProfile/UserProfile'
-import { Users } from './pages/Users/Users'
+import { BrowserRouter, Route, Routes} from 'react-router-dom'
 import reportWebVitals from './reportWebVitals'
 import App from './App'
+import { Home } from './modules/Home/Home'
+import { Users } from './modules/Users/Users'
+import { Table } from './modules/Users/Table/Table'
+import { Profile } from './modules/Users/Profile/Profile'
+import { Settings } from './modules/Settings/Settings'
+import { createRoot } from 'react-dom/client'
 
-export enum Path {
-  Users = 'users',
-  UserProfile = ':userId',
-  Settings = 'settings'
-}
+const root = createRoot(document.getElementById('root') as HTMLDivElement)
 
-ReactDOM.render(
+root.render(
   <React.StrictMode>
     <BrowserRouter>
       <Routes>
         <Route path='/' element={<App />} >
-            <Route index element={<Home/>} />
-            <Route path={Path.Users} element={<Users/>} >
-              <Route path={Path.UserProfile} element={<UserProfile/>} /> 
-            </Route>
-            <Route path={Path.Settings} element={<Settings/>} />   
+          <Route index element={<Home />} />
+          <Route path="users" element={<Users />} >
+            <Route index element={<Table />} />
+            <Route path=':userId' element={<Profile />} />
+          </Route>
+          <Route path="settings" element={<Settings />} />
         </Route>
       </Routes>
     </BrowserRouter>
-  </React.StrictMode>,
-  document.getElementById('root')
-);
+  </React.StrictMode>
+)
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))

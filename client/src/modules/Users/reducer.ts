@@ -1,33 +1,33 @@
 import { Reducer } from "react"
-import { Action, Actionlist, ActionType, StateUsers, UsersActionTypes, } from "./usersReducerTypes"
+import { Action, DropAction, DropActionTypes, StateUsers, ActionTypes } from "./types"
 
 export const initialState: StateUsers = {
     users: [],
     selectAllUsers: false,
     actionlist: [
-        {title: 'New', action: 'new', disabled: true, actionType: [ActionType.Always]},
-        {title: 'Edit', action: 'edit', disabled: true, actionType: [ActionType.Single]},
-        {title: 'Delete', action: 'delete', disabled: true, actionType: [ActionType.Balk, ActionType.Single]}
+        {title: 'New', action: 'new', disabled: true, actionType: [DropActionTypes.Always]},
+        {title: 'Edit', action: 'edit', disabled: true, actionType: [DropActionTypes.Single]},
+        {title: 'Delete', action: 'delete', disabled: true, actionType: [DropActionTypes.Balk, DropActionTypes.Single]}
     ]
 }
 
-function showActions(actionType: ActionType, actionlist: Actionlist[]): Actionlist[] {
+function showDropActions(actionType: DropActionTypes, actionlist: DropAction[]): DropAction[] {
     return actionlist.map(action => {
-        if (action.actionType.includes(ActionType.Always) || action.actionType.includes(actionType)) {
+        if (action.actionType.includes(DropActionTypes.Always) || action.actionType.includes(actionType)) {
             return { ...action, disabled: false }
         }
         return { ...action, disabled: true }
     })
 }
 
-export const usersReducer: Reducer<StateUsers, Action> = (state, action) => {
+export const reducer: Reducer<StateUsers, Action> = (state, action) => {
     switch (action.type) {
-        case UsersActionTypes.SetData:
+        case ActionTypes.SetData:
             return {
                 ...state,
                 users: action.payload
             }
-        case UsersActionTypes.SelectUsers:
+        case ActionTypes.SelectUsers:
             if (action.payload === 'all') {
                 return {
                     ...state,
@@ -53,7 +53,7 @@ export const usersReducer: Reducer<StateUsers, Action> = (state, action) => {
                     return user
                 })
             }
-        case UsersActionTypes.SelectOneUser:
+        case ActionTypes.SelectOneUser:
             return {
                 ...state,
                 users: state.users.map(user => {
@@ -70,23 +70,23 @@ export const usersReducer: Reducer<StateUsers, Action> = (state, action) => {
                 }),
                 selectAllUsers: false
             }
-        case UsersActionTypes.ShowUsersActions:
+        case ActionTypes.ShowDropActions:
             if (action.payload === 0) {
                 return {
                     ...state,
-                    actionlist: showActions(ActionType.Always, state.actionlist)
+                    actionlist: showDropActions(DropActionTypes.Always, state.actionlist)
                 }
             }
             if (action.payload > 1) {
                 return {
                     ...state,
-                    actionlist: showActions(ActionType.Balk, state.actionlist)
+                    actionlist: showDropActions(DropActionTypes.Balk, state.actionlist)
                 }
             }
             
             return {
                 ...state,
-                actionlist: showActions(ActionType.Single, state.actionlist)
+                actionlist: showDropActions(DropActionTypes.Single, state.actionlist)
             }
         default:
             return state

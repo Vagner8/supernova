@@ -15,7 +15,7 @@ export function Menu() {
     }
 
     return (
-        <nav className={ `${styles.nav} ${open ? styles.open : false}` }>
+        <nav className={ `${styles.nav} ${open ? false : styles.open}` }>
             <div className="nav-wrapper">
             <i onClick={onClick} className={ `${styles.burger} material-icons` }>dehaze</i>
                 <ul className={ styles.list }>
