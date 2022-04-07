@@ -7,7 +7,7 @@ import { FetchStatus, useFetch } from '../../../hooks/useFetch'
 import { useEffect } from 'react'
 import { Preloader } from '../../../components/Preloader/Preloader'
 
-export function Table() {
+export default function Table() {
   const {data, status} = useFetch<User[]>(UserURL.AllUsers)
   const {dispatch, state: {users, selectAllUsers}} = useUserContext()
 

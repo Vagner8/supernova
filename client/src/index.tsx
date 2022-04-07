@@ -1,29 +1,33 @@
-import React from 'react'
+import React, { lazy, Suspense } from 'react'
 import { BrowserRouter, Route, Routes} from 'react-router-dom'
 import reportWebVitals from './reportWebVitals'
 import App from './App'
-import { Home } from './modules/Home/Home'
 import { Users } from './modules/Users/Users'
-import { Table } from './modules/Users/Table/Table'
 import { Profile } from './modules/Users/Profile/Profile'
-import { Settings } from './modules/Settings/Settings'
 import { createRoot } from 'react-dom/client'
+import { Preloader } from './components/Preloader/Preloader'
 
 const root = createRoot(document.getElementById('root') as HTMLDivElement)
+
+const Home = lazy(() => import('./modules/Home/Home'))
+const Table = lazy(() => import('./modules/Users/Table/Table'))
+const Settings = lazy(() => import('./modules/Settings/Settings'))
 
 root.render(
   <React.StrictMode>
     <BrowserRouter>
-      <Routes>
-        <Route path='/' element={<App />} >
-          <Route index element={<Home />} />
-          <Route path="users" element={<Users />} >
-            <Route index element={<Table />} />
-            <Route path=':userId' element={<Profile />} />
+      <Suspense fallback={<Preloader />}>
+        <Routes>
+          <Route path='/' element={<App />} >
+            <Route index element={<Home />} />
+            <Route path="users" element={<Users />} >
+              <Route index element={<Table />} />
+              <Route path=':userId' element={<Profile />} />
+            </Route>
+            <Route path="settings" element={<Settings />} />
           </Route>
-          <Route path="settings" element={<Settings />} />
-        </Route>
-      </Routes>
+        </Routes>
+      </Suspense>
     </BrowserRouter>
   </React.StrictMode>
 )
