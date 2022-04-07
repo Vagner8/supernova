@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { Preloader } from '../../../components/Preloader/Preloader'
+import { Switch } from '../../../components/Switch/Switch'
 import { FetchStatus, useFetch } from '../../../hooks/useFetch'
 import { ActionTypes, User, UserURL } from '../types'
 import { useUserContext } from '../Users'
@@ -24,7 +25,7 @@ export function Profile() {
   const {_id, name, surname, email, img, phone, address, registration, birth} = data
 
   return (
-    <div className={styles.Profile}>
+    <div className={styles.ProfileComponent}>
       <ul className="collection">
         <li className="collection-item avatar">
           <img src={img} alt="" className="circle" />
@@ -40,6 +41,9 @@ export function Profile() {
           <p>{new Date(registration).toLocaleDateString()}</p>
           <p>{email}</p>
           <p>{phone}</p>
+        </li>
+        <li className={`${styles.switch} collection-item avatar`} >
+          <Switch label="Active" />
         </li>
       </ul>
     </div>

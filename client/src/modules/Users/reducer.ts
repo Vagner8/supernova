@@ -7,6 +7,7 @@ export const initialState: StateUsers = {
     actionlist: [
         {title: 'New', action: 'new', disabled: true, actionType: [DropActionTypes.Always]},
         {title: 'Edit', action: 'edit', disabled: true, actionType: [DropActionTypes.Single]},
+        {title: 'Copy', action: 'copy', disabled: true, actionType: [DropActionTypes.Single]},
         {title: 'Delete', action: 'delete', disabled: true, actionType: [DropActionTypes.Balk, DropActionTypes.Single]}
     ]
 }

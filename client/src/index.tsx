@@ -7,11 +7,11 @@ import { Profile } from './modules/Users/Profile/Profile'
 import { createRoot } from 'react-dom/client'
 import { Preloader } from './components/Preloader/Preloader'
 
-const root = createRoot(document.getElementById('root') as HTMLDivElement)
-
 const Home = lazy(() => import('./modules/Home/Home'))
 const Table = lazy(() => import('./modules/Users/Table/Table'))
 const Settings = lazy(() => import('./modules/Settings/Settings'))
+
+const root = createRoot(document.getElementById('root') as HTMLDivElement)
 
 root.render(
   <React.StrictMode>
@@ -35,4 +35,4 @@ root.render(
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+reportWebVitals(console.log);

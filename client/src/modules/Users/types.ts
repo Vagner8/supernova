@@ -9,6 +9,7 @@ export interface User {
     email: string
     password: string
     selected: boolean
+    disabled: boolean
     action?: string[]
     phone: string
     registration: Date
@@ -20,7 +21,7 @@ export interface User {
 
 export interface DropAction {
     title: string
-    action: 'edit' | 'delete' | 'new'
+    action: 'edit' | 'delete' | 'new' | 'copy'
     disabled: boolean
     actionType: DropActionTypes[]
 }
