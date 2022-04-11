@@ -1,9 +1,14 @@
-import { useEffect } from 'react'
+import { ReactElement, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
+import uniqid from 'uniqid'
+import { Point } from '../../../components/Point/Point'
 import { Preloader } from '../../../components/Preloader/Preloader'
-import { Switch } from '../../../components/Switch/Switch'
+// import { Switch } from '../../../components/Switch/Switch'
 import { FetchStatus, useFetch } from '../../../hooks/useFetch'
-import { ActionTypes, User, UserURL } from '../types'
+import { pointsOfUser } from '../helpers'
+import { ProfileActionType } from '../reducers/profileReducer/profileReducer'
+import { UsersActionType } from '../reducers/usersReducer'
+import { Points, User, UserURL } from '../types'
 import { useUserContext } from '../Users'
 import styles from './Profile.module.sass'
 
@@ -11,40 +16,49 @@ export function Profile() {
   const {userId} = useParams()
   const {data, status} = useFetch<User>(`${UserURL.Profile}?userId=${userId}`)
 
-  const {dispatch} = useUserContext()
+  const {profileDispatch, usersDispatch, profileState} = useUserContext()
+
+  useEffect(() => {
+    if (data) {
+      profileDispatch({type: ProfileActionType.SetData, payload: data})
+    }
+  }, [profileDispatch, data])
 
   useEffect(() => {
     if (userId) {
-      dispatch({type: ActionTypes.SelectOneUser, payload: userId})
-      dispatch({type: ActionTypes.ShowDropActions, payload: 1})
+      usersDispatch({type: UsersActionType.SelectOneUser, payload: userId})
+      usersDispatch({type: UsersActionType.ShowDropActions, payload: 1})
     }
-  }, [dispatch, userId])
+  }, [usersDispatch, userId])
 
-  if (!data || status !== FetchStatus.Fulfilled) return <Preloader/>
+  if (!profileState.user || status !== FetchStatus.Fulfilled) return <Preloader/>
 
-  const {_id, name, surname, email, img, phone, address, registration, birth} = data
+  const {points, img} = pointsOfUser(profileState.user)
+
+  function buildPoint(point: Points) : ReactElement[] {
+    return Object.entries(point).map(([key, value]) => {
+      return (
+        <Point
+          key={uniqid()}
+          img={key === 'name' ? img : null}
+          value={value}
+          name={key}
+          editMode={profileState.editMode}
+        />
+      )
+    })
+  }
 
   return (
     <div className={styles.ProfileComponent}>
       <ul className="collection">
-        <li className="collection-item avatar">
-          <img src={img} alt="" className="circle" />
-            <p>{name}</p>
-            <p>{surname}</p>
-            <p>{_id}</p>
-        </li>
-        <li className="collection-item avatar">
-          <p>{new Date(birth).toLocaleDateString()}</p>
-          <p>{address}</p>
-        </li>
-        <li className="collection-item avatar">
-          <p>{new Date(registration).toLocaleDateString()}</p>
-          <p>{email}</p>
-          <p>{phone}</p>
-        </li>
-        <li className={`${styles.switch} collection-item avatar`} >
-          <Switch label="Active" />
-        </li>
+        {points.map(point => {
+          return (
+            <li key={uniqid()} className={`${styles.point} collection-item avatar`}>
+              {buildPoint(point)}
+            </li>
+          )
+        })}
       </ul>
     </div>
   )

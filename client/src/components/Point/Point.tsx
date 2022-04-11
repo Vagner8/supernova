@@ -1,25 +1,29 @@
-import { ReactElement } from "react"
+import { TextInput } from "../Inputs/TextInput"
 
 interface Props {
-  title: string
-  input?: ReactElement
-  img?: string
+  value: string
+  name?: string
+  img?: string | null
+  editMode: boolean
 }
 
-export function Point({ title, input, img }: Props) {
+export function Point({ value, name, img, editMode }: Props) {
+  if (editMode) {
+    return (
+      <>
+        <TextInput
+          name={name}
+          initialValue={value}
+        />
+      </>
+    )
+  }
   return (
-    <li className="collection-item avatar">
-      {img ? <img src={img} alt="" className="circle" /> : null}
+    <>
+      {img ? <img src={img} alt="Avatar" className="circle" /> : null}
       <div>
-        <p>{title}</p>
-        {input ? input : null}
+        {name ? <p>{name}: {value}</p> : value}
       </div>
-    </li>
+    </>
   )
-}
-
-Point.defaultProps = {
-  title: 'name',
-  img: 'https://ic.pics.livejournal.com/dubikvit/65747770/8083875/8083875_900.jpg',
-  input: <input type="text" />
 }

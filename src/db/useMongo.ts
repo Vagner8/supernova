@@ -1,5 +1,5 @@
 import { MongoClient, ObjectId } from 'mongodb'
-import { Clusters, Collections } from './types'
+import { Clusters, Collections, User } from './types'
 
 class UseMongo {
     public client = new MongoClient(
@@ -14,11 +14,11 @@ class UseMongo {
     public async connection() {
         try {
             await this.client.connect()
-            console.log("Mongo connected correctly to server")
             const db = this.client.db(this.cluster)
-            return db.collection(this.collection)
+            const collection = db.collection(this.collection)
+            return collection
         } catch (err) {
-            console.log(err.stack)
+            console.error(err.stack)
         }
     }
 
@@ -27,9 +27,9 @@ class UseMongo {
         return col.find()
     }
 
-    public async findOne(query?: string) {
+    public async findOne<T>(query?: string) {
         const col = await this.connection()
-        return col.findOne({_id: new ObjectId(query)})
+        return col.findOne<T>({_id: new ObjectId(query)})
     }
 
     public async close() {

@@ -22,12 +22,12 @@ class UseMongo {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 yield this.client.connect();
-                console.log("Mongo connected correctly to server");
                 const db = this.client.db(this.cluster);
-                return db.collection(this.collection);
+                const collection = db.collection(this.collection);
+                return collection;
             }
             catch (err) {
-                console.log(err.stack);
+                console.error(err.stack);
             }
         });
     }

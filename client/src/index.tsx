@@ -1,6 +1,6 @@
 import React, { lazy, Suspense } from 'react'
 import { BrowserRouter, Route, Routes} from 'react-router-dom'
-import reportWebVitals from './reportWebVitals'
+// import reportWebVitals from './reportWebVitals'
 import App from './App'
 import { Users } from './modules/Users/Users'
 import { Profile } from './modules/Users/Profile/Profile'
@@ -14,7 +14,7 @@ const Settings = lazy(() => import('./modules/Settings/Settings'))
 const root = createRoot(document.getElementById('root') as HTMLDivElement)
 
 root.render(
-  <React.StrictMode>
+  // <React.StrictMode>
     <BrowserRouter>
       <Suspense fallback={<Preloader />}>
         <Routes>
@@ -29,10 +29,10 @@ root.render(
         </Routes>
       </Suspense>
     </BrowserRouter>
-  </React.StrictMode>
+  // </React.StrictMode>
 )
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals(console.log);
+// reportWebVitals(console.log);

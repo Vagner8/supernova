@@ -2,28 +2,30 @@ import { Checkbox } from '../../../components/Checkbox/Checkbox'
 import { NavLink } from 'react-router-dom'
 import styles from './Table.module.sass'
 import { useUserContext } from '../Users'
-import { ActionTypes, User, UserURL } from '../types'
+import { User, UserURL } from '../types'
 import { FetchStatus, useFetch } from '../../../hooks/useFetch'
 import { useEffect } from 'react'
 import { Preloader } from '../../../components/Preloader/Preloader'
+import { Point } from '../../../components/Point/Point'
+import { UsersActionType } from '../reducers/usersReducer'
 
 export default function Table() {
   const {data, status} = useFetch<User[]>(UserURL.AllUsers)
-  const {dispatch, state: {users, selectAllUsers}} = useUserContext()
+  const {usersDispatch, usersState: {users, selectAllUsers}, profileState: {editMode}} = useUserContext()
 
   useEffect(() => {
     if (data) {
-      dispatch({type: ActionTypes.SetData, payload: data})
+      usersDispatch({type: UsersActionType.SetData, payload: data})
     }
-  }, [dispatch, data])
+  }, [usersDispatch, data])
 
   useEffect(() => {
-    dispatch({type: ActionTypes.ShowDropActions, payload: users.filter(user => user.selected).length})
-  }, [dispatch, users])
+    usersDispatch({type: UsersActionType.ShowDropActions, payload: users.filter(user => user.selected).length})
+  }, [usersDispatch, users])
 
   function selectUsers(id: string) {
     return function() {
-      dispatch({type: ActionTypes.SelectUsers, payload: id})
+      usersDispatch({type: UsersActionType.SelectUsers, payload: id})
     }
   }
 
@@ -39,8 +41,8 @@ export default function Table() {
             selected={selectAllUsers}
           />
         </li>
-        {users.map(item => {
-          const { _id, name, surname, email, selected, img } = item
+        {users.map(user => {
+          const { _id, name, surname, email, selected, img } = user
           return (
             <li key={_id} className={`${styles.item} collection-item`}>
               <div className={styles.left}>
@@ -52,12 +54,20 @@ export default function Table() {
               </div>
               <div className={styles.right}>
                 <div className={styles.image}>
-                  <img  src={img} alt="" />
+                  <img src={img} alt="" />
                 </div>
-                <div>{_id}</div>
-                <div>{name}</div>
-                <div>{surname}</div>
-                <div>{email}</div>
+                <div className={styles.column}>
+                  <Point value={_id} editMode={false}/>
+                </div>
+                {[name, surname].map(value => {
+                  return (
+                    <div className={styles.column}>
+                      <Point value={value} editMode={selected ? editMode : false}/>
+                    </div>
+                )})}
+                <div className={styles.column}>
+                  <Point value={email} editMode={false} />
+                </div>
                 <NavLink
                   className={styles.navlink}
                   to={`${_id}` }

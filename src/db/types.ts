@@ -14,4 +14,11 @@ export interface User {
     email: string
     password: string
     selected: boolean
+    disabled: boolean
+    phone: string
+    registration: Date
+    address: string
+    role: 'admin'
+    birth: Date
+    img: string
 }

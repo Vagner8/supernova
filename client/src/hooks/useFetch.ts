@@ -30,6 +30,7 @@ export function useFetch<T>(url: string)  {
         }
         fetchData()
     }, [url, num])
+
     return {
         data,
         status,

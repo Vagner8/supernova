@@ -1,21 +1,35 @@
 import { useReducer } from 'react'
 import { Outlet, useOutletContext } from 'react-router-dom'
 import { Header } from './Header/Header'
-import { initialState, reducer } from './reducer'
+import { profileInitState, profileReducer } from './reducers/profileReducer/profileReducer'
+import { usersInitState, usersReducer } from './reducers/usersReducer'
 import { UseUserContext } from './types'
 import styles from './Users.module.sass'
 
 export function Users() {
-    const [state, dispatch] = useReducer(reducer, initialState)
-
-    return (
-        <div className={styles.Users}>
-            <Header actionlist={state.actionlist}/>
-            <Outlet context={{ dispatch, state }}/>
-        </div>
-    )
+  const [usersState, usersDispatch] = useReducer(usersReducer, usersInitState)
+  const [profileState, profileDispatch] = useReducer(profileReducer, profileInitState)
+  return (
+    <div className={styles.Users}>
+      <Header
+        actionlist={usersState.actionlist}
+        usersDispatch={usersDispatch}
+        usersState={usersState}
+        profileDispatch={profileDispatch}
+        profileState={profileState}
+      />
+      <Outlet
+        context={{
+            usersDispatch,
+            profileDispatch,
+            usersState,
+            profileState
+          }}
+      />
+    </div>
+  )
 }
 
 export function useUserContext() {
-    return useOutletContext<UseUserContext>()
+  return useOutletContext<UseUserContext>()
 }

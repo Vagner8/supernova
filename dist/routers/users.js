@@ -16,16 +16,31 @@ const express_1 = __importDefault(require("express"));
 const useMongo_1 = require("../db/useMongo");
 const router = express_1.default.Router();
 router.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const cursor = yield useMongo_1.usersDB.find();
-    const users = yield cursor.toArray();
-    res.json(users);
-    yield useMongo_1.usersDB.close();
+    try {
+        const cursor = yield useMongo_1.usersDB.find();
+        const users = yield cursor.toArray();
+        res.json(users);
+    }
+    catch (err) {
+        console.error(req.query, err.message);
+    }
+    finally {
+        yield useMongo_1.usersDB.close();
+    }
 }));
-router.get('/profile', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { userId } = req.query;
-    const user = yield useMongo_1.usersDB.findOne(userId);
-    res.json(user);
-    yield useMongo_1.usersDB.close();
+router.get('/profile?:userId', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { userId } = req.query;
+        const user = yield useMongo_1.usersDB.findOne(userId);
+        res.json(user);
+        yield useMongo_1.usersDB.close();
+    }
+    catch (err) {
+        console.error(req.query, err.message);
+    }
+    finally {
+        yield useMongo_1.usersDB.close();
+    }
 }));
 router.post('/post', (req, res) => {
     console.log(req.body);

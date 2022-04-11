@@ -1,4 +1,6 @@
-import { ReactElement } from "react"
+import { Dispatch, ReactElement } from "react"
+import { ProfileAction, ProfileState } from "./reducers/profileReducer/profileReducer"
+import { UsersAction, UsersState } from "./reducers/usersReducer"
 
 // Types
 
@@ -10,7 +12,6 @@ export interface User {
     password: string
     selected: boolean
     disabled: boolean
-    action?: string[]
     phone: string
     registration: Date
     address: string
@@ -19,11 +20,29 @@ export interface User {
     img: string
 }
 
+export type Personal = Pick<User, 'name' | 'surname' | '_id'>
+export type Origin = Pick<User, 'birth' | 'address'>
+export type Contacts = Pick<User, 'registration' | 'email' | 'phone'>
+export type Settings = Pick<User, 'img' | 'disabled'>
+
+export type Points = 
+| Personal
+| Origin
+| Contacts
+| Settings
+
+export enum Todo {
+    Edit = 'edit',
+    Delete = 'delete',
+    New = 'new',
+    Copy = 'copy'
+}
+
 export interface DropAction {
-    title: string
-    action: 'edit' | 'delete' | 'new' | 'copy'
+    name: string
+    todo: Todo
     disabled: boolean
-    actionType: DropActionTypes[]
+    type: DropActionType[]
 }
 
 export interface Content {
@@ -32,26 +51,15 @@ export interface Content {
 }
 
 export interface UseUserContext {
-    dispatch: React.Dispatch<Action>
-    state: StateUsers
+    usersDispatch: Dispatch<UsersAction>
+    profileDispatch: Dispatch<ProfileAction>
+    usersState: UsersState
+    profileState: ProfileState
 }
-
-export type Action =
-| SetDataAction
-| CheckAction
-| ShowDropActions
-| SelectOneUser
 
 // Enums
 
-export enum ActionTypes {
-    SetData = 'SetData',
-    SelectUsers = 'SelectUsers',
-    SelectOneUser = 'SelectOneUser',
-    ShowDropActions = 'ShowDropActions',
-}
-
-export enum DropActionTypes {
+export enum DropActionType {
     Balk = 'bulk',
     Single = 'single',
     Always = 'always'
@@ -64,46 +72,14 @@ export enum UserURL {
     PostUser = '/users/post'
 }
 
-// ActionTypes
-
-export interface SelectOneUser {
-    type: ActionTypes.SelectOneUser
-    payload: string
-}
-
-export interface ShowDropActions {
-    type: ActionTypes.ShowDropActions
-    payload: number
-}
-
-export interface SetDataAction {
-    type: ActionTypes.SetData
-    payload: User[]
-}
-
-export interface CheckAction {
-    type: ActionTypes.SelectUsers
-    payload: string
-}
-
-// Reducer
-
-export interface StateUsers {
-    users: User[]
-    selectAllUsers: boolean
-    actionlist: DropAction[]
-}
-
-// Functions
-
-export interface ClickDropdown {
-    (action: DropAction['action']): () => void
-}
-
 export interface UserProfileContext {
     selectUserByProfile: SelectUserByProfile
 }
 
 export interface SelectUserByProfile {
     (): void 
+}
+
+export interface OnClickDropdown {
+    (todo: Todo, userIdParam: string | undefined):  () => void
 }
