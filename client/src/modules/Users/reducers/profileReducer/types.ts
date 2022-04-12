@@ -1,5 +1,5 @@
-import { User } from "../../types"
-import { ProfileActionType } from "./profileReducer"
+import { User } from '../../types';
+import { ProfileActionType } from './profileReducer';
 
 export interface SetProfileData {
     type: ProfileActionType.SetData

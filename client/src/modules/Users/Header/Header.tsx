@@ -1,9 +1,9 @@
-import { Dispatch } from 'react'
-import { Dropdown } from '../../../components/Dropdown/Dropdown'
-import { ProfileAction, ProfileActionType, ProfileState } from '../reducers/profileReducer/profileReducer'
-import { UsersAction } from '../reducers/usersReducer'
-import { DropAction, OnClickDropdown } from '../types'
-import styles from './Header.module.sass'
+import { Dispatch } from 'react';
+import { Dropdown } from '../../../components/Dropdown/Dropdown';
+import { ProfileAction, ProfileActionType, ProfileState } from '../reducers/profileReducer/profileReducer';
+import { UsersAction } from '../reducers/usersReducer';
+import { DropAction, OnClickDropdown } from '../types';
+import styles from './Header.module.sass';
 
 interface Props {
   dropdownList: DropAction[]
@@ -17,12 +17,12 @@ export function Header(
     dropdownList,
     profileState,
     profileDispatch,
-  } : Props) {
-
+  } : Props,
+) {
   const onClickDropdown: OnClickDropdown = () => {
-    profileDispatch({type: ProfileActionType.SetEditMode})
-    console.log('onClickDropdown')
-  }
+    profileDispatch({ type: ProfileActionType.SetEditMode });
+    console.log('onClickDropdown');
+  };
 
   return (
     <nav className={styles.nav}>
@@ -35,5 +35,5 @@ export function Header(
         />
       </div>
     </nav>
-  )
+  );
 }

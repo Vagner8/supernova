@@ -1,6 +1,6 @@
-import { Dispatch, MouseEvent, ReactElement } from "react"
-import { ProfileAction, ProfileState } from "./reducers/profileReducer/profileReducer"
-import { UsersAction, UsersState } from "./reducers/usersReducer"
+import { Dispatch, MouseEvent, ReactElement } from 'react';
+import { ProfileAction, ProfileState } from './reducers/profileReducer/profileReducer';
+import { UsersAction, UsersState } from './reducers/usersReducer';
 
 // Types
 
@@ -25,7 +25,7 @@ export type Origin = Pick<User, 'birth' | 'address'>
 export type Contacts = Pick<User, 'registration' | 'email' | 'phone'>
 export type Settings = Pick<User, 'img' | 'disabled'>
 
-export type Points = 
+export type Points =
 | Personal
 | Origin
 | Contacts
@@ -76,7 +76,7 @@ export interface UserProfileContext {
 }
 
 export interface SelectUserByProfile {
-    (): void 
+    (): void
 }
 
 export interface OnClickDropdown {
