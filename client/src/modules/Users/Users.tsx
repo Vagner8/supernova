@@ -12,9 +12,8 @@ export function Users() {
   return (
     <div className={styles.Users}>
       <Header
-        actionlist={usersState.actionlist}
+        dropdownList={usersState.dropdownList}
         usersDispatch={usersDispatch}
-        usersState={usersState}
         profileDispatch={profileDispatch}
         profileState={profileState}
       />

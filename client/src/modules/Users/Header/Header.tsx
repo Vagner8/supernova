@@ -1,13 +1,12 @@
 import { Dispatch } from 'react'
 import { Dropdown } from '../../../components/Dropdown/Dropdown'
 import { ProfileAction, ProfileActionType, ProfileState } from '../reducers/profileReducer/profileReducer'
-import { UsersAction, UsersState } from '../reducers/usersReducer'
-import { DropAction, OnClickDropdown, Todo } from '../types'
+import { UsersAction } from '../reducers/usersReducer'
+import { DropAction, OnClickDropdown } from '../types'
 import styles from './Header.module.sass'
 
 interface Props {
-  actionlist: DropAction[]
-  usersState: UsersState
+  dropdownList: DropAction[]
   profileState: ProfileState
   usersDispatch: Dispatch<UsersAction>
   profileDispatch: Dispatch<ProfileAction>
@@ -15,20 +14,14 @@ interface Props {
 
 export function Header(
   {
-    actionlist,
-    usersState,
+    dropdownList,
+    profileState,
     profileDispatch,
-    profileState
   } : Props) {
 
-  const onClickDropdown: OnClickDropdown = (todo, userIdParam) => {
-    return function () {
-      profileDispatch({type: ProfileActionType.SetEditMode})
-      // if (!userIdParam) {
-      //   navigateTo()
-      // }
-      // console.log('table', usersState.users[0]._id)
-    }
+  const onClickDropdown: OnClickDropdown = () => {
+    profileDispatch({type: ProfileActionType.SetEditMode})
+    console.log('onClickDropdown')
   }
 
   return (
@@ -36,9 +29,9 @@ export function Header(
       <div className={`${styles.wrapper} nav-wrapper`}>
         <Dropdown
           title="Actions"
-          items={actionlist}
-          onClickDropdown={onClickDropdown}
+          dropdownList={dropdownList}
           editMode={profileState.editMode}
+          onClickDropdown={onClickDropdown}
         />
       </div>
     </nav>

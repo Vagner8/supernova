@@ -4,7 +4,7 @@ import { DropAction, DropActionType, Todo, User } from "../types"
 export interface UsersState {
     users: User[]
     selectAllUsers: boolean
-    actionlist: DropAction[]
+    dropdownList: DropAction[]
 }
 
 export enum UsersActionType {
@@ -43,11 +43,11 @@ export type UsersAction =
 export const usersInitState: UsersState = {
     users: [],
     selectAllUsers: false,
-    actionlist: [
-        {name: 'New', todo: Todo.New, disabled: true, type: [DropActionType.Always]},
-        {name: 'Edit', todo: Todo.Edit, disabled: true, type: [DropActionType.Balk, DropActionType.Single]},
-        {name: 'Copy', todo: Todo.Copy, disabled: true, type: [DropActionType.Single]},
-        {name: 'Delete', todo: Todo.Delete, disabled: true, type: [DropActionType.Balk, DropActionType.Single]}
+    dropdownList: [
+        {todo: Todo.New, disabled: false, type: [DropActionType.Always]},
+        {todo: Todo.Edit, disabled: false, type: [DropActionType.Balk, DropActionType.Single]},
+        {todo: Todo.Copy, disabled: false, type: [DropActionType.Single]},
+        {todo: Todo.Delete, disabled: false, type: [DropActionType.Balk, DropActionType.Single]}
     ]
 }
 
@@ -105,27 +105,27 @@ export const usersReducer: Reducer<UsersState, UsersAction> = (state, action) =>
             if (action.payload === 0) {
                 return {
                     ...state,
-                    actionlist: showDropActions(DropActionType.Always, state.actionlist)
+                    dropdownList: showDropActions(DropActionType.Always, state.dropdownList)
                 }
             }
             if (action.payload > 1) {
                 return {
                     ...state,
-                    actionlist: showDropActions(DropActionType.Balk, state.actionlist)
+                    dropdownList: showDropActions(DropActionType.Balk, state.dropdownList)
                 }
             }
             
             return {
                 ...state,
-                actionlist: showDropActions(DropActionType.Single, state.actionlist)
+                dropdownList: showDropActions(DropActionType.Single, state.dropdownList)
             }
         default:
             return state
     }
 }
 
-function showDropActions(actionType: DropActionType, actionlist: DropAction[]): DropAction[] {
-    return actionlist.map(action => {
+function showDropActions(actionType: DropActionType, dropdownList: DropAction[]): DropAction[] {
+    return dropdownList.map(action => {
         if (action.type.includes(DropActionType.Always) || action.type.includes(actionType)) {
             return { ...action, disabled: false }
         }

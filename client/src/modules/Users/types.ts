@@ -1,4 +1,4 @@
-import { Dispatch, ReactElement } from "react"
+import { Dispatch, MouseEvent, ReactElement } from "react"
 import { ProfileAction, ProfileState } from "./reducers/profileReducer/profileReducer"
 import { UsersAction, UsersState } from "./reducers/usersReducer"
 
@@ -39,7 +39,6 @@ export enum Todo {
 }
 
 export interface DropAction {
-    name: string
     todo: Todo
     disabled: boolean
     type: DropActionType[]
@@ -81,5 +80,5 @@ export interface SelectUserByProfile {
 }
 
 export interface OnClickDropdown {
-    (todo: Todo, userIdParam: string | undefined):  () => void
+    (e: MouseEvent): void
 }

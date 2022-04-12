@@ -1,12 +1,11 @@
-import { useEffect, useRef } from "react"
+import { useLayoutEffect, useRef } from "react"
 import { DropAction, OnClickDropdown, Todo } from "../../modules/Users/types"
-import { useParams } from "react-router-dom"
 import M from 'materialize-css'
 import styles from './Dropdown.module.sass'
 
 interface PropsDropdown {
   title: string
-  items: DropAction[]
+  dropdownList: DropAction[]
   editMode: boolean
   onClickDropdown: OnClickDropdown
 }
@@ -14,25 +13,24 @@ interface PropsDropdown {
 export function Dropdown(
   {
     title,
-    items,
+    dropdownList,
     editMode,
     onClickDropdown
   }: PropsDropdown
 ) {
   const ref = useRef<HTMLButtonElement>(null)
-  const { userId } = useParams()
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (ref.current) {
       M.Dropdown.init(ref.current)
     }
-  })
+  }, [])
 
-  function setItemName(itemName: string, itemTodo: string) : string {
-    if (itemTodo === Todo.Edit) {
+  function setItemName(todo: string) : string {
+    if (todo === Todo.Edit) {
       return editMode ? 'Edit off' : 'Edit on'
     }
-    return itemName
+    return todo
   }
 
   return (
@@ -45,12 +43,12 @@ export function Dropdown(
         id="dropdown1"
         className='dropdown-content'
       >
-        {items.map(item => {
+        {dropdownList.map(item => {
           if (item.disabled) return null
           return (
-            <li className={styles.item} onClick={onClickDropdown(item.todo, userId)} key={item.todo} >
-              <a href="#!">
-                {setItemName(item.name, item.todo)}
+            <li className={styles.item} key={item.todo} >
+              <a href="#!" onClick={onClickDropdown}>
+                {setItemName(item.todo)}
               </a>
             </li>
           )
@@ -58,4 +56,11 @@ export function Dropdown(
       </ul>
     </div>
   )
+}
+
+Dropdown.defaultProps = {
+  title: 'Actions',
+  dropdownList: [],
+  editMode: false,
+  onClickDropdown: () => {}
 }

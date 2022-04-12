@@ -8,6 +8,7 @@ import { useEffect } from 'react'
 import { Preloader } from '../../../components/Preloader/Preloader'
 import { Point } from '../../../components/Point/Point'
 import { UsersActionType } from '../reducers/usersReducer'
+import uniqid from 'uniqid'
 
 export default function Table() {
   const {data, status} = useFetch<User[]>(UserURL.AllUsers)
@@ -61,7 +62,7 @@ export default function Table() {
                 </div>
                 {[name, surname].map(value => {
                   return (
-                    <div className={styles.column}>
+                    <div key={uniqid()} className={styles.column}>
                       <Point value={value} editMode={selected ? editMode : false}/>
                     </div>
                 )})}
