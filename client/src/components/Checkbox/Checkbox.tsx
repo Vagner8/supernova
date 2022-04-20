@@ -1,26 +1,30 @@
+import { ChangeHandler } from '../../share/shareTypes';
 import styles from './Checkbox.module.sass';
 
 interface PropsCheckbox {
-    id: string
-    label?: string
-    selected: boolean
-    selectUsers: (id: string) => () => void
+  id: string;
+  label?: string;
+  selected: boolean;
+  onChange: ChangeHandler;
 }
 
 export function Checkbox({
-  id, label, selected, selectUsers,
-} : PropsCheckbox) {
+  id, label, selected, onChange,
+}: PropsCheckbox) {
   return (
-    <label
-      data-action="selected"
-      className={styles.label}
-    >
+    <label htmlFor={id} data-action="selected" className={styles.label}>
       <input
         type="checkbox"
+        id={id}
         checked={selected}
-        onChange={selectUsers(id)}
+        onChange={onChange}
+        aria-label={id}
       />
-      <span>{ label }</span>
+      <span>{label}</span>
     </label>
   );
 }
+
+Checkbox.defaultProps = {
+  label: '',
+};

@@ -13,39 +13,39 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
-const useMongo_1 = require("../db/useMongo");
+const useCollection_1 = require("../db/useCollection");
 const router = express_1.default.Router();
-router.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.get("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const cursor = yield useMongo_1.usersDB.find();
-        const users = yield cursor.toArray();
-        res.json(users);
+        console.log('get users');
+        const users = yield (yield useCollection_1.usersCollection.find()).toArray();
+        // const users = await (await testCollection.find()).toArray();
+        const dropList = yield (yield useCollection_1.dropListCollection.find()).toArray();
+        res.json({ users, dropList });
     }
     catch (err) {
-        console.error(req.query, err.message);
+        console.dir(err);
     }
     finally {
-        yield useMongo_1.usersDB.close();
+        yield useCollection_1.usersCollection.close();
+        yield useCollection_1.dropListCollection.close();
     }
 }));
-router.get('/profile?:userId', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.get('/?:userId', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { userId } = req.query;
-        const user = yield useMongo_1.usersDB.findOne(userId);
-        res.json(user);
-        yield useMongo_1.usersDB.close();
+        console.log(userId);
     }
     catch (err) {
-        console.error(req.query, err.message);
+        console.dir(err);
     }
     finally {
-        yield useMongo_1.usersDB.close();
     }
 }));
-router.post('/post', (req, res) => {
-    console.log(req.body);
-    res.json('ok');
-});
+// router.post('/post', (req, res) => {
+//   console.log(req.body)
+//   res.json('ok')
+// })
 // router.put('/put', (req, res) => {
 // })
 // router.delete('/delete', (req, res) => {

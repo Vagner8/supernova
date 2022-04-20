@@ -1,0 +1,14 @@
+@use 'src/sass/variables' as v
+@use 'src/sass/mixins' as m
+
+.Menu_Component
+  height: 64px
+  .burger_button
+    @include m.inviseble-button()
+    height: 100%
+  .nav
+    position: fixed
+    top: 0
+    z-index: 999
+  .ul
+    z-index: 1002

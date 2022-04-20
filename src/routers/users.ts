@@ -1,38 +1,42 @@
-import express from 'express'
-import { User } from '../db/types'
-import { usersDB } from '../db/useMongo'
+import express from "express";
+import {
+  usersCollection,
+  dropListCollection,
+  testCollection,
+} from "../db/useCollection";
 
-const router = express.Router()
+const router = express.Router();
 
-router.get('/', async (req, res) => {
+router.get("/", async (req, res) => {
   try {
-    const cursor = await usersDB.find()
-    const users = await cursor.toArray()
-    res.json(users)
+    console.log('get users');
+    const users = await (await usersCollection.find()).toArray();
+    // const users = await (await testCollection.find()).toArray();
+    const dropList = await (await dropListCollection.find()).toArray();
+    res.json({ users, dropList });
   } catch (err) {
-    console.error(req.query, err.message)
+    console.dir(err);
   } finally {
-    await usersDB.close()
+    await usersCollection.close();
+    await dropListCollection.close();
   }
-})
+});
 
-router.get('/profile?:userId', async (req, res) => {
+router.get('/?:userId', async (req, res) => {
   try {
     const { userId } = req.query
-    const user = await usersDB.findOne<User>(userId as string)
-    res.json(user)
-    await usersDB.close()
+    console.log(userId)
   } catch (err) {
-    console.error(req.query, err.message)
+    console.dir(err);
   } finally {
-    await usersDB.close()
+    
   }
 })
 
-router.post('/post', (req, res) => {
-  console.log(req.body)
-  res.json('ok')
-})
+// router.post('/post', (req, res) => {
+//   console.log(req.body)
+//   res.json('ok')
+// })
 
 // router.put('/put', (req, res) => {
 
@@ -42,4 +46,4 @@ router.post('/post', (req, res) => {
 //     console.log(req.body)
 // })
 
-export default router
+export default router;

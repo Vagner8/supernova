@@ -11,36 +11,50 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.settingsDB = exports.usersDB = void 0;
 const mongodb_1 = require("mongodb");
+const settings_1 = require("./settings");
 const types_1 = require("./types");
 class UseMongo {
     constructor(cluster, collection) {
         this.cluster = cluster;
         this.collection = collection;
-        this.client = new mongodb_1.MongoClient('mongodb+srv://vagner:knedlik110507@server-super-admin.wmlhf.mongodb.net/myFirstDatabase?retryWrites=true&w=majority');
+        // public client = new MongoClient('mongodb+srv://vagner:knedlik110507@server-super-admin.wmlhf.mongodb.net/myFirstDatabase?retryWrites=true&w=majority');
+        this.client = new mongodb_1.MongoClient(settings_1.url);
+        this.docs = [
+            { stars: 3, categories: ["Bakery", "Sandwiches"], name: "Rising Sun Bakery" },
+            { stars: 4, categories: ["Bakery", "Cafe", "Bar"], name: "Cafe au Late" },
+            { stars: 5, categories: ["Coffee", "Bakery"], name: "Liz's Coffee Bar" },
+            { stars: 3, categories: ["Steak", "Seafood"], name: "Oak Steakhouse" },
+            { stars: 4, categories: ["Bakery", "Dessert"], name: "Petit Cookie" },
+        ];
     }
-    connection() {
+    run() {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 yield this.client.connect();
-                const db = this.client.db(this.cluster);
-                const collection = db.collection(this.collection);
+                const cluster = this.client.db(this.cluster);
+                const collection = cluster.collection(this.collection);
+                console.info(`Connected to collection: ${collection.collectionName}`);
                 return collection;
             }
             catch (err) {
-                console.error(err.stack);
+                throw new Error(err);
             }
         });
     }
     find() {
         return __awaiter(this, void 0, void 0, function* () {
-            const col = yield this.connection();
-            return col.find();
+            const collection = yield this.run();
+            const pipeline = [
+                { $match: { users: { name: "Arnold" } } },
+                { $group: { _id: "$id", count: { $sum: 1 } } }
+            ];
+            return collection.aggregate(pipeline);
         });
     }
     findOne(query) {
         return __awaiter(this, void 0, void 0, function* () {
-            const col = yield this.connection();
-            return col.findOne({ _id: new mongodb_1.ObjectId(query) });
+            const col = yield this.run();
+            return col.findOne({ _id: new mongodb_1.ObjectId("6259e128bb9dfb1871c0983a") });
         });
     }
     close() {

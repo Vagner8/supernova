@@ -1,22 +1,17 @@
 import { TextInput } from '../Inputs/TextInput';
 
 interface Props {
-  value: string
-  name?: string
-  img?: string | null
-  editMode: boolean
+  value: string;
+  name?: string;
+  img?: string | null;
+  editMode: boolean;
 }
 
 export function Point({
   value, name, img, editMode,
 }: Props) {
   if (editMode) {
-    return (
-      <TextInput
-        name={name}
-        initialValue={value}
-      />
-    );
+    return <TextInput name={name} initialValue={value} />;
   }
   return (
     <>
@@ -29,8 +24,15 @@ export function Point({
             {' '}
             {value}
           </p>
-        ) : value}
+        ) : (
+          value
+        )}
       </div>
     </>
   );
 }
+
+Point.defaultProps = {
+  img: '',
+  name: '',
+};

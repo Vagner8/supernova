@@ -1,13 +1,12 @@
-import {
-  FormEvent, memo, useLayoutEffect, useState,
-} from 'react';
+import { FormEvent, useLayoutEffect, useState } from 'react';
+import M from 'materialize-css';
 
 interface Props {
-  name?: string
-  initialValue: string
+  name?: string;
+  initialValue: string;
 }
 
-export const TextInput = memo(({ name, initialValue } : Props) => {
+export function TextInput({ name, initialValue }: Props) {
   const [value, setValue] = useState(initialValue);
 
   useLayoutEffect(() => {
@@ -29,8 +28,13 @@ export const TextInput = memo(({ name, initialValue } : Props) => {
           onChange={onChange}
         />
         <label htmlFor="first_name">{name}</label>
-        {/* <span className="helper-text" data-error="wrong" data-success="right"></span> */}
+        {/* <span className="helper-text" data-error="wrong"
+         data-success="right"></span> */}
       </div>
     </form>
   );
-});
+}
+
+TextInput.defaultProps = {
+  name: '',
+};

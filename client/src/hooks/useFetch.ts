@@ -1,27 +1,30 @@
 import { useEffect, useState } from 'react';
 
 export enum FetchStatus {
-    Idle = 'idle',
-    Pending = 'pending',
-    Fulfilled = 'fulfilled',
-    Error = 'error'
+  Idle = 'idle',
+  Pending = 'pending',
+  Fulfilled = 'fulfilled',
+  Error = 'error',
 }
 
-export function useFetch<T>(url: string) {
-  const [data, setData] = useState<T>();
-  const [status, setStatus] = useState<FetchStatus>(FetchStatus.Idle);
-  const [num, setNum] = useState(0);
+export enum UsersAPI {
+  Users = '/users',
+  Profile = '/users/profile',
+  DeleteUser = '/users/delete',
+  PostUser = '/users/post',
+  Settings = '/settings',
+}
 
-  function reset() {
-    setNum(Math.random());
-  }
+export function useFetch(url: string) {
+  const [data, setData] = useState<unknown>();
+  const [status, setStatus] = useState<FetchStatus>(FetchStatus.Idle);
 
   useEffect(() => {
     async function fetchData() {
       setStatus(FetchStatus.Pending);
       try {
-        const res = await fetch(url);
-        const json = await res.json();
+        const responses = await fetch(url);
+        const json = await responses.json();
         setData(json);
         setStatus(FetchStatus.Fulfilled);
       } catch (err) {
@@ -29,11 +32,10 @@ export function useFetch<T>(url: string) {
       }
     }
     fetchData();
-  }, [url, num]);
+  }, [url]);
 
   return {
     data,
     status,
-    reset,
   };
 }

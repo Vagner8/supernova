@@ -3,11 +3,14 @@
         "Actionlist",
         "browserslist",
         "Datepicker",
+        "dehaze",
         "knedlik",
         "linebreak",
         "navlink",
+        "Sidenav",
         "uniqid",
         "vagner",
         "wmlhf"
-    ]
+    ],
+    "editor.tabSize": 2
 }
