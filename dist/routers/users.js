@@ -13,33 +13,34 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
-const useCollection_1 = require("../db/useCollection");
+const useDataBase_1 = require("./../db/useDataBase");
 const router = express_1.default.Router();
 router.get("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        console.log('get users');
-        const users = yield (yield useCollection_1.usersCollection.find()).toArray();
-        // const users = await (await testCollection.find()).toArray();
-        const dropList = yield (yield useCollection_1.dropListCollection.find()).toArray();
-        res.json({ users, dropList });
+        // const users = await useUsersDB.find(UsersCollections.Personal)
+        // res.json(await users.toArray())
+        res.json({
+            photo: 'D:/Open Server 5.3.5/OSPanel/domains/server-super-admin/src/img/terminator.jpg'
+        });
     }
     catch (err) {
         console.dir(err);
     }
     finally {
-        yield useCollection_1.usersCollection.close();
-        yield useCollection_1.dropListCollection.close();
+        yield useDataBase_1.useUsersDB.close();
     }
 }));
-router.get('/?:userId', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.get("/profile", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { userId } = req.query;
-        console.log(userId);
+        if (req.query.userId === "new") {
+            yield useDataBase_1.useUsersDB.createDB();
+        }
     }
     catch (err) {
         console.dir(err);
     }
     finally {
+        yield useDataBase_1.useUsersDB.close();
     }
 }));
 // router.post('/post', (req, res) => {

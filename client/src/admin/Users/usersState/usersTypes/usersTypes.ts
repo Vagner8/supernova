@@ -39,19 +39,13 @@ export interface DropItem {
 }
 
 export interface UsersState {
-  users: User[];
+  users: User[] | undefined;
   dropList: DropItem[];
-  profile: User | null;
   isAllUsersSelected: boolean;
   editMode: boolean;
+  isFetching: boolean;
+  isError: false | Error;
 }
-
-export type Personal = Pick<User, 'name' | 'surname' | '_id'>;
-export type Origin = Pick<User, 'birth' | 'address'>;
-export type Contacts = Pick<User, 'registration' | 'email' | 'phone'>;
-export type Settings = Pick<User, 'img' | 'disabled'>;
-
-export type Points = Personal | Origin | Contacts;
 
 export interface Content {
   Preloader: ReactElement;

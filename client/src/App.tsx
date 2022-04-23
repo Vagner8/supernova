@@ -1,8 +1,8 @@
 import './App.sass';
-import { AdminRoutes } from './admin/Admin';
+import { Admin } from './admin/Admin';
 
 function App() {
-  return <AdminRoutes />;
+  return <Admin />;
 }
 
 export default App;

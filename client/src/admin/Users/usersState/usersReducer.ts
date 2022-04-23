@@ -3,18 +3,46 @@ import { adjustDropList } from './actionHandlers/dropListActionHandlers';
 import {
   DropListActionType,
   ProfileActionType,
-  TableActionType,
+  UsersActionType,
   Todo,
   UsersReducerActions,
   UsersState,
 } from './usersTypes';
 
 export const usersInitState: UsersState = {
-  users: [],
-  dropList: [],
-  profile: null,
+  users: undefined,
+  dropList: [
+    {
+      _id: '625a8ba08e3031cf45cf1565',
+      todo: Todo.New,
+      disabled: false,
+      always: true,
+    },
+    {
+      _id: '625a8c5a8e3031cf45cf1566',
+      todo: Todo.Edit,
+      disabled: true,
+      bulk: true,
+      single: true,
+    },
+    {
+      _id: '625a8caf8e3031cf45cf1567',
+      todo: Todo.Copy,
+      disabled: true,
+      single: true,
+    },
+    {
+      _id: '625a8cbb8e3031cf45cf1568',
+      todo: Todo.Delete,
+      disabled: true,
+      single: true,
+      bulk: true,
+    },
+  ],
   isAllUsersSelected: false,
   editMode: false,
+  isFetching: false,
+  isError: false,
 };
 
 export const usersReducer: Reducer<UsersState, UsersReducerActions> = (
@@ -22,14 +50,23 @@ export const usersReducer: Reducer<UsersState, UsersReducerActions> = (
   action,
 ) => {
   switch (action.type) {
-    case TableActionType.SetData:
+    case UsersActionType.SetData:
       return {
         ...state,
-        ...action.payload,
+        users: action.payload.users,
       };
-    case TableActionType.SelectionUsers:
-      const { id } = action.payload;
-      if (id === 'all') {
+    case UsersActionType.SetFetching:
+      return {
+        ...state,
+        isFetching: action.payload.isFetching,
+      };
+    case UsersActionType.SetError:
+      return {
+        ...state,
+        isError: action.payload.isError,
+      };
+    case UsersActionType.SelectionUsers:
+      if (action.payload.id === 'all') {
         return {
           ...state,
           isAllUsersSelected: !state.isAllUsersSelected,
@@ -52,22 +89,6 @@ export const usersReducer: Reducer<UsersState, UsersReducerActions> = (
           return user;
         }),
       };
-    case TableActionType.SelectOne:
-      return {
-        ...state,
-        users: state.users.map((user) => {
-          if (user._id === action.payload) {
-            return {
-              ...user,
-              selected: (user.selected = true),
-            };
-          }
-          return {
-            ...user,
-            selected: (user.selected = false),
-          };
-        }),
-      };
     case DropListActionType.AdjustDropList:
       return adjustDropList(state, action.payload.numberSelectedUsers);
     case DropListActionType.ToggleEditMode:
@@ -81,7 +102,7 @@ export const usersReducer: Reducer<UsersState, UsersReducerActions> = (
     case ProfileActionType.SetData:
       return {
         ...state,
-        profile: action.payload,
+        users: [action.payload],
       };
     default:
       return state;

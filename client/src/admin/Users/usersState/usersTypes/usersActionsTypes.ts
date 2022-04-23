@@ -1,40 +1,47 @@
-import { DropItem, User } from '.';
+import { User } from '.';
 
-export enum TableActionType {
+export enum UsersActionType {
   SetData = 'TableSetData',
-  SelectionUsers = 'TableSelection',
-  SelectOne = 'TableSelectOne',
+  SetFetching = 'SetFetching',
+  SetError = 'SetError',
+  SelectionUsers = 'SelectionUsers',
   MassSelection = 'TableMassSelection',
 }
 
 export interface TableSetData {
-  type: TableActionType.SetData;
-  payload: {users: User[]; dropList: DropItem[]};
+  type: UsersActionType.SetData;
+  payload: { users: User[] };
 }
 
 export interface TableItemsSelection {
-  type: TableActionType.SelectionUsers;
+  type: UsersActionType.SelectionUsers;
   payload: { id: string };
 }
 
-export interface SelectOneUser {
-  type: TableActionType.SelectOne;
-  payload: string;
+export interface UsersMassSelection {
+  type: UsersActionType.MassSelection;
 }
 
-export interface UsersMassSelection {
-  type: TableActionType.MassSelection;
+export interface SetFetching {
+  type: UsersActionType.SetFetching;
+  payload: { isFetching: boolean };
+}
+
+export interface SetError {
+  type: UsersActionType.SetError;
+  payload: { isError: Error };
 }
 
 type UsersActions =
   | TableSetData
   | TableItemsSelection
-  | SelectOneUser
-  | UsersMassSelection;
+  | UsersMassSelection
+  | SetFetching
+  | SetError;
 
 export enum DropListActionType {
   AdjustDropList = 'AdjustDropList',
-  ToggleEditMode = 'ToggleEditMode'
+  ToggleEditMode = 'ToggleEditMode',
 }
 
 export interface AdjustDropList {
@@ -44,7 +51,7 @@ export interface AdjustDropList {
 
 export interface ToggleEditMode {
   type: DropListActionType.ToggleEditMode;
-  payload: {id: string};
+  payload: { id: string };
 }
 
 type DropListActions = AdjustDropList | ToggleEditMode;
@@ -57,8 +64,7 @@ export interface SetProfileData {
   type: ProfileActionType.SetData;
   payload: User;
 }
-
-type ProfileActions = SetProfileData
+type ProfileActions = SetProfileData;
 
 export type UsersReducerActions =
   | UsersActions

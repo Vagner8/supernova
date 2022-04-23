@@ -1,43 +1,82 @@
-import { DropList } from '../../components/DropList/DropList';
-import { ChangeHandler, ClickHandler } from '../../share/shareTypes';
-import { useAdminContext } from '../Admin';
-import { TableUsers } from './TableUsers/TableUsers';
+import { Dispatch, useEffect } from 'react';
+import { Preloader } from '../../components/Preloader/Preloader';
+import {
+  TableListHeader,
+  TableListRow,
+} from '../../components/TableList/TableList';
+import { useFetchUsers, UsersAPI } from '../../hooks/useFetchUsers';
+import { ChangeHandler } from '../../share/shareTypes';
 import styles from './Users.module.sass';
 import {
+  UsersActionType,
+  User,
+  UsersReducerActions,
+  UsersState,
   DropListActionType,
-  TableActionType,
-  Todo,
 } from './usersState/usersTypes';
 
-export default function Users() {
-  const {
-    users: {
-      state: { users, dropList, editMode, isAllUsersSelected },
-      dispatch,
-    },
-  } = useAdminContext();
+interface UsersTableProps {
+  users: User[];
+  isAllUsersSelected: boolean;
+  selectUsers: ChangeHandler;
+  usersDispatch: Dispatch<UsersReducerActions>
+}
 
-  const onClickDropdown: ClickHandler = ({ target }) => {
-    const { id } = target as HTMLButtonElement;
-    if (id) {
-      dispatch({
-        type: DropListActionType.ToggleEditMode,
-        payload: { id },
-      });
-    }
-  };
+function UsersTable({
+  users,
+  isAllUsersSelected,
+  selectUsers,
+  usersDispatch,
+}: UsersTableProps) {
+  useEffect(() => {
+    usersDispatch({
+      type: DropListActionType.AdjustDropList,
+      payload: {
+        numberSelectedUsers: users.filter((user) => user.selected).length,
+      },
+    });
+  }, [usersDispatch, users]);
+  return (
+    <div className={styles.UsersTable_Component}>
+      <ul className={styles.list}>
+        <TableListHeader selected={isAllUsersSelected} onChange={selectUsers} />
+        {users.map((user) => {
+          const { _id, selected, img } = user;
+          const columns = ['_id', 'name', 'surname', 'email'];
+          return (
+            <TableListRow
+              id={_id}
+              key={_id}
+              selected={selected}
+              img={img}
+              columns={Object.entries(user)
+                .map(([key, value]) => {
+                  if (columns.includes(key)) return value;
+                  return false;
+                })
+                .filter((value) => value)}
+              onChange={selectUsers}
+            />
+          );
+        })}
+      </ul>
+    </div>
+  );
+}
 
-  function setDropItemTitle(todo: string): string {
-    if (todo === Todo.Edit) {
-      return editMode ? 'edit off' : 'edit on';
-    }
-    return todo;
-  }
+interface UsersProps {
+  usersState: UsersState;
+  usersDispatch: Dispatch<UsersReducerActions>;
+}
+
+export default function Users({ usersState, usersDispatch }: UsersProps) {
+  const { users, isAllUsersSelected, isFetching } = usersState;
+  useFetchUsers(usersDispatch, UsersAPI.Users);
 
   const selectUsers: ChangeHandler = ({ target }) => {
     if (target) {
-      dispatch({
-        type: TableActionType.SelectionUsers,
+      usersDispatch({
+        type: UsersActionType.SelectionUsers,
         payload: { id: target.id },
       });
     }
@@ -45,17 +84,16 @@ export default function Users() {
 
   return (
     <div className={styles.Users_Module}>
-      <DropList
-        title="Actions"
-        dropList={dropList ?? []}
-        onClickDropdown={onClickDropdown}
-        setDropItemTitle={setDropItemTitle}
-      />
-      <TableUsers
-        isAllUsersSelected={isAllUsersSelected}
-        users={users}
-        selectUsers={selectUsers}
-      />
+      {!users || isFetching ? (
+        <Preloader />
+      ) : (
+        <UsersTable
+          users={users}
+          isAllUsersSelected={isAllUsersSelected}
+          selectUsers={selectUsers}
+          usersDispatch={usersDispatch}
+        />
+      )}
     </div>
   );
 }

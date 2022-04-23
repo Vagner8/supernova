@@ -9,10 +9,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.testCollection = exports.dropListCollection = exports.usersCollection = void 0;
 const mongodb_1 = require("mongodb");
+// import { users } from "./mockData";
 const settings_1 = require("./settings");
-const types_1 = require("./types");
 class UseCollection {
     constructor(cluster, collection) {
         this.cluster = cluster;
@@ -24,6 +23,7 @@ class UseCollection {
             try {
                 yield this.client.connect();
                 const cluster = this.client.db(this.cluster);
+                console.info(`Connected to collection: ${cluster.databaseName}`);
                 const collection = cluster.collection(this.collection);
                 console.info(`Connected to collection: ${collection.collectionName}`);
                 return collection;
@@ -44,13 +44,32 @@ class UseCollection {
             }
         });
     }
+    // public async findOne(query: Object, options: any) {
+    //   try {
+    //     const collection = await this.run();
+    //     return collection.findOne(query, options);
+    //   } catch (err) {
+    //     console.dir(err);
+    //   }
+    // }
+    // public async insertUsers() {
+    //   try {
+    //     const collection = await this.run();
+    //     collection.insertMany(users);
+    //   } catch (err) {}
+    // }
+    // public async lookup(query: Object[]) {
+    //   try {
+    //     const collection = await this.run();
+    //     return collection.aggregate(query)
+    //   } catch (err) {
+    //     console.dir(err);
+    //   }
+    // }
     close() {
         return __awaiter(this, void 0, void 0, function* () {
             yield this.client.close();
         });
     }
 }
-exports.usersCollection = new UseCollection(types_1.Clusters.ServerSuperAdmin, types_1.Collections.Users);
-exports.dropListCollection = new UseCollection(types_1.Clusters.ServerSuperAdmin, types_1.Collections.DropList);
-exports.testCollection = new UseCollection(types_1.Clusters.ServerSuperAdmin, types_1.Collections.Test);
 //# sourceMappingURL=useCollection.js.map

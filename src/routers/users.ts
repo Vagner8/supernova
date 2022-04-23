@@ -1,37 +1,35 @@
-import express from "express";
-import {
-  usersCollection,
-  dropListCollection,
-  testCollection,
-} from "../db/useCollection";
+import express, { Request } from "express";
+import { newUser } from "./../db/data/usersData";
+import { useUsersDB } from "./../db/useDataBase";
+import { ProfileRequest, UsersCollections } from "./../db/usersTypes";
 
 const router = express.Router();
 
 router.get("/", async (req, res) => {
   try {
-    console.log('get users');
-    const users = await (await usersCollection.find()).toArray();
-    // const users = await (await testCollection.find()).toArray();
-    const dropList = await (await dropListCollection.find()).toArray();
-    res.json({ users, dropList });
+    // const users = await useUsersDB.find(UsersCollections.Personal)
+    // res.json(await users.toArray())
+    res.json({
+      photo: 'D:/Open Server 5.3.5/OSPanel/domains/server-super-admin/src/img/terminator.jpg'
+    })
   } catch (err) {
     console.dir(err);
   } finally {
-    await usersCollection.close();
-    await dropListCollection.close();
+    await useUsersDB.close();
   }
 });
 
-router.get('/?:userId', async (req, res) => {
+router.get("/profile", async (req: ProfileRequest, res) => {
   try {
-    const { userId } = req.query
-    console.log(userId)
+    if (req.query.userId === "new") {
+      await useUsersDB.createDB();
+    }
   } catch (err) {
     console.dir(err);
   } finally {
-    
+    await useUsersDB.close();
   }
-})
+});
 
 // router.post('/post', (req, res) => {
 //   console.log(req.body)

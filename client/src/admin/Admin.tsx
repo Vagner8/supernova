@@ -1,67 +1,69 @@
-import React, { Dispatch, lazy, Suspense, useEffect, useReducer } from 'react';
-import { Outlet, Route, Routes, useOutletContext } from 'react-router-dom';
+import React, { lazy, Suspense, useReducer } from 'react';
+import { Route, Routes } from 'react-router-dom';
+import { DropList } from '../components/DropList/DropList';
 import { Menu } from '../components/Menu/Menu';
 import { Preloader } from '../components/Preloader/Preloader';
-import { FetchStatus, useFetch, UsersAPI } from '../hooks/useFetch';
 import { Profile } from './Profile/Profile';
-import { TableActionType, UsersReducerActions } from './Users/usersState/usersTypes/usersActionsTypes';
 import { usersInitState, usersReducer } from './Users/usersState/usersReducer';
-import {
-  DropItem,
-  User,
-  UsersState,
-} from './Users/usersState/usersTypes';
+import styles from './Admin.module.sass';
+import { DropListActionType, Todo } from './Users/usersState/usersTypes';
+import { ClickHandler } from '../share/shareTypes';
 
 const Home = lazy(() => import('./Home/Home'));
 const Settings = lazy(() => import('./Settings/Settings'));
 const Users = lazy(() => import('./Users/Users'));
 
-interface UseAdminContext {
-  users: {
-    state: UsersState;
-    status: FetchStatus;
-    dispatch: Dispatch<UsersReducerActions>;
-  };
-}
-
-export function useAdminContext() {
-  return useOutletContext<UseAdminContext>();
-}
-
 export function Admin() {
-  const { data, status } = useFetch(UsersAPI.Users);
-  const [state, dispatch] = useReducer(usersReducer, usersInitState);
-  useEffect(() => {
-    dispatch({
-      type: TableActionType.SetData,
-      payload: data as { users: User[]; dropList: DropItem[] },
-    });
-  }, [data]);
+  const [usersState, usersDispatch] = useReducer(usersReducer, usersInitState);
+
+  function setDropItemTitle(todo: string): string {
+    if (todo === Todo.Edit) {
+      return usersState.editMode ? 'edit off' : 'edit on';
+    }
+    return todo;
+  }
+
+  const onClickDropdown: ClickHandler = ({ target }) => {
+    const { id } = target as HTMLButtonElement;
+    if (id) {
+      usersDispatch({
+        type: DropListActionType.ToggleEditMode,
+        payload: { id },
+      });
+    }
+  };
 
   return (
-    <Outlet
-      context={{
-        users: { state, status, dispatch },
-      }}
-    />
-  );
-}
-
-export function AdminRoutes() {
-  return (
-    <div className="App_Component">
-      <div className="app_menu">
+    <div className="Admin_Component">
+      <div className="Admin_menu">
         <Menu />
       </div>
-      <div className="app_body">
+      <DropList
+        title="Actions"
+        dropList={usersState.dropList ?? []}
+        onClickDropdown={onClickDropdown}
+        setDropItemTitle={setDropItemTitle}
+      />
+      <div className={styles.Admin_Component}>
         <Suspense fallback={<Preloader />}>
           <Routes>
-            <Route path="admin" element={<Admin />}>
-              <Route index element={<Home />} />
-              <Route path="users" element={<Users />} />
-              <Route path="profile/:userId" element={<Profile />} />
-              <Route path="settings" element={<Settings />} />
-            </Route>
+            <Route path="admin" element={<Home />} />
+            <Route
+              path="admin/users"
+              element={
+                <Users usersState={usersState} usersDispatch={usersDispatch} />
+              }
+            />
+            <Route
+              path="admin/profile/:userId"
+              element={(
+                <Profile
+                  usersState={usersState}
+                  usersDispatch={usersDispatch}
+                />
+              )}
+            />
+            <Route path="admin/settings" element={<Settings />} />
           </Routes>
         </Suspense>
       </div>

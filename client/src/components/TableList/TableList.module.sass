@@ -1,36 +1,24 @@
-@use 'src/sass/variables' as v
-.Table_Component
-  ul.list
-    border: none
-    height: 3000px
-  .item
-    display: flex
-    justify-content: space-between
-  .left
-    display: flex
-    align-items: center
-  .right
-    flex: 1
-    display: flex
-    align-items: center
-    position: relative
-    div
-      margin-right: 20px
-    &:hover
-      color: v.$green-color
+@use 'src/sass/variables' as V
+
+.TableListRow_Component
+  display: flex
+  .img
+    border-radius: 50%
+    width: 50px
+    height: 50px
   .column
-    flex: 3
-  .image
     display: flex
-    align-items: center
-    img
-      border-radius: 50%
-      width: 42px
-      height: 42px
-  .navlink
-    position: absolute
-    display: block
-    top: 0
-    bottom: 0
-    right: 0
-    left: 0
+    align-content: center
+    flex: 1
+    margin: 0 15px
+
+.TableListRow_Component
+  min-height: 75px
+  display: flex
+  align-items: center
+  .NavLink
+    display: flex
+    flex: 1
+    color: V.$text-color
+    &:hover
+      color: V.$green-color

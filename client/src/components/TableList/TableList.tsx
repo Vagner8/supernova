@@ -1,6 +1,7 @@
+import { NavLink } from 'react-router-dom';
+import uniqid from 'uniqid';
 import { Checkbox } from '../Checkbox/Checkbox';
 import { ChangeHandler } from '../../share/shareTypes';
-import { User } from '../../admin/Users/usersState/usersTypes';
 import styles from './TableList.module.sass';
 
 interface TableListHeaderProps {
@@ -10,8 +11,13 @@ interface TableListHeaderProps {
 
 export function TableListHeader({ selected, onChange }: TableListHeaderProps) {
   return (
-    <li className="collection-item">
-      <Checkbox id="all" selected={selected} onChange={onChange} />
+    <li className={styles.TableListHeader_Component}>
+      <Checkbox
+        label="select all"
+        id="all"
+        selected={selected}
+        onChange={onChange}
+      />
     </li>
   );
 }
@@ -20,46 +26,32 @@ interface TableRowProps {
   id: string;
   columns: string[];
   selected: boolean;
+  img?: string;
   onChange: ChangeHandler;
 }
 
-function TableRow({ id, columns, selected, onChange }: TableRowProps) {
+export function TableListRow({
+  id,
+  img,
+  columns,
+  selected,
+  onChange,
+}: TableRowProps) {
   return (
-    <li key={id} className={`${styles.item} collection-item`}>
-      <div className={styles.left}>
-        <Checkbox id={id} selected={selected} onChange={onChange} />
-      </div>
-      {columns.map((column) => (
-        <div>{column}</div>
-      ))}
+    <li className={styles.TableListRow_Component}>
+      <Checkbox id={id} selected={selected} onChange={onChange} />
+      <NavLink className={styles.NavLink} to={`/admin/profile/${id}`}>
+        {img ? <img className={styles.img} src={img} alt="" /> : null}
+        {columns.map((column) => (
+          <div key={uniqid()} className={styles.column}>
+            <p>{column}</p>
+          </div>
+        ))}
+      </NavLink>
     </li>
   );
 }
 
-interface TableListBodyProps {
-  rows: User[];
-  columns: string[];
-  onChange: ChangeHandler;
-}
-
-export function TableListBody({ rows, columns, onChange }: TableListBodyProps) {
-  return (
-    <>
-      {rows.map((row) => {
-        const { _id, selected } = row;
-        return (
-          <TableRow
-            key={_id}
-            id={_id}
-            columns={Object.entries(row).map(([key, value]) => {
-              if (columns.includes(key)) return value;
-              return false;
-            }).filter((value) => value)}
-            selected={selected}
-            onChange={onChange}
-          />
-        );
-      })}
-    </>
-  );
-}
+TableListRow.defaultProps = {
+  img: '',
+};

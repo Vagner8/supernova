@@ -1,68 +1,112 @@
-// import { ReactElement, useEffect } from 'react';
-// import { useParams } from 'react-router-dom';
-// import uniqid from 'uniqid';
-// import { Point } from '../../components/Point/Point';
-// import { Preloader } from '../../components/Preloader/Preloader';
-// import { FetchStatus, useFetch, UsersAPI } from '../../hooks/useFetch';
-// import { pointsOfUser } from '../helpers';
-// import { useUserContext } from '../Users/Users';
-// import {
-//   Points,
-//   ProfileActionType,
-//   User,
-//   TableActionType,
-// } from '../Users/usersState/usersTypes';
-// import styles from './Profile.module.sass';
+import { Dispatch, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import uniqid from 'uniqid';
+import { Field } from '../../components/Field/Field';
+import { DatePicker } from '../../components/Inputs/DatePicker';
+import { TextInput } from '../../components/Inputs/TextInput';
+import { Preloader } from '../../components/Preloader/Preloader';
+import { useFetchUsers, UsersAPI } from '../../hooks/useFetchUsers';
+import {
+  DropListActionType,
+  UsersReducerActions,
+  UsersState,
+} from '../Users/usersState/usersTypes';
+import styles from './Profile.module.sass';
 
-export function Profile() {
+interface FieldProps {
+  title: string;
+  value: string;
+  editMode: boolean;
+  textInput: string[];
+  datePicker: string[];
+  stable: string[];
+}
+
+function Fields({
+  title,
+  value,
+  editMode,
+  textInput,
+  datePicker,
+  stable,
+}: FieldProps) {
+  if (title.match(/img/i)) {
+    return (
+      <li>
+        <img src={value} alt={title} />
+      </li>
+    );
+  }
+  if (!editMode) {
+    return (
+      <li>
+        <Field title={title} value={value} />
+      </li>
+    );
+  }
+
+  if (editMode) {
+    if (stable.includes(title)) {
+      return <Field title={title} value={value} />;
+    }
+    if (textInput.includes(title)) {
+      return <TextInput label={title} initialValue={value} />;
+    }
+    if (datePicker.includes(title)) {
+      return <DatePicker label={title} initialValue={value} />;
+    }
+  }
+
   return null;
-  // const { userId } = useParams();
-  // const { data, status } = useFetch(`${UsersAPI.Profile}?userId=${userId}`);
-  // const {
-  //   dispatch,
-  //   state: { profile, editMode },
-  // } = useUserContext();
-
-  // useEffect(() => {
-  //   dispatch({ type: ProfileActionType.SetData, payload: data as User });
-  // }, [dispatch, data]);
-
-  // useEffect(() => {
-  //   if (userId) {
-  //     dispatch({ type: TableActionType.SelectOne, payload: userId });
-  //   }
-  // }, [dispatch, userId]);
-
-  // if (!profile || status !== FetchStatus.Fulfilled) {
-  //   return <Preloader />;
-  // }
-
-  // const { points, img } = pointsOfUser(profile);
-
-  // function buildPoint(point: Points): ReactElement[] {
-  //   return Object.entries(point).map(([key, value]) => (
-  //     <Point
-  //       key={uniqid()}
-  //       img={key === 'name' ? img : null}
-  //       value={value}
-  //       name={key}
-  //       editMode={editMode}
-  //     />
-  //   ));
-  // }
 
   // return (
-  //   <div className={styles.ProfileComponent}>
-  //     <ul className="collection">
-  //       {points.map((point) => (
-  //         <li
-  //           key={uniqid()}
-  //           className={`${styles.point} collection-item avatar`}
-  //         >
-  //           {buildPoint(point)}
-  //         </li>
-  //       ))}
-  //     </ul>
-  //   </div>
+  //   <li>
+  //     {noInput.includes(title) || !editMode ? (
+  //       <Field title={title} value={value} />
+  //     ) : (
+  //       <TextInput label={title} initialValue={value} />
+  //     )}
+  //   </li>
   // );
+}
+
+interface ProfileProps {
+  usersState: UsersState;
+  usersDispatch: Dispatch<UsersReducerActions>;
+}
+
+export function Profile({ usersState, usersDispatch }: ProfileProps) {
+  const { userId } = useParams();
+  useFetchUsers(usersDispatch, `${UsersAPI.Profile}?userId=${userId}`);
+  const { users, isFetching, editMode } = usersState;
+
+  useEffect(() => {
+    usersDispatch({
+      type: DropListActionType.AdjustDropList,
+      payload: {
+        numberSelectedUsers: 1,
+      },
+    });
+  }, [usersDispatch, users]);
+
+  if (!users || isFetching) return <Preloader />;
+  return (
+    <div className={styles.Profile_Component}>
+      <ul>
+        {Object.entries(users[0]).map(([key, value]) => {
+          return (
+            <Fields
+              key={uniqid()}
+              title={key}
+              value={value}
+              editMode={editMode}
+              textInput={['name', 'surname', 'phone', 'address']}
+              datePicker={['birth']}
+              stable={['_id', 'registration']}
+            />
+          );
+        })}
+      </ul>
+    </div>
+  );
 }
