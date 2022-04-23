@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { ChangeHandler } from '../../share/shareTypes';
 import { initializeApp } from 'firebase/app';
-import { getStorage, ref, uploadBytes, listAll } from 'firebase/storage'
+import { getStorage, ref, uploadBytes } from 'firebase/storage'
 import uniqid from 'uniqid';
 
 const firebaseConfig = {
@@ -34,7 +34,6 @@ export function Uploader() {
     for await (let image of images) {
       const imageRef = ref(storage, `img/${image.name}${uniqid()}`)
       await uploadBytes(imageRef, image)
-      console.log('ураааааа!')
     }
   }
 
