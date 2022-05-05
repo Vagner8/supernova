@@ -13,16 +13,16 @@ const admin = (
   </MemoryRouter>
 );
 
-// describe('Users errors test', () => {
-//   beforeEach(() => {
-//     mockFetch(mockUsers);
-//   });
-//   afterEach(() => {
-//     cleanup();
-//   });
-//   it('get empty array of users from server', async () => {
-//     render(admin);
-//     await act(() => Promise.resolve());
-//     await waitFor(() => expect(screen.getByText('Sylvester')));
-//   });
-// });
+describe.skip('Users errors test', () => {
+  beforeEach(() => {
+    mockFetch(mockUsers);
+  });
+  afterEach(() => {
+    cleanup();
+  });
+  it('get empty array of users from server', async () => {
+    render(admin);
+    await act(() => Promise.resolve());
+    await waitFor(() => expect(screen.getByText('Sylvester')));
+  });
+});

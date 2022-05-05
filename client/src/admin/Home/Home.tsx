@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react';
 import { Uploader } from '../../components/Uploader/Uploader';
 
 export default function Home() {

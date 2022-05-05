@@ -1,8 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { ChangeHandler } from '../../share/shareTypes';
 import { initializeApp } from 'firebase/app';
-import { getStorage, ref, uploadBytes } from 'firebase/storage'
+import { getStorage, ref, uploadBytes } from 'firebase/storage';
 import uniqid from 'uniqid';
+import styles from './Uploader.module.sass';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyDhZ-LsToHMH4zNzb_rDTTfegPrZrG6hzE',
@@ -18,9 +19,6 @@ const storage = getStorage(app);
 
 export function Uploader() {
   const [images, setImages] = useState<any>(null);
-  useEffect(() => {
-
-  }, [])
 
   const onChange: ChangeHandler = ({ target }) => {
     if (target.files) {
@@ -32,13 +30,13 @@ export function Uploader() {
   async function upload() {
     if (images === null) return;
     for await (let image of images) {
-      const imageRef = ref(storage, `img/${image.name}${uniqid()}`)
-      await uploadBytes(imageRef, image)
+      const imageRef = ref(storage, `img/${image.name}${uniqid()}`);
+      await uploadBytes(imageRef, image);
     }
   }
 
   return (
-    <>
+    <div className={styles.Uploader_Component}>
       <div className="file-field input-field">
         <div className="btn">
           <span>File</span>
@@ -54,6 +52,6 @@ export function Uploader() {
       </div>
 
       <button onClick={upload}>button</button>
-    </>
+    </div>
   );
 }

@@ -1,16 +1,18 @@
 import { User } from '.';
+import { UsersForTable } from './usersTypes';
 
 export enum UsersActionType {
-  SetData = 'TableSetData',
+  SetUsersForTable = 'SetUsersForTable',
   SetFetching = 'SetFetching',
   SetError = 'SetError',
   SelectionUsers = 'SelectionUsers',
   MassSelection = 'TableMassSelection',
+  SwitchUserStatus = 'SwitchUserStatus'
 }
 
 export interface TableSetData {
-  type: UsersActionType.SetData;
-  payload: { users: User[] };
+  type: UsersActionType.SetUsersForTable;
+  payload: { usersForTable: UsersForTable[] };
 }
 
 export interface TableItemsSelection {
@@ -32,12 +34,18 @@ export interface SetError {
   payload: { isError: Error };
 }
 
+export interface SwitchUserStatus {
+  type: UsersActionType.SwitchUserStatus;
+  payload: { userId: string };
+}
+
 type UsersActions =
   | TableSetData
   | TableItemsSelection
   | UsersMassSelection
   | SetFetching
-  | SetError;
+  | SetError
+  | SwitchUserStatus;
 
 export enum DropListActionType {
   AdjustDropList = 'AdjustDropList',

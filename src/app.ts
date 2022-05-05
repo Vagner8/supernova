@@ -1,9 +1,9 @@
+import 'dotenv/config'
 import express from "express";
 import users from "./routers/users";
-import multer from "multer";
 
 const app = express();
-const port = process.env.PORT || 5000;
+const port = process.env.PORT;
 
 app.use(express.json());
 app.use("/users", users);

@@ -76,37 +76,38 @@ interface ProfileProps {
 }
 
 export function Profile({ usersState, usersDispatch }: ProfileProps) {
-  const { userId } = useParams();
-  useFetchUsers(usersDispatch, `${UsersAPI.Profile}?userId=${userId}`);
-  const { users, isFetching, editMode } = usersState;
+  return null
+  // const { userId } = useParams();
+  // useFetchUsers(usersDispatch, `${UsersAPI.Profile}?userId=${userId}`);
+  // const { users, isFetching, editMode } = usersState;
 
-  useEffect(() => {
-    usersDispatch({
-      type: DropListActionType.AdjustDropList,
-      payload: {
-        numberSelectedUsers: 1,
-      },
-    });
-  }, [usersDispatch, users]);
+  // useEffect(() => {
+  //   usersDispatch({
+  //     type: DropListActionType.AdjustDropList,
+  //     payload: {
+  //       numberSelectedUsers: 1,
+  //     },
+  //   });
+  // }, [usersDispatch, users]);
 
-  if (!users || isFetching) return <Preloader />;
-  return (
-    <div className={styles.Profile_Component}>
-      <ul>
-        {Object.entries(users[0]).map(([key, value]) => {
-          return (
-            <Fields
-              key={uniqid()}
-              title={key}
-              value={value}
-              editMode={editMode}
-              textInput={['name', 'surname', 'phone', 'address']}
-              datePicker={['birth']}
-              stable={['_id', 'registration']}
-            />
-          );
-        })}
-      </ul>
-    </div>
-  );
+  // if (!users || isFetching) return <Preloader />;
+  // return (
+  //   <div className={styles.Profile_Component}>
+  //     <ul>
+  //       {Object.entries(users[0]).map(([key, value]) => {
+  //         return (
+  //           <Fields
+  //             key={uniqid()}
+  //             title={key}
+  //             value={value}
+  //             editMode={editMode}
+  //             textInput={['name', 'surname', 'phone', 'address']}
+  //             datePicker={['birth']}
+  //             stable={['_id', 'registration']}
+  //           />
+  //         );
+  //       })}
+  //     </ul>
+  //   </div>
+  // );
 }

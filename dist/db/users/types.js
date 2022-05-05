@@ -9,7 +9,7 @@ var UsersCollections;
 (function (UsersCollections) {
     UsersCollections["Personal"] = "personal";
     UsersCollections["Setting"] = "setting";
-    UsersCollections["Contact"] = "contact";
+    UsersCollections["Contacts"] = "contact";
     UsersCollections["Address"] = "Address";
     UsersCollections["Security"] = "Security";
 })(UsersCollections = exports.UsersCollections || (exports.UsersCollections = {}));

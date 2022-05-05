@@ -1,18 +1,20 @@
-import styles from './Switch.module.sass';
+import { ChangeHandler } from '../../share/shareTypes';
+import styles from './switch.module.sass';
 
 interface Props {
-    label: string
+  id: string
+  checked: boolean;
+  onChange: ChangeHandler
 }
 
-export function Switch({ label } : Props) {
+export function Switch({ id, checked, onChange }: Props) {
   return (
     <div className={`${styles.SwitchComponent} switch`}>
-      <p className={styles.label}>{label}</p>
       <label>
-        no
-        <input type="checkbox" />
+        off
+        <input id={id} type="checkbox" checked={checked} onChange={onChange}/>
         <span className="lever" />
-        yes
+        on
       </label>
     </div>
   );

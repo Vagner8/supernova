@@ -10,7 +10,7 @@ import {
 } from './usersTypes';
 
 export const usersInitState: UsersState = {
-  users: undefined,
+  usersForTable: undefined,
   dropList: [
     {
       _id: '625a8ba08e3031cf45cf1565',
@@ -50,10 +50,10 @@ export const usersReducer: Reducer<UsersState, UsersReducerActions> = (
   action,
 ) => {
   switch (action.type) {
-    case UsersActionType.SetData:
+    case UsersActionType.SetUsersForTable:
       return {
         ...state,
-        users: action.payload.users,
+        usersForTable: action.payload.usersForTable,
       };
     case UsersActionType.SetFetching:
       return {
@@ -70,7 +70,7 @@ export const usersReducer: Reducer<UsersState, UsersReducerActions> = (
         return {
           ...state,
           isAllUsersSelected: !state.isAllUsersSelected,
-          users: state.users?.map((user) => ({
+          usersForTable: state.usersForTable?.map((user) => ({
             ...user,
             selected: !state.isAllUsersSelected,
           })),
@@ -79,8 +79,8 @@ export const usersReducer: Reducer<UsersState, UsersReducerActions> = (
       return {
         ...state,
         isAllUsersSelected: false,
-        users: state.users?.map((user) => {
-          if (user._id === action.payload.id) {
+        usersForTable: state.usersForTable?.map((user) => {
+          if (user.userId === action.payload.id) {
             return {
               ...user,
               selected: !user.selected,
@@ -89,6 +89,19 @@ export const usersReducer: Reducer<UsersState, UsersReducerActions> = (
           return user;
         }),
       };
+    case UsersActionType.SwitchUserStatus:
+      return {
+        ...state,
+        usersForTable: state.usersForTable?.map(user => {
+          if (user.userId === action.payload.userId) {
+            return {
+              ...user,
+              disabled: !user.disabled
+            }
+          }
+          return user
+        })
+      }
     case DropListActionType.AdjustDropList:
       return adjustDropList(state, action.payload.numberSelectedUsers);
     case DropListActionType.ToggleEditMode:

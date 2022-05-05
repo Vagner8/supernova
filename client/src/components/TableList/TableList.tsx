@@ -3,6 +3,8 @@ import uniqid from 'uniqid';
 import { Checkbox } from '../Checkbox/Checkbox';
 import { ChangeHandler } from '../../share/shareTypes';
 import styles from './TableList.module.sass';
+import { Switch } from '../Switch/Switch';
+import { Status } from '../Status/Status';
 
 interface TableListHeaderProps {
   selected: boolean;
@@ -24,30 +26,44 @@ export function TableListHeader({ selected, onChange }: TableListHeaderProps) {
 
 interface TableRowProps {
   id: string;
-  columns: string[];
+  img: string;
   selected: boolean;
-  img?: string;
-  onChange: ChangeHandler;
+  disabled: boolean;
+  columns: string[];
+  onChangeCheckbox: ChangeHandler;
+  onChangeSwitch: ChangeHandler;
 }
 
 export function TableListRow({
   id,
   img,
-  columns,
   selected,
-  onChange,
+  columns,
+  disabled,
+  onChangeCheckbox,
+  onChangeSwitch,
 }: TableRowProps) {
   return (
     <li className={styles.TableListRow_Component}>
-      <Checkbox id={id} selected={selected} onChange={onChange} />
+      <Checkbox id={id} selected={selected} onChange={onChangeCheckbox} />
       <NavLink className={styles.NavLink} to={`/admin/profile/${id}`}>
         {img ? <img className={styles.img} src={img} alt="" /> : null}
-        {columns.map((column) => (
-          <div key={uniqid()} className={styles.column}>
-            <p>{column}</p>
-          </div>
-        ))}
+        {columns.map((column) => {
+          if (column === 'status') {
+            return (
+              <div key={uniqid()} className={styles.column}>
+                <Status disabled={disabled} />
+              </div>
+            )
+          }
+          return (
+            <div key={uniqid()} className={styles.column}>
+              <p>{column}</p>
+            </div>
+          );
+        })}
       </NavLink>
+      <Switch id={id} checked={!disabled} onChange={onChangeSwitch} />
     </li>
   );
 }

@@ -2,19 +2,40 @@ import { ReactElement } from 'react';
 
 export interface User {
   _id: string;
+  img: string;
+  userId: string;
   name: string;
   surname: string;
+  birth: string;
+
+  city: string;
+  zip: string;
+  street: string;
+  numberHouse: string;
+
+  phone: string;
   email: string;
-  password: string;
+
+  registration: string;
+  role: string;
   selected: boolean;
   disabled: boolean;
-  phone: string;
-  registration: string;
-  address: string;
-  role: string;
-  birth: string;
-  img: string;
+
+  password: string;
 }
+
+export type UsersForTable = Pick<
+  User,
+  | 'userId'
+  | 'name'
+  | 'surname'
+  | 'phone'
+  | 'email'
+  | 'img'
+  | 'selected'
+  | 'disabled'
+  | 'role'
+>;
 
 export enum Todo {
   Edit = 'edit',
@@ -39,7 +60,7 @@ export interface DropItem {
 }
 
 export interface UsersState {
-  users: User[] | undefined;
+  usersForTable: UsersForTable[] | undefined;
   dropList: DropItem[];
   isAllUsersSelected: boolean;
   editMode: boolean;

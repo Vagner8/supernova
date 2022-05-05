@@ -13,36 +13,34 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
+const types_1 = require("./../db/types");
 const useDataBase_1 = require("./../db/useDataBase");
 const router = express_1.default.Router();
 router.get("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        // const users = await useUsersDB.find(UsersCollections.Personal)
-        // res.json(await users.toArray())
-        res.json({
-            photo: 'D:/Open Server 5.3.5/OSPanel/domains/server-super-admin/src/img/terminator.jpg'
-        });
+        const users = yield useDataBase_1.useSuperAdmin.find(types_1.Collections.Users);
+        res.json(yield users.toArray());
     }
-    catch (err) {
-        console.dir(err);
+    catch (error) {
+        console.dir(error);
+        res.status(500).json({ error, message: error.message });
     }
     finally {
-        yield useDataBase_1.useUsersDB.close();
+        yield useDataBase_1.useSuperAdmin.close();
     }
 }));
-router.get("/profile", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        if (req.query.userId === "new") {
-            yield useDataBase_1.useUsersDB.createDB();
-        }
-    }
-    catch (err) {
-        console.dir(err);
-    }
-    finally {
-        yield useDataBase_1.useUsersDB.close();
-    }
-}));
+// router.get("/profile", async (req: ProfileRequest, res) => {
+//   try {
+//     if (req.query.userId === "new") {
+//       await useUsersDB.createDB();
+//       res.json('useUsersDB has been created')
+//     }
+//   } catch (err) {
+//     console.dir(err);
+//   } finally {
+//     await useUsersDB.close();
+//   }
+// });
 // router.post('/post', (req, res) => {
 //   console.log(req.body)
 //   res.json('ok')
