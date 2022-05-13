@@ -1,11 +1,24 @@
-function cache() {
-  let data
-  return function(callback) {
-    data = 1
-    return data
-  }
-}
+const inputs = [
+  {
+    label: 'name',
+    type: 'text',
+    value: 'f',
+    error: false,
+    helperText: ' ',
+  },
+  {
+    label: 'password',
+    type: 'password',
+    value: 'f',
+    error: false,
+    helperText: ' ',
+  },
+]
 
-const a = cache()
 
-console.log(a())
+let a = inputs.reduce((acc, input) => {
+  acc[input.label] = input.value
+  return acc
+}, {})
+
+console.log(a)

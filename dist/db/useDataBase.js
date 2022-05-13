@@ -11,34 +11,22 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.useSuperAdmin = void 0;
 const mongodb_1 = require("mongodb");
-const errorHandlers_1 = require("./../share/errorHandlers");
-const settings_1 = require("./settings");
+const dbSettings_1 = require("./dbSettings");
 const types_1 = require("./types");
-class useDataBase {
+class UseDB {
     constructor(dataBase) {
         this.dataBase = dataBase;
-        this.client = new mongodb_1.MongoClient(settings_1.url);
+        this.client = new mongodb_1.MongoClient(dbSettings_1.url);
     }
-    connectDB() {
+    getCollection(collectionName) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 yield this.client.connect();
-                return this.client.db(this.dataBase);
+                const db = this.client.db(this.dataBase);
+                return db.collection(collectionName);
             }
-            catch (_a) {
-                (0, errorHandlers_1.throwError)(this.connectDB.name, this.dataBase);
-            }
-        });
-    }
-    find(collectionName) {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                const db = yield this.connectDB();
-                const collection = db.collection(collectionName);
-                return collection.find();
-            }
-            catch (_a) {
-                (0, errorHandlers_1.throwError)(this.find.name);
+            catch (err) {
+                console.log(err);
             }
         });
     }
@@ -48,5 +36,5 @@ class useDataBase {
         });
     }
 }
-exports.useSuperAdmin = new useDataBase(types_1.DataBase.SuperAdmin);
+exports.useSuperAdmin = new UseDB(types_1.DataBase.SuperAdmin);
 //# sourceMappingURL=useDataBase.js.map

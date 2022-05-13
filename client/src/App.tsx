@@ -1,5 +1,5 @@
-import './App.sass';
 import { Admin } from './admin/Admin';
+import './App.css';
 
 function App() {
   return <Admin />;

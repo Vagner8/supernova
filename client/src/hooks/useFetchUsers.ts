@@ -39,6 +39,7 @@ export const useFetchUsers: UseFetchUsers = (usersDispatch, action, url) => {
         }),
     };
   }, [usersDispatch])
+  
   useEffect(() => {
     async function fetchData() {
       try {

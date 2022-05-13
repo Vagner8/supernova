@@ -1,10 +1,6 @@
 import { Dispatch, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import uniqid from 'uniqid';
-import { Field } from '../../components/Field/Field';
-import { DatePicker } from '../../components/Inputs/DatePicker';
-import { TextInput } from '../../components/Inputs/TextInput';
-import { Preloader } from '../../components/Preloader/Preloader';
 import { useFetchUsers, UsersAPI } from '../../hooks/useFetchUsers';
 import {
   DropListActionType,
@@ -30,32 +26,32 @@ function Fields({
   datePicker,
   stable,
 }: FieldProps) {
-  if (title.match(/img/i)) {
-    return (
-      <li>
-        <img src={value} alt={title} />
-      </li>
-    );
-  }
-  if (!editMode) {
-    return (
-      <li>
-        <Field title={title} value={value} />
-      </li>
-    );
-  }
+  // if (title.match(/img/i)) {
+  //   return (
+  //     <li>
+  //       <img src={value} alt={title} />
+  //     </li>
+  //   );
+  // }
+  // if (!editMode) {
+  //   return (
+  //     <li>
+  //       <Field title={title} value={value} />
+  //     </li>
+  //   );
+  // }
 
-  if (editMode) {
-    if (stable.includes(title)) {
-      return <Field title={title} value={value} />;
-    }
-    if (textInput.includes(title)) {
-      return <TextInput label={title} initialValue={value} />;
-    }
-    if (datePicker.includes(title)) {
-      return <DatePicker label={title} initialValue={value} />;
-    }
-  }
+  // if (editMode) {
+  //   if (stable.includes(title)) {
+  //     return <Field title={title} value={value} />;
+  //   }
+  //   if (textInput.includes(title)) {
+  //     return <TextInput label={title} initialValue={value} />;
+  //   }
+  //   if (datePicker.includes(title)) {
+  //     return <DatePicker label={title} initialValue={value} />;
+  //   }
+  // }
 
   return null;
 

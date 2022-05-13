@@ -1,28 +1,18 @@
 import { MongoClient } from "mongodb";
-import { throwError } from "./../share/errorHandlers";
-import { url } from "./settings";
+import { url } from "./dbSettings";
 import { Collections, DataBase } from "./types";
 
-class useDataBase {
+class UseDB {
   public client = new MongoClient(url);
   constructor(public dataBase: DataBase) {}
 
-  public async connectDB() {
+  public async getCollection<T>(collectionName: Collections) {
     try {
       await this.client.connect();
-      return this.client.db(this.dataBase);
-    } catch {
-      throwError(this.connectDB.name, this.dataBase)
-    }
-  }
-
-  public async find(collectionName: Collections) {
-    try {
-      const db = await this.connectDB();
-      const collection = db.collection(collectionName)
-      return collection.find()
-    } catch {
-      throwError(this.find.name)
+      const db = this.client.db(this.dataBase);
+      return db.collection<T>(collectionName)
+    } catch (err) {
+      console.log(err)
     }
   }
 
@@ -31,4 +21,4 @@ class useDataBase {
   }
 }
 
-export const useSuperAdmin = new useDataBase(DataBase.SuperAdmin);
+export const useSuperAdmin = new UseDB(DataBase.SuperAdmin);

@@ -8,5 +8,6 @@ var DataBase;
 var Collections;
 (function (Collections) {
     Collections["Users"] = "users";
+    Collections["Owners"] = "owners";
 })(Collections = exports.Collections || (exports.Collections = {}));
 //# sourceMappingURL=types.js.map

@@ -1,20 +1,26 @@
-import React, { lazy, Suspense, useReducer } from 'react';
+import React, { lazy, Suspense, useReducer, useState } from 'react';
 import { Route, Routes } from 'react-router-dom';
-import { DropList } from '../components/DropList/DropList';
-import { Menu } from '../components/Menu/Menu';
-import { Preloader } from '../components/Preloader/Preloader';
-import { Profile } from './Profile/Profile';
 import { usersInitState, usersReducer } from './Users/usersState/usersReducer';
 import styles from './Admin.module.sass';
 import { DropListActionType, Todo } from './Users/usersState/usersTypes';
 import { ClickHandler } from '../share/shareTypes';
+import { Auth } from './Auth/Auth';
 
 const Home = lazy(() => import('./Home/Home'));
 const Settings = lazy(() => import('./Settings/Settings'));
-const Users = lazy(() => import('./Users/Users'));
+// const Users = lazy(() => import('./Users/Users'));
+
+export interface Owner {
+  name: string;
+  ownerId: string;
+}
 
 export function Admin() {
   const [usersState, usersDispatch] = useReducer(usersReducer, usersInitState);
+  const [owner, setOwner] = useState<Owner>({
+    name: '',
+    ownerId: '',
+  })
 
   function setDropItemTitle(todo: string): string {
     if (todo === Todo.Edit) {
@@ -33,28 +39,21 @@ export function Admin() {
     }
   };
 
+  if (!owner.ownerId) return <Auth setOwner={setOwner}/>
+
   return (
     <div className="Admin_Component">
-      <div className="Admin_menu">
-        <Menu />
-      </div>
-      <DropList
-        title="Actions"
-        dropList={usersState.dropList ?? []}
-        onClickDropdown={onClickDropdown}
-        setDropItemTitle={setDropItemTitle}
-      />
       <div className={styles.Admin_Component}>
-        <Suspense fallback={<Preloader />}>
+        <Suspense fallback={'<Preloader />'}>
           <Routes>
-            <Route path="admin" element={<Home />} />
-            <Route
+            <Route path="admin/home" element={<Home />} />
+            {/* <Route
               path="admin/users"
               element={
                 <Users usersState={usersState} usersDispatch={usersDispatch} />
               }
-            />
-            <Route
+            /> */}
+            {/* <Route
               path="admin/profile/:userId"
               element={(
                 <Profile
@@ -62,7 +61,7 @@ export function Admin() {
                   usersDispatch={usersDispatch}
                 />
               )}
-            />
+            /> */}
             <Route path="admin/settings" element={<Settings />} />
           </Routes>
         </Suspense>

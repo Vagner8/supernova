@@ -5,8 +5,10 @@
         "browserslist",
         "Damme",
         "Datepicker",
+        "DBSTRING",
         "dehaze",
         "firebaseapp",
+        "fontsource",
         "Karlovy",
         "knedlik",
         "Lazenska",
@@ -17,6 +19,7 @@
         "Sidenav",
         "Tfeg",
         "uniqid",
+        "uuidv",
         "vagner",
         "wmlhf",
         "wtimeout"
