@@ -14,8 +14,12 @@
   width: 100%;
 }
 
-.Input.active .field {
+.active .field {
   border-bottom: 1px solid #26a69a;
+}
+
+.field.error {
+  border-bottom: 1px solid #F44336;
 }
 
 .label {
@@ -25,9 +29,13 @@
   transition-duration: 100ms;
 }
 
-.Input.active .label {
+.active .label {
   color: #26a69a;
   font-size: 12px;
   top: -10px;
   transition-duration: 100ms;
+}
+
+.label.error {
+  color: #F44336;
 }

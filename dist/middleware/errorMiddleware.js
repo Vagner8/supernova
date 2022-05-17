@@ -3,25 +3,24 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.errorMiddleware = exports.ValidationError = void 0;
 const mongodb_1 = require("mongodb");
 class ValidationError extends Error {
-    constructor(message, field) {
+    constructor(errorMessage, errorField) {
         super();
-        this.message = message;
-        this.field = field;
+        this.errorMessage = errorMessage;
+        this.errorField = errorField;
     }
 }
 exports.ValidationError = ValidationError;
 const errorMiddleware = (error, req, res, next) => {
+    console.log('errorMiddleware', 'errorMiddleware');
     if (error instanceof ValidationError) {
         return res.status(400).json({
-            error: true,
-            message: error.message,
-            field: error.field
+            errorMessage: error.errorMessage,
+            errorField: error.errorField,
         });
     }
     if (error instanceof mongodb_1.MongoAPIError) {
         return res.status(500).json({
-            error: true,
-            message: error.message,
+            errorMessage: error.message,
         });
     }
     next(error);

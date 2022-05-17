@@ -1,12 +1,19 @@
 import { Method } from './apiType';
 
-export async function fetchData<T>(
+interface Error {
+  errorMessage: string | null;
+  errorField: string | null
+}
+
+export async function postData<ReturnData>(
   method: Method,
   url: string,
   body?: any,
-): Promise<{ error: boolean; message: string, field: string } | T | undefined> {
-  console.log('fetchData');
-  
+): Promise<
+  | Error
+  | ReturnData
+  | undefined
+> {
   try {
     const response = await fetch(url, {
       method,

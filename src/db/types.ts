@@ -16,3 +16,14 @@ export interface ErrorMiddleware {
 export interface Middleware {
   (req: Request, res: Response, next: NextFunction): void
 }
+
+declare global {
+  namespace NodeJS {
+    interface ProcessEnv {
+      MONGO_USER: string;
+      MONGO_PASSWORD: string;
+      ACCESS: string;
+      REFRESH: string;
+    }
+  }
+}

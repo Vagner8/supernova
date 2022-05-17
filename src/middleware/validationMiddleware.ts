@@ -6,7 +6,7 @@ export enum ErrorName {
 }
 
 function validate(
-  field: "name" | "email" | "password",
+  errorField: "name" | "email" | "password",
   item: string | number,
   length: { min: number; max: number }
 ) {
@@ -14,23 +14,23 @@ function validate(
 
   if (str.length < length.min) {
     throw new ValidationError(
-      `min ${field} is ${length.min} characters`,
-      field
+      `min ${errorField} is ${length.min} characters`,
+      errorField
     );
   }
   if (str.length > length.max) {
     throw new ValidationError(
-      `max ${field} is ${length.max} characters`,
-      field
+      `max ${errorField} is ${length.max} characters`,
+      errorField,
     );
   }
 
-  switch (field) {
+  switch (errorField) {
     case "email":
       if (!str.split("").includes("@")) {
         throw new ValidationError(
-          `${field} is incorrect`,
-          field
+          `${errorField} is incorrect`,
+          errorField
         );
       }
   }

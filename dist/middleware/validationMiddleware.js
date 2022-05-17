@@ -6,18 +6,18 @@ var ErrorName;
 (function (ErrorName) {
     ErrorName["ValidationError"] = "Validation Error:";
 })(ErrorName = exports.ErrorName || (exports.ErrorName = {}));
-function validate(field, item, length) {
+function validate(errorField, item, length) {
     const str = item.toString();
     if (str.length < length.min) {
-        throw new errorMiddleware_1.ValidationError(`min ${field} is ${length.min} characters`, field);
+        throw new errorMiddleware_1.ValidationError(`min ${errorField} is ${length.min} characters`, errorField);
     }
     if (str.length > length.max) {
-        throw new errorMiddleware_1.ValidationError(`max ${field} is ${length.max} characters`, field);
+        throw new errorMiddleware_1.ValidationError(`max ${errorField} is ${length.max} characters`, errorField);
     }
-    switch (field) {
+    switch (errorField) {
         case "email":
             if (!str.split("").includes("@")) {
-                throw new errorMiddleware_1.ValidationError(`${field} is incorrect`, field);
+                throw new errorMiddleware_1.ValidationError(`${errorField} is incorrect`, errorField);
             }
     }
 }

@@ -1,16 +1,16 @@
 import { MongoClient } from "mongodb";
-import { url } from "./dbSettings";
+import { url } from "./settings";
 import { Collections, DataBase } from "./types";
 
-class UseDB {
+export class UseDB {
   public client = new MongoClient(url);
   constructor(public dataBase: DataBase) {}
 
-  public async getCollection<T>(collectionName: Collections) {
+  public async getCollection<C>(collectionName: Collections) {
     try {
       await this.client.connect();
       const db = this.client.db(this.dataBase);
-      return db.collection<T>(collectionName)
+      return db.collection<C>(collectionName)
     } catch (err) {
       console.log(err)
     }

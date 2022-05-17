@@ -13,7 +13,7 @@ export function Visibility({
 }: VisibilityProps) {
   return (
     <button onClick={onClick} className={styles.Visibility} type='button'>
-      {visibility ? <Icon icon="visibility" /> : <Icon icon="visibility_off" />}
+      <Icon icon={visibility ? "visibility_off" : "visibility" }/>
     </button>
   );
 }

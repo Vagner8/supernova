@@ -1,15 +1,24 @@
-import { ChangeEvent, FocusEvent, MouseEvent, useState } from 'react';
-import { Visibility } from 'UIKit/Visibility/Visibility';
+import { ChangeEvent, FocusEvent, useState } from 'react';
+import { Visibility } from 'UIKit';
 import styles from './Input.module.css';
 
 interface InputProps {
   label: string;
   value: string;
+  errorField: string | null;
+  errorMessage: string | null;
   type?: 'password';
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
 }
 
-export function Input({ type, value, label, onChange }: InputProps) {
+export function Input({
+  type,
+  value,
+  label,
+  errorField,
+  errorMessage,
+  onChange,
+}: InputProps) {
   const [active, setActive] = useState('');
   const [hidePassword, setHidePassword] = useState(true);
   const onFocus = () => {
@@ -20,22 +29,45 @@ export function Input({ type, value, label, onChange }: InputProps) {
       setActive('');
     }
   };
+
   const onClick = () => {
     setHidePassword(!hidePassword);
   };
 
-  const switchInputType = (a: boolean) => {
-    return a ? 'password' : 'text';
+  const switchInputType = (trigger: boolean) => {
+    return trigger ? 'password' : 'text';
+  };
+
+  const showError = (
+    message: string | null,
+    field: string | null,
+    inputLabel: string,
+  ): boolean => {
+    if (message && !field) {
+      return true;
+    }
+    if (message && field) {
+      return field === inputLabel ? true : false;
+    }
+    return false;
   };
 
   return (
-    <div className={`${styles.Input} ${styles[active]}`}>
-      <label className={styles.label} htmlFor={label}>
-        {label}
+    <div role="group" className={`${styles.Input} ${styles[active]}`}>
+      <label
+        className={`${styles.label} ${
+          styles[showError(errorMessage, errorField, label) ? 'error' : '']
+        }`}
+        htmlFor={label}
+      >
+        {label}{' '}
+        {showError(errorMessage, errorField, label) ? `- ${errorMessage}` : null}
       </label>
       <input
         id={label}
-        className={styles.field}
+        className={`${styles.field} ${
+          styles[showError(errorMessage, errorField, label) ? 'error' : '']
+        }`}
         name={label}
         type={type === 'password' ? switchInputType(hidePassword) : type}
         value={value}

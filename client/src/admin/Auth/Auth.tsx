@@ -1,11 +1,10 @@
-import { Dispatch, FormEvent, SetStateAction, useReducer } from 'react';
-import styles from './Auth.module.css';
-import { ChangeHandler } from '../../share/shareTypes';
-import { authReducer, authInitState, AuthStringActions } from './authReducer';
-import { fetchData } from '../../api/api';
-import { AuthAPI, Method } from '../../api/apiType';
-import { Owner } from '../Admin';
-import { Button, Input } from 'UIKit';
+import { ChangeEvent, Dispatch, FormEvent, SetStateAction, useReducer } from 'react';
+import styles from 'admin/Auth/Auth.module.css';
+import { authReducer, authInitState, AuthStringActions } from 'admin/Auth/authReducer';
+import { Owner } from 'admin/Admin';
+import { Button, Input, Icon } from 'UIKit';
+import { postData } from 'api/api';
+import { AuthAPI, Method } from 'api/apiType';
 
 interface AuthProps {
   setOwner: Dispatch<SetStateAction<Owner>>;
@@ -14,14 +13,23 @@ interface AuthProps {
 export function Auth({ setOwner }: AuthProps) {
   const [authState, dispatch] = useReducer(authReducer, authInitState);
 
-  const onChange: ChangeHandler = ({ target }) => {
-    if (target) {
-      const { name, value } = target;
+  const onChange = (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.target) {
+      const { name, value } = e.target;
       dispatch({
         type: AuthStringActions.OnChangeInputs,
         payload: { inputName: name, inputValue: value },
       });
       dispatch({ type: AuthStringActions.IsSubmitDisabled });
+      if (authState.errorMessage) {
+        dispatch({
+          type: AuthStringActions.SetError,
+          payload: {
+            errorField: null,
+            errorMessage: null,
+          },
+        });
+      }
     }
   };
 
@@ -31,7 +39,10 @@ export function Auth({ setOwner }: AuthProps) {
       type: AuthStringActions.SetIsFetching,
       payload: { isFetching: true },
     });
-    const response = await fetchData<Owner>(Method.POST, AuthAPI.Registration);
+    const response = await postData<Owner>(Method.POST, AuthAPI.Registration, {
+      name: authState.inputs[0].value,
+      password: authState.inputs[1].value,
+    });
     dispatch({
       type: AuthStringActions.SetIsFetching,
       payload: { isFetching: false },
@@ -40,14 +51,14 @@ export function Auth({ setOwner }: AuthProps) {
       return dispatch({
         type: AuthStringActions.SetError,
         payload: {
-          error: true,
-          message: 'Unexpected error',
-          field: '',
+          errorMessage: 'Unexpected error',
+          errorField: null,
         },
       });
     }
-    if ('error' in response) {
-      return dispatch({ type: AuthStringActions.SetError, payload: response });
+    if ('errorMessage' in response) {
+      dispatch({ type: AuthStringActions.SetError, payload: response });
+      return;
     }
     setOwner(response);
   };
@@ -59,14 +70,21 @@ export function Auth({ setOwner }: AuthProps) {
         <form onSubmit={onSubmit}>
           {authState.inputs.map((input) => (
             <Input
-              label={input.label}
               key={input.label}
+              errorField={authState.errorField}
+              errorMessage={authState.errorMessage}
+              label={input.label}
               type={input.type}
               value={input.value}
               onChange={onChange}
             />
           ))}
-          <Button title="Send" type="submit" />
+          <Button
+            disabled={authState.disabledSubmit}
+            title="Send"
+            type="submit"
+            icon={<Icon icon="send" />}
+          />
         </form>
       </div>
     </div>

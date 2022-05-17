@@ -1,4 +1,7 @@
 .Button {
+  display: flex;
+  align-items: center;
+  letter-spacing: .5px;
   color: white;
   background-color: #2bbbad;
   border-radius: 2px;
@@ -14,4 +17,14 @@
 .Button.large {
   padding: 0 28px;
   height: 54px;
+}
+
+.icon {
+  margin-left: 0.75rem;
+}
+
+.Button.disabled {
+  background-color: #DFDFDF;
+  box-shadow: none;
+  color: #9F9F9F;
 }

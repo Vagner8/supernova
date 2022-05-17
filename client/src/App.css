@@ -11,6 +11,10 @@ button:hover {
   cursor: pointer;
 }
 
+p {
+  margin: 0;
+}
+
 h3 {
   font-size: 2.92rem;
   line-height: 110%;

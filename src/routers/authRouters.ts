@@ -1,9 +1,8 @@
 import express from "express";
-import { validationMiddleware } from "./../middleware/validationMiddleware";
-import { registrationPost } from "./../controllers/authControllers";
+import { authController } from "../controllers/authController";
 
 const router = express.Router();
 
-router.post("/registration", registrationPost);
+router.post("/registration", authController);
 
 export default router;

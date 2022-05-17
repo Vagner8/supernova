@@ -9,14 +9,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.useSuperAdmin = void 0;
+exports.useSuperAdmin = exports.UseDB = void 0;
 const mongodb_1 = require("mongodb");
-const dbSettings_1 = require("./dbSettings");
+const settings_1 = require("./settings");
 const types_1 = require("./types");
 class UseDB {
     constructor(dataBase) {
         this.dataBase = dataBase;
-        this.client = new mongodb_1.MongoClient(dbSettings_1.url);
+        this.client = new mongodb_1.MongoClient(settings_1.url);
     }
     getCollection(collectionName) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -36,5 +36,6 @@ class UseDB {
         });
     }
 }
+exports.UseDB = UseDB;
 exports.useSuperAdmin = new UseDB(types_1.DataBase.SuperAdmin);
 //# sourceMappingURL=useDataBase.js.map

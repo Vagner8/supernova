@@ -13,9 +13,17 @@ interface AuthInput {
   value: string;
 }
 
+interface AuthState {
+  inputs: AuthInput[];
+  disabledSubmit: boolean;
+  isFetching: boolean;
+  errorMessage: string | null;
+  errorField: string | null;
+}
+
 interface SetError {
   type: AuthStringActions.SetError;
-  payload: { error: boolean; message: string; field: string };
+  payload: Pick<AuthState, 'errorMessage' | 'errorField'>;
 }
 
 interface ChangeInputs {
@@ -29,7 +37,7 @@ interface isSubmitDisabled {
 
 interface SetIsFetching {
   type: AuthStringActions.SetIsFetching;
-  payload: { isFetching: boolean };
+  payload: Pick<AuthState, 'isFetching'>;
 }
 
 type AuthReducerActions =
@@ -37,14 +45,6 @@ type AuthReducerActions =
   | isSubmitDisabled
   | SetError
   | SetIsFetching;
-
-interface AuthState {
-  inputs: AuthInput[];
-  disabledSubmit: boolean;
-  isFetching: boolean;
-  error: boolean;
-  message: string;
-}
 
 export const authInitState: AuthState = {
   inputs: [
@@ -60,8 +60,8 @@ export const authInitState: AuthState = {
   ],
   disabledSubmit: true,
   isFetching: false,
-  error: false,
-  message: '',
+  errorMessage: null,
+  errorField: null,
 };
 
 export const authReducer: Reducer<AuthState, AuthReducerActions> = (
@@ -70,11 +70,11 @@ export const authReducer: Reducer<AuthState, AuthReducerActions> = (
 ) => {
   switch (action.type) {
     case AuthStringActions.SetError:
-      const { error, message } = action.payload;
+      const { errorMessage, errorField } = action.payload;
       return {
         ...state,
-        error,
-        message,
+        errorMessage,
+        errorField,
       };
     case AuthStringActions.OnChangeInputs:
       const { inputName, inputValue } = action.payload;
