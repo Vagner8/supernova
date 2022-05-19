@@ -1,66 +1,66 @@
-import { ChangeEvent, Dispatch, FormEvent, SetStateAction, useReducer } from 'react';
+import { ChangeEvent, Dispatch, FormEvent, useReducer } from 'react';
 import styles from 'admin/Auth/Auth.module.css';
-import { authReducer, authInitState, AuthStringActions } from 'admin/Auth/authReducer';
-import { Owner } from 'admin/Admin';
+import {
+  authReducer,
+  authInitState,
+  AuthStrAction,
+} from 'admin/Auth/authReducer';
 import { Button, Input, Icon } from 'UIKit';
-import { postData } from 'api/api';
-import { AuthAPI, Method } from 'api/apiType';
+import { AuthAPI, fetchData } from 'api/fetchData';
+import {
+  AdminReducerActions,
+  AdminState,
+  AdminStrAction,
+  OwnerId,
+} from 'admin/adminReducer';
 
 interface AuthProps {
-  setOwner: Dispatch<SetStateAction<Owner>>;
+  adminDispatch: Dispatch<AdminReducerActions>;
+  adminState: AdminState;
 }
 
-export function Auth({ setOwner }: AuthProps) {
+export function Auth({ adminDispatch, adminState }: AuthProps) {
   const [authState, dispatch] = useReducer(authReducer, authInitState);
 
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
-    if (e.target) {
-      const { name, value } = e.target;
+    const { name, value } = e.target;
+    dispatch({
+      type: AuthStrAction.SetOnChange,
+      payload: { name, value },
+    });
+    if (authState.inputs.every((item) => item.value)) {
       dispatch({
-        type: AuthStringActions.OnChangeInputs,
-        payload: { inputName: name, inputValue: value },
+        type: AuthStrAction.SetDisabledSubmit,
+        payload: { disabledSubmit: false },
       });
-      dispatch({ type: AuthStringActions.IsSubmitDisabled });
-      if (authState.errorMessage) {
-        dispatch({
-          type: AuthStringActions.SetError,
-          payload: {
-            errorField: null,
-            errorMessage: null,
-          },
-        });
-      }
+    }
+    if (authState.formErr.errorMessage) {
+      dispatch({
+        type: AuthStrAction.SetFormErr,
+        payload: {
+          errorField: null,
+          errorMessage: null,
+        },
+      });
     }
   };
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    dispatch({
-      type: AuthStringActions.SetIsFetching,
-      payload: { isFetching: true },
-    });
-    const response = await postData<Owner>(Method.POST, AuthAPI.Registration, {
-      name: authState.inputs[0].value,
-      password: authState.inputs[1].value,
-    });
-    dispatch({
-      type: AuthStringActions.SetIsFetching,
-      payload: { isFetching: false },
-    });
-    if (!response) {
-      return dispatch({
-        type: AuthStringActions.SetError,
-        payload: {
-          errorMessage: 'Unexpected error',
-          errorField: null,
-        },
-      });
-    }
-    if ('errorMessage' in response) {
-      dispatch({ type: AuthStringActions.SetError, payload: response });
-      return;
-    }
-    setOwner(response);
+    const response = await fetchData<OwnerId>(
+      'POST',
+      AuthAPI.Registration,
+      adminDispatch,
+      {
+        name: authState.inputs[0].value,
+        password: authState.inputs[1].value,
+      },
+    );
+    // adminDispatch({ type: AdminStrAction.SetResponse, payload: response });
+    // adminDispatch({
+    //   type: AdminStrAction.SetIsFetching,
+    //   payload: { isFetching: false },
+    // });
   };
 
   return (
@@ -71,8 +71,8 @@ export function Auth({ setOwner }: AuthProps) {
           {authState.inputs.map((input) => (
             <Input
               key={input.label}
-              errorField={authState.errorField}
-              errorMessage={authState.errorMessage}
+              errorField={authState.formErr.errorField}
+              errorMessage={authState.formErr.errorMessage}
               label={input.label}
               type={input.type}
               value={input.value}

@@ -1,26 +1,33 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.errorMiddleware = exports.ValidationError = void 0;
-const mongodb_1 = require("mongodb");
-class ValidationError extends Error {
+exports.errorMiddleware = exports.FormErr = exports.Err = void 0;
+class Err extends Error {
+    constructor(errorMessage, logout) {
+        super();
+        this.errorMessage = errorMessage;
+        this.logout = logout;
+    }
+}
+exports.Err = Err;
+class FormErr extends Error {
     constructor(errorMessage, errorField) {
         super();
         this.errorMessage = errorMessage;
         this.errorField = errorField;
     }
 }
-exports.ValidationError = ValidationError;
+exports.FormErr = FormErr;
 const errorMiddleware = (error, req, res, next) => {
-    console.log('errorMiddleware', 'errorMiddleware');
-    if (error instanceof ValidationError) {
+    if (error instanceof FormErr) {
         return res.status(400).json({
             errorMessage: error.errorMessage,
             errorField: error.errorField,
         });
     }
-    if (error instanceof mongodb_1.MongoAPIError) {
-        return res.status(500).json({
-            errorMessage: error.message,
+    if (error instanceof Err) {
+        return res.status(401).json({
+            errorMessage: error.errorMessage,
+            logout: error.logout
         });
     }
     next(error);

@@ -1,23 +1,28 @@
-import { MongoAPIError } from "mongodb";
 import { ErrorMiddleware } from "./../db/types";
 
-export class ValidationError extends Error {
+export class Err extends Error {
+  constructor(public errorMessage: string, public logout: boolean) {
+    super();
+  }
+}
+
+export class FormErr extends Error {
   constructor(public errorMessage: string, public errorField: string | null) {
     super();
   }
 }
 
 export const errorMiddleware: ErrorMiddleware = (error, req, res, next) => {
-  console.log('errorMiddleware', 'errorMiddleware')
-  if (error instanceof ValidationError) {
+  if (error instanceof FormErr) {
     return res.status(400).json({
       errorMessage: error.errorMessage,
       errorField: error.errorField,
     });
   }
-  if (error instanceof MongoAPIError) {
-    return res.status(500).json({
-      errorMessage: error.message,
+  if (error instanceof Err) {
+    return res.status(401).json({
+      errorMessage: error.errorMessage,
+      logout: error.logout
     });
   }
   next(error);

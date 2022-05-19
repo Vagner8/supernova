@@ -1,13 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Collections = exports.DataBase = void 0;
+exports.CollName = exports.DataBase = void 0;
 var DataBase;
 (function (DataBase) {
     DataBase["SuperAdmin"] = "super-admin";
 })(DataBase = exports.DataBase || (exports.DataBase = {}));
-var Collections;
-(function (Collections) {
-    Collections["Users"] = "users";
-    Collections["Owners"] = "owners";
-})(Collections = exports.Collections || (exports.Collections = {}));
+var CollName;
+(function (CollName) {
+    CollName["Users"] = "users";
+    CollName["Owners"] = "owners";
+})(CollName = exports.CollName || (exports.CollName = {}));
 //# sourceMappingURL=types.js.map

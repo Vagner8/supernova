@@ -1,16 +1,16 @@
-import { MongoClient } from "mongodb";
+import { Collection, MongoClient } from "mongodb";
 import { url } from "./settings";
-import { Collections, DataBase } from "./types";
+import { CollName, DataBase, Owner } from "./types";
 
-export class UseDB {
+export class UseDB<Coll> {
   public client = new MongoClient(url);
   constructor(public dataBase: DataBase) {}
 
-  public async getCollection<C>(collectionName: Collections) {
+  public async connect(collectionName: CollName) {
     try {
       await this.client.connect();
       const db = this.client.db(this.dataBase);
-      return db.collection<C>(collectionName)
+      return db.collection<Coll>(collectionName)
     } catch (err) {
       console.log(err)
     }
@@ -21,4 +21,4 @@ export class UseDB {
   }
 }
 
-export const useSuperAdmin = new UseDB(DataBase.SuperAdmin);
+export const superAdmin = new UseDB<Owner>(DataBase.SuperAdmin);

@@ -22,10 +22,10 @@ const uuid_1 = require("uuid");
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const checkOwner = (owner, reqName, reqPassword) => {
     if (!owner) {
-        throw new errorMiddleware_1.ValidationError("owner in not exist", null);
+        throw new errorMiddleware_1.FormErr("owner in not exist", null);
     }
     if (owner.name !== reqName) {
-        throw new errorMiddleware_1.ValidationError("incorrect", "name");
+        throw new errorMiddleware_1.FormErr("incorrect", "name");
     }
     if (owner.ownerId && bcryptjs_1.default.compareSync(reqPassword, owner.password)) {
         return owner;
@@ -33,7 +33,7 @@ const checkOwner = (owner, reqName, reqPassword) => {
     if (!owner.ownerId && reqPassword === owner.password) {
         return owner;
     }
-    throw new errorMiddleware_1.ValidationError("incorrect", "password");
+    throw new errorMiddleware_1.FormErr("incorrect", "password");
 };
 const withOwnerId = (owner, res) => {
     res.status(200).json({ name: owner.name, ownerId: owner.ownerId });

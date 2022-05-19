@@ -4,20 +4,20 @@ exports.validationMiddleware = exports.ErrorName = void 0;
 const errorMiddleware_1 = require("./errorMiddleware");
 var ErrorName;
 (function (ErrorName) {
-    ErrorName["ValidationError"] = "Validation Error:";
+    ErrorName["FormErr"] = "Validation Error:";
 })(ErrorName = exports.ErrorName || (exports.ErrorName = {}));
 function validate(errorField, item, length) {
     const str = item.toString();
     if (str.length < length.min) {
-        throw new errorMiddleware_1.ValidationError(`min ${errorField} is ${length.min} characters`, errorField);
+        throw new errorMiddleware_1.FormErr(`min ${errorField} is ${length.min} characters`, errorField);
     }
     if (str.length > length.max) {
-        throw new errorMiddleware_1.ValidationError(`max ${errorField} is ${length.max} characters`, errorField);
+        throw new errorMiddleware_1.FormErr(`max ${errorField} is ${length.max} characters`, errorField);
     }
     switch (errorField) {
         case "email":
             if (!str.split("").includes("@")) {
-                throw new errorMiddleware_1.ValidationError(`${errorField} is incorrect`, errorField);
+                throw new errorMiddleware_1.FormErr(`${errorField} is incorrect`, errorField);
             }
     }
 }

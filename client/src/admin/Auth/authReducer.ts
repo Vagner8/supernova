@@ -1,10 +1,10 @@
+import { FormErr } from 'api/fetchData';
 import { Reducer } from 'react';
 
-export enum AuthStringActions {
-  SetError = 'SetError',
-  OnChangeInputs = 'OnChangeInputs',
-  IsSubmitDisabled = 'IsSubmitDisabled',
-  SetIsFetching = 'SetIsFetching',
+export enum AuthStrAction {
+  SetOnChange = 'SetOnChange',
+  SetDisabledSubmit = 'SetDisabledSubmit',
+  SetFormErr = 'SetFormErr'
 }
 
 interface AuthInput {
@@ -16,35 +16,25 @@ interface AuthInput {
 interface AuthState {
   inputs: AuthInput[];
   disabledSubmit: boolean;
-  isFetching: boolean;
-  errorMessage: string | null;
-  errorField: string | null;
+  formErr: FormErr;
 }
 
-interface SetError {
-  type: AuthStringActions.SetError;
-  payload: Pick<AuthState, 'errorMessage' | 'errorField'>;
+interface SetOnChange {
+  type: AuthStrAction.SetOnChange;
+  payload: { name: string; value: string };
 }
 
-interface ChangeInputs {
-  type: AuthStringActions.OnChangeInputs;
-  payload: { inputName: string; inputValue: string };
+interface SetDisabledSubmit {
+  type: AuthStrAction.SetDisabledSubmit;
+  payload: { disabledSubmit: boolean };
 }
 
-interface isSubmitDisabled {
-  type: AuthStringActions.IsSubmitDisabled;
+interface SetFormErr {
+  type: AuthStrAction.SetFormErr,
+  payload: FormErr
 }
 
-interface SetIsFetching {
-  type: AuthStringActions.SetIsFetching;
-  payload: Pick<AuthState, 'isFetching'>;
-}
-
-type AuthReducerActions =
-  | ChangeInputs
-  | isSubmitDisabled
-  | SetError
-  | SetIsFetching;
+type AuthReducerActions = SetOnChange | SetDisabledSubmit | SetFormErr;
 
 export const authInitState: AuthState = {
   inputs: [
@@ -59,9 +49,10 @@ export const authInitState: AuthState = {
     },
   ],
   disabledSubmit: true,
-  isFetching: false,
-  errorMessage: null,
-  errorField: null,
+  formErr: {
+    errorMessage: null,
+    errorField: null,
+  },
 };
 
 export const authReducer: Reducer<AuthState, AuthReducerActions> = (
@@ -69,22 +60,15 @@ export const authReducer: Reducer<AuthState, AuthReducerActions> = (
   action,
 ) => {
   switch (action.type) {
-    case AuthStringActions.SetError:
-      const { errorMessage, errorField } = action.payload;
-      return {
-        ...state,
-        errorMessage,
-        errorField,
-      };
-    case AuthStringActions.OnChangeInputs:
-      const { inputName, inputValue } = action.payload;
+    case AuthStrAction.SetOnChange:
+      const { name, value } = action.payload;
       return {
         ...state,
         inputs: state.inputs.map((input) => {
-          if (input.label === inputName) {
+          if (input.label === name) {
             return {
               ...input,
-              value: inputValue,
+              value,
               error: false,
               helperText: ' ',
             };
@@ -92,18 +76,20 @@ export const authReducer: Reducer<AuthState, AuthReducerActions> = (
           return input;
         }),
       };
-    case AuthStringActions.IsSubmitDisabled:
+    case AuthStrAction.SetDisabledSubmit:
       return {
         ...state,
-        disabledSubmit: !state.inputs.every((input) => input.value),
+        disabledSubmit: action.payload.disabledSubmit,
       };
-    case AuthStringActions.SetIsFetching: {
+    case AuthStrAction.SetFormErr:
       return {
         ...state,
-        isFetching: action.payload.isFetching,
-        disabledSubmit: action.payload.isFetching,
-      };
-    }
+        formErr: {
+          ...state.formErr,
+          errorMessage: action.payload.errorMessage,
+          errorField: action.payload.errorField
+        }
+      }
     default:
       return state;
   }

@@ -1,8 +1,8 @@
 import { Middleware } from "./../db/types";
-import { ValidationError } from "./errorMiddleware";
+import { FormErr } from "./errorMiddleware";
 
 export enum ErrorName {
-  ValidationError = "Validation Error:",
+  FormErr = "Validation Error:",
 }
 
 function validate(
@@ -13,13 +13,13 @@ function validate(
   const str = item.toString();
 
   if (str.length < length.min) {
-    throw new ValidationError(
+    throw new FormErr(
       `min ${errorField} is ${length.min} characters`,
       errorField
     );
   }
   if (str.length > length.max) {
-    throw new ValidationError(
+    throw new FormErr(
       `max ${errorField} is ${length.max} characters`,
       errorField,
     );
@@ -28,7 +28,7 @@ function validate(
   switch (errorField) {
     case "email":
       if (!str.split("").includes("@")) {
-        throw new ValidationError(
+        throw new FormErr(
           `${errorField} is incorrect`,
           errorField
         );

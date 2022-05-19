@@ -1,1 +1,1 @@
-{"version":3,"file":"tokenMiddleware.js","sourceRoot":"","sources":["../../src/middleware/tokenMiddleware.ts"],"names":[],"mappings":""}
+{"version":3,"file":"tokenMiddleware.js","sourceRoot":"","sources":["../../src/middleware/tokenMiddleware.ts"],"names":[],"mappings":";;;AAEO,MAAM,eAAe,GAAG,GAAG,EAAE,CAAC,CAAC,GAAY,EAAE,GAAa,EAAE,IAAkB,EAAE,EAAE;IACvF,OAAO,CAAC,GAAG,CAAC,iBAAiB,CAAC,CAAA;IAC9B,GAAG,CAAC,WAAW,CAAC,SAAS,CAAC,CAAA;IAC1B,IAAI,EAAE,CAAA;AACR,CAAC,CAAA;AAJY,QAAA,eAAe,mBAI3B"}

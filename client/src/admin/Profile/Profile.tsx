@@ -1,7 +1,6 @@
 import { Dispatch, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import uniqid from 'uniqid';
-import { useFetchUsers, UsersAPI } from '../../hooks/useFetchUsers';
 import {
   DropListActionType,
   UsersReducerActions,

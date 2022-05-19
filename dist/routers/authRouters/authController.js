@@ -13,10 +13,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.authController = void 0;
-const types_1 = require("../db/types");
-const useDataBase_1 = require("../db/useDataBase");
+const types_1 = require("../../db/types");
+const useDataBase_1 = require("../../db/useDataBase");
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
-const errorMiddleware_1 = require("../middleware/errorMiddleware");
+const errorMiddleware_1 = require("../../middleware/errorMiddleware");
 const uuid_1 = require("uuid");
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 class AuthController {

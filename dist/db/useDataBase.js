@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.useSuperAdmin = exports.UseDB = void 0;
+exports.superAdmin = exports.UseDB = void 0;
 const mongodb_1 = require("mongodb");
 const settings_1 = require("./settings");
 const types_1 = require("./types");
@@ -18,7 +18,7 @@ class UseDB {
         this.dataBase = dataBase;
         this.client = new mongodb_1.MongoClient(settings_1.url);
     }
-    getCollection(collectionName) {
+    connect(collectionName) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 yield this.client.connect();
@@ -37,5 +37,5 @@ class UseDB {
     }
 }
 exports.UseDB = UseDB;
-exports.useSuperAdmin = new UseDB(types_1.DataBase.SuperAdmin);
+exports.superAdmin = new UseDB(types_1.DataBase.SuperAdmin);
 //# sourceMappingURL=useDataBase.js.map

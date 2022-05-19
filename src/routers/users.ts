@@ -1,6 +1,4 @@
 import express from "express";
-import { Collections } from "./../db/types";
-import { useSuperAdmin } from "./../db/useDataBase";
 
 const router = express.Router();
 
