@@ -1,7 +1,13 @@
-// import { fetchData } from "api/fetchData";
-// import { useEffect } from "react";
+import { AdminReducerActions, AdminStrAction } from 'admin/adminReducer';
+import { fetcher } from 'api/fetcher';
+import { Dispatch } from 'react';
+import { Button, Linear, Navbar } from 'UIKit';
 
-export default function Home() {
+interface HomeProps {
+  adminDispatch: Dispatch<AdminReducerActions>;
+}
+
+export default function Home({ adminDispatch }: HomeProps) {
   // useEffect(() => {
   //   const verifyToken = async () => {
   //     const response = await fetchData<string>('GET', '/users');
@@ -12,17 +18,19 @@ export default function Home() {
   //   verifyToken();
   // }, []);
 
-  // const onClick = async () => {
-  //   const response = await fetchData<string>('GET', '/users');
-  //   if (response) {
-  //     console.log(response)
-  //   }
-  // }
+  const onClick = async () => {
+    const res = await fetcher<string>('GET', '/users', adminDispatch);
+    if (typeof res === 'string') {
+      return console.log(res)
+    }
+    if (!res || 'logout' in res) {
+      return adminDispatch({ type: AdminStrAction.SetErr, payload: res });
+    }
+  };
 
   return (
     <>
-      <h3>Home</h3>
-      {/* <button onClick={onClick}>button</button> */}
+      <Navbar />
     </>
   );
 }

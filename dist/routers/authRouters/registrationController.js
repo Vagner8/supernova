@@ -27,8 +27,8 @@ function registrationController(req, res, next) {
         try {
             const ownersColl = yield useDataBase_1.superAdmin.connect(types_1.CollName.Owners);
             if (!ownersColl)
-                throw new errorMiddleware_1.Err(`bad connection: ${funcName}`, false);
-            const useToken = new UseToken_1.UseToken(req, res, ownersColl);
+                throw new errorMiddleware_1.Err(500, `no connection: ${funcName}`, false);
+            const useToken = new UseToken_1.UseToken(res, ownersColl);
             const owner = yield ownersColl.findOne({ name });
             if (!owner)
                 throw new errorMiddleware_1.FormErr(`${name} not exist`, "name");

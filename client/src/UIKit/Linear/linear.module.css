@@ -1,0 +1,66 @@
+.Linear {
+  width: 100%;
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  border: none;
+  height: 0.20em;
+  color: #26a69a;
+  background-color: #acece6;
+  font-size: 16px;
+}
+
+.Linear::-webkit-progress-bar {
+  background-color: transparent;
+}
+
+/* Determinate */
+.Linear::-webkit-progress-value {
+  background-color: currentColor;
+  transition: all 0.2s;
+}
+
+.Linear::-moz-progress-bar {
+  background-color: currentColor;
+  transition: all 0.2s;
+}
+
+.Linear::-ms-fill {
+  border: none;
+  background-color: currentColor;
+  transition: all 0.2s;
+}
+
+/* Indeterminate */
+.Linear:indeterminate {
+  background-size: 200% 100%;
+  background-image: Linear-gradient(to right, transparent 50%, currentColor 50%, currentColor 60%, transparent 60%, transparent 71.5%, currentColor 71.5%, currentColor 84%, transparent 84%);
+  animation: Linear 2s infinite Linear;
+}
+
+.Linear:indeterminate::-moz-progress-bar {
+  background-color: transparent;
+}
+
+.Linear:indeterminate::-ms-fill {
+  animation-name: none;
+}
+
+@keyframes Linear {
+  0% {
+      background-size: 200% 100%;
+      background-position: left -31.25% top 0%;
+  }
+  50% {
+      background-size: 800% 100%;
+      background-position: left -49% top 0%;
+  }
+  100% {
+      background-size: 400% 100%;
+      background-position: left -102% top 0%;
+  }
+}

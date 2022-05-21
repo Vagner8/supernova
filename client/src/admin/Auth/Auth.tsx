@@ -1,18 +1,18 @@
 import { ChangeEvent, Dispatch, FormEvent, useReducer } from 'react';
-import styles from 'admin/Auth/Auth.module.css';
+import styles from './auth.module.css';
 import {
   authReducer,
   authInitState,
   AuthStrAction,
 } from 'admin/Auth/authReducer';
-import { Button, Input, Icon } from 'UIKit';
-import { AuthAPI, fetchData } from 'api/fetchData';
+import { Button, Input, Icon, Linear } from 'UIKit';
 import {
   AdminReducerActions,
   AdminState,
   AdminStrAction,
   OwnerId,
 } from 'admin/adminReducer';
+import { AuthAPI, fetcher } from 'api/fetcher';
 
 interface AuthProps {
   adminDispatch: Dispatch<AdminReducerActions>;
@@ -20,22 +20,22 @@ interface AuthProps {
 }
 
 export function Auth({ adminDispatch, adminState }: AuthProps) {
-  const [authState, dispatch] = useReducer(authReducer, authInitState);
+  const [authState, authDispatch] = useReducer(authReducer, authInitState);
 
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    dispatch({
+    authDispatch({
       type: AuthStrAction.SetOnChange,
       payload: { name, value },
     });
     if (authState.inputs.every((item) => item.value)) {
-      dispatch({
+      authDispatch({
         type: AuthStrAction.SetDisabledSubmit,
         payload: { disabledSubmit: false },
       });
     }
     if (authState.formErr.errorMessage) {
-      dispatch({
+      authDispatch({
         type: AuthStrAction.SetFormErr,
         payload: {
           errorField: null,
@@ -47,7 +47,7 @@ export function Auth({ adminDispatch, adminState }: AuthProps) {
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const response = await fetchData<OwnerId>(
+    const res = await fetcher<OwnerId>(
       'POST',
       AuthAPI.Registration,
       adminDispatch,
@@ -56,37 +56,42 @@ export function Auth({ adminDispatch, adminState }: AuthProps) {
         password: authState.inputs[1].value,
       },
     );
-    // adminDispatch({ type: AdminStrAction.SetResponse, payload: response });
-    // adminDispatch({
-    //   type: AdminStrAction.SetIsFetching,
-    //   payload: { isFetching: false },
-    // });
+    if (!res || 'logout' in res) {
+      return adminDispatch({ type: AdminStrAction.SetErr, payload: res });
+    }
+    if ('errorField' in res) {
+      return authDispatch({ type: AuthStrAction.SetFormErr, payload: res });
+    }
+    adminDispatch({ type: AdminStrAction.SetOwnerId, payload: res });
   };
 
   return (
-    <div className={styles.Auth}>
-      <div>
-        <h4>Log in</h4>
-        <form onSubmit={onSubmit}>
-          {authState.inputs.map((input) => (
-            <Input
-              key={input.label}
-              errorField={authState.formErr.errorField}
-              errorMessage={authState.formErr.errorMessage}
-              label={input.label}
-              type={input.type}
-              value={input.value}
-              onChange={onChange}
+    <>
+      <Linear show={adminState.isFetching}/>
+      <div className={styles.Auth}>
+        <div>
+          <h4>Log in</h4>
+          <form onSubmit={onSubmit}>
+            {authState.inputs.map((input) => (
+              <Input
+                key={input.label}
+                errorField={authState.formErr.errorField}
+                errorMessage={authState.formErr.errorMessage}
+                label={input.label}
+                type={input.type}
+                value={input.value}
+                onChange={onChange}
+              />
+            ))}
+            <Button
+              disabled={authState.disabledSubmit}
+              title="Send"
+              type="submit"
+              icon={<Icon icon="send" />}
             />
-          ))}
-          <Button
-            disabled={authState.disabledSubmit}
-            title="Send"
-            type="submit"
-            icon={<Icon icon="send" />}
-          />
-        </form>
+          </form>
+        </div>
       </div>
-    </div>
+    </>
   );
 }

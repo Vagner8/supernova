@@ -21,8 +21,8 @@ export async function registrationController(
   const { name, password } = req.body as EeqBody;
   try {
     const ownersColl = await superAdmin.connect(CollName.Owners);
-    if (!ownersColl) throw new Err(`bad connection: ${funcName}`, false);
-    const useToken = new UseToken(req, res, ownersColl);
+    if (!ownersColl) throw new Err(500, `no connection: ${funcName}`, false);
+    const useToken = new UseToken(res, ownersColl);
     const owner = await ownersColl.findOne({ name });
     if (!owner) throw new FormErr(`${name} not exist`, "name");
     if (owner.ownerId) {

@@ -1,4 +1,4 @@
-import { Err } from 'api/fetchData';
+import { Err } from 'api/fetcher';
 import { Reducer } from 'react';
 
 export enum AdminStrAction {
@@ -8,12 +8,13 @@ export enum AdminStrAction {
 }
 
 export interface AdminState {
-  ownerId: string | null;
   isFetching: boolean;
   err: Err;
 }
 
-export type OwnerId = Pick<AdminState, 'ownerId'>;
+export interface OwnerId  {
+  ownerId: string;
+}
 
 interface SetIsFetching {
   type: AdminStrAction.SetIsFetching;
@@ -33,7 +34,6 @@ interface SetErr {
 export type AdminReducerActions = SetIsFetching | SetOwnerId | SetErr;
 
 export const adminInitState: AdminState = {
-  ownerId: null,
   isFetching: false,
   err: {
     errorMessage: null,
@@ -52,10 +52,8 @@ export const adminReducer: Reducer<AdminState, AdminReducerActions> = (
         isFetching: action.payload.isFetching,
       };
     case AdminStrAction.SetOwnerId:
-      return {
-        ...state,
-        ownerId: action.payload.ownerId,
-      };
+      localStorage.setItem('ownerId', action.payload.ownerId)
+      return state
     case AdminStrAction.SetErr: {
       if (!action.payload) {
         return {
@@ -68,6 +66,7 @@ export const adminReducer: Reducer<AdminState, AdminReducerActions> = (
         };
       }
       if ('logout' in action.payload) {
+        action.payload.logout && localStorage.removeItem('ownerId')
         return {
           ...state,
           error: {

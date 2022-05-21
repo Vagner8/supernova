@@ -10,14 +10,14 @@ const authRouters_1 = __importDefault(require("./routers/authRouters/authRouters
 const errorMiddleware_1 = require("./middleware/errorMiddleware");
 const validationMiddleware_1 = require("./middleware/validationMiddleware");
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
-const tokenMiddleware_1 = require("./middleware/tokenMiddleware");
+const accessMiddleware_1 = require("./middleware/accessMiddleware");
 const app = (0, express_1.default)();
 app.use((0, cookie_parser_1.default)());
 app.use(express_1.default.json());
 app.use((0, validationMiddleware_1.validationMiddleware)());
-app.use((0, tokenMiddleware_1.tokenMiddleware)());
-app.use("/users", usersRouters_1.default);
 app.use("/auth", authRouters_1.default);
+app.use((0, accessMiddleware_1.accessMiddleware)());
+app.use("/users", usersRouters_1.default);
 app.use(errorMiddleware_1.errorMiddleware);
 app.listen(process.env.PORT, () => {
     console.log(`Server has been started on port ${process.env.PORT}`);

@@ -17,31 +17,33 @@ export enum AuthAPI {
 }
 
 
-export async function fetchData<Data>(
+export async function fetcher<Data>(
   method: 'POST' | 'DELETE' | 'PUT' | 'GET',
   url: string,
   adminDispatch: Dispatch<AdminReducerActions>,
   body?: any,
 ): Promise<Err | FormErr | Data | undefined> {
-  try {
     adminDispatch({
       type: AdminStrAction.SetIsFetching,
       payload: { isFetching: true },
     });
-    const response = await fetch(url, {
-      method,
-      body: JSON.stringify(body),
-      headers: {
-        'Content-type': 'application/json',
-        Cookie: 'accessToken=value',
-      },
-    });
-    adminDispatch({
-      type: AdminStrAction.SetIsFetching,
-      payload: { isFetching: false },
-    });
-    return await response.json();
-  } catch (error) {
-    console.log(error);
-  }
+    try {
+      const response = await fetch(url, {
+        method,
+        body: JSON.stringify(body),
+        headers: {
+          'Content-type': 'application/json',
+          'credentials': 'include',
+          'ownerId': localStorage.getItem('ownerId') || 'idle'
+        },
+      });
+      return await response.json();
+    } catch (err) {
+      console.log(err)
+    } finally {
+      adminDispatch({
+        type: AdminStrAction.SetIsFetching,
+        payload: { isFetching: false },
+      });
+    }
 }

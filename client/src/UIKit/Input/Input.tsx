@@ -1,6 +1,6 @@
 import { ChangeEvent, FocusEvent, useState } from 'react';
 import { Visibility } from 'UIKit';
-import styles from './Input.module.css';
+import styles from './input.module.css';
 
 interface InputProps {
   label: string;

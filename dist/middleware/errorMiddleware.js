@@ -2,8 +2,9 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.errorMiddleware = exports.FormErr = exports.Err = void 0;
 class Err extends Error {
-    constructor(errorMessage, logout) {
+    constructor(status, errorMessage, logout) {
         super();
+        this.status = status;
         this.errorMessage = errorMessage;
         this.logout = logout;
     }
@@ -25,7 +26,7 @@ const errorMiddleware = (error, req, res, next) => {
         });
     }
     if (error instanceof Err) {
-        return res.status(401).json({
+        return res.status(error.status).json({
             errorMessage: error.errorMessage,
             logout: error.logout
         });

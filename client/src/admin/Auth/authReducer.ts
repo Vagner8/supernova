@@ -1,4 +1,4 @@
-import { FormErr } from 'api/fetchData';
+import { FormErr } from 'api/fetcher';
 import { Reducer } from 'react';
 
 export enum AuthStrAction {
@@ -34,7 +34,7 @@ interface SetFormErr {
   payload: FormErr
 }
 
-type AuthReducerActions = SetOnChange | SetDisabledSubmit | SetFormErr;
+export type AuthReducerActions = SetOnChange | SetDisabledSubmit | SetFormErr;
 
 export const authInitState: AuthState = {
   inputs: [

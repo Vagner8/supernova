@@ -15,35 +15,28 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.UseToken = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 class UseToken {
-    constructor(req, res, collection) {
-        this.req = req;
+    constructor(res, collection) {
         this.res = res;
         this.collection = collection;
     }
     createAccessToken(ownerId) {
         const accessToken = jsonwebtoken_1.default.sign({ ownerId }, process.env.ACCESS_SECRET, {
-            expiresIn: "10sec",
+            expiresIn: "15m",
         });
         this.res.cookie("accessToken", accessToken, {
             sameSite: "lax",
             httpOnly: true,
-            maxAge: 10 * 1000,
+            maxAge: 60 * 1000 * 15,
         });
     }
     createRefreshToken(ownerId) {
         return __awaiter(this, void 0, void 0, function* () {
             const refreshToken = jsonwebtoken_1.default.sign({ ownerId }, process.env.REFRESH_SECRET, {
-                expiresIn: "60s",
+                expiresIn: "3d",
             });
-            yield this.collection.updateOne({ ownerId }, { $set: { refreshToken } });
-        });
-    }
-    checkAccessToken() {
-        return __awaiter(this, void 0, void 0, function* () {
-        });
-    }
-    checkRefreshToken() {
-        return __awaiter(this, void 0, void 0, function* () {
+            if (this.collection) {
+                yield this.collection.updateOne({ ownerId }, { $set: { refreshToken } });
+            }
         });
     }
 }

@@ -1,7 +1,7 @@
 import { ErrorMiddleware } from "./../db/types";
 
 export class Err extends Error {
-  constructor(public errorMessage: string, public logout: boolean) {
+  constructor(public status: 403 | 500, public errorMessage: string, public logout: boolean) {
     super();
   }
 }
@@ -20,7 +20,7 @@ export const errorMiddleware: ErrorMiddleware = (error, req, res, next) => {
     });
   }
   if (error instanceof Err) {
-    return res.status(401).json({
+    return res.status(error.status).json({
       errorMessage: error.errorMessage,
       logout: error.logout
     });

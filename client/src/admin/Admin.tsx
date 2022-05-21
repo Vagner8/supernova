@@ -9,14 +9,14 @@ const Settings = lazy(() => import('./Settings/Settings'));
 export function Admin() {
   const [adminState, adminDispatch] = useReducer(adminReducer, adminInitState);
 
-  if (!adminState.ownerId) {
+  if (!localStorage.getItem('ownerId')) {
     return <Auth adminState={adminState} adminDispatch={adminDispatch} />;
   }
 
   return (
     <Suspense fallback={'Preloader'}>
       <Routes>
-        <Route index element={<Home />} />
+        <Route index element={<Home adminDispatch={adminDispatch} />} />
         {/* <Route
               path="admin/users"
               element={

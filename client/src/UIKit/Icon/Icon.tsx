@@ -1,4 +1,4 @@
-import styles from './Icon.module.css'
+import styles from './icon.module.css'
 
 interface IconProps {
   icon: 'visibility' | 'visibility_off' | 'send' | 'error'
