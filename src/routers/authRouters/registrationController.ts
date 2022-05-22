@@ -21,7 +21,7 @@ export async function registrationController(
   const { name, password } = req.body as EeqBody;
   try {
     const ownersColl = await superAdmin.connect(CollName.Owners);
-    if (!ownersColl) throw new Err(500, `no connection: ${funcName}`, false);
+    if (!ownersColl) throw new Err(500, `no connection: ${funcName}`);
     const useToken = new UseToken(res, ownersColl);
     const owner = await ownersColl.findOne({ name });
     if (!owner) throw new FormErr(`${name} not exist`, "name");
@@ -31,7 +31,7 @@ export async function registrationController(
       }
       useToken.createAccessToken(owner.ownerId);
       await useToken.createRefreshToken(owner.ownerId);
-      return res.status(201).json({ ownerId: owner.ownerId });
+      res.status(201).json({ ownerId: owner.ownerId });
     }
 
     if (!owner.ownerId) {
@@ -52,7 +52,7 @@ export async function registrationController(
         }
       );
       useToken.createAccessToken(uniqueId);
-      return res.status(201).json({ownerId: uniqueId});
+      res.status(201).json({ownerId: uniqueId});
     }
   } catch (err) {
     next(err);

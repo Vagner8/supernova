@@ -12,7 +12,7 @@ import {
   AdminStrAction,
   OwnerId,
 } from 'admin/adminReducer';
-import { AuthAPI, fetcher } from 'api/fetcher';
+import { API, fetcher } from 'api/fetcher';
 
 interface AuthProps {
   adminDispatch: Dispatch<AdminReducerActions>;
@@ -49,7 +49,7 @@ export function Auth({ adminDispatch, adminState }: AuthProps) {
     e.preventDefault();
     const res = await fetcher<OwnerId>(
       'POST',
-      AuthAPI.Registration,
+      API.Registration,
       adminDispatch,
       {
         name: authState.inputs[0].value,

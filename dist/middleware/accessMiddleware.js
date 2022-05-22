@@ -30,7 +30,6 @@ const accessMiddleware = () => (req, res, next) => __awaiter(void 0, void 0, voi
                 if (err) {
                     throw new errorMiddleware_1.Err(403, "access token is expired", true);
                 }
-                next();
             });
         }
         if (!accessToken) {
@@ -48,16 +47,16 @@ const accessMiddleware = () => (req, res, next) => __awaiter(void 0, void 0, voi
                 }
                 const useToken = new UseToken_1.UseToken(res);
                 useToken.createAccessToken(ownerId);
-                next();
             });
         }
-        next();
     }
     catch (err) {
         next(err);
     }
     finally {
+        console.log("finally");
         yield useDataBase_1.superAdmin.close();
+        next();
     }
 });
 exports.accessMiddleware = accessMiddleware;

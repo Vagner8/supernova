@@ -27,7 +27,7 @@ function registrationController(req, res, next) {
         try {
             const ownersColl = yield useDataBase_1.superAdmin.connect(types_1.CollName.Owners);
             if (!ownersColl)
-                throw new errorMiddleware_1.Err(500, `no connection: ${funcName}`, false);
+                throw new errorMiddleware_1.Err(500, `no connection: ${funcName}`);
             const useToken = new UseToken_1.UseToken(res, ownersColl);
             const owner = yield ownersColl.findOne({ name });
             if (!owner)
@@ -38,7 +38,7 @@ function registrationController(req, res, next) {
                 }
                 useToken.createAccessToken(owner.ownerId);
                 yield useToken.createRefreshToken(owner.ownerId);
-                return res.status(201).json({ ownerId: owner.ownerId });
+                res.status(201).json({ ownerId: owner.ownerId });
             }
             if (!owner.ownerId) {
                 if (password !== owner.password) {
@@ -55,7 +55,7 @@ function registrationController(req, res, next) {
                     },
                 });
                 useToken.createAccessToken(uniqueId);
-                return res.status(201).json({ ownerId: uniqueId });
+                res.status(201).json({ ownerId: uniqueId });
             }
         }
         catch (err) {

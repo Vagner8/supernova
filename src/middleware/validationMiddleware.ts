@@ -1,4 +1,4 @@
-import { Middleware } from "./../db/types";
+import { NextFunction, Request, Response } from "express";
 import { FormErr } from "./errorMiddleware";
 
 export enum ErrorName {
@@ -21,23 +21,20 @@ function validate(
   if (str.length > length.max) {
     throw new FormErr(
       `max ${errorField} is ${length.max} characters`,
-      errorField,
+      errorField
     );
   }
 
   switch (errorField) {
     case "email":
       if (!str.split("").includes("@")) {
-        throw new FormErr(
-          `${errorField} is incorrect`,
-          errorField
-        );
+        throw new FormErr(`${errorField} is incorrect`, errorField);
       }
   }
 }
 
-export function validationMiddleware(): Middleware {
-  return (req, res, next) => {
+export function validationMiddleware() {
+  return (req: Request, res: Response, next: NextFunction) => {
     if (!req.body) next();
     if (req.body.name) validate("name", req.body.name, { min: 1, max: 20 });
     if (req.body.email) validate("email", req.body.email, { min: 3, max: 30 });

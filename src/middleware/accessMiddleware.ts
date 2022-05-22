@@ -20,7 +20,6 @@ export const accessMiddleware =
           if (err) {
             throw new Err(403, "access token is expired", true);
           }
-          next();
         });
       }
 
@@ -36,19 +35,23 @@ export const accessMiddleware =
         if (!result) {
           throw new Err(500, "no refreshToken", true);
         }
-        jwt.verify(result.refreshToken, process.env.REFRESH_SECRET, (err: any) => {
-          if (err) {
-            throw new Err(403, "refresh token is expired", true);
+        jwt.verify(
+          result.refreshToken,
+          process.env.REFRESH_SECRET,
+          (err: any) => {
+            if (err) {
+              throw new Err(403, "refresh token is expired", true);
+            }
+            const useToken = new UseToken(res);
+            useToken.createAccessToken(ownerId);
           }
-          const useToken = new UseToken(res)
-          useToken.createAccessToken(ownerId)
-          next();
-        });
+        );
       }
-      next();
     } catch (err) {
       next(err);
     } finally {
+      console.log("finally");
       await superAdmin.close();
+      next();
     }
   };

@@ -4,3 +4,5 @@ export * from './Icon/Icon';
 export * from './Visibility/Visibility';
 export * from './Linear/Linear';
 export * from './Navbar/Navbar';
+export * from './Avatar/Avatar';
+export * from './Img/Img';

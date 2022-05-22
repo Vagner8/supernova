@@ -1,4 +1,4 @@
-import { Collection, MongoClient } from "mongodb";
+import { MongoClient } from "mongodb";
 import { url } from "./settings";
 import { CollName, DataBase, Owner } from "./types";
 

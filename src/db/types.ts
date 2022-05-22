@@ -3,10 +3,17 @@ import { ObjectId } from "mongodb";
 
 export interface Owner {
   _id: ObjectId;
-  name: string;
-  password: string;
   ownerId: string | undefined;
+  password: string;
   refreshToken: string | undefined;
+
+  name: string;
+  surname: string;
+  email: string;
+  phone: string;
+  city: string;
+  zip: string;
+  address: string; 
 }
 
 export enum DataBase {
@@ -18,14 +25,6 @@ export enum CollName {
   Owners = "owners"
 }
 
-export interface ErrorMiddleware {
-  (error: Error, req: Request, res: Response, next: NextFunction): void
-}
-
-export interface Middleware {
-  (req: Request, res: Response, next: NextFunction): void
-}
-
 declare global {
   namespace NodeJS {
     interface ProcessEnv {
@@ -33,6 +32,7 @@ declare global {
       MONGO_PASSWORD: string;
       ACCESS_SECRET: string;
       REFRESH_SECRET: string;
+      GOOGLE_APPLICATION_CREDENTIALS: string;
     }
   }
 }

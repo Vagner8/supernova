@@ -1,9 +1,16 @@
-import styles from './icon.module.css'
+import styles from './icon.module.css';
 
 interface IconProps {
-  icon: 'visibility' | 'visibility_off' | 'send' | 'error'
+  className?: string;
+  icon:
+    | 'visibility'
+    | 'visibility_off'
+    | 'send'
+    | 'error'
+    | 'menu'
+    | 'account_circle';
 }
 
-export function Icon({icon}: IconProps) {
-  return <i className={`${styles.Icon} material-icons`}>{icon}</i>
+export function Icon({ icon, className }: IconProps) {
+  return <i className={`${styles.Icon} ${className} material-icons`}>{icon}</i>;
 }

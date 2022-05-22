@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.errorMiddleware = exports.FormErr = exports.Err = void 0;
 class Err extends Error {
-    constructor(status, errorMessage, logout) {
+    constructor(status, errorMessage, logout = false) {
         super();
         this.status = status;
         this.errorMessage = errorMessage;
@@ -18,7 +18,7 @@ class FormErr extends Error {
     }
 }
 exports.FormErr = FormErr;
-const errorMiddleware = (error, req, res, next) => {
+function errorMiddleware(error, req, res, next) {
     if (error instanceof FormErr) {
         return res.status(400).json({
             errorMessage: error.errorMessage,
@@ -28,10 +28,10 @@ const errorMiddleware = (error, req, res, next) => {
     if (error instanceof Err) {
         return res.status(error.status).json({
             errorMessage: error.errorMessage,
-            logout: error.logout
+            logout: error.logout,
         });
     }
     next(error);
-};
+}
 exports.errorMiddleware = errorMiddleware;
 //# sourceMappingURL=errorMiddleware.js.map

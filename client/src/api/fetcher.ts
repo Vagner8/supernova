@@ -11,10 +11,11 @@ export interface FormErr {
   errorField: string | null;
 }
 
-export enum AuthAPI {
+export enum API {
   Registration = '/auth/registration',
-  Verify = '/auth/verify',
+  Owner = '/owner'
 }
+
 
 
 export async function fetcher<Data>(

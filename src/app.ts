@@ -2,6 +2,7 @@ import "dotenv/config";
 import express from "express";
 import users from "./routers/usersRouters/usersRouters";
 import auth from "./routers/authRouters/authRouters";
+import owner from "./routers/ownerRouters/ownerRouters";
 import { errorMiddleware } from "./middleware/errorMiddleware";
 import { validationMiddleware } from "./middleware/validationMiddleware";
 import cookieParser from "cookie-parser";
@@ -13,8 +14,9 @@ app.use(cookieParser());
 app.use(express.json());
 app.use(validationMiddleware());
 app.use("/auth", auth);
-app.use(accessMiddleware())
+app.use(accessMiddleware());
 app.use("/users", users);
+app.use("/owner", owner);
 app.use(errorMiddleware);
 
 app.listen(process.env.PORT, () => {

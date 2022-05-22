@@ -7,12 +7,23 @@ export enum AdminStrAction {
   SetErr = 'SetErr',
 }
 
-export interface AdminState {
-  isFetching: boolean;
-  err: Err;
+export interface Owner {
+  name: string;
+  surname: string;
+  email: string;
+  phone: string;
+  city: string;
+  zip: string;
+  address: string; 
 }
 
-export interface OwnerId  {
+export interface AdminState {
+  isFetching: boolean;
+  err: Err | null;
+  owner: Owner | null;
+}
+
+export interface OwnerId {
   ownerId: string;
 }
 
@@ -35,10 +46,8 @@ export type AdminReducerActions = SetIsFetching | SetOwnerId | SetErr;
 
 export const adminInitState: AdminState = {
   isFetching: false,
-  err: {
-    errorMessage: null,
-    logout: false,
-  },
+  err: null,
+  owner: null,
 };
 
 export const adminReducer: Reducer<AdminState, AdminReducerActions> = (
@@ -52,8 +61,8 @@ export const adminReducer: Reducer<AdminState, AdminReducerActions> = (
         isFetching: action.payload.isFetching,
       };
     case AdminStrAction.SetOwnerId:
-      localStorage.setItem('ownerId', action.payload.ownerId)
-      return state
+      localStorage.setItem('ownerId', action.payload.ownerId);
+      return state;
     case AdminStrAction.SetErr: {
       if (!action.payload) {
         return {
@@ -66,7 +75,7 @@ export const adminReducer: Reducer<AdminState, AdminReducerActions> = (
         };
       }
       if ('logout' in action.payload) {
-        action.payload.logout && localStorage.removeItem('ownerId')
+        action.payload.logout && localStorage.removeItem('ownerId');
         return {
           ...state,
           error: {
