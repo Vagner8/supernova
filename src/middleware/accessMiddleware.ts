@@ -10,7 +10,12 @@ export const accessMiddleware =
     try {
       const ownerId = req.headers.ownerid;
       if (ownerId === "idle" || !ownerId || Array.isArray(ownerId)) {
-        throw new Err(403, "no ownerId header", true);
+        throw new Err({
+          status: 403,
+          text: "no ownerId header",
+          field: null,
+          logout: true,
+        });
       }
 
       const accessToken = req.cookies.accessToken;
@@ -18,7 +23,12 @@ export const accessMiddleware =
       if (accessToken) {
         jwt.verify(accessToken, process.env.ACCESS_SECRET, (err: any) => {
           if (err) {
-            throw new Err(403, "access token is expired", true);
+            throw new Err({
+              status: 403,
+              text: "access token is expired",
+              field: null,
+              logout: true,
+            });
           }
         });
       }
@@ -26,21 +36,36 @@ export const accessMiddleware =
       if (!accessToken) {
         const ownersColl = await superAdmin.connect(CollName.Owners);
         if (!ownersColl) {
-          throw new Err(500, `no connection ${CollName.Owners}`, true);
+          throw new Err({
+            status: 500,
+            text: `no connection ${CollName.Owners}`,
+            field: null,
+            logout: true,
+          });
         }
         const result = await ownersColl.findOne<{ refreshToken: string }>(
           { ownerId },
           { projection: { _id: 0, refreshToken: 1 } }
         );
         if (!result) {
-          throw new Err(500, "no refreshToken", true);
+          throw new Err({
+            status: 500,
+            text: "no refreshToken",
+            field: null,
+            logout: true,
+          });
         }
         jwt.verify(
           result.refreshToken,
           process.env.REFRESH_SECRET,
           (err: any) => {
             if (err) {
-              throw new Err(403, "refresh token is expired", true);
+              throw new Err({
+                status: 403,
+                text: "refresh token is expired",
+                field: null,
+                logout: true,
+              });
             }
             const useToken = new UseToken(res);
             useToken.createAccessToken(ownerId);
@@ -50,7 +75,6 @@ export const accessMiddleware =
     } catch (err) {
       next(err);
     } finally {
-      console.log("finally");
       await superAdmin.close();
       next();
     }

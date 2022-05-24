@@ -60,7 +60,7 @@ export const usersReducer: Reducer<UsersState, UsersReducerActions> = (
         ...state,
         isFetching: action.payload.isFetching,
       };
-    case UsersActionType.SetError:
+    case UsersActionType.SaveError:
       return {
         ...state,
         isError: action.payload.isError,

@@ -4,7 +4,7 @@ import { UsersForTable } from './usersTypes';
 export enum UsersActionType {
   SetUsersForTable = 'SetUsersForTable',
   SetFetching = 'SetFetching',
-  SetError = 'SetError',
+  SaveError = 'SaveError',
   SelectionUsers = 'SelectionUsers',
   MassSelection = 'TableMassSelection',
   SwitchUserStatus = 'SwitchUserStatus'
@@ -29,8 +29,8 @@ export interface SetFetching {
   payload: { isFetching: boolean };
 }
 
-export interface SetError {
-  type: UsersActionType.SetError;
+export interface SaveError {
+  type: UsersActionType.SaveError;
   payload: { isError: Error };
 }
 
@@ -44,7 +44,7 @@ type UsersActions =
   | TableItemsSelection
   | UsersMassSelection
   | SetFetching
-  | SetError
+  | SaveError
   | SwitchUserStatus;
 
 export enum DropListActionType {

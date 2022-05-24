@@ -2,13 +2,10 @@ import { AdminReducerActions, AdminStrAction } from 'admin/adminReducer';
 import { Dispatch } from 'react';
 
 export interface Err {
-  errorMessage: string | null;
-  logout: boolean;
-}
-
-export interface FormErr {
-  errorMessage: string | null;
-  errorField: string | null;
+  status: 400 | 403 | 500,
+  text: string,
+  logout: boolean,
+  field: string | null
 }
 
 export enum API {
@@ -16,14 +13,12 @@ export enum API {
   Owner = '/owner'
 }
 
-
-
-export async function fetcher<Data>(
+export async function fetcher<D>(
   method: 'POST' | 'DELETE' | 'PUT' | 'GET',
   url: string,
   adminDispatch: Dispatch<AdminReducerActions>,
   body?: any,
-): Promise<Err | FormErr | Data | undefined> {
+): Promise<Err | D | undefined> {
     adminDispatch({
       type: AdminStrAction.SetIsFetching,
       payload: { isFetching: true },

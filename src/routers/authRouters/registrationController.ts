@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { CollName } from "../../db/types";
 import { superAdmin } from "../../db/useDataBase";
 import bcrypt from "bcryptjs";
-import { Err, FormErr } from "../../middleware/errorMiddleware";
+import { Err } from "../../middleware/errorMiddleware";
 import { v4 as uuidv4 } from "uuid";
 import { UseToken } from "./../../UseToken";
 import jwt from "jsonwebtoken";
@@ -21,13 +21,32 @@ export async function registrationController(
   const { name, password } = req.body as EeqBody;
   try {
     const ownersColl = await superAdmin.connect(CollName.Owners);
-    if (!ownersColl) throw new Err(500, `no connection: ${funcName}`);
+    if (!ownersColl) {
+      throw new Err({
+        status: 500,
+        text: `no connection: ${funcName}`,
+        field: null,
+        logout: false,
+      });
+    }
     const useToken = new UseToken(res, ownersColl);
     const owner = await ownersColl.findOne({ name });
-    if (!owner) throw new FormErr(`${name} not exist`, "name");
+    if (!owner) {
+      throw new Err({
+        status: 403,
+        text: `${name} not exist`,
+        field: "name",
+        logout: false,
+      });
+    }
     if (owner.ownerId) {
       if (!bcrypt.compareSync(password, owner.password)) {
-        throw new FormErr("incorrect", "password");
+        throw new Err({
+          status: 400,
+          text: "incorrect",
+          field: "password",
+          logout: false,
+        });
       }
       useToken.createAccessToken(owner.ownerId);
       await useToken.createRefreshToken(owner.ownerId);
@@ -36,7 +55,12 @@ export async function registrationController(
 
     if (!owner.ownerId) {
       if (password !== owner.password) {
-        throw new FormErr("incorrect", "password");
+        throw new Err({
+          status: 400,
+          text: "incorrect",
+          field: "password",
+          logout: false,
+        });
       }
       const encryptedPassword = await bcrypt.hash(password, 10);
       const uniqueId = uuidv4();

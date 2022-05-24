@@ -1,4 +1,10 @@
-import { MouseEvent, ReactElement, useEffect, useRef, useState } from 'react';
+import {
+  MouseEvent,
+  ReactElement,
+  ReactNode,
+  useEffect,
+  useState,
+} from 'react';
 import { Icon } from 'UIKit/Icon/Icon';
 import styles from './button.module.css';
 
@@ -8,6 +14,7 @@ interface ButtonProps {
   title: string;
   disabled: boolean;
   icon?: ReactElement<typeof Icon>;
+  children?: ReactNode;
   clickHandler?: (e: MouseEvent<HTMLButtonElement>) => void;
 }
 
@@ -17,6 +24,7 @@ export function Button({
   size,
   disabled,
   icon,
+  children,
   clickHandler,
 }: ButtonProps) {
   const [coords, setCoords] = useState({ x: -1, y: -1 });
@@ -34,12 +42,12 @@ export function Button({
   }, [isRippling]);
 
   const createRipple = (e: MouseEvent<HTMLButtonElement>) => {
-    const btn = e.currentTarget.closest('button')
+    const btn = e.currentTarget.closest('button');
     if (btn) {
       const rect = btn.getBoundingClientRect();
       setCoords({ x: e.clientX - rect.left, y: e.clientY - rect.top });
     }
-  }
+  };
 
   const onClick = (e: MouseEvent<HTMLButtonElement>) => {
     if (clickHandler) {
@@ -57,6 +65,7 @@ export function Button({
       disabled={disabled}
       onClick={onClick}
     >
+      {children ? children : null}
       <span className={styles.title}>{title}</span>
       {icon ? <div className={styles.icon}>{icon}</div> : null}
       {isRippling ? (
@@ -64,7 +73,7 @@ export function Button({
           className={styles.ripple}
           style={{
             left: coords.x,
-            top: coords.y
+            top: coords.y,
           }}
         />
       ) : (

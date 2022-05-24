@@ -26,15 +26,32 @@ function registrationController(req, res, next) {
         const { name, password } = req.body;
         try {
             const ownersColl = yield useDataBase_1.superAdmin.connect(types_1.CollName.Owners);
-            if (!ownersColl)
-                throw new errorMiddleware_1.Err(500, `no connection: ${funcName}`);
+            if (!ownersColl) {
+                throw new errorMiddleware_1.Err({
+                    status: 500,
+                    text: `no connection: ${funcName}`,
+                    field: null,
+                    logout: false,
+                });
+            }
             const useToken = new UseToken_1.UseToken(res, ownersColl);
             const owner = yield ownersColl.findOne({ name });
-            if (!owner)
-                throw new errorMiddleware_1.FormErr(`${name} not exist`, "name");
+            if (!owner) {
+                throw new errorMiddleware_1.Err({
+                    status: 403,
+                    text: `${name} not exist`,
+                    field: "name",
+                    logout: false,
+                });
+            }
             if (owner.ownerId) {
                 if (!bcryptjs_1.default.compareSync(password, owner.password)) {
-                    throw new errorMiddleware_1.FormErr("incorrect", "password");
+                    throw new errorMiddleware_1.Err({
+                        status: 400,
+                        text: "incorrect",
+                        field: "password",
+                        logout: false,
+                    });
                 }
                 useToken.createAccessToken(owner.ownerId);
                 yield useToken.createRefreshToken(owner.ownerId);
@@ -42,7 +59,12 @@ function registrationController(req, res, next) {
             }
             if (!owner.ownerId) {
                 if (password !== owner.password) {
-                    throw new errorMiddleware_1.FormErr("incorrect", "password");
+                    throw new errorMiddleware_1.Err({
+                        status: 400,
+                        text: "incorrect",
+                        field: "password",
+                        logout: false,
+                    });
                 }
                 const encryptedPassword = yield bcryptjs_1.default.hash(password, 10);
                 const uniqueId = (0, uuid_1.v4)();

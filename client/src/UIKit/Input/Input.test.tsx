@@ -1,55 +1,109 @@
 import '@testing-library/jest-dom';
 import { cleanup, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { Input } from 'UIKit'
+import { Err } from 'api/fetcher';
+import { Input } from 'UIKit';
+
+const passwordError: Err = {
+  status: 400,
+  text: 'error message',
+  field: 'password',
+  logout: false,
+};
+
+const nameError: Err = {
+  status: 400,
+  text: 'error message',
+  field: 'name',
+  logout: false,
+};
+
+const errorWithoutField: Err = {
+  status: 400,
+  text: 'error message',
+  field: null,
+  logout: false,
+};
 
 const InputComponent = (
-  value: '' | 'text' = '',
-  message: 'error message' | null = null,
-  field: 'name' | 'password' | null = null,
+  label: 'password' | 'name',
+  type: 'text' | 'password',
+  value: string,
+  error: Err | null,
 ) => (
   <Input
     value={value}
-    label="label"
-    errorMessage={message}
-    errorField={field}
+    label={label}
+    error={error}
+    type={type}
     onChange={jest.fn}
   />
 );
 
-const inputElement = () => screen.getByRole('textbox', { name: /label/i })
-const divElement = () => screen.getByRole('group');
-const labelElement = () => screen.getByText(/label/i)
+const PasswordInputComponent = (error: Err | null) =>
+  InputComponent('password', 'password', '123', error);
+const NameInputComponent = (error: Err | null) =>
+  InputComponent('name', 'text', 'John', error);
+
+const inputElement = (name: 'password' | 'name') =>
+  screen.getByLabelText(RegExp(name, 'i'));
 
 describe('Input', () => {
   afterEach(() => {
     cleanup();
   });
-  it('input has state value', async () => {
-    render(InputComponent('text'));
-    expect(inputElement()).toHaveValue('text');
+  it('gets password error, only password input has error', () => {
+    const { container } = render(
+      <div>
+        {PasswordInputComponent(passwordError)}
+        {NameInputComponent(passwordError)}
+      </div>,
+    );
+    screen.debug();
+    expect(inputElement('password')).toHaveClass('error');
+    expect(container.querySelector('label[for=password]')).toHaveTextContent(
+      'password - error message',
+    );
+    expect(inputElement('name')).not.toHaveClass('error');
+    expect(container.querySelector('label[for=name]')).toHaveTextContent(
+      'name',
+    );
   });
-  it('start typing, the div has active class', async () => {
-    render(InputComponent('text'));
-    await userEvent.type(inputElement(), 'text');
-    expect(divElement()).toHaveClass('active');
+  it('gets name error, only name input has error', () => {
+    const {container} = render(
+      <div>
+        {PasswordInputComponent(nameError)}
+        {NameInputComponent(nameError)}
+      </div>,
+    );
+    expect(inputElement('password')).not.toHaveClass('error');
+    expect(container.querySelector('label[for=password]')).toHaveTextContent(
+      'password',
+    );
+    expect(inputElement('name')).toHaveClass('error');
+    expect(container.querySelector('label[for=name]')).toHaveTextContent(
+      'name - error message',
+    );
   });
-  it('input has no value and focus, div has no active class', async () => {
-    render(InputComponent());
-    expect(divElement()).not.toHaveClass('active');
-  });
-  it('gets error, label has error message', async () => {
-    render(InputComponent('text', 'error message'));
-    expect(labelElement()).toHaveTextContent(/error message/i);
-  });
-  it('gets error, label and input have error class', () => {
-    render(InputComponent('text', 'error message'));
-    expect(inputElement()).toHaveClass('error');
-    expect(labelElement()).toHaveClass('error');
-  });
-  it('no error message, no error class', async () => {
-    render(InputComponent('text'));
-    expect(inputElement()).not.toHaveClass('error');
-    expect(labelElement()).not.toHaveClass('error');
-  });
+  it('gets error without field, all input have error', () => {
+    const {container} = render(
+      <div>
+        {PasswordInputComponent(errorWithoutField)}
+        {NameInputComponent(errorWithoutField)}
+      </div>,
+    );
+    expect(inputElement('password')).toHaveClass('error');
+    expect(container.querySelector('label[for=password]')).toHaveTextContent(
+      'password - error message',
+    );
+    expect(inputElement('name')).toHaveClass('error');
+    expect(container.querySelector('label[for=name]')).toHaveTextContent(
+      'name - error message',
+    );
+  })
+  it('can show password', async () => {
+    render(PasswordInputComponent(null))
+    await userEvent.click(screen.getByText(/visibility_off/i))
+    expect((inputElement('password') as HTMLInputElement).type).toEqual('text')
+  })
 });

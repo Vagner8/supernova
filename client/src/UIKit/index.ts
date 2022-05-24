@@ -6,3 +6,10 @@ export * from './Linear/Linear';
 export * from './Navbar/Navbar';
 export * from './Avatar/Avatar';
 export * from './Img/Img';
+export * from './FileInput/FileInput';
+export * from './Container/Container';
+export * from './Circular/Circular';
+export * from './Point/Point';
+
+export * from './Typography/Text/Text';
+export * from './Typography/Title/Title';

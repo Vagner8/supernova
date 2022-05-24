@@ -1,17 +1,13 @@
 import { NextFunction, Request, Response } from "express";
 
 export class Err extends Error {
-  constructor(
-    public status: 400 | 403 | 500,
-    public errorMessage: string,
-    public logout: boolean = false
-  ) {
-    super();
+  constructor(public obj: {
+    status: 400 | 403 | 500,
+    text: string,
+    logout: boolean,
+    field: string | null
   }
-}
-
-export class FormErr extends Error {
-  constructor(public errorMessage: string, public errorField: string | null) {
+  ) {
     super();
   }
 }
@@ -22,17 +18,8 @@ export function errorMiddleware(
   res: Response,
   next: NextFunction
 ) {
-  if (error instanceof FormErr) {
-    return res.status(400).json({
-      errorMessage: error.errorMessage,
-      errorField: error.errorField,
-    });
-  }
   if (error instanceof Err) {
-    return res.status(error.status).json({
-      errorMessage: error.errorMessage,
-      logout: error.logout,
-    });
+    return res.status(error.obj.status).json(error.obj);
   }
   next(error);
 }

@@ -1,8 +1,10 @@
 .Button {
+  min-width: 72px;
   overflow: hidden;
   position: relative;
   display: flex;
   align-items: center;
+  justify-content: center;
   letter-spacing: .5px;
   color: white;
   background-color: #26a69a;

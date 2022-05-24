@@ -3,8 +3,10 @@ import { Reducer } from 'react';
 
 export enum AdminStrAction {
   SetIsFetching = 'SetIsFetching',
-  SetOwnerId = 'SetOwnerId',
-  SetErr = 'SetErr',
+  SaveOwnerId = 'SaveOwnerId',
+  SaveError = 'SaveError',
+  DeleteError = 'DeleteError',
+  SaveOwner = 'SaveOwner'
 }
 
 export interface Owner {
@@ -14,12 +16,12 @@ export interface Owner {
   phone: string;
   city: string;
   zip: string;
-  address: string; 
+  address: string;
 }
 
 export interface AdminState {
   isFetching: boolean;
-  err: Err | null;
+  error: Err | null;
   owner: Owner | null;
 }
 
@@ -32,21 +34,35 @@ interface SetIsFetching {
   payload: Pick<AdminState, 'isFetching'>;
 }
 
-interface SetOwnerId {
-  type: AdminStrAction.SetOwnerId;
+interface SaveOwnerId {
+  type: AdminStrAction.SaveOwnerId;
   payload: OwnerId;
 }
 
-interface SetErr {
-  type: AdminStrAction.SetErr;
+interface SaveError {
+  type: AdminStrAction.SaveError;
   payload: Err | undefined;
 }
 
-export type AdminReducerActions = SetIsFetching | SetOwnerId | SetErr;
+interface DeleteError {
+  type: AdminStrAction.DeleteError;
+}
+
+interface SaveOwner {
+  type: AdminStrAction.SaveOwner;
+  payload: Owner
+}
+
+export type AdminReducerActions =
+  | SetIsFetching
+  | SaveOwnerId
+  | SaveError
+  | DeleteError
+  | SaveOwner;
 
 export const adminInitState: AdminState = {
   isFetching: false,
-  err: null,
+  error: null,
   owner: null,
 };
 
@@ -60,33 +76,39 @@ export const adminReducer: Reducer<AdminState, AdminReducerActions> = (
         ...state,
         isFetching: action.payload.isFetching,
       };
-    case AdminStrAction.SetOwnerId:
+    case AdminStrAction.SaveOwnerId:
       localStorage.setItem('ownerId', action.payload.ownerId);
       return state;
-    case AdminStrAction.SetErr: {
+    case AdminStrAction.SaveError: {
       if (!action.payload) {
         return {
           ...state,
           error: {
-            ...state.err,
-            errorMessage: 'unexpected error',
+            ...state.error,
+            status: 400,
+            text: 'unexpected error',
             logout: false,
+            field: null,
           },
         };
       }
-      if ('logout' in action.payload) {
-        action.payload.logout && localStorage.removeItem('ownerId');
-        return {
-          ...state,
-          error: {
-            ...state.err,
-            errorMessage: action.payload.errorMessage,
-            logout: action.payload.logout,
-          },
-        };
-      }
-      return state;
+      action.payload.logout && localStorage.removeItem('ownerId');
+      return {
+        ...state,
+        error: {
+          ...state.error,
+          status: action.payload.status,
+          text: action.payload.text,
+          logout: action.payload.logout,
+          field: action.payload.field,
+        },
+      };
     }
+    case AdminStrAction.SaveOwner: 
+      return {
+        ...state,
+        owner: action.payload
+      }
     default:
       return state;
   }

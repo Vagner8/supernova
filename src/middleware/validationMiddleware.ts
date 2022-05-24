@@ -1,9 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { FormErr } from "./errorMiddleware";
-
-export enum ErrorName {
-  FormErr = "Validation Error:",
-}
+import { Err } from "./errorMiddleware";
 
 function validate(
   errorField: "name" | "email" | "password",
@@ -13,22 +9,31 @@ function validate(
   const str = item.toString();
 
   if (str.length < length.min) {
-    throw new FormErr(
-      `min ${errorField} is ${length.min} characters`,
-      errorField
-    );
+    throw new Err({
+      status: 400,
+      text: `min ${length.min} characters`,
+      logout: false,
+      field: errorField
+    })
   }
   if (str.length > length.max) {
-    throw new FormErr(
-      `max ${errorField} is ${length.max} characters`,
-      errorField
-    );
+    throw new Err({
+      status: 400,
+      text: `max ${length.max} characters`,
+      logout: false,
+      field: errorField
+    });
   }
 
   switch (errorField) {
     case "email":
       if (!str.split("").includes("@")) {
-        throw new FormErr(`${errorField} is incorrect`, errorField);
+        throw new Err({
+          status: 400,
+          text: `incorrect ${errorField}`,
+          logout: false,
+          field: errorField
+        });
       }
   }
 }

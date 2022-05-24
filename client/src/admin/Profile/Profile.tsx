@@ -1,7 +1,19 @@
+import { AdminState } from 'admin/adminReducer'
+import { Container, Point } from 'UIKit'
 import styles from './profile.module.css'
 
-export default function Profile() {
+interface ProfileProps {
+  adminState: AdminState
+}
+
+export default function Profile({adminState}: ProfileProps) {
   return (
-    <div className={styles.Profile}>Profile</div>
+    <Container>
+      <div className={styles.Profile}>
+        <Point title='title'>
+          text
+        </Point>
+      </div>
+    </Container>
   )
 }

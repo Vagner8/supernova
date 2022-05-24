@@ -34,20 +34,13 @@ export function Auth({ adminDispatch, adminState }: AuthProps) {
         payload: { disabledSubmit: false },
       });
     }
-    if (authState.formErr.errorMessage) {
-      authDispatch({
-        type: AuthStrAction.SetFormErr,
-        payload: {
-          errorField: null,
-          errorMessage: null,
-        },
-      });
-    }
+    if (!adminState.error) return
+    adminDispatch({type: AdminStrAction.DeleteError})
   };
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const res = await fetcher<OwnerId>(
+    const response = await fetcher<OwnerId>(
       'POST',
       API.Registration,
       adminDispatch,
@@ -56,18 +49,18 @@ export function Auth({ adminDispatch, adminState }: AuthProps) {
         password: authState.inputs[1].value,
       },
     );
-    if (!res || 'logout' in res) {
-      return adminDispatch({ type: AdminStrAction.SetErr, payload: res });
+    if (!response || 'logout' in response) {
+      return adminDispatch({
+        type: AdminStrAction.SaveError,
+        payload: response,
+      });
     }
-    if ('errorField' in res) {
-      return authDispatch({ type: AuthStrAction.SetFormErr, payload: res });
-    }
-    adminDispatch({ type: AdminStrAction.SetOwnerId, payload: res });
+    adminDispatch({ type: AdminStrAction.SaveOwnerId, payload: response });
   };
 
   return (
     <>
-      <Linear show={adminState.isFetching}/>
+      <Linear show={adminState.isFetching} />
       <div className={styles.Auth}>
         <div>
           <h4>Log in</h4>
@@ -75,8 +68,7 @@ export function Auth({ adminDispatch, adminState }: AuthProps) {
             {authState.inputs.map((input) => (
               <Input
                 key={input.label}
-                errorField={authState.formErr.errorField}
-                errorMessage={authState.formErr.errorMessage}
+                error={adminState.error}
                 label={input.label}
                 type={input.type}
                 value={input.value}

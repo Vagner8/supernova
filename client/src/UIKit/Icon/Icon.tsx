@@ -1,14 +1,19 @@
 import styles from './icon.module.css';
 
+export type IconName =
+  | 'visibility'
+  | 'visibility_off'
+  | 'send'
+  | 'error'
+  | 'menu'
+  | 'account_circle'
+  | 'close'
+  | 'delete'
+  | 'cancel';
+
 interface IconProps {
   className?: string;
-  icon:
-    | 'visibility'
-    | 'visibility_off'
-    | 'send'
-    | 'error'
-    | 'menu'
-    | 'account_circle';
+  icon: IconName;
 }
 
 export function Icon({ icon, className }: IconProps) {

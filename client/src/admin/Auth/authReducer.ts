@@ -1,22 +1,19 @@
-import { FormErr } from 'api/fetcher';
 import { Reducer } from 'react';
 
 export enum AuthStrAction {
   SetOnChange = 'SetOnChange',
   SetDisabledSubmit = 'SetDisabledSubmit',
-  SetFormErr = 'SetFormErr'
 }
 
 interface AuthInput {
   label: string;
-  type?: 'password';
+  type: 'password' | 'text';
   value: string;
 }
 
 interface AuthState {
   inputs: AuthInput[];
   disabledSubmit: boolean;
-  formErr: FormErr;
 }
 
 interface SetOnChange {
@@ -29,17 +26,13 @@ interface SetDisabledSubmit {
   payload: { disabledSubmit: boolean };
 }
 
-interface SetFormErr {
-  type: AuthStrAction.SetFormErr,
-  payload: FormErr
-}
-
-export type AuthReducerActions = SetOnChange | SetDisabledSubmit | SetFormErr;
+export type AuthReducerActions = SetOnChange | SetDisabledSubmit;
 
 export const authInitState: AuthState = {
   inputs: [
     {
       label: 'name',
+      type: 'text',
       value: '',
     },
     {
@@ -49,10 +42,6 @@ export const authInitState: AuthState = {
     },
   ],
   disabledSubmit: true,
-  formErr: {
-    errorMessage: null,
-    errorField: null,
-  },
 };
 
 export const authReducer: Reducer<AuthState, AuthReducerActions> = (
@@ -81,15 +70,6 @@ export const authReducer: Reducer<AuthState, AuthReducerActions> = (
         ...state,
         disabledSubmit: action.payload.disabledSubmit,
       };
-    case AuthStrAction.SetFormErr:
-      return {
-        ...state,
-        formErr: {
-          ...state.formErr,
-          errorMessage: action.payload.errorMessage,
-          errorField: action.payload.errorField
-        }
-      }
     default:
       return state;
   }

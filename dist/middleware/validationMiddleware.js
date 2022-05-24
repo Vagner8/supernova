@@ -1,23 +1,34 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.validationMiddleware = exports.ErrorName = void 0;
+exports.validationMiddleware = void 0;
 const errorMiddleware_1 = require("./errorMiddleware");
-var ErrorName;
-(function (ErrorName) {
-    ErrorName["FormErr"] = "Validation Error:";
-})(ErrorName = exports.ErrorName || (exports.ErrorName = {}));
 function validate(errorField, item, length) {
     const str = item.toString();
     if (str.length < length.min) {
-        throw new errorMiddleware_1.FormErr(`min ${errorField} is ${length.min} characters`, errorField);
+        throw new errorMiddleware_1.Err({
+            status: 400,
+            text: `min ${length.min} characters`,
+            logout: false,
+            field: errorField
+        });
     }
     if (str.length > length.max) {
-        throw new errorMiddleware_1.FormErr(`max ${errorField} is ${length.max} characters`, errorField);
+        throw new errorMiddleware_1.Err({
+            status: 400,
+            text: `max ${length.max} characters`,
+            logout: false,
+            field: errorField
+        });
     }
     switch (errorField) {
         case "email":
             if (!str.split("").includes("@")) {
-                throw new errorMiddleware_1.FormErr(`${errorField} is incorrect`, errorField);
+                throw new errorMiddleware_1.Err({
+                    status: 400,
+                    text: `incorrect ${errorField}`,
+                    logout: false,
+                    field: errorField
+                });
             }
     }
 }

@@ -18,12 +18,23 @@ function getOwnerController(req, res, next) {
         const funcName = getOwnerController.name;
         try {
             const ownerId = req.query.ownerId;
-            if (!ownerId)
-                throw new errorMiddleware_1.Err(400, `no ownerId: ${funcName}`);
-            console.log('ownersColl');
+            if (!ownerId) {
+                throw new errorMiddleware_1.Err({
+                    status: 403,
+                    text: `no ownerId: ${funcName}`,
+                    field: null,
+                    logout: false,
+                });
+            }
             const ownersColl = yield useDataBase_1.superAdmin.connect(types_1.CollName.Owners);
-            if (!ownersColl)
-                throw new errorMiddleware_1.Err(500, `no connection: ${funcName}`);
+            if (!ownersColl) {
+                throw new errorMiddleware_1.Err({
+                    status: 500,
+                    text: `no connection: ${funcName}`,
+                    field: null,
+                    logout: false,
+                });
+            }
             const owner = yield ownersColl.findOne({ ownerId }, {
                 projection: {
                     _id: 0,
@@ -32,8 +43,14 @@ function getOwnerController(req, res, next) {
                     refreshToken: 0,
                 },
             });
-            if (!owner)
-                throw new errorMiddleware_1.Err(500, `owner no found: ${funcName}`);
+            if (!owner) {
+                throw new errorMiddleware_1.Err({
+                    status: 500,
+                    text: `owner no found: ${funcName}`,
+                    field: null,
+                    logout: false,
+                });
+            }
             res.status(200).json(owner);
         }
         catch (err) {

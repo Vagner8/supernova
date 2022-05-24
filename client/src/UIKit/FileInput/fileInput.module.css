@@ -1,0 +1,56 @@
+.FileInput {
+  position: relative;
+  display: flex;
+}
+
+.input {
+  opacity: 0;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 3;
+  cursor: pointer;
+}
+
+.file_names {
+  display: flex;
+  flex-wrap: wrap;
+  margin-left: 0.75rem;
+}
+
+.small {
+  color: rgba(0,0,0,0.6);
+  height: 36px;
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(0,0,0,0.6);
+  line-height: 32px;
+  padding-left: 12px;
+  padding-right: 6px;
+  border-radius: 16px;
+  background-color: #e4e4e4;
+  margin-bottom: .25rem;
+  margin-right: .25rem;
+}
+
+.wrap_file_names {
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.icon {
+  color: rgba(0,0,0,0.6);
+  margin-left: .55rem;
+}
+
+.delete {
+  color: rgba(0,0,0,0.6);
+}
+
+.Eraser {
+  margin-bottom: .25rem;
+}
