@@ -47,8 +47,8 @@ function AdminRoutes({ adminState, adminDispatch }: AdminRoutesProps) {
       }
       adminDispatch({ type: AdminStrAction.SaveOwner, payload: response });
       adminDispatch({
-        type: AdminStrAction.SaveLoading,
-        payload: { type: 'ok', message: 'Success data is uploaded' },
+        type: AdminStrAction.saveDownloadResult,
+        payload: { type: 'ok', message: 'Success data uploaded' },
       });
     };
     fetchOwner();

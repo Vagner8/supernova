@@ -3,7 +3,7 @@ import { cleanup, render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { Navbar } from './Navbar';
 
-const NavbarComponent = (avatar?: string, ownerName?: string ) => (
+const NavbarComponent = (avatar: string, ownerName: string ) => (
   <MemoryRouter initialEntries={['/admin']}>
     <Navbar avatar={avatar} ownerName={ownerName}/>
   </MemoryRouter>
@@ -17,23 +17,23 @@ describe('Navbar', () => {
     cleanup();
   });
   it('is exist', () => {
-    render(NavbarComponent());
+    render(NavbarComponent('url', 'name'));
     expect(navbarElement()).toBeInTheDocument();
   });
   it('has link', () => {
-    render(NavbarComponent());
+    render(NavbarComponent('url', 'name'));
     expect(linkElement()).toBeInTheDocument();
   });
   it('has class Navbar', () => {
-    render(NavbarComponent());
+    render(NavbarComponent('url', 'name'));
     expect(navbarElement()).toHaveClass('Navbar');
   });
   it('has menu icon', () => {
-    render(NavbarComponent());
+    render(NavbarComponent('url', 'name'));
     expect(menuButtonElement()).toBeInTheDocument();
   });
   it('gets url, img appears', () => {
-    render(NavbarComponent('url'));
+    render(NavbarComponent('url', 'name'));
     expect(screen.getByRole('img')).toBeInTheDocument();
   })
   it('gets name, name appears', () => {

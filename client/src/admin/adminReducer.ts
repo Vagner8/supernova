@@ -7,7 +7,7 @@ export enum AdminStrAction {
   SaveError = 'SaveError',
   DeleteError = 'DeleteError',
   SaveOwner = 'SaveOwner',
-  SaveLoading = 'SaveLoading'
+  saveDownloadResult = 'saveDownloadResult'
 }
 
 export interface Owner {
@@ -68,8 +68,8 @@ interface SaveOwner {
   payload: Owner;
 }
 
-interface SaveLoading {
-  type: AdminStrAction.SaveLoading;
+interface saveDownloadResult {
+  type: AdminStrAction.saveDownloadResult;
   payload: Loading | null;
 }
 
@@ -79,7 +79,7 @@ export type AdminReducerActions =
   | SaveError
   | DeleteError
   | SaveOwner
-  | SaveLoading;
+  | saveDownloadResult;
 
 export const adminInitState: AdminState = {
   isFetching: false,
@@ -125,7 +125,7 @@ export const adminReducer: Reducer<AdminState, AdminReducerActions> = (
         ...state,
         owner: action.payload,
       };
-    case AdminStrAction.SaveLoading: 
+    case AdminStrAction.saveDownloadResult: 
       return {
         ...state,
         loading: action.payload

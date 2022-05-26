@@ -1,13 +1,13 @@
 import { uploadFiles } from 'firebaseSender';
-import { ChangeEvent, useEffect, useRef, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import { Button, Icon, Circular } from 'UIKit';
 import styles from './fileInput.module.css';
 
 interface FileInputProps {
-  multiple?: boolean;
+  multiple: boolean;
 }
 
-export function FileInput({ multiple = false }: FileInputProps) {
+export function FileInput({ multiple }: FileInputProps) {
   const [files, setFiles] = useState<File[]>();
   const [canSend, setCanSend] = useState(false);
   const [isSending, setIsSending] = useState(false)

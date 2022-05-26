@@ -1,18 +1,15 @@
 import { Icon, Img } from 'UIKit';
 import styles from './avatar.module.css';
 
-interface ProfileProps {
-  url?: string;
+export interface ProfileProps {
+  url: string | undefined;
+  size: 'xs' | 'm' | 'l';
 }
 
-export function Avatar({ url }: ProfileProps) {
+export function Avatar({ url, size }: ProfileProps) {
   const showImg = () => {
-    if (url) return <Img url={url} alt="avatar"/>
+    if (url) return <Img url={url} alt="avatar" />;
     return <Icon className={styles.icon} icon="account_circle" />;
   };
-  return (
-    <div className={styles.Avatar}>
-      <div className={styles.img_wrapper}>{showImg()}</div>
-    </div>
-  );
+  return <div className={`${styles.Avatar} ${styles[size]}`}>{showImg()}</div>;
 }

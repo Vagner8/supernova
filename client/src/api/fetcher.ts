@@ -37,7 +37,7 @@ export async function fetcher<D>(
   } catch (err) {
     console.log(err);
     adminDispatch({
-      type: AdminStrAction.SaveLoading,
+      type: AdminStrAction.saveDownloadResult,
       payload: { type: 'error', message: 'server error'},
     });
   } finally {

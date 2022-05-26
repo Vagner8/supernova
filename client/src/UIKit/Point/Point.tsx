@@ -1,16 +1,15 @@
-import { ReactNode } from 'react';
 import styles from './point.module.css';
 
 interface PointProps {
-  title: string;
-  children: ReactNode;
+  keyText: string;
+  valueText: string;
 }
 
-export function Point({ children, title }: PointProps) {
+export function Point({ keyText, valueText }: PointProps) {
   return (
-    <>
-      <h5>{title}</h5>
-      <div className={styles.Point}>{children}</div>
-    </>
+    <div className={styles.Point}>
+      <small className={styles.small}>{keyText}</small>
+      <p>{valueText}</p>
+    </div>
   );
 }

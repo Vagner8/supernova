@@ -22,7 +22,7 @@ export function Navbar({avatar, ownerName}: NavbarProps) {
       <div className={styles.right}>
         <NavLink className={styles.avatar_link} to="/admin/profile">
           <p className={styles.owner_name}>{ownerName}</p>
-          <Avatar url={avatar} />
+          <Avatar url={avatar} size='xs' />
         </NavLink>
       </div>
     </nav>

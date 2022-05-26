@@ -22,14 +22,14 @@ export function Snackbar({ loading, adminDispatch }: SnackbarProps) {
   useEffect(() => {
     if (loading?.type === 'error') return
     setTimeout(() => {
-      adminDispatch({ type: AdminStrAction.SaveLoading, payload: null });
+      adminDispatch({ type: AdminStrAction.saveDownloadResult, payload: null });
     }, 3000);
   }, [adminDispatch, loading?.type]);
 
   if (!loading) return null;
 
   const onClick = () => {
-    adminDispatch({ type: AdminStrAction.SaveLoading, payload: null });
+    adminDispatch({ type: AdminStrAction.saveDownloadResult, payload: null });
   };
 
   return (
