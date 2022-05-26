@@ -2,15 +2,15 @@ import { AdminReducerActions, AdminStrAction } from 'admin/adminReducer';
 import { Dispatch } from 'react';
 
 export interface Err {
-  status: 400 | 403 | 500,
-  text: string,
-  logout: boolean,
-  field: string | null
+  status: 400 | 403 | 500;
+  message: string;
+  logout: boolean;
+  field: string | null;
 }
 
 export enum API {
   Registration = '/auth/registration',
-  Owner = '/owner'
+  Owner = '/owner',
 }
 
 export async function fetcher<D>(
@@ -19,27 +19,31 @@ export async function fetcher<D>(
   adminDispatch: Dispatch<AdminReducerActions>,
   body?: any,
 ): Promise<Err | D | undefined> {
+  adminDispatch({
+    type: AdminStrAction.SetIsFetching,
+    payload: { isFetching: true },
+  });
+  try {
+    const response = await fetch(url, {
+      method,
+      body: JSON.stringify(body),
+      headers: {
+        'Content-type': 'application/json',
+        credentials: 'include',
+        ownerId: localStorage.getItem('ownerId') || 'idle',
+      },
+    });
+    return await response.json();
+  } catch (err) {
+    console.log(err);
+    adminDispatch({
+      type: AdminStrAction.SaveLoading,
+      payload: { type: 'error', message: 'server error'},
+    });
+  } finally {
     adminDispatch({
       type: AdminStrAction.SetIsFetching,
-      payload: { isFetching: true },
+      payload: { isFetching: false },
     });
-    try {
-      const response = await fetch(url, {
-        method,
-        body: JSON.stringify(body),
-        headers: {
-          'Content-type': 'application/json',
-          'credentials': 'include',
-          'ownerId': localStorage.getItem('ownerId') || 'idle'
-        },
-      });
-      return await response.json();
-    } catch (err) {
-      console.log(err)
-    } finally {
-      adminDispatch({
-        type: AdminStrAction.SetIsFetching,
-        payload: { isFetching: false },
-      });
-    }
+  }
 }

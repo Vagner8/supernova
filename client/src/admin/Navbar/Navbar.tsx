@@ -3,7 +3,12 @@ import { Icon } from 'UIKit';
 import { Avatar } from 'UIKit';
 import styles from './navbar.module.css';
 
-export function Navbar() {
+interface NavbarProps {
+  avatar: string | undefined
+  ownerName: string | undefined
+}
+
+export function Navbar({avatar, ownerName}: NavbarProps) {
   return (
     <nav className={styles.Navbar}>
       <div className={styles.lift}>
@@ -15,8 +20,9 @@ export function Navbar() {
         </NavLink>
       </div>
       <div className={styles.right}>
-        <NavLink to="/admin/profile">
-          <Avatar url="https://www.fandimefilmu.cz/files/images/2020/01/14/article_main_dl0em0xw3c958ftm.jpg" />
+        <NavLink className={styles.avatar_link} to="/admin/profile">
+          <p className={styles.owner_name}>{ownerName}</p>
+          <Avatar url={avatar} />
         </NavLink>
       </div>
     </nav>

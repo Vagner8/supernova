@@ -3,9 +3,9 @@ import { cleanup, render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { Navbar } from './Navbar';
 
-const navbar = () => (
+const NavbarComponent = (avatar?: string, ownerName?: string ) => (
   <MemoryRouter initialEntries={['/admin']}>
-    <Navbar />
+    <Navbar avatar={avatar} ownerName={ownerName}/>
   </MemoryRouter>
 );
 const navbarElement = () => screen.getByRole('navigation');
@@ -17,19 +17,27 @@ describe('Navbar', () => {
     cleanup();
   });
   it('is exist', () => {
-    render(navbar());
+    render(NavbarComponent());
     expect(navbarElement()).toBeInTheDocument();
   });
   it('has link', () => {
-    render(navbar());
+    render(NavbarComponent());
     expect(linkElement()).toBeInTheDocument();
   });
   it('has class Navbar', () => {
-    render(navbar());
+    render(NavbarComponent());
     expect(navbarElement()).toHaveClass('Navbar');
   });
   it('has menu icon', () => {
-    render(navbar());
+    render(NavbarComponent());
     expect(menuButtonElement()).toBeInTheDocument();
   });
+  it('gets url, img appears', () => {
+    render(NavbarComponent('url'));
+    expect(screen.getByRole('img')).toBeInTheDocument();
+  })
+  it('gets name, name appears', () => {
+    render(NavbarComponent('url', 'name'));
+    expect(screen.getByText('name')).toBeInTheDocument();
+  })
 });

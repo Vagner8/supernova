@@ -9,7 +9,9 @@ export type IconName =
   | 'account_circle'
   | 'close'
   | 'delete'
-  | 'cancel';
+  | 'cancel'
+  | 'task_alt'
+  | 'warning';
 
 interface IconProps {
   className?: string;

@@ -1,19 +1,16 @@
-import { IconName, Title, Text } from 'UIKit';
-import { Icon } from 'UIKit/Icon/Icon';
-import styles from './point.module.css'
+import { ReactNode } from 'react';
+import styles from './point.module.css';
 
 interface PointProps {
   title: string;
-  children: string;
-  iconName?: IconName
+  children: ReactNode;
 }
 
-export function Point({title, children, iconName}: PointProps) {
+export function Point({ children, title }: PointProps) {
   return (
-    <div className={styles.Point}>
-      {iconName ? <Icon icon={iconName}/> : null}
-      <Title>{title}</Title>
-      <Text>{children}</Text>
-    </div>
-  )
+    <>
+      <h5>{title}</h5>
+      <div className={styles.Point}>{children}</div>
+    </>
+  );
 }

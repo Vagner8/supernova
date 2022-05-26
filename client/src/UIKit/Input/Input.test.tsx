@@ -6,21 +6,21 @@ import { Input } from 'UIKit';
 
 const passwordError: Err = {
   status: 400,
-  text: 'error message',
+  message: 'error message',
   field: 'password',
   logout: false,
 };
 
 const nameError: Err = {
   status: 400,
-  text: 'error message',
+  message: 'error message',
   field: 'name',
   logout: false,
 };
 
 const errorWithoutField: Err = {
   status: 400,
-  text: 'error message',
+  message: 'error message',
   field: null,
   logout: false,
 };

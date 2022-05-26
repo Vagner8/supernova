@@ -12,7 +12,7 @@ export const accessMiddleware =
       if (ownerId === "idle" || !ownerId || Array.isArray(ownerId)) {
         throw new Err({
           status: 403,
-          text: "no ownerId header",
+          message: "no ownerId header",
           field: null,
           logout: true,
         });
@@ -25,7 +25,7 @@ export const accessMiddleware =
           if (err) {
             throw new Err({
               status: 403,
-              text: "access token is expired",
+              message: "access token is expired",
               field: null,
               logout: true,
             });
@@ -38,7 +38,7 @@ export const accessMiddleware =
         if (!ownersColl) {
           throw new Err({
             status: 500,
-            text: `no connection ${CollName.Owners}`,
+            message: `no connection ${CollName.Owners}`,
             field: null,
             logout: true,
           });
@@ -50,7 +50,7 @@ export const accessMiddleware =
         if (!result) {
           throw new Err({
             status: 500,
-            text: "no refreshToken",
+            message: "no refreshToken",
             field: null,
             logout: true,
           });
@@ -62,7 +62,7 @@ export const accessMiddleware =
             if (err) {
               throw new Err({
                 status: 403,
-                text: "refresh token is expired",
+                message: "refresh token is expired",
                 field: null,
                 logout: true,
               });

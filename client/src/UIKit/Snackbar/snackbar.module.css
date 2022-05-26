@@ -1,0 +1,36 @@
+.Snackbar {
+  position: absolute;
+  left: 1.25rem;
+  bottom: 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: .75rem 1.25rem;
+  color: rgb(255, 255, 255);
+  border-radius: 4px;
+  box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 5px -1px, rgba(0, 0, 0, 0.14) 0px 6px 10px 0px, rgba(0, 0, 0, 0.12) 0px 1px 18px 0px;
+}
+
+.ok {
+  background-color: #66bb6a;
+}
+
+.error {
+  background-color: #e57373;
+}
+
+.warning {
+  background-color: #ffee58;
+}
+
+.message {
+  padding: 0 0.75rem;
+}
+
+.button {
+  border-radius: 50%;
+}
+
+.button:hover {
+  background-color: #4caf50;
+}

@@ -21,7 +21,7 @@ function getOwnerController(req, res, next) {
             if (!ownerId) {
                 throw new errorMiddleware_1.Err({
                     status: 403,
-                    text: `no ownerId: ${funcName}`,
+                    message: `no ownerId: ${funcName}`,
                     field: null,
                     logout: false,
                 });
@@ -30,7 +30,7 @@ function getOwnerController(req, res, next) {
             if (!ownersColl) {
                 throw new errorMiddleware_1.Err({
                     status: 500,
-                    text: `no connection: ${funcName}`,
+                    message: `no connection: ${funcName}`,
                     field: null,
                     logout: false,
                 });
@@ -46,7 +46,7 @@ function getOwnerController(req, res, next) {
             if (!owner) {
                 throw new errorMiddleware_1.Err({
                     status: 500,
-                    text: `owner no found: ${funcName}`,
+                    message: `owner no found: ${funcName}`,
                     field: null,
                     logout: false,
                 });

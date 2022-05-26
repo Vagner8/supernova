@@ -3,7 +3,7 @@ import { NextFunction, Request, Response } from "express";
 export class Err extends Error {
   constructor(public obj: {
     status: 400 | 403 | 500,
-    text: string,
+    message: string,
     logout: boolean,
     field: string | null
   }

@@ -49,7 +49,7 @@ export function Input({
         className={`${styles.label} ${showError(error, label) && styles.error}`}
         htmlFor={label}
       >
-        {`${label} ${showError(error, label) ? `- ${error?.text}` : ''}`}
+        {`${label} ${showError(error, label) ? `- ${error?.message}` : ''}`}
       </label>
       <input
         id={label}

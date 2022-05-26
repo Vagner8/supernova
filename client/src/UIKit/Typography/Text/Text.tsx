@@ -6,5 +6,5 @@ interface TextProps {
 }
 
 export function Text({ children }: TextProps) {
-  return <p className={styles.Title}>{children}</p>;
+  return <p className={styles.Text}>{children}</p>;
 }

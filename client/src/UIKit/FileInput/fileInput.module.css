@@ -43,12 +43,17 @@
 }
 
 .icon {
-  color: rgba(0,0,0,0.6);
+  color: rgba(0, 0, 0, 0.26);
   margin-left: .55rem;
 }
 
 .delete {
-  color: rgba(0,0,0,0.6);
+  color: rgba(0, 0, 0, 0.26);
+}
+
+.delete:hover,
+.icon:hover {
+  color: rgba(0, 0, 0, 0.4);
 }
 
 .Eraser {

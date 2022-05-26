@@ -31,7 +31,7 @@ export type AuthReducerActions = SetOnChange | SetDisabledSubmit;
 export const authInitState: AuthState = {
   inputs: [
     {
-      label: 'name',
+      label: 'login',
       type: 'text',
       value: '',
     },

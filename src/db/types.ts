@@ -1,19 +1,27 @@
-import { NextFunction, Request, Response } from "express";
 import { ObjectId } from "mongodb";
 
 export interface Owner {
   _id: ObjectId;
   ownerId: string | undefined;
+  login: string;
   password: string;
   refreshToken: string | undefined;
 
-  name: string;
-  surname: string;
-  email: string;
-  phone: string;
-  city: string;
-  zip: string;
-  address: string; 
+  personal: {
+    name: string;
+    surname: string;
+    avatar: string;
+  }
+  contacts: {
+    email: string;
+    phone: string;
+  }
+  address: {
+    city: string;
+    zip: string;
+    street: string;
+    number: string; 
+  }
 }
 
 export enum DataBase {

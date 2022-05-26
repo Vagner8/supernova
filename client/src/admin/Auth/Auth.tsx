@@ -45,7 +45,7 @@ export function Auth({ adminDispatch, adminState }: AuthProps) {
       API.Registration,
       adminDispatch,
       {
-        name: authState.inputs[0].value,
+        login: authState.inputs[0].value,
         password: authState.inputs[1].value,
       },
     );

@@ -1,4 +1,10 @@
-import React, { Dispatch, lazy, Suspense, useEffect, useReducer } from 'react';
+import React, {
+  Dispatch,
+  lazy,
+  Suspense,
+  useEffect,
+  useReducer,
+} from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { Auth } from './Auth/Auth';
 import {
@@ -9,7 +15,7 @@ import {
   AdminStrAction,
   Owner,
 } from './adminReducer';
-import { Linear, Navbar } from 'UIKit';
+import { Linear, Navbar, Snackbar } from 'UIKit';
 import { API, fetcher } from 'api/fetcher';
 
 const Home = lazy(() => import('./Home/Home'));
@@ -40,19 +46,28 @@ function AdminRoutes({ adminState, adminDispatch }: AdminRoutesProps) {
         });
       }
       adminDispatch({ type: AdminStrAction.SaveOwner, payload: response });
+      adminDispatch({
+        type: AdminStrAction.SaveLoading,
+        payload: { type: 'ok', message: 'Success data is uploaded' },
+      });
     };
     fetchOwner();
   }, [adminDispatch]);
 
   return (
     <>
-      <Navbar />
+      <Snackbar loading={adminState.loading} adminDispatch={adminDispatch} />
+      <Linear show={adminState.isFetching} />
+      <Navbar
+        ownerName={adminState.owner?.personal.name}
+        avatar={adminState.owner?.personal.avatar}
+      />
       <Suspense fallback={<Linear show={true} />}>
         <Routes>
           <Route index element={<Home adminDispatch={adminDispatch} />} />
           <Route
             path="/profile"
-            element={<Profile adminState={adminState} />}
+            element={<Profile owner={adminState.owner} />}
           />
         </Routes>
       </Suspense>

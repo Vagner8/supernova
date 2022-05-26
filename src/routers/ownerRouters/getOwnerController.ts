@@ -14,7 +14,7 @@ export async function getOwnerController(
     if (!ownerId) {
       throw new Err({
         status: 403,
-        text: `no ownerId: ${funcName}`,
+        message: `no ownerId: ${funcName}`,
         field: null,
         logout: false,
       });
@@ -23,7 +23,7 @@ export async function getOwnerController(
     if (!ownersColl) {
       throw new Err({
         status: 500,
-        text: `no connection: ${funcName}`,
+        message: `no connection: ${funcName}`,
         field: null,
         logout: false,
       });
@@ -42,7 +42,7 @@ export async function getOwnerController(
     if (!owner) {
       throw new Err({
         status: 500,
-        text: `owner no found: ${funcName}`,
+        message: `owner no found: ${funcName}`,
         field: null,
         logout: false,
       });

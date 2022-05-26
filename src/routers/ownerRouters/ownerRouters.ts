@@ -1,8 +1,8 @@
-import express from 'express'
-import { getOwnerController } from './getOwnerController'
+import express from "express";
+import { getOwnerController } from "./getOwnerController";
 
-const router = express.Router()
+const router = express.Router();
 
-router.get('/', getOwnerController)
+router.get("/", getOwnerController);
 
-export default router
+export default router;

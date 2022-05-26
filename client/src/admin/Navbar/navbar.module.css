@@ -1,9 +1,13 @@
 .Navbar {
+  position: fixed;
+  left: 0;
+  right: 0;
   background-color: #ee6e73;
   height: 64px;
   padding: 0 .75rem;
   color: white;
   display: flex;
+  box-shadow: rgba(0, 0, 0, 0.2) 0px 2px 4px -1px, rgba(0, 0, 0, 0.14) 0px 4px 5px 0px, rgba(0, 0, 0, 0.12) 0px 1px 10px 0px;
 }
 
 .lift {
@@ -29,4 +33,14 @@
 
 .button {
   color: white;
+}
+
+.avatar_link {
+  color: white;
+  display: flex;
+  align-items: center;
+}
+
+.owner_name {
+  margin-right: .75rem;
 }

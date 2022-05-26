@@ -30,7 +30,7 @@ const onChange = async () => {
   if (input) await userEvent.upload(input, files());
   return input;
 };
-const closeElement = () => screen.getAllByText(/close/i);
+const closeElement = () => screen.getAllByText(/cancel/i);
 const eraser = () => screen.getByText(/delete/i);
 
 describe('FileInput', () => {

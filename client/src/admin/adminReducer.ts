@@ -6,23 +6,38 @@ export enum AdminStrAction {
   SaveOwnerId = 'SaveOwnerId',
   SaveError = 'SaveError',
   DeleteError = 'DeleteError',
-  SaveOwner = 'SaveOwner'
+  SaveOwner = 'SaveOwner',
+  SaveLoading = 'SaveLoading'
 }
 
 export interface Owner {
-  name: string;
-  surname: string;
-  email: string;
-  phone: string;
-  city: string;
-  zip: string;
-  address: string;
+  personal: {
+    name: string;
+    surname: string;
+    avatar: string;
+  };
+  contacts: {
+    email: string;
+    phone: string;
+  };
+  address: {
+    city: string;
+    zip: string;
+    street: string;
+    number: string;
+  };
+}
+
+export interface Loading {
+  type: 'ok' | 'error' | 'warning';
+  message: string;
 }
 
 export interface AdminState {
   isFetching: boolean;
   error: Err | null;
   owner: Owner | null;
+  loading: Loading | null;
 }
 
 export interface OwnerId {
@@ -50,7 +65,12 @@ interface DeleteError {
 
 interface SaveOwner {
   type: AdminStrAction.SaveOwner;
-  payload: Owner
+  payload: Owner;
+}
+
+interface SaveLoading {
+  type: AdminStrAction.SaveLoading;
+  payload: Loading | null;
 }
 
 export type AdminReducerActions =
@@ -58,12 +78,14 @@ export type AdminReducerActions =
   | SaveOwnerId
   | SaveError
   | DeleteError
-  | SaveOwner;
+  | SaveOwner
+  | SaveLoading;
 
 export const adminInitState: AdminState = {
   isFetching: false,
   error: null,
   owner: null,
+  loading: null,
 };
 
 export const adminReducer: Reducer<AdminState, AdminReducerActions> = (
@@ -86,7 +108,7 @@ export const adminReducer: Reducer<AdminState, AdminReducerActions> = (
           error: {
             ...state.error,
             status: 400,
-            text: 'unexpected error',
+            message: 'unexpected error',
             logout: false,
             field: null,
           },
@@ -95,19 +117,18 @@ export const adminReducer: Reducer<AdminState, AdminReducerActions> = (
       action.payload.logout && localStorage.removeItem('ownerId');
       return {
         ...state,
-        error: {
-          ...state.error,
-          status: action.payload.status,
-          text: action.payload.text,
-          logout: action.payload.logout,
-          field: action.payload.field,
-        },
+        error: action.payload
       };
     }
-    case AdminStrAction.SaveOwner: 
+    case AdminStrAction.SaveOwner:
       return {
         ...state,
-        owner: action.payload
+        owner: action.payload,
+      };
+    case AdminStrAction.SaveLoading: 
+      return {
+        ...state,
+        loading: action.payload
       }
     default:
       return state;

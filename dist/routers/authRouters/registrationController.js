@@ -23,24 +23,24 @@ const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 function registrationController(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         const funcName = registrationController.name;
-        const { name, password } = req.body;
+        const { login, password } = req.body;
         try {
             const ownersColl = yield useDataBase_1.superAdmin.connect(types_1.CollName.Owners);
             if (!ownersColl) {
                 throw new errorMiddleware_1.Err({
                     status: 500,
-                    text: `no connection: ${funcName}`,
+                    message: `no connection: ${funcName}`,
                     field: null,
                     logout: false,
                 });
             }
             const useToken = new UseToken_1.UseToken(res, ownersColl);
-            const owner = yield ownersColl.findOne({ name });
+            const owner = yield ownersColl.findOne({ login });
             if (!owner) {
                 throw new errorMiddleware_1.Err({
                     status: 403,
-                    text: `${name} not exist`,
-                    field: "name",
+                    message: `${login} not exist`,
+                    field: "login",
                     logout: false,
                 });
             }
@@ -48,7 +48,7 @@ function registrationController(req, res, next) {
                 if (!bcryptjs_1.default.compareSync(password, owner.password)) {
                     throw new errorMiddleware_1.Err({
                         status: 400,
-                        text: "incorrect",
+                        message: "incorrect",
                         field: "password",
                         logout: false,
                     });
@@ -61,7 +61,7 @@ function registrationController(req, res, next) {
                 if (password !== owner.password) {
                     throw new errorMiddleware_1.Err({
                         status: 400,
-                        text: "incorrect",
+                        message: "incorrect",
                         field: "password",
                         logout: false,
                     });
@@ -69,7 +69,7 @@ function registrationController(req, res, next) {
                 const encryptedPassword = yield bcryptjs_1.default.hash(password, 10);
                 const uniqueId = (0, uuid_1.v4)();
                 const refreshToken = jsonwebtoken_1.default.sign({ ownerId: uniqueId }, process.env.REFRESH_SECRET);
-                const result = yield ownersColl.updateOne({ name }, {
+                const result = yield ownersColl.updateOne({ login }, {
                     $set: {
                         refreshToken,
                         ownerId: uniqueId,
