@@ -10,7 +10,7 @@ const mockFirebaseSender = uploadFiles as jest.MockedFunction<
   typeof uploadFiles
 >;
 
-const fileInput = () => <FileInput multiple={true} />;
+const fileInput = () => <FileInput title='title' multiple={true} />;
 
 const buttonElement = (title: 'file' | 'send' = 'file') =>
   screen.getByRole('button', { name: RegExp(title, 'i') });

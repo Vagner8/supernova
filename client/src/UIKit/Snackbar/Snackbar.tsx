@@ -1,41 +1,61 @@
 import {
   AdminReducerActions,
   AdminStrAction,
-  Loading,
+  EventResult,
 } from 'admin/adminReducer';
 import { Dispatch, useEffect } from 'react';
 import { Icon } from 'UIKit';
 import styles from './snackbar.module.css';
 
 interface SnackbarProps {
-  loading: Loading | null;
+  eventResult: EventResult | null;
   adminDispatch: Dispatch<AdminReducerActions>;
 }
 
-export function Snackbar({ loading, adminDispatch }: SnackbarProps) {
-  const icons: { ok: 'task_alt'; error: 'error'; warning: 'warning' } = {
+let started: boolean = false;
+let timer: any;
+
+export function Snackbar({ eventResult, adminDispatch }: SnackbarProps) {
+  const icons: {
+    ok: 'task_alt';
+    error: 'error';
+    warning: 'warning';
+  } = {
     ok: 'task_alt',
     error: 'error',
     warning: 'warning',
   };
 
   useEffect(() => {
-    if (loading?.type === 'error') return
-    setTimeout(() => {
-      adminDispatch({ type: AdminStrAction.saveDownloadResult, payload: null });
-    }, 3000);
-  }, [adminDispatch, loading?.type]);
+    const go = () => {
+      started = true;
+      timer = setTimeout(() => {
+        if (eventResult?.status === 'error') return;
+        adminDispatch({
+          type: AdminStrAction.SaveEventResult,
+          payload: { eventResult: null },
+        });
+        started = false;
+      }, 3000);
+    };
+    if (!started) return go();
+    clearTimeout(timer);
+    go();
+  }, [adminDispatch, eventResult?.status]);
 
-  if (!loading) return null;
+  if (!eventResult) return null;
 
   const onClick = () => {
-    adminDispatch({ type: AdminStrAction.saveDownloadResult, payload: null });
+    adminDispatch({
+      type: AdminStrAction.SaveEventResult,
+      payload: { eventResult: null },
+    });
   };
 
   return (
-    <div className={`${styles.Snackbar} ${styles[loading.type]}`}>
-      <Icon icon={icons[loading.type]} />
-      <p className={styles.message}>{loading.message}</p>
+    <div className={`${styles.Snackbar} ${styles[eventResult.status]}`}>
+      <Icon icon={icons[eventResult.status]} />
+      <p className={styles.message}>{eventResult.message}</p>
       <button onClick={onClick} className={styles.button}>
         <Icon icon="close" />
       </button>

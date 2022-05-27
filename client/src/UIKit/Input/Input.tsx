@@ -1,5 +1,5 @@
 import { Err } from 'api/fetcher';
-import { ChangeEvent, FocusEvent, useState } from 'react';
+import { ChangeEvent, FocusEvent, useEffect, useState } from 'react';
 import { Visibility } from 'UIKit';
 import styles from './input.module.css';
 
@@ -18,8 +18,14 @@ export function Input({
   error,
   onChange,
 }: InputProps) {
-  const [active, setActive] = useState('');
+  const [active, setActive] = useState<'active' | ''>('');
   const [hidePassword, setHidePassword] = useState(true);
+
+  useEffect(() => {
+    if (!value) return
+    setActive('active')
+  }, [value])
+
   const onFocus = () => {
     setActive('active');
   };

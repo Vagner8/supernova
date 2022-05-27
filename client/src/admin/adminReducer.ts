@@ -7,29 +7,42 @@ export enum AdminStrAction {
   SaveError = 'SaveError',
   DeleteError = 'DeleteError',
   SaveOwner = 'SaveOwner',
-  saveDownloadResult = 'saveDownloadResult'
+  SaveEventResult = 'SaveEventResult',
+  SaveOwnerChanges = 'SaveOwnerChanges',
+}
+
+export interface Personal {
+  name: string;
+  surname: string;
+  avatar: string;
+}
+
+export interface Contacts {
+  email: string;
+  phone: string;
+}
+
+export interface Address {
+  city: string;
+  zip: string;
+  street: string;
+  number: string;
 }
 
 export interface Owner {
-  personal: {
-    name: string;
-    surname: string;
-    avatar: string;
-  };
-  contacts: {
-    email: string;
-    phone: string;
-  };
-  address: {
-    city: string;
-    zip: string;
-    street: string;
-    number: string;
-  };
+  personal: Personal;
+  contacts: Contacts;
+  address: Address;
 }
 
-export interface Loading {
-  type: 'ok' | 'error' | 'warning';
+export type OwnerKeys = keyof Owner;
+type PersonalKeys = keyof Owner['personal'];
+type ContactsKeys = keyof Owner['contacts'];
+type AddressKeys = keyof Owner['address'];
+export type OwnerNestedKeys = PersonalKeys | ContactsKeys | AddressKeys;
+
+export interface EventResult {
+  status: 'ok' | 'error' | 'warning';
   message: string;
 }
 
@@ -37,7 +50,8 @@ export interface AdminState {
   isFetching: boolean;
   error: Err | null;
   owner: Owner | null;
-  loading: Loading | null;
+  ownerCopy: Owner | null;
+  eventResult: EventResult | null;
 }
 
 export interface OwnerId {
@@ -56,7 +70,7 @@ interface SaveOwnerId {
 
 interface SaveError {
   type: AdminStrAction.SaveError;
-  payload: Err | undefined;
+  payload: { error: Err | undefined };
 }
 
 interface DeleteError {
@@ -68,9 +82,18 @@ interface SaveOwner {
   payload: Owner;
 }
 
-interface saveDownloadResult {
-  type: AdminStrAction.saveDownloadResult;
-  payload: Loading | null;
+interface SaveEventResult {
+  type: AdminStrAction.SaveEventResult;
+  payload: { eventResult: EventResult | null };
+}
+
+interface SaveOwnerChanges {
+  type: AdminStrAction.SaveOwnerChanges;
+  payload: {
+    name: OwnerNestedKeys;
+    value: string;
+    key: OwnerKeys;
+  };
 }
 
 export type AdminReducerActions =
@@ -79,13 +102,15 @@ export type AdminReducerActions =
   | SaveError
   | DeleteError
   | SaveOwner
-  | saveDownloadResult;
+  | SaveEventResult
+  | SaveOwnerChanges;
 
 export const adminInitState: AdminState = {
   isFetching: false,
   error: null,
   owner: null,
-  loading: null,
+  ownerCopy: null,
+  eventResult: null,
 };
 
 export const adminReducer: Reducer<AdminState, AdminReducerActions> = (
@@ -102,7 +127,7 @@ export const adminReducer: Reducer<AdminState, AdminReducerActions> = (
       localStorage.setItem('ownerId', action.payload.ownerId);
       return state;
     case AdminStrAction.SaveError: {
-      if (!action.payload) {
+      if (!action.payload.error) {
         return {
           ...state,
           error: {
@@ -114,10 +139,10 @@ export const adminReducer: Reducer<AdminState, AdminReducerActions> = (
           },
         };
       }
-      action.payload.logout && localStorage.removeItem('ownerId');
+      action.payload.error.logout && localStorage.removeItem('ownerId');
       return {
         ...state,
-        error: action.payload
+        error: action.payload.error,
       };
     }
     case AdminStrAction.SaveOwner:
@@ -125,11 +150,25 @@ export const adminReducer: Reducer<AdminState, AdminReducerActions> = (
         ...state,
         owner: action.payload,
       };
-    case AdminStrAction.saveDownloadResult: 
+    case AdminStrAction.SaveEventResult:
       return {
         ...state,
-        loading: action.payload
-      }
+        eventResult: action.payload.eventResult,
+      };
+    case AdminStrAction.SaveOwnerChanges:
+      const { key, name, value } = action.payload;
+      if (!state.owner) return state;
+      if (!state.ownerCopy) state.ownerCopy = state.owner;
+      return {
+        ...state,
+        owner: {
+          ...state.owner,
+          [key]: {
+            ...state.owner[key],
+            [name]: value,
+          },
+        },
+      };
     default:
       return state;
   }

@@ -52,7 +52,7 @@ export function Auth({ adminDispatch, adminState }: AuthProps) {
     if (!response || 'logout' in response) {
       return adminDispatch({
         type: AdminStrAction.SaveError,
-        payload: response,
+        payload: {error: response},
       });
     }
     adminDispatch({ type: AdminStrAction.SaveOwnerId, payload: response });

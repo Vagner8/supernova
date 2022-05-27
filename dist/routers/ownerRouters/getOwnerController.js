@@ -41,6 +41,7 @@ function getOwnerController(req, res, next) {
                     ownerId: 0,
                     password: 0,
                     refreshToken: 0,
+                    login: 0
                 },
             });
             if (!owner) {

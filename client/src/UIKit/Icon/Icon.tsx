@@ -11,7 +11,9 @@ export type IconName =
   | 'delete'
   | 'cancel'
   | 'task_alt'
-  | 'warning';
+  | 'warning'
+  | 'edit'
+  | 'block';
 
 interface IconProps {
   className?: string;

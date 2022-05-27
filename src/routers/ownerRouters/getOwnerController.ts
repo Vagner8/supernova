@@ -36,6 +36,7 @@ export async function getOwnerController(
           ownerId: 0,
           password: 0,
           refreshToken: 0,
+          login: 0
         },
       }
     );

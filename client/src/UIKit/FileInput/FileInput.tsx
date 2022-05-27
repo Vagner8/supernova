@@ -5,9 +5,10 @@ import styles from './fileInput.module.css';
 
 interface FileInputProps {
   multiple: boolean;
+  title: string;
 }
 
-export function FileInput({ multiple }: FileInputProps) {
+export function FileInput({ multiple, title }: FileInputProps) {
   const [files, setFiles] = useState<File[]>();
   const [canSend, setCanSend] = useState(false);
   const [isSending, setIsSending] = useState(false)
@@ -37,7 +38,7 @@ export function FileInput({ multiple }: FileInputProps) {
   };
 
   const deleteAll = () => setFiles([])
-  const setTitle = () => canSend ? 'send' : 'file'
+  const setTitle = () => canSend ? 'send' : title
 
   return (
     <div className={styles.FileInput}>
@@ -90,7 +91,7 @@ function Chips({ files, deleteOne, deleteAll }: ChipsProps) {
       {files.map((file, index) => (
         <div className={styles.small} key={file.name}>
           <div className={styles.wrap_file_names}>
-            {file.name}
+            <p className={styles.file_name}>{file.name}</p>
             <button onClick={deleteOne(index)}>
               <Icon className={styles.icon} icon="cancel" />
             </button>

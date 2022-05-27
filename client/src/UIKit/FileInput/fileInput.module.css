@@ -18,7 +18,6 @@
 .file_names {
   display: flex;
   flex-wrap: wrap;
-  margin-left: 0.75rem;
 }
 
 .small {
@@ -58,4 +57,11 @@
 
 .Eraser {
   margin-bottom: .25rem;
+}
+
+.file_name {
+  max-width: 100px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis; 
 }

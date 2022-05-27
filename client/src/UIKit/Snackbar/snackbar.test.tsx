@@ -1,10 +1,10 @@
 import { cleanup, render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { Snackbar } from './Snackbar';
-import { Loading } from 'admin/adminReducer';
+import { EventResult } from 'admin/adminReducer';
 
-const SnackbarComponent = (loading: Loading) => (
-  <Snackbar loading={loading} adminDispatch={jest.fn} />
+const SnackbarComponent = (eventResult: EventResult) => (
+  <Snackbar eventResult={eventResult} adminDispatch={jest.fn} />
 );
 
 describe('Snackbar', () => {
@@ -14,7 +14,7 @@ describe('Snackbar', () => {
   it('has Snackbar class', () => {
     const { container } = render(
       SnackbarComponent({
-        type: 'ok',
+        status: 'ok',
         message: 'message',
       }),
     );
@@ -23,7 +23,7 @@ describe('Snackbar', () => {
   it('gets ok type', () => {
     const { container } = render(
       SnackbarComponent({
-        type: 'ok',
+        status: 'ok',
         message: 'message',
       }),
     );
@@ -33,7 +33,7 @@ describe('Snackbar', () => {
   it('gets error type', () => {
     const { container } = render(
       SnackbarComponent({
-        type: 'error',
+        status: 'error',
         message: 'message',
       }),
     );
@@ -43,7 +43,7 @@ describe('Snackbar', () => {
   it('gets warning type', () => {
     const { container } = render(
       SnackbarComponent({
-        type: 'warning',
+        status: 'warning',
         message: 'message',
       }),
     );

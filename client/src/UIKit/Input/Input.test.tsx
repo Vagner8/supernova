@@ -1,5 +1,5 @@
 import '@testing-library/jest-dom';
-import { cleanup, render, screen } from '@testing-library/react';
+import { cleanup, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Err } from 'api/fetcher';
 import { Input } from 'UIKit';
@@ -59,7 +59,6 @@ describe('Input', () => {
         {NameInputComponent(passwordError)}
       </div>,
     );
-    screen.debug();
     expect(inputElement('password')).toHaveClass('error');
     expect(container.querySelector('label[for=password]')).toHaveTextContent(
       'password - error message',
@@ -70,7 +69,7 @@ describe('Input', () => {
     );
   });
   it('gets name error, only name input has error', () => {
-    const {container} = render(
+    const { container } = render(
       <div>
         {PasswordInputComponent(nameError)}
         {NameInputComponent(nameError)}
@@ -86,7 +85,7 @@ describe('Input', () => {
     );
   });
   it('gets error without field, all input have error', () => {
-    const {container} = render(
+    const { container } = render(
       <div>
         {PasswordInputComponent(errorWithoutField)}
         {NameInputComponent(errorWithoutField)}
@@ -100,10 +99,14 @@ describe('Input', () => {
     expect(container.querySelector('label[for=name]')).toHaveTextContent(
       'name - error message',
     );
-  })
+  });
   it('can show password', async () => {
-    render(PasswordInputComponent(null))
-    await userEvent.click(screen.getByText(/visibility_off/i))
-    expect((inputElement('password') as HTMLInputElement).type).toEqual('text')
-  })
+    render(PasswordInputComponent(null));
+    await userEvent.click(screen.getByText(/visibility_off/i));
+    expect((inputElement('password') as HTMLInputElement).type).toEqual('text');
+  });
+  it('has value, label gets active class', () => {
+    const { container } = render(PasswordInputComponent(null));
+    expect(container.querySelector('.active')).toBeInTheDocument();
+  });
 });
