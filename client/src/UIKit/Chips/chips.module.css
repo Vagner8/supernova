@@ -1,0 +1,36 @@
+.Chips {
+  display: flex;
+  align-items: center;
+  color: rgba(0,0,0,0.6);
+  height: 36px;
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(0,0,0,0.6);
+  line-height: 32px;
+  padding-left: 12px;
+  padding-right: 6px;
+  border-radius: 16px;
+  background-color: #e4e4e4;
+  margin-bottom: .25rem;
+  margin-right: .25rem;
+}
+
+.Chips.with_img {
+  padding-left: 0px;
+}
+
+.icon {
+  color: rgba(0, 0, 0, 0.26);
+  margin-left: .55rem;
+}
+
+.icon:hover {
+  color: rgba(0, 0, 0, 0.4);
+}
+
+.text {
+  max-width: 100px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis; 
+}

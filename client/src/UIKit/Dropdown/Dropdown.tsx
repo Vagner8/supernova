@@ -3,10 +3,11 @@ import styles from './dropdown.module.css';
 
 interface DropdownProps {
   list: string[];
+  saveButton: boolean;
   handleTarget: (target: HTMLButtonElement) => void;
 }
 
-export function Dropdown({ list, handleTarget }: DropdownProps) {
+export function Dropdown({ list, saveButton, handleTarget }: DropdownProps) {
   const [show, setSow] = useState(false);
 
   useEffect(() => {
@@ -30,7 +31,7 @@ export function Dropdown({ list, handleTarget }: DropdownProps) {
     setSow(false);
     if (!e.target) return;
     const target = e.target as HTMLButtonElement;
-    handleTarget(target)
+    handleTarget(target);
   };
 
   return (
@@ -47,6 +48,9 @@ export function Dropdown({ list, handleTarget }: DropdownProps) {
               </button>
             </li>
           ))}
+          {saveButton ? (
+            <button className={styles.save_button}>save</button>
+          ) : null}
         </ul>
       ) : null}
     </div>

@@ -3,7 +3,7 @@ import styles from './avatar.module.css';
 
 export interface ProfileProps {
   url: string | undefined;
-  size: 'xs' | 'm' | 'l';
+  size: 'xs' | 'm' | 'l' | 'chips';
 }
 
 export function Avatar({ url, size }: ProfileProps) {

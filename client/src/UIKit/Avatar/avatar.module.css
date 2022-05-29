@@ -10,6 +10,12 @@
   font-size: xx-large;
 }
 
+.chips {
+  width: 36px;
+  height: 36px;
+  margin-right: 12px;
+}
+
 .xs {
   width: 40px;
   height: 40px;

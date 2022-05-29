@@ -12,6 +12,8 @@ export * from './Circular/Circular';
 export * from './Point/Point';
 export * from './Snackbar/Snackbar';
 export * from './Dropdown/Dropdown';
+export * from './BottomSheetModals/BottomSheetModals';
+export * from './Chips/Chips';
 
 export * from './Typography/Text/Text';
 export * from './Typography/Title/Title';

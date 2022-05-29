@@ -1,18 +1,19 @@
 import { cleanup, render } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import Profile from './Profile';
-import { Owner } from 'admin/adminReducer';
+import { ProfileType } from './profileReducer';
 
-const ProfileComponent = (owner: Owner | null) => (
+const ProfileComponent = () => (
   <Profile
     adminDispatch={jest.fn}
     eventsDispatch={jest.fn}
-    owner={owner}
+    filesDispatch={jest.fn}
+    files={null}
     editMode={false}
   />
 );
 
-const owner: Owner = {
+const owner: ProfileType = {
   personal: {
     name: 'name',
     surname: 'surname',
@@ -35,7 +36,7 @@ describe('Profile', () => {
     cleanup();
   });
   it('has Snackbar class', async () => {
-    const { container } = render(ProfileComponent(owner));
+    const { container } = render(ProfileComponent());
     expect(container.querySelector('.Profile')).toBeInTheDocument();
   });
 });

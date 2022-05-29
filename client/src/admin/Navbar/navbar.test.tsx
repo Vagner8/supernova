@@ -6,12 +6,15 @@ import { Navbar } from './Navbar';
 const NavbarComponent = (avatar: string, ownerName: string) => (
   <MemoryRouter initialEntries={['/admin']}>
     <Navbar
+      saveButton={true}
+      dependentState='adminState'
       editMode={false}
-      avatar={avatar}
-      ownerName={ownerName}
+      // avatar={avatar}
+      // ownerName={ownerName}
       events={['1']}
       eventsDispatch={jest.fn}
       adminDispatch={jest.fn}
+      filesDispatch={jest.fn}
     />
   </MemoryRouter>
 );

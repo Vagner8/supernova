@@ -1,27 +1,34 @@
 import { AdminReducerActions } from 'admin/adminReducer';
 import { Events } from 'admin/Events/Events';
-import { EventsReducerActions, EventsType } from 'admin/Events/eventsReducer';
+import {
+  DependentState,
+  EventsReducerActions,
+  EventsType,
+} from 'admin/Events/eventsReducer';
+import { FilesReducerActions } from 'admin/filesReducer';
 import { Dispatch } from 'react';
 import { NavLink } from 'react-router-dom';
 import { Icon, Avatar } from 'UIKit';
 import styles from './navbar.module.css';
 
 interface NavbarProps {
-  avatar: string | undefined;
-  ownerName: string | undefined;
   editMode: boolean;
-  events: EventsType
+  events: EventsType;
+  dependentState: DependentState | null;
+  saveButton: boolean;
   eventsDispatch: Dispatch<EventsReducerActions>;
   adminDispatch: Dispatch<AdminReducerActions>;
+  filesDispatch: Dispatch<FilesReducerActions>
 }
 
 export function Navbar({
-  avatar,
-  ownerName,
   events,
   editMode,
+  dependentState,
+  saveButton,
   eventsDispatch,
   adminDispatch,
+  filesDispatch
 }: NavbarProps) {
   return (
     <nav className={styles.Navbar}>
@@ -32,15 +39,18 @@ export function Navbar({
         <Events
           events={events}
           editMode={editMode}
+          dependentState={dependentState}
+          saveButton={saveButton}
           eventsDispatch={eventsDispatch}
           adminDispatch={adminDispatch}
+          filesDispatch={filesDispatch}
         />
       </div>
       <div className={styles.right}>
-        <NavLink className={styles.avatar_link} to="/admin/profile">
+        {/* <NavLink className={styles.avatar_link} to="/admin/profile">
           <p className={styles.owner_name}>{ownerName}</p>
           <Avatar url={avatar} size="xs" />
-        </NavLink>
+        </NavLink> */}
       </div>
     </nav>
   );

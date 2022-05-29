@@ -40,6 +40,17 @@
   padding: .75rem 1.25rem;
 }
 
+.save_button {
+  font-size: 16px;
+  width: 100%;
+  padding: .75rem 1.25rem;
+  background-color: #26a69a;
+}
+
+.save_button:hover {
+  background-color: #2bbbad;
+}
+
 .li_button:hover {
   background-color: #eee;
   cursor: pointer;
