@@ -1,6 +1,5 @@
 import 'dotenv/config'
 
-const userName = encodeURIComponent(process.env.MONGO_USER);
 const password = encodeURIComponent(process.env.MONGO_PASSWORD);
 
-export const url = `mongodb+srv://${userName}:${password}@server-super-admin.wmlhf.mongodb.net/super-admin?retryWrites=true&w=majority`;
+export const url = `mongodb+srv://vagner:${password}@supernova.1nqe9.mongodb.net/?retryWrites=true&w=majority`

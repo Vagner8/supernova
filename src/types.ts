@@ -1,5 +1,5 @@
 export enum DataBase {
-  SuperAdmin = "super-admin",
+  Supernova = "supernova",
 }
 
 export enum CollName {

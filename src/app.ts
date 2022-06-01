@@ -27,7 +27,7 @@ app.use(errorMiddleware);
 export const restartServer = async () => {
   const client = new MongoClient(url);
   await client.connect()
-  db = client.db(DataBase.SuperAdmin)
+  db = client.db(DataBase.Supernova)
   app.listen(process.env.PORT, () => {
     console.log(`Server has been started on port ${process.env.PORT}`);
   });

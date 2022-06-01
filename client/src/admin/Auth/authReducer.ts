@@ -58,8 +58,6 @@ export const authReducer: Reducer<AuthState, AuthReducerActions> = (
             return {
               ...input,
               value,
-              error: false,
-              helperText: ' ',
             };
           }
           return input;

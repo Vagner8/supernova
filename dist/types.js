@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.CollName = exports.DataBase = void 0;
 var DataBase;
 (function (DataBase) {
-    DataBase["SuperAdmin"] = "super-admin";
+    DataBase["Supernova"] = "supernova";
 })(DataBase = exports.DataBase || (exports.DataBase = {}));
 var CollName;
 (function (CollName) {
