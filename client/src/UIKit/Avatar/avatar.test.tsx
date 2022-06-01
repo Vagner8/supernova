@@ -21,7 +21,7 @@ describe('Avatar', () => {
     expect(container.querySelector('.m')).toBeInTheDocument();
   });
   it('gets icon if no url', () => {
-    const { container } = render(avatar({ url: undefined, size: 'l' }));
+    const { container } = render(avatar({ url: null, size: 'l' }));
     expect(screen.getByText(/account_circle/i)).toBeInTheDocument();
     expect(container.querySelector('.l')).toBeInTheDocument();
   });

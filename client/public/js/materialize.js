@@ -59,7 +59,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
   }
 
   function onReady(fn) {
-    if (doc.readyState !== "eventResult") {
+    if (doc.readyState !== "fetchResult") {
       fn();
     } else {
       doc.addEventListener("DOMContentLoaded", fn);

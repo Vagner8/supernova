@@ -1,4 +1,4 @@
-import { AdminReducerActions } from 'admin/adminReducer';
+import { AdminReducerActions, AdminState } from 'admin/adminReducer';
 import { Events } from 'admin/Events/Events';
 import {
   DependentState,
@@ -16,9 +16,11 @@ interface NavbarProps {
   events: EventsType;
   dependentState: DependentState | null;
   saveButton: boolean;
+  login: AdminState['login'];
+  avatar: AdminState['avatar'];
   eventsDispatch: Dispatch<EventsReducerActions>;
   adminDispatch: Dispatch<AdminReducerActions>;
-  filesDispatch: Dispatch<FilesReducerActions>
+  filesDispatch: Dispatch<FilesReducerActions>;
 }
 
 export function Navbar({
@@ -26,9 +28,11 @@ export function Navbar({
   editMode,
   dependentState,
   saveButton,
+  login,
+  avatar,
   eventsDispatch,
   adminDispatch,
-  filesDispatch
+  filesDispatch,
 }: NavbarProps) {
   return (
     <nav className={styles.Navbar}>
@@ -47,10 +51,10 @@ export function Navbar({
         />
       </div>
       <div className={styles.right}>
-        {/* <NavLink className={styles.avatar_link} to="/admin/profile">
-          <p className={styles.owner_name}>{ownerName}</p>
+        <NavLink className={styles.avatar_link} to="/admin/profile">
+          <p className={styles.login}>{login}</p>
           <Avatar url={avatar} size="xs" />
-        </NavLink> */}
+        </NavLink>
       </div>
     </nav>
   );

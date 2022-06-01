@@ -1,8 +1,4 @@
-import {
-  AdminReducerActions,
-  AdminState,
-  AdminStrAction,
-} from 'admin/adminReducer';
+import { AdminReducerActions, FetchResult } from 'admin/adminReducer';
 import {
   EventNames,
   EventsReducerActions,
@@ -14,14 +10,22 @@ import {
   FilesState,
   FilesStrAction,
 } from 'admin/filesReducer';
-import { ChangeEvent, Dispatch, Fragment, useEffect, useReducer } from 'react';
-import { Avatar, Container, FileInput, Input, Point } from 'UIKit';
+import { ChangeEvent, Dispatch, useCallback, useEffect, useReducer } from 'react';
+import { Avatar, Container, FileInput, Form } from 'UIKit';
 import styles from './profile.module.css';
-import { profileInitState, profileReducer } from './profileReducer';
+import { storeOwnerPII } from './profileApi';
+import {
+  OwnerPIIKeys,
+  profileInitState,
+  profileReducer,
+  ProfileStrAction,
+} from './profileReducer';
 
 interface ProfileProps {
   editMode: EventsState['editMode'];
   files: FilesState['files'];
+  errorField: FetchResult['field'] | undefined;
+  errorMessage: FetchResult['message'] | undefined;
   adminDispatch: Dispatch<AdminReducerActions>;
   eventsDispatch: Dispatch<EventsReducerActions>;
   filesDispatch: Dispatch<FilesReducerActions>;
@@ -29,7 +33,8 @@ interface ProfileProps {
 
 export default function Profile({
   editMode,
-  files,
+  errorField,
+  errorMessage,
   adminDispatch,
   eventsDispatch,
   filesDispatch,
@@ -38,7 +43,9 @@ export default function Profile({
     profileReducer,
     profileInitState,
   );
+
   useEffect(() => {
+    storeOwnerPII(profileDispatch, adminDispatch);
     eventsDispatch({
       type: EventsStrAction.SaveEvents,
       payload: { events: [EventNames.Edit] },
@@ -47,9 +54,21 @@ export default function Profile({
       type: EventsStrAction.SetDependentState,
       payload: { stateName: 'adminState' },
     });
-  }, [eventsDispatch]);
+  }, [profileDispatch, adminDispatch, eventsDispatch]);
 
-  const inputOnChange = (e: ChangeEvent<HTMLInputElement>) => {};
+  const inputsOnChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+    if (!e.target) return;
+    if (!e.target.dataset.formName) return;
+    const { name, value } = e.target;
+    profileDispatch({
+      type: ProfileStrAction.SaveInputsOutputs,
+      payload: {
+        name,
+        value,
+        formName: e.target.dataset.formName as OwnerPIIKeys,
+      },
+    });
+  }, [])
 
   const fileInputOnChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) return;
@@ -59,25 +78,31 @@ export default function Profile({
     });
   };
 
+  if (!profileState.ownerPII) return null;
+
+  const { personal } = profileState.ownerPII;
+
   return (
     <Container>
       <div className={styles.Profile}>
         <div className={styles.lift}>
-          {/* <Avatar url={personal.avatar} size="m" />
+          <Avatar url={personal.avatar} size="m" />
           <h6>
-            {personal.name} {personal.surname}
-          </h6> */}
+            {personal.name || 'empty'} {personal.surname || 'empty'}
+          </h6>
           {editMode ? (
             <FileInput multiple={true} onChange={fileInputOnChange} />
           ) : null}
         </div>
         <div className={styles.middle}>
-          <h6>Personal</h6>
-          <div className={styles.point_wrapper}></div>
-          <h6>Contacts</h6>
-          <div className={styles.point_wrapper}></div>
-          <h6>Address</h6>
-          <div className={styles.point_wrapper}></div>
+          <Form
+            editMode={editMode}
+            data={profileState.ownerPII}
+            inputsOnChange={inputsOnChange}
+            errorField={errorField}
+            errorMessage={errorMessage}
+            sort={['personal', 'contacts', 'address']}
+          />
         </div>
         <div className={styles.right}></div>
       </div>

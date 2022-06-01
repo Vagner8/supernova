@@ -1,30 +1,31 @@
 import { NextFunction, Request, Response } from "express";
-import { CollName } from "../../db/types";
-import { superAdmin } from "../../db/useDataBase";
+import { CollName } from "../../../types";
 import bcrypt from "bcryptjs";
-import { Err } from "../../middleware/errorMiddleware";
+import { Err } from "../../../middleware/errorMiddleware";
 import { v4 as uuidv4 } from "uuid";
-import { UseToken } from "./../../UseToken";
+import { UseToken } from "../../../UseToken";
 import jwt from "jsonwebtoken";
+import { db, restartServer } from "../../../app";
+import { Owner } from './../../../../common/owner'
 
 interface EeqBody {
   login: string;
   password: string;
 }
 
-export async function registrationController(
+export async function login(
   req: Request,
   res: Response,
   next: NextFunction
 ) {
-  const funcName = registrationController.name;
   const { login, password } = req.body as EeqBody;
   try {
-    const ownersColl = await superAdmin.connect(CollName.Owners);
+    const ownersColl = db.collection<Owner>(CollName.Owners)
     if (!ownersColl) {
+      restartServer()
       throw new Err({
         status: 500,
-        message: `no connection: ${funcName}`,
+        message: "no connection",
         field: null,
         logout: false,
       });
@@ -64,7 +65,10 @@ export async function registrationController(
       }
       const encryptedPassword = await bcrypt.hash(password, 10);
       const uniqueId = uuidv4();
-      const refreshToken = jwt.sign({ownerId: uniqueId}, process.env.REFRESH_SECRET)
+      const refreshToken = jwt.sign(
+        { ownerId: uniqueId },
+        process.env.REFRESH_SECRET
+      );
       const result = await ownersColl.updateOne(
         { login },
         {
@@ -76,11 +80,9 @@ export async function registrationController(
         }
       );
       useToken.createAccessToken(uniqueId);
-      res.status(201).json({ownerId: uniqueId});
+      res.status(201).json({ ownerId: uniqueId });
     }
   } catch (err) {
     next(err);
-  } finally {
-    await superAdmin.close();
   }
 }

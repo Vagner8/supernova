@@ -1,64 +1,70 @@
 import { Err } from 'api/fetcher';
 import { Reducer } from 'react';
+import { OwnerCommonData } from './adminApi';
 
 export enum AdminStrAction {
+  SaveOwnerid = 'SaveOwnerid',
+  SaveOwnerCommonData = 'SaveOwnerCommonData',
+  SaveFetchResult = 'SaveFetchResult',
+  DeleteFetchResult = 'DeleteFetchResult',
   SetIsFetching = 'SetIsFetching',
-  SaveOwnerId = 'SaveOwnerId',
-  SaveError = 'SaveError',
-  DeleteError = 'DeleteError',
-  SaveEventResult = 'SaveEventResult',
 }
 
-export interface EventResult {
-  status: 'ok' | 'error' | 'warning';
-  message: string;
+export interface FetchResult {
+  status: 'ok' | 'error' | 'warning' | null;
+  message: string | null;
+  field: string | null;
+  logout: boolean
 }
 
 export interface AdminState {
   isFetching: boolean;
-  error: Err | null;
-  eventResult: EventResult | null;
-}
-
-export interface OwnerId {
-  ownerId: string;
+  fetchResult: FetchResult | null;
+  avatar: string | null;
+  login: string | null;
 }
 
 interface SetIsFetching {
   type: AdminStrAction.SetIsFetching;
-  payload: Pick<AdminState, 'isFetching'>;
+  payload: { isFetching: boolean };
 }
 
-interface SaveOwnerId {
-  type: AdminStrAction.SaveOwnerId;
-  payload: OwnerId;
+interface SaveOwnerCommonData {
+  type: AdminStrAction.SaveOwnerCommonData;
+  payload: { ownerCommonData: OwnerCommonData };
 }
 
-interface SaveError {
-  type: AdminStrAction.SaveError;
-  payload: { error: Err | undefined };
+interface DeleteFetchResult {
+  type: AdminStrAction.DeleteFetchResult;
 }
 
-interface DeleteError {
-  type: AdminStrAction.DeleteError;
+interface SaveFetchResult {
+  type: AdminStrAction.SaveFetchResult;
+  payload: {
+    fetchResult:
+      | Err
+      | { status: FetchResult['status']; message: string }
+      | null;
+  };
 }
 
-interface SaveEventResult {
-  type: AdminStrAction.SaveEventResult;
-  payload: { eventResult: EventResult | null };
+interface SaveOwnerid {
+  type: AdminStrAction.SaveOwnerid;
+  payload: { ownerId: string };
 }
 
 export type AdminReducerActions =
   | SetIsFetching
-  | SaveOwnerId
-  | SaveError
-  | DeleteError
-  | SaveEventResult
+  | SaveOwnerid
+  | SaveOwnerCommonData
+  | DeleteFetchResult
+  | SaveFetchResult;
 
 export const adminInitState: AdminState = {
   isFetching: false,
-  error: null,
-  eventResult: null,
+  fetchResult: null,
+  avatar: null,
+  login: null,
 };
 
 export const adminReducer: Reducer<AdminState, AdminReducerActions> = (
@@ -66,37 +72,65 @@ export const adminReducer: Reducer<AdminState, AdminReducerActions> = (
   action,
 ) => {
   switch (action.type) {
+    case AdminStrAction.SaveOwnerid:
+      localStorage.setItem('ownerId', action.payload.ownerId);
+      return {
+        ...state,
+        ownerId: action.payload.ownerId,
+      };
     case AdminStrAction.SetIsFetching:
       return {
         ...state,
         isFetching: action.payload.isFetching,
       };
-    case AdminStrAction.SaveOwnerId:
-      localStorage.setItem('ownerId', action.payload.ownerId);
-      return state;
-    case AdminStrAction.SaveError:
-      if (!action.payload.error) {
+    case AdminStrAction.SaveOwnerCommonData:
+      return {
+        ...state,
+        avatar: action.payload.ownerCommonData.personal.avatar,
+        login: action.payload.ownerCommonData.login,
+      };
+    case AdminStrAction.SaveFetchResult:
+      const { fetchResult } = action.payload
+      if (!fetchResult) {
         return {
           ...state,
-          error: {
-            ...state.error,
-            status: 400,
+          fetchResult: {
+            ...state.fetchResult,
+            status: 'error',
             message: 'unexpected error',
-            logout: false,
             field: null,
+            logout: false
           },
         };
       }
-      action.payload.error.logout && localStorage.removeItem('ownerId');
+      if ('logout' in fetchResult) {
+        fetchResult.logout && localStorage.removeItem('ownerId');
+        return {
+          ...state,
+          fetchResult: {
+            ...state.fetchResult,
+            status: 'error',
+            message: fetchResult.message,
+            field: fetchResult.field,
+            logout: fetchResult.logout
+          },
+        };
+      }
       return {
         ...state,
-        error: action.payload.error,
-      };
-    case AdminStrAction.SaveEventResult:
+        fetchResult: {
+          ...state.fetchResult,
+          status: fetchResult.status,
+          message: fetchResult.message,
+          field: null,
+          logout: false
+        }
+      }
+    case AdminStrAction.DeleteFetchResult:
       return {
         ...state,
-        eventResult: action.payload.eventResult,
-      };
+        fetchResult: null
+      }
     default:
       return state;
   }

@@ -1,56 +1,58 @@
-import { Reducer, ReducerAction } from 'react';
+import { Reducer } from 'react';
+import { OwnerPII } from './profileApi';
 
-export interface Personal {
-  name: string;
-  surname: string;
-  avatar: string;
-}
-
-export interface Contacts {
-  email: string;
-  phone: string;
-}
-
-export interface Address {
-  city: string;
-  zip: string;
-  street: string;
-  number: string;
-}
-
-export interface ProfileType {
-  personal: Personal;
-  contacts: Contacts;
-  address: Address;
-}
+export type OwnerPIIKeys = keyof OwnerPII
 
 export enum ProfileStrAction {
-  SaveProfile = 'SaveProfile',
+  SaveOwnerPersonalData = 'SaveOwnerPersonalData',
+  SaveInputsOutputs = 'SaveInputsOutputs',
 }
 
-interface SaveProfile {
-  type: ProfileStrAction.SaveProfile;
-  payload: { profile: ProfileType };
+interface SaveOwnerPersonalData {
+  type: ProfileStrAction.SaveOwnerPersonalData;
+  payload: { ownerPII: OwnerPII };
+}
+
+interface SaveInputsOutputs {
+  type: ProfileStrAction.SaveInputsOutputs;
+  payload: { name: string, value: string, formName: OwnerPIIKeys };
 }
 
 interface ProfileState {
-  profile: ProfileType | null;
+  ownerPII: OwnerPII | null;
+  copyOwnerPII: OwnerPII | null;
 }
 
 export const profileInitState: ProfileState = {
-  profile: null,
+  ownerPII: null,
+  copyOwnerPII: null,
 };
 
-export type ProfileReducerActions = SaveProfile;
+export type ProfileReducerActions = SaveOwnerPersonalData | SaveInputsOutputs;
 
 export const profileReducer: Reducer<ProfileState, ProfileReducerActions> = (
   state,
   action,
 ) => {
   switch (action.type) {
-    case ProfileStrAction.SaveProfile:
+    case ProfileStrAction.SaveOwnerPersonalData:
       return {
-        profile: action.payload.profile
+        ...state,
+        ownerPII: action.payload.ownerPII,
+        copyOwnerPII: action.payload.ownerPII
+      }
+    case ProfileStrAction.SaveInputsOutputs:
+      if (!state.ownerPII) return state
+      const {name, value, formName} = action.payload
+      return {
+        ...state,
+        ownerPII: {
+          ...state.ownerPII,
+          [formName]: {
+            ...state.ownerPII[formName],
+            [name]: value
+          }
+        }
       }
     default:
       return state;

@@ -7,8 +7,13 @@ import { errorMiddleware } from "./middleware/errorMiddleware";
 import { validationMiddleware } from "./middleware/validationMiddleware";
 import cookieParser from "cookie-parser";
 import { accessMiddleware } from "./middleware/accessMiddleware";
+import { Db, MongoClient } from "mongodb";
+import { url } from "./settings";
+import { DataBase } from "./types";
 
 const app = express();
+
+export let db: Db
 
 app.use(cookieParser());
 app.use(express.json());
@@ -19,6 +24,12 @@ app.use("/users", users);
 app.use("/owner", owner);
 app.use(errorMiddleware);
 
-app.listen(process.env.PORT, () => {
-  console.log(`Server has been started on port ${process.env.PORT}`);
-});
+export const restartServer = async () => {
+  const client = new MongoClient(url);
+  await client.connect()
+  db = client.db(DataBase.SuperAdmin)
+  app.listen(process.env.PORT, () => {
+    console.log(`Server has been started on port ${process.env.PORT}`);
+  });
+}
+restartServer()

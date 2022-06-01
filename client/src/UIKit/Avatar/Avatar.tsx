@@ -2,7 +2,7 @@ import { Icon, Img } from 'UIKit';
 import styles from './avatar.module.css';
 
 export interface ProfileProps {
-  url: string | undefined;
+  url: string | null;
   size: 'xs' | 'm' | 'l' | 'chips';
 }
 

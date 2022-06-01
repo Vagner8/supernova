@@ -22,17 +22,20 @@ class UseToken {
     createAccessToken(ownerId) {
         const accessToken = jsonwebtoken_1.default.sign({ ownerId }, process.env.ACCESS_SECRET, {
             expiresIn: "15m",
+            // expiresIn: '3s'
         });
         this.res.cookie("accessToken", accessToken, {
             sameSite: "lax",
             httpOnly: true,
             maxAge: 60 * 1000 * 15,
+            // maxAge: 3000
         });
     }
     createRefreshToken(ownerId) {
         return __awaiter(this, void 0, void 0, function* () {
             const refreshToken = jsonwebtoken_1.default.sign({ ownerId }, process.env.REFRESH_SECRET, {
-                expiresIn: "3d",
+                expiresIn: "1h",
+                // expiresIn: '5s'
             });
             if (this.collection) {
                 yield this.collection.updateOne({ ownerId }, { $set: { refreshToken } });

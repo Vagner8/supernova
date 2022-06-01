@@ -5,12 +5,11 @@ import {
   authInitState,
   AuthStrAction,
 } from 'admin/Auth/authReducer';
-import { Button, Input, Icon, Linear } from 'UIKit';
+import { Button, Input, Icon, Linear, Snackbar } from 'UIKit';
 import {
   AdminReducerActions,
   AdminState,
   AdminStrAction,
-  OwnerId,
 } from 'admin/adminReducer';
 import { API, fetcher } from 'api/fetcher';
 
@@ -34,28 +33,27 @@ export function Auth({ adminDispatch, adminState }: AuthProps) {
         payload: { disabledSubmit: false },
       });
     }
-    if (!adminState.error) return
-    adminDispatch({type: AdminStrAction.DeleteError})
+    if (!adminState.fetchResult) return;
+    adminDispatch({ type: AdminStrAction.DeleteFetchResult });
   };
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const response = await fetcher<OwnerId>(
-      'POST',
-      API.Registration,
+    const res = (await fetcher({
+      method: 'POST',
+      url: API.Registration,
       adminDispatch,
-      {
+      message: 'Success',
+      body: {
         login: authState.inputs[0].value,
         password: authState.inputs[1].value,
       },
-    );
-    if (!response || 'logout' in response) {
-      return adminDispatch({
-        type: AdminStrAction.SaveError,
-        payload: {error: response},
-      });
-    }
-    adminDispatch({ type: AdminStrAction.SaveOwnerId, payload: response });
+    })) as undefined | { ownerId: string };
+    if (!res) return;
+    adminDispatch({
+      type: AdminStrAction.SaveOwnerid,
+      payload: { ownerId: res.ownerId },
+    });
   };
 
   return (
@@ -68,7 +66,8 @@ export function Auth({ adminDispatch, adminState }: AuthProps) {
             {authState.inputs.map((input) => (
               <Input
                 key={input.label}
-                error={adminState.error}
+                errorMessage={adminState.fetchResult?.message}
+                errorField={adminState.fetchResult?.field}
                 label={input.label}
                 type={input.type}
                 value={input.value}
@@ -84,6 +83,12 @@ export function Auth({ adminDispatch, adminState }: AuthProps) {
           </form>
         </div>
       </div>
+      <Snackbar
+        status={adminState.fetchResult?.status}
+        message={adminState.fetchResult?.message}
+        filed={adminState.fetchResult?.field}
+        adminDispatch={adminDispatch}
+      />
     </>
   );
 }

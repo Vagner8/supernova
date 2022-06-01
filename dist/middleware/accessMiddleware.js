@@ -13,11 +13,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.accessMiddleware = void 0;
-const types_1 = require("./../db/types");
-const useDataBase_1 = require("./../db/useDataBase");
+const types_1 = require("../types");
 const errorMiddleware_1 = require("./errorMiddleware");
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const UseToken_1 = require("./../UseToken");
+const app_1 = require("./../app");
 const accessMiddleware = () => (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const ownerId = req.headers.ownerid;
@@ -43,8 +43,9 @@ const accessMiddleware = () => (req, res, next) => __awaiter(void 0, void 0, voi
             });
         }
         if (!accessToken) {
-            const ownersColl = yield useDataBase_1.superAdmin.connect(types_1.CollName.Owners);
+            const ownersColl = app_1.db.collection(types_1.CollName.Owners);
             if (!ownersColl) {
+                (0, app_1.restartServer)();
                 throw new errorMiddleware_1.Err({
                     status: 500,
                     message: `no connection ${types_1.CollName.Owners}`,
@@ -70,8 +71,7 @@ const accessMiddleware = () => (req, res, next) => __awaiter(void 0, void 0, voi
                         logout: true,
                     });
                 }
-                const useToken = new UseToken_1.UseToken(res);
-                useToken.createAccessToken(ownerId);
+                new UseToken_1.UseToken(res).createAccessToken(ownerId);
             });
         }
     }
@@ -79,7 +79,6 @@ const accessMiddleware = () => (req, res, next) => __awaiter(void 0, void 0, voi
         next(err);
     }
     finally {
-        yield useDataBase_1.superAdmin.close();
         next();
     }
 });

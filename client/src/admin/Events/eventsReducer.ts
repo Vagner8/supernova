@@ -74,11 +74,11 @@ export const eventsReducer: Reducer<EventsState, EventsReducerActions> = (
         ...state,
         editMode: !state.editMode,
         events: state.events.map((event) => {
-          if (event === EventNames.EditOff) {
-            return EventNames.Edit;
-          }
           if (event === EventNames.Edit) {
             return EventNames.EditOff;
+          }
+          if (event === EventNames.EditOff) {
+            return EventNames.Edit;
           }
           return event;
         }),

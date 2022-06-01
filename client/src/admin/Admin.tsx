@@ -6,10 +6,8 @@ import {
   adminReducer,
   AdminReducerActions,
   AdminState,
-  AdminStrAction,
 } from './adminReducer';
 import { Linear, Navbar, Snackbar } from 'UIKit';
-import { API, fetcher } from 'api/fetcher';
 import {
   eventsInitState,
   eventsReducer,
@@ -23,6 +21,7 @@ import {
   FilesState,
 } from './filesReducer';
 import { FilesSheet } from './FilesSheet/FilesSheet';
+import { storeOwnerCommonData } from './adminApi';
 
 const Home = lazy(() => import('./Home/Home'));
 const Profile = lazy(() => import('./Profile/Profile'));
@@ -35,28 +34,10 @@ export function Admin() {
   );
   const [filesState, filesDispatch] = useReducer(filesReducer, filesInitState);
 
-  // useEffect(() => {
-  //   const fetchOwner = async () => {
-  //     const url = `${API.Owner}/?ownerId=${localStorage.getItem('ownerId')}`;
-  //     const response = await fetcher<Owner>('GET', url, adminDispatch);
-  //     if (!response || 'logout' in response) {
-  //       return adminDispatch({
-  //         type: AdminStrAction.SaveError,
-  //         payload: { error: response },
-  //       });
-  //     }
-  //     adminDispatch({ type: AdminStrAction.SaveOwner, payload: response });
-  //     adminDispatch({
-  //       type: AdminStrAction.SaveEventResult,
-  //       payload: {
-  //         eventResult: { status: 'ok', message: 'Success data uploaded' },
-  //       },
-  //     });
-  //   };
-  //   fetchOwner();
-  // }, [adminDispatch]);
-
-  if (!localStorage.getItem('ownerId')) {
+  // if (!localStorage.getItem('ownerId') || adminState.fetchResult?.logout) {
+  //   return <Auth adminState={adminState} adminDispatch={adminDispatch} />;
+  // }
+  if (adminState.fetchResult?.logout) {
     return <Auth adminState={adminState} adminDispatch={adminDispatch} />;
   }
   return (
@@ -88,12 +69,19 @@ function AdminRoutes({
   filesState,
   filesDispatch,
 }: AdminRoutesProps) {
+  console.log('AdminRoutesProps');
+
+  useEffect(() => {
+    storeOwnerCommonData(adminDispatch)
+  }, [adminDispatch]);
 
   return (
     <>
       <Linear show={adminState.isFetching} />
       <Snackbar
-        eventResult={adminState.eventResult}
+        status={adminState.fetchResult?.status}
+        message={adminState.fetchResult?.message}
+        filed={adminState.fetchResult?.field}
         adminDispatch={adminDispatch}
       />
       <Linear show={adminState.isFetching} />
@@ -102,6 +90,8 @@ function AdminRoutes({
         editMode={eventsState.editMode}
         dependentState={eventsState.dependentState}
         saveButton={eventsState.saveButton}
+        login={adminState.login}
+        avatar={adminState.avatar}
         adminDispatch={adminDispatch}
         eventsDispatch={eventsDispatch}
         filesDispatch={filesDispatch}
@@ -115,6 +105,8 @@ function AdminRoutes({
               <Profile
                 files={filesState.files}
                 editMode={eventsState.editMode}
+                errorField={adminState.fetchResult?.field}
+                errorMessage={adminState.fetchResult?.message}
                 adminDispatch={adminDispatch}
                 eventsDispatch={eventsDispatch}
                 filesDispatch={filesDispatch}

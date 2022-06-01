@@ -1,41 +1,21 @@
-"use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.superAdmin = exports.UseDB = void 0;
-const mongodb_1 = require("mongodb");
-const settings_1 = require("./settings");
-const types_1 = require("./types");
-class UseDB {
-    constructor(dataBase) {
-        this.dataBase = dataBase;
-        this.client = new mongodb_1.MongoClient(settings_1.url);
-    }
-    connect(collectionName) {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                yield this.client.connect();
-                const db = this.client.db(this.dataBase);
-                return db.collection(collectionName);
-            }
-            catch (err) {
-                console.log(err);
-            }
-        });
-    }
-    close() {
-        return __awaiter(this, void 0, void 0, function* () {
-            yield this.client.close();
-        });
-    }
-}
-exports.UseDB = UseDB;
-exports.superAdmin = new UseDB(types_1.DataBase.SuperAdmin);
+// import { MongoClient } from "mongodb";
+// import { url } from "./settings";
+// import { CollName, DataBase, Owner } from "./types";
+// export class UseDB<Coll> {
+//   public client = new MongoClient(url);
+//   constructor(public dataBase: DataBase) {}
+//   public async connect(collectionName: CollName) {
+//     try {
+//       const a = await this.client.connect()
+//       const db = this.client.db(this.dataBase);
+//       return db.collection<Coll>(collectionName)
+//     } catch (err) {
+//       console.log(err)
+//     }
+//   }
+//   public async close() {
+//     await this.client.close();
+//   }
+// }
+// export const superAdmin = new UseDB<Owner>(DataBase.SuperAdmin);
 //# sourceMappingURL=useDataBase.js.map

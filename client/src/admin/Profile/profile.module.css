@@ -18,9 +18,3 @@
 .middle, .right {
   width: 40%;
 }
-
-.point_wrapper {
-  border: 1px solid rgba(0, 0, 0, 0.12);
-  border-radius: 4px;
-  padding: 1.25rem 1.25rem 0 1.25rem;
-}

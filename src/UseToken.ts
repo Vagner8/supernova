@@ -1,7 +1,7 @@
-import { Response, Request } from "express";
+import { Response } from "express";
 import jwt from "jsonwebtoken";
 import { Collection } from "mongodb";
-import { Owner } from "./db/types";
+import { Owner } from "./../common/owner";
 
 export class UseToken {
   constructor(
@@ -12,17 +12,20 @@ export class UseToken {
   createAccessToken(ownerId: string) {
     const accessToken = jwt.sign({ ownerId }, process.env.ACCESS_SECRET, {
       expiresIn: "15m",
+      // expiresIn: '3s'
     });
     this.res.cookie("accessToken", accessToken, {
       sameSite: "lax",
       httpOnly: true,
       maxAge: 60 * 1000 * 15,
+      // maxAge: 3000
     });
   }
 
   async createRefreshToken(ownerId: string) {
     const refreshToken = jwt.sign({ ownerId }, process.env.REFRESH_SECRET, {
-      expiresIn: "3d",
+      expiresIn: "1h",
+      // expiresIn: '5s'
     });
     if (this.collection) {
       await this.collection.updateOne({ ownerId }, { $set: { refreshToken } });

@@ -1,10 +1,16 @@
 import { cleanup, render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import { Snackbar } from './Snackbar';
-import { EventResult } from 'admin/adminReducer';
+import { Snackbar, SnackbarProps } from './Snackbar';
 
-const SnackbarComponent = (eventResult: EventResult) => (
-  <Snackbar eventResult={eventResult} adminDispatch={jest.fn} />
+type TestProps = Omit<SnackbarProps, 'adminDispatch'>;
+
+const SnackbarComponent = ({ status, message, filed }: TestProps) => (
+  <Snackbar
+    filed={filed}
+    status={status}
+    message={message}
+    adminDispatch={jest.fn}
+  />
 );
 
 describe('Snackbar', () => {
@@ -16,6 +22,7 @@ describe('Snackbar', () => {
       SnackbarComponent({
         status: 'ok',
         message: 'message',
+        filed: null,
       }),
     );
     expect(container.querySelector('.Snackbar')).toBeInTheDocument();
@@ -25,6 +32,7 @@ describe('Snackbar', () => {
       SnackbarComponent({
         status: 'ok',
         message: 'message',
+        filed: null,
       }),
     );
     expect(container.querySelector('.ok')).toBeInTheDocument();
@@ -35,6 +43,7 @@ describe('Snackbar', () => {
       SnackbarComponent({
         status: 'error',
         message: 'message',
+        filed: null,
       }),
     );
     expect(container.querySelector('.error')).toBeInTheDocument();
@@ -45,9 +54,20 @@ describe('Snackbar', () => {
       SnackbarComponent({
         status: 'warning',
         message: 'message',
+        filed: null,
       }),
     );
     expect(container.querySelector('.warning')).toBeInTheDocument();
     expect(screen.getByText(/warning/i)).toBeInTheDocument();
+  });
+  it('no appears if gets filed', () => {
+    const { container } = render(
+      SnackbarComponent({
+        status: 'error',
+        message: 'message',
+        filed: 'filed',
+      }),
+    );
+    expect(container.querySelector('.Snackbar')).not.toBeInTheDocument();
   });
 });

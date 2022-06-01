@@ -1,13 +1,15 @@
-import { Err } from 'api/fetcher';
-import { ChangeEvent, FocusEvent, useEffect, useState } from 'react';
+import { FetchResult } from 'admin/adminReducer';
+import { ChangeEvent, FocusEvent, memo, useEffect, useState } from 'react';
 import { Visibility } from 'UIKit';
 import styles from './input.module.css';
 
-interface InputProps {
+export interface InputProps {
   label: string;
   value: string;
-  error: Err | null
   type: 'password' | 'text';
+  errorMessage: FetchResult['message'] | undefined;
+  errorField: FetchResult['field'] | undefined;
+  formName?: string;
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
 }
 
@@ -15,16 +17,18 @@ export function Input({
   type,
   value,
   label,
-  error,
+  errorMessage,
+  errorField,
+  formName,
   onChange,
 }: InputProps) {
   const [active, setActive] = useState<'active' | ''>('');
   const [hidePassword, setHidePassword] = useState(true);
 
   useEffect(() => {
-    if (!value) return
-    setActive('active')
-  }, [value])
+    if (!value) return;
+    setActive('active');
+  }, [value]);
 
   const onFocus = () => {
     setActive('active');
@@ -42,27 +46,30 @@ export function Input({
     return trigger ? 'password' : 'text';
   };
 
-  const showError = (err: Err | null, inputLabel: string): boolean => {
-    if (!err) return false
-    if (err.field === null) return true
-    if (err.field !== inputLabel) return false
-    return true
-  }
+  const showError = (): boolean => {
+    if (!errorMessage) return false;
+    if (!errorField) return false;
+    if (errorField !== label) return false;
+    return true;
+  };
+
+  console.log('input');
 
   return (
     <div role="group" className={`${styles.Input} ${styles[active]}`}>
       <label
-        className={`${styles.label} ${showError(error, label) && styles.error}`}
+        className={`${styles.label} ${showError() && styles.error}`}
         htmlFor={label}
       >
-        {`${label} ${showError(error, label) ? `- ${error?.message}` : ''}`}
+        {`${label} ${showError() ? `- ${errorMessage}` : ''}`}
       </label>
       <input
         id={label}
-        className={`${styles.field} ${showError(error, label) && styles.error}`}
+        className={`${styles.field} ${showError() && styles.error}`}
         name={label}
         type={type === 'password' ? switchInputType(hidePassword) : type}
         value={value}
+        data-form-name={formName}
         onChange={onChange}
         onFocus={onFocus}
         onBlur={onBlur}
@@ -73,3 +80,5 @@ export function Input({
     </div>
   );
 }
+
+export const InputMemo = memo(Input);

@@ -9,9 +9,9 @@ const NavbarComponent = (avatar: string, ownerName: string) => (
       saveButton={true}
       dependentState='adminState'
       editMode={false}
-      // avatar={avatar}
-      // ownerName={ownerName}
+      avatar={avatar}
       events={['1']}
+      login='login'
       eventsDispatch={jest.fn}
       adminDispatch={jest.fn}
       filesDispatch={jest.fn}
@@ -41,8 +41,8 @@ describe('Navbar', () => {
     render(NavbarComponent('url', 'name'));
     expect(screen.getByRole('img')).toBeInTheDocument();
   });
-  it('gets name, name appears', () => {
+  it('have login', () => {
     render(NavbarComponent('url', 'name'));
-    expect(screen.getByText('name')).toBeInTheDocument();
+    expect(screen.getByText('login')).toBeInTheDocument();
   });
 });

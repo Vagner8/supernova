@@ -1,9 +1,10 @@
 import { NextFunction, Request, Response } from "express";
-import { CollName } from "./../db/types";
-import { superAdmin } from "./../db/useDataBase";
+import { CollName } from "../types";
 import { Err } from "./errorMiddleware";
 import jwt from "jsonwebtoken";
 import { UseToken } from "./../UseToken";
+import { db, restartServer } from "./../app";
+import { Owner } from './../../common/owner'
 
 export const accessMiddleware =
   () => async (req: Request, res: Response, next: NextFunction) => {
@@ -34,8 +35,9 @@ export const accessMiddleware =
       }
 
       if (!accessToken) {
-        const ownersColl = await superAdmin.connect(CollName.Owners);
+        const ownersColl = db.collection<Owner>(CollName.Owners)
         if (!ownersColl) {
+          restartServer()
           throw new Err({
             status: 500,
             message: `no connection ${CollName.Owners}`,
@@ -67,15 +69,13 @@ export const accessMiddleware =
                 logout: true,
               });
             }
-            const useToken = new UseToken(res);
-            useToken.createAccessToken(ownerId);
+            new UseToken(res).createAccessToken(ownerId);
           }
         );
       }
     } catch (err) {
       next(err);
     } finally {
-      await superAdmin.close();
       next();
     }
   };

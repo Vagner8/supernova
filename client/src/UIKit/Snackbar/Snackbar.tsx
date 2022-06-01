@@ -1,21 +1,29 @@
 import {
   AdminReducerActions,
   AdminStrAction,
-  EventResult,
+  FetchResult,
 } from 'admin/adminReducer';
-import { Dispatch, useEffect } from 'react';
+import { Dispatch, useEffect, useState } from 'react';
 import { Icon } from 'UIKit';
 import styles from './snackbar.module.css';
 
-interface SnackbarProps {
-  eventResult: EventResult | null;
+export interface SnackbarProps {
+  status: FetchResult['status'] | undefined;
+  message: FetchResult['message'] | undefined;
+  filed: FetchResult['field'] | undefined;
   adminDispatch: Dispatch<AdminReducerActions>;
 }
 
 let started: boolean = false;
 let timer: any;
 
-export function Snackbar({ eventResult, adminDispatch }: SnackbarProps) {
+export function Snackbar({
+  status,
+  message,
+  filed,
+  adminDispatch,
+}: SnackbarProps) {
+  const [show, setShow] = useState(true)
   const icons: {
     ok: 'task_alt';
     error: 'error';
@@ -30,32 +38,29 @@ export function Snackbar({ eventResult, adminDispatch }: SnackbarProps) {
     const go = () => {
       started = true;
       timer = setTimeout(() => {
-        if (eventResult?.status === 'error') return;
-        adminDispatch({
-          type: AdminStrAction.SaveEventResult,
-          payload: { eventResult: null },
-        });
+        if (status === 'error') return;
+        setShow(false)
         started = false;
       }, 3000);
     };
     if (!started) return go();
     clearTimeout(timer);
     go();
-  }, [adminDispatch, eventResult?.status]);
-
-  if (!eventResult) return null;
+  }, [adminDispatch, status]);
 
   const onClick = () => {
     adminDispatch({
-      type: AdminStrAction.SaveEventResult,
-      payload: { eventResult: null },
+      type: AdminStrAction.DeleteFetchResult,
     });
   };
 
+  if (!message || !status || filed) return null;
+  if (!show) return null
+
   return (
-    <div className={`${styles.Snackbar} ${styles[eventResult.status]}`}>
-      <Icon icon={icons[eventResult.status]} />
-      <p className={styles.message}>{eventResult.message}</p>
+    <div className={`${styles.Snackbar} ${styles[status]}`}>
+      <Icon icon={icons[status]} />
+      <p className={styles.message}>{message}</p>
       <button onClick={onClick} className={styles.button}>
         <Icon icon="close" />
       </button>

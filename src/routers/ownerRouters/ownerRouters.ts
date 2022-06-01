@@ -1,8 +1,8 @@
 import express from "express";
-import { getOwnerController } from "./getOwnerController";
+import { getOwner } from "./controllers/getOwner";
 
 const router = express.Router();
 
-router.get("/", getOwnerController);
+router.get("/", getOwner);
 
 export default router;

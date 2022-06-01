@@ -9,16 +9,25 @@ export interface Err {
 }
 
 export enum API {
-  Registration = '/auth/registration',
+  Registration = '/auth/login',
   Owner = '/owner',
 }
 
-export async function fetcher<D>(
-  method: 'POST' | 'DELETE' | 'PUT' | 'GET',
-  url: string,
-  adminDispatch: Dispatch<AdminReducerActions>,
-  body?: any,
-): Promise<Err | D | undefined> {
+interface Fetcher {
+  method: 'POST' | 'DELETE' | 'PUT' | 'GET';
+  url: string;
+  adminDispatch: Dispatch<AdminReducerActions>;
+  body?: any;
+  message: string;
+}
+
+export async function fetcher({
+  method,
+  url,
+  adminDispatch,
+  body,
+  message,
+}: Fetcher) {
   adminDispatch({
     type: AdminStrAction.SetIsFetching,
     payload: { isFetching: true },
@@ -33,12 +42,27 @@ export async function fetcher<D>(
         ownerId: localStorage.getItem('ownerId') || 'idle',
       },
     });
-    return await response.json();
+    const json = await response.json();
+    if (!json || 'logout' in json) {
+      return adminDispatch({
+        type: AdminStrAction.SaveFetchResult,
+        payload: { fetchResult: json as Err },
+      });
+    }
+    adminDispatch({
+      type: AdminStrAction.SaveFetchResult,
+      payload: {
+        fetchResult: { status: 'ok', message },
+      },
+    });
+    return json;
   } catch (err) {
     console.log(err);
     adminDispatch({
-      type: AdminStrAction.SaveEventResult,
-      payload: { eventResult: { status: 'error', message: 'server error' } },
+      type: AdminStrAction.SaveFetchResult,
+      payload: {
+        fetchResult: { status: 'error', message: 'server error' },
+      },
     });
   } finally {
     adminDispatch({
