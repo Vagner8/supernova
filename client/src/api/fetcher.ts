@@ -42,12 +42,13 @@ export async function fetcher({
         ownerId: localStorage.getItem('ownerId') || 'idle',
       },
     });
-    const json = await response.json();
+    const json = await response.json() as undefined | Err | Object;
     if (!json || 'logout' in json) {
-      return adminDispatch({
+      adminDispatch({
         type: AdminStrAction.SaveFetchResult,
-        payload: { fetchResult: json as Err },
+        payload: { fetchResult: json },
       });
+      return undefined
     }
     adminDispatch({
       type: AdminStrAction.SaveFetchResult,

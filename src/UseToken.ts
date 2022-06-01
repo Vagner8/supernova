@@ -25,7 +25,7 @@ export class UseToken {
   async createRefreshToken(ownerId: string) {
     const refreshToken = jwt.sign({ ownerId }, process.env.REFRESH_SECRET, {
       expiresIn: "1h",
-      // expiresIn: '5s'
+      // expiresIn: '20s'
     });
     if (this.collection) {
       await this.collection.updateOne({ ownerId }, { $set: { refreshToken } });

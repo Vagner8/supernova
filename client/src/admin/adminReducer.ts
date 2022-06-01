@@ -44,7 +44,7 @@ interface SaveFetchResult {
     fetchResult:
       | Err
       | { status: FetchResult['status']; message: string }
-      | null;
+      | undefined
   };
 }
 

@@ -22,5 +22,5 @@ export async function getOwner(
     url,
     adminDispatch,
     message: 'Successful response',
-  })) as unknown;
+  }));
 }

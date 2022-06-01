@@ -1,5 +1,5 @@
 .Snackbar {
-  position: absolute;
+  position: fixed;
   left: 1.25rem;
   bottom: 1.25rem;
   display: flex;

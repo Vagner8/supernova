@@ -34,12 +34,10 @@ export function Admin() {
   );
   const [filesState, filesDispatch] = useReducer(filesReducer, filesInitState);
 
-  // if (!localStorage.getItem('ownerId') || adminState.fetchResult?.logout) {
-  //   return <Auth adminState={adminState} adminDispatch={adminDispatch} />;
-  // }
-  if (adminState.fetchResult?.logout) {
+  if (!localStorage.getItem('ownerId') || adminState.fetchResult?.logout) {
     return <Auth adminState={adminState} adminDispatch={adminDispatch} />;
   }
+
   return (
     <AdminRoutes
       adminState={adminState}
