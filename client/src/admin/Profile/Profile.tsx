@@ -17,6 +17,7 @@ import {
   useCallback,
   useEffect,
   useReducer,
+  useRef,
 } from 'react';
 import { Avatar, Container, FileInput, Form } from 'UIKit';
 import styles from './profile.module.css';
@@ -31,7 +32,7 @@ import {
 
 interface ProfileProps {
   selectedEvent: EventsState['selectedEvent'];
-  eventsList: EventsState['eventsList']
+  eventsList: EventsState['eventsList'];
   files: FilesState['files'];
   errorField: OperationResult['field'] | undefined;
   errorMessage: OperationResult['message'] | undefined;
@@ -40,8 +41,6 @@ interface ProfileProps {
   eventsDispatch: Dispatch<EventsReducerActions>;
   filesDispatch: Dispatch<FilesReducerActions>;
 }
-
-let count = 0;
 
 export default function Profile({
   selectedEvent,
@@ -59,6 +58,9 @@ export default function Profile({
     profileInitState,
   );
 
+  // const count = useRef(0)
+  let count = 0;
+
   useEffect(() => {
     storeOwnerPII(profileDispatch, adminDispatch);
   }, [adminDispatch]);
@@ -66,7 +68,7 @@ export default function Profile({
   useEffect(() => {
     eventsDispatch({
       type: EventsStrAction.SaveEventsList,
-      payload: { eventsList: [EventNames.Edit] },
+      payload: { eventsList: [EventNames.Edit, EventNames.Delete] },
     });
   }, [eventsDispatch]);
 
@@ -100,15 +102,14 @@ export default function Profile({
           formName: e.target.dataset.formName as OwnerPIIKeys,
         },
       });
+      if (count !== 0) return;
       count++;
-      if (!count) return;
       eventsDispatch({
         type: EventsStrAction.SaveSelectedEvent,
         payload: { selectedEvent: EventNames.Save },
       });
-      // count = 0
     },
-    [eventsDispatch],
+    [eventsDispatch, count],
   );
 
   const fileInputOnChange = (e: ChangeEvent<HTMLInputElement>) => {

@@ -13,7 +13,8 @@ export type IconName =
   | 'task_alt'
   | 'warning'
   | 'edit'
-  | 'block';
+  | 'block'
+  | 'save';
 
 interface IconProps {
   className?: string;

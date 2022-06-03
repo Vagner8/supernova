@@ -7,7 +7,7 @@ export enum EventNames {
   EditOff = 'edit off',
   Copy = 'copy',
   Delete = 'delete',
-  Save = 'save'
+  Save = 'save',
 }
 
 export enum EventsStrAction {
@@ -50,6 +50,43 @@ export const eventsInitState: EventsState = {
   copyInputValues: null,
 };
 
+interface SetEventsList {
+  selectedEvent: EventsState['selectedEvent'];
+  prevEventList: EventsState['eventsList'];
+}
+
+const setEventsList = ({
+  selectedEvent,
+  prevEventList,
+}: SetEventsList): EventsState['eventsList'] => {
+  if (!selectedEvent) return prevEventList;
+  if (prevEventList.includes(selectedEvent)) {
+    if (selectedEvent === EventNames.Edit) {
+      return prevEventList.map((event) => {
+        if (event === EventNames.Edit) {
+          return EventNames.EditOff;
+        }
+        return event;
+      });
+    }
+    if (selectedEvent === EventNames.EditOff) {
+      return prevEventList.map((event) => {
+        if (event === EventNames.EditOff) {
+          return EventNames.Edit;
+        }
+        if (event === EventNames.Save) {
+          return ''
+        }
+        return event;
+      });
+    }
+  }
+  if (selectedEvent === EventNames.Save) {
+    return [...prevEventList, EventNames.Save];
+  }
+  return prevEventList;
+};
+
 export const eventsReducer: Reducer<EventsState, EventsReducerActions> = (
   state,
   action,
@@ -70,19 +107,9 @@ export const eventsReducer: Reducer<EventsState, EventsReducerActions> = (
       return {
         ...state,
         selectedEvent: selectedEvent,
-        eventsList: state.eventsList.map((event, _, list) => {
-          if (
-            selectedEvent === EventNames.Edit ||
-            selectedEvent === EventNames.EditOff
-          ) {
-            return event === EventNames.EditOff
-              ? EventNames.Edit
-              : EventNames.EditOff;
-          }
-          // if (selectedEvent === EventNames.Save) {
-
-          // }
-          return event;
+        eventsList: setEventsList({
+          selectedEvent,
+          prevEventList: state.eventsList,
         }),
       };
     default:

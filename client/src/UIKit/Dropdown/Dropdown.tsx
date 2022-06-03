@@ -1,4 +1,6 @@
+import { EventNames } from 'admin/Events/eventsReducer';
 import { MouseEvent, useEffect, useState } from 'react';
+import { Icon } from 'UIKit';
 import styles from './dropdown.module.css';
 
 interface DropdownProps {
@@ -7,11 +9,7 @@ interface DropdownProps {
   handleTarget: (target: HTMLButtonElement) => void;
 }
 
-export function Dropdown({
-  title,
-  list,
-  handleTarget,
-}: DropdownProps) {
+export function Dropdown({ title, list, handleTarget }: DropdownProps) {
   const [show, setSow] = useState(false);
 
   useEffect(() => {
@@ -47,13 +45,22 @@ export function Dropdown({
       </button>
       {show ? (
         <ul className={styles.list}>
-          {list.map((item) => (
-            <li key={item}>
-              <button className={styles.li_button} onClick={buttonClick}>
-                {item}
-              </button>
-            </li>
-          ))}
+          {list.map((item) => {
+            if (!item) return
+            return (
+              <li key={item}>
+                <button
+                  className={`${styles.li_button} ${styles[item]}`}
+                  onClick={buttonClick}
+                >
+                  {item}
+                  {item === EventNames.Save ? (
+                    <Icon className={styles.ikon} icon="save" />
+                  ) : null}
+                </button>
+              </li>
+            );
+          })}
         </ul>
       ) : null}
     </div>
