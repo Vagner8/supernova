@@ -1,62 +1,53 @@
+import { OwnerPII } from 'admin/Profile/profileApi';
 import { Reducer } from 'react';
 
 export enum EventNames {
-  NoEvents = 'no events',
   New = 'new',
   Edit = 'edit',
   EditOff = 'edit off',
   Copy = 'copy',
   Delete = 'delete',
+  Save = 'save'
 }
 
 export enum EventsStrAction {
-  SaveEvents = 'SaveEvents',
-  SetEditMode = 'SetEditMode',
-  SetDependentState = 'SetDependentState',
-  SwitchSaveButton = 'SwitchSaveButton',
+  SaveEventsList = 'SaveEventsList',
+  CopyInputValues = 'CopyInputValues',
+  SaveSelectedEvent = 'SaveSelectedEvent',
 }
 
-interface SaveEvents {
-  type: EventsStrAction.SaveEvents;
-  payload: { events: EventsType };
+interface SaveEventsList {
+  type: EventsStrAction.SaveEventsList;
+  payload: { eventsList: EventsState['eventsList'] };
 }
 
-interface SetEditMode {
-  type: EventsStrAction.SetEditMode;
+interface CopyInputValues {
+  type: EventsStrAction.CopyInputValues;
+  payload: { copyInputValues: CopiesInputValues | null };
 }
 
-interface SetDependentState {
-  type: EventsStrAction.SetDependentState;
-  payload: { stateName: DependentState };
+interface SaveSelectedEvent {
+  type: EventsStrAction.SaveSelectedEvent;
+  payload: { selectedEvent: EventNames };
 }
-
-interface SwitchSaveButton {
-  type: EventsStrAction.SwitchSaveButton;
-  payload: { saveButton: boolean };
-}
-
-export type EventsType = string[];
-
-export type DependentState = 'adminState';
 
 export interface EventsState {
-  events: EventsType;
-  editMode: boolean;
-  dependentState: DependentState | null;
-  saveButton: boolean;
+  eventsList: string[];
+  selectedEvent: EventNames | null;
+  copyInputValues: CopiesInputValues | null;
 }
 
+export type CopiesInputValues = OwnerPII;
+
 export type EventsReducerActions =
-  | SaveEvents
-  | SetEditMode
-  | SetDependentState
-  | SwitchSaveButton;
+  | SaveEventsList
+  | CopyInputValues
+  | SaveSelectedEvent;
 
 export const eventsInitState: EventsState = {
-  events: [EventNames.NoEvents],
-  editMode: false,
-  dependentState: null,
-  saveButton: false,
+  selectedEvent: null,
+  eventsList: [],
+  copyInputValues: null,
 };
 
 export const eventsReducer: Reducer<EventsState, EventsReducerActions> = (
@@ -64,34 +55,35 @@ export const eventsReducer: Reducer<EventsState, EventsReducerActions> = (
   action,
 ) => {
   switch (action.type) {
-    case EventsStrAction.SaveEvents:
+    case EventsStrAction.SaveEventsList:
       return {
         ...state,
-        events: action.payload.events,
+        eventsList: action.payload.eventsList,
       };
-    case EventsStrAction.SetEditMode:
+    case EventsStrAction.CopyInputValues:
       return {
         ...state,
-        editMode: !state.editMode,
-        events: state.events.map((event) => {
-          if (event === EventNames.Edit) {
-            return EventNames.EditOff;
+        copyInputValues: action.payload.copyInputValues,
+      };
+    case EventsStrAction.SaveSelectedEvent:
+      const { selectedEvent } = action.payload;
+      return {
+        ...state,
+        selectedEvent: selectedEvent,
+        eventsList: state.eventsList.map((event, _, list) => {
+          if (
+            selectedEvent === EventNames.Edit ||
+            selectedEvent === EventNames.EditOff
+          ) {
+            return event === EventNames.EditOff
+              ? EventNames.Edit
+              : EventNames.EditOff;
           }
-          if (event === EventNames.EditOff) {
-            return EventNames.Edit;
-          }
+          // if (selectedEvent === EventNames.Save) {
+
+          // }
           return event;
         }),
-      };
-    case EventsStrAction.SetDependentState:
-      return {
-        ...state,
-        dependentState: action.payload.stateName,
-      };
-    case EventsStrAction.SwitchSaveButton:
-      return {
-        ...state,
-        saveButton: action.payload.saveButton,
       };
     default:
       return state;

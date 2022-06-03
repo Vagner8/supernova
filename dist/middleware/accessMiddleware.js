@@ -66,7 +66,7 @@ const accessMiddleware = () => (req, res, next) => __awaiter(void 0, void 0, voi
                 if (err) {
                     throw new errorMiddleware_1.Err({
                         status: 403,
-                        message: "refresh token is expired",
+                        message: "your token is expired",
                         field: null,
                         logout: true,
                     });

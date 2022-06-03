@@ -2,24 +2,24 @@ import { InputMemo, Point } from 'UIKit';
 import styles from './form.module.css';
 import { ChangeEvent, Fragment } from 'react';
 import { OwnerPII } from 'admin/Profile/profileApi';
-import { EventsState } from 'admin/Events/eventsReducer';
-import { FetchResult } from 'admin/adminReducer';
+import { EventNames, EventsState } from 'admin/Events/eventsReducer';
+import { OperationResult } from 'admin/adminReducer';
 
 interface PrintPointsProps {
   data: OwnerPII;
   sort: string[];
-  editMode: EventsState['editMode'];
-  errorField: FetchResult['field'] | undefined
-  errorMessage: FetchResult['message'] | undefined
+  errorField: OperationResult['field'] | undefined;
+  errorMessage: OperationResult['message'] | undefined;
+  showInputs: boolean;
   inputsOnChange: (e: ChangeEvent<HTMLInputElement>) => void;
 }
 
 export function Form({
   data,
   sort,
-  editMode,
   errorField,
   errorMessage,
+  showInputs,
   inputsOnChange,
 }: PrintPointsProps) {
   return (
@@ -33,7 +33,7 @@ export function Form({
                 if (keyText === 'avatar') return;
                 return (
                   <Fragment key={keyText}>
-                    {editMode ? (
+                    {showInputs ? (
                       <InputMemo
                         type="text"
                         label={keyText}

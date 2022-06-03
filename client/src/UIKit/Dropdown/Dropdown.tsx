@@ -2,12 +2,16 @@ import { MouseEvent, useEffect, useState } from 'react';
 import styles from './dropdown.module.css';
 
 interface DropdownProps {
-  list: string[];
-  saveButton: boolean;
+  title: string;
+  list: string[] | null;
   handleTarget: (target: HTMLButtonElement) => void;
 }
 
-export function Dropdown({ list, saveButton, handleTarget }: DropdownProps) {
+export function Dropdown({
+  title,
+  list,
+  handleTarget,
+}: DropdownProps) {
   const [show, setSow] = useState(false);
 
   useEffect(() => {
@@ -34,10 +38,12 @@ export function Dropdown({ list, saveButton, handleTarget }: DropdownProps) {
     handleTarget(target);
   };
 
+  if (!list) return null;
+
   return (
     <div className={styles.Dropdown}>
       <button onClick={dropdownClick} className={styles.button}>
-        events
+        {title}
       </button>
       {show ? (
         <ul className={styles.list}>
@@ -48,9 +54,6 @@ export function Dropdown({ list, saveButton, handleTarget }: DropdownProps) {
               </button>
             </li>
           ))}
-          {saveButton ? (
-            <button className={styles.save_button}>save</button>
-          ) : null}
         </ul>
       ) : null}
     </div>

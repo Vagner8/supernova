@@ -1,11 +1,11 @@
-import { ChangeEvent, Dispatch, FormEvent, useReducer } from 'react';
+import { ChangeEvent, Dispatch, FormEvent, useCallback, useReducer } from 'react';
 import styles from './auth.module.css';
 import {
   authReducer,
   authInitState,
   AuthStrAction,
 } from 'admin/Auth/authReducer';
-import { Button, Input, Icon, Linear, Snackbar } from 'UIKit';
+import { Button, Icon, Linear, Snackbar, InputMemo } from 'UIKit';
 import {
   AdminReducerActions,
   AdminState,
@@ -20,22 +20,17 @@ interface AuthProps {
 
 export function Auth({ adminDispatch, adminState }: AuthProps) {
   const [authState, authDispatch] = useReducer(authReducer, authInitState);
+  // const [isPending, startTransition] = useTransition()
 
-  const onChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const onChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     authDispatch({
       type: AuthStrAction.SetOnChange,
       payload: { name, value },
     });
-    if (authState.inputs.every((item) => item.value)) {
-      authDispatch({
-        type: AuthStrAction.SetDisabledSubmit,
-        payload: { disabledSubmit: false },
-      });
-    }
-    if (!adminState.fetchResult) return;
-    adminDispatch({ type: AdminStrAction.DeleteFetchResult });
-  };
+    if (!adminState.operationResult) return;
+    adminDispatch({ type: AdminStrAction.DeleteOperationResult });
+  }, [adminDispatch, adminState.operationResult]);
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -64,18 +59,18 @@ export function Auth({ adminDispatch, adminState }: AuthProps) {
           <h4>Log in</h4>
           <form onSubmit={onSubmit}>
             {authState.inputs.map((input) => (
-              <Input
+              <InputMemo
                 key={input.label}
-                errorMessage={adminState.fetchResult?.message}
-                errorField={adminState.fetchResult?.field}
+                errorMessage={adminState.operationResult?.message}
+                errorField={adminState.operationResult?.field}
                 label={input.label}
                 type={input.type}
                 value={input.value}
+                required={input.required}
                 onChange={onChange}
               />
             ))}
             <Button
-              disabled={authState.disabledSubmit}
               title="Send"
               type="submit"
               icon={<Icon icon="send" />}
@@ -84,9 +79,9 @@ export function Auth({ adminDispatch, adminState }: AuthProps) {
         </div>
       </div>
       <Snackbar
-        status={adminState.fetchResult?.status}
-        message={adminState.fetchResult?.message}
-        filed={adminState.fetchResult?.field}
+        status={adminState.operationResult?.status}
+        message={adminState.operationResult?.message}
+        filed={adminState.operationResult?.field}
         adminDispatch={adminDispatch}
       />
     </>

@@ -5145,7 +5145,7 @@ small {
   overflow: hidden;
   left: 0;
   top: 0;
-  pointer-events: none;
+  pointer-eventsList: none;
   visibility: hidden;
   background-color: #323232;
 }
@@ -5195,7 +5195,7 @@ small {
 .btn-large[disabled],
 .btn-small[disabled],
 .btn-flat[disabled] {
-  pointer-events: none;
+  pointer-eventsList: none;
   background-color: #DFDFDF !important;
   -webkit-box-shadow: none;
           box-shadow: none;
@@ -5663,7 +5663,7 @@ body.keyboard-focused .dropdown-content li:focus {
   transition-property: transform, opacity, -webkit-transform;
   -webkit-transform: scale(0);
           transform: scale(0);
-  pointer-events: none;
+  pointer-eventsList: none;
 }
 
 .waves-effect.waves-light .waves-ripple {
@@ -6414,7 +6414,7 @@ textarea.materialize-textarea:focus.invalid ~ .helper-text[data-error], .select-
      -moz-user-select: none;
       -ms-user-select: none;
           user-select: none;
-  pointer-events: none;
+  pointer-eventsList: none;
 }
 
 input:not([type]).valid ~ .helper-text:after,
@@ -6720,7 +6720,7 @@ textarea.materialize-textarea {
 [type="radio"]:checked {
   position: absolute;
   opacity: 0;
-  pointer-events: none;
+  pointer-eventsList: none;
 }
 
 [type="radio"]:not(:checked) + span,
@@ -6844,7 +6844,7 @@ textarea.materialize-textarea {
 [type="checkbox"]:checked {
   position: absolute;
   opacity: 0;
-  pointer-events: none;
+  pointer-eventsList: none;
 }
 
 [type="checkbox"] {
@@ -7165,7 +7165,7 @@ select {
 .select-wrapper.valid + label,
 .select-wrapper.invalid + label {
   width: 100%;
-  pointer-events: none;
+  pointer-eventsList: none;
 }
 
 .select-wrapper input.select-dropdown {
@@ -7624,7 +7624,7 @@ input[type=range]::-ms-thumb {
 
 .sidenav .subheader {
   cursor: initial;
-  pointer-events: none;
+  pointer-eventsList: none;
   color: rgba(0, 0, 0, 0.54);
   font-size: 14px;
   font-weight: 500;
@@ -8448,7 +8448,7 @@ input[type=range]::-ms-thumb {
 
 .carousel.scrolling .carousel-item .materialboxed,
 .carousel .carousel-item:not(.active) .materialboxed {
-  pointer-events: none;
+  pointer-eventsList: none;
 }
 
 .tap-target-wrapper {
@@ -8486,10 +8486,19 @@ input[type=range]::-ms-thumb {
   visibility: visible;
   -webkit-animation: pulse-animation 1s cubic-bezier(0.24, 0, 0.38, 1) infinite;
           animation: pulse-animation 1s cubic-bezier(0.24, 0, 0.38, 1) infinite;
-  -webkit-transition: opacity .3s, visibility 0s 1s, -webkit-transform .3s;
-  transition: opacity .3s, visibility 0s 1s, -webkit-transform .3s;
-  transition: opacity .3s, transform .3s, visibility 0s 1s;
-  transition: opacity .3s, transform .3s, visibility 0s 1s, -webkit-transform .3s;
+  -webkit-transition: opacity .3s,
+ visibility 0s 1s,
+ -webkit-transform .3s;
+  transition: opacity .3s,
+ visibility 0s 1s,
+ -webkit-transform .3s;
+  transition: opacity .3s,
+ transform .3s,
+ visibility 0s 1s;
+  transition: opacity .3s,
+ transform .3s,
+ visibility 0s 1s,
+ -webkit-transform .3s;
 }
 
 .tap-target {
@@ -8542,10 +8551,19 @@ input[type=range]::-ms-thumb {
 
 .tap-target-wave::after {
   visibility: hidden;
-  -webkit-transition: opacity .3s, visibility 0s, -webkit-transform .3s;
-  transition: opacity .3s, visibility 0s, -webkit-transform .3s;
-  transition: opacity .3s, transform .3s, visibility 0s;
-  transition: opacity .3s, transform .3s, visibility 0s, -webkit-transform .3s;
+  -webkit-transition: opacity .3s,
+ visibility 0s,
+ -webkit-transform .3s;
+  transition: opacity .3s,
+ visibility 0s,
+ -webkit-transform .3s;
+  transition: opacity .3s,
+ transform .3s,
+ visibility 0s;
+  transition: opacity .3s,
+ transform .3s,
+ visibility 0s,
+ -webkit-transform .3s;
   z-index: -1;
 }
 
@@ -8754,7 +8772,7 @@ input[type=range]::-ms-thumb {
 .datepicker-table abbr {
   text-decoration: none;
   color: #999;
-}
+}eventsList
 
 .datepicker-table td {
   border-radius: 50%;

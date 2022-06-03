@@ -1,38 +1,17 @@
-import { AdminReducerActions, AdminState } from 'admin/adminReducer';
+import { AdminState } from 'admin/adminReducer';
 import { Events } from 'admin/Events/Events';
-import {
-  DependentState,
-  EventsReducerActions,
-  EventsType,
-} from 'admin/Events/eventsReducer';
-import { FilesReducerActions } from 'admin/filesReducer';
-import { Dispatch } from 'react';
 import { NavLink } from 'react-router-dom';
 import { Icon, Avatar } from 'UIKit';
 import styles from './navbar.module.css';
 
 interface NavbarProps {
-  editMode: boolean;
-  events: EventsType;
-  dependentState: DependentState | null;
-  saveButton: boolean;
   login: AdminState['login'];
   avatar: AdminState['avatar'];
-  eventsDispatch: Dispatch<EventsReducerActions>;
-  adminDispatch: Dispatch<AdminReducerActions>;
-  filesDispatch: Dispatch<FilesReducerActions>;
 }
 
 export function Navbar({
-  events,
-  editMode,
-  dependentState,
-  saveButton,
   login,
   avatar,
-  eventsDispatch,
-  adminDispatch,
-  filesDispatch,
 }: NavbarProps) {
   return (
     <nav className={styles.Navbar}>
@@ -40,15 +19,6 @@ export function Navbar({
         <button className={styles.button}>
           <Icon icon="menu" />
         </button>
-        <Events
-          events={events}
-          editMode={editMode}
-          dependentState={dependentState}
-          saveButton={saveButton}
-          eventsDispatch={eventsDispatch}
-          adminDispatch={adminDispatch}
-          filesDispatch={filesDispatch}
-        />
       </div>
       <div className={styles.right}>
         <NavLink className={styles.avatar_link} to="/admin/profile">

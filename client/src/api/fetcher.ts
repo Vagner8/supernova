@@ -42,27 +42,58 @@ export async function fetcher({
         ownerId: localStorage.getItem('ownerId') || 'idle',
       },
     });
-    const json = await response.json() as undefined | Err | Object;
-    if (!json || 'logout' in json) {
+    const json = (await response.json()) as undefined | Err | Object;
+    if (!json) {
       adminDispatch({
-        type: AdminStrAction.SaveFetchResult,
-        payload: { fetchResult: json },
+        type: AdminStrAction.SaveOperationResult,
+        payload: {
+          operationResult: {
+            status: 'error',
+            message: 'unexpected error',
+            field: null,
+            logout: false,
+          },
+        },
       });
-      return undefined
+      return undefined;
+    }
+    if ('logout' in json) {
+      adminDispatch({
+        type: AdminStrAction.SaveOperationResult,
+        payload: {
+          operationResult: {
+            status: 'error',
+            message: json.message,
+            field: json.field,
+            logout: json.logout,
+          },
+        },
+      });
+      return undefined;
     }
     adminDispatch({
-      type: AdminStrAction.SaveFetchResult,
+      type: AdminStrAction.SaveOperationResult,
       payload: {
-        fetchResult: { status: 'ok', message },
+        operationResult: {
+          status: 'ok',
+          message,
+          field: null,
+          logout: false,
+        },
       },
     });
     return json;
   } catch (err) {
     console.log(err);
     adminDispatch({
-      type: AdminStrAction.SaveFetchResult,
+      type: AdminStrAction.SaveOperationResult,
       payload: {
-        fetchResult: { status: 'error', message: 'server error' },
+        operationResult: {
+          status: 'error',
+          message: 'server error',
+          field: null,
+          logout: false,
+        },
       },
     });
   } finally {

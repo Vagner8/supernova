@@ -4,12 +4,12 @@ import { OwnerPII } from './profileApi';
 export type OwnerPIIKeys = keyof OwnerPII
 
 export enum ProfileStrAction {
-  SaveOwnerPersonalData = 'SaveOwnerPersonalData',
+  SaveOwnerPII = 'SaveOwnerPII',
   SaveInputsOutputs = 'SaveInputsOutputs',
 }
 
-interface SaveOwnerPersonalData {
-  type: ProfileStrAction.SaveOwnerPersonalData;
+interface SaveOwnerPII {
+  type: ProfileStrAction.SaveOwnerPII;
   payload: { ownerPII: OwnerPII };
 }
 
@@ -18,28 +18,25 @@ interface SaveInputsOutputs {
   payload: { name: string, value: string, formName: OwnerPIIKeys };
 }
 
-interface ProfileState {
-  ownerPII: OwnerPII | null;
-  copyOwnerPII: OwnerPII | null;
+export interface ProfileState {
+ ownerPII: OwnerPII | null;
 }
 
 export const profileInitState: ProfileState = {
   ownerPII: null,
-  copyOwnerPII: null,
 };
 
-export type ProfileReducerActions = SaveOwnerPersonalData | SaveInputsOutputs;
+export type ProfileReducerActions = SaveOwnerPII | SaveInputsOutputs;
 
 export const profileReducer: Reducer<ProfileState, ProfileReducerActions> = (
   state,
   action,
 ) => {
   switch (action.type) {
-    case ProfileStrAction.SaveOwnerPersonalData:
+    case ProfileStrAction.SaveOwnerPII:
       return {
         ...state,
-        ownerPII: action.payload.ownerPII,
-        copyOwnerPII: action.payload.ownerPII
+        ownerPII: action.payload.ownerPII
       }
     case ProfileStrAction.SaveInputsOutputs:
       if (!state.ownerPII) return state

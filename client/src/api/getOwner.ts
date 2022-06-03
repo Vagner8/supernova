@@ -21,6 +21,6 @@ export async function getOwner(
     method: 'GET',
     url,
     adminDispatch,
-    message: 'Successful response',
+    message: 'successful response',
   }));
 }

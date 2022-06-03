@@ -1,4 +1,4 @@
-import React, { Dispatch, lazy, Suspense, useEffect, useReducer } from 'react';
+import { Dispatch, lazy, Suspense, useEffect, useReducer } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { Auth } from './Auth/Auth';
 import {
@@ -22,6 +22,7 @@ import {
 } from './filesReducer';
 import { FilesSheet } from './FilesSheet/FilesSheet';
 import { storeOwnerCommonData } from './adminApi';
+import { Events } from './Events/Events';
 
 const Home = lazy(() => import('./Home/Home'));
 const Profile = lazy(() => import('./Profile/Profile'));
@@ -34,7 +35,7 @@ export function Admin() {
   );
   const [filesState, filesDispatch] = useReducer(filesReducer, filesInitState);
 
-  if (!localStorage.getItem('ownerId') || adminState.fetchResult?.logout) {
+  if (!localStorage.getItem('ownerId')) {
     return <Auth adminState={adminState} adminDispatch={adminDispatch} />;
   }
 
@@ -67,44 +68,42 @@ function AdminRoutes({
   filesState,
   filesDispatch,
 }: AdminRoutesProps) {
-  console.log('AdminRoutesProps');
 
   useEffect(() => {
-    storeOwnerCommonData(adminDispatch)
+    storeOwnerCommonData(adminDispatch);
   }, [adminDispatch]);
 
   return (
     <>
       <Linear show={adminState.isFetching} />
-      <Snackbar
-        status={adminState.fetchResult?.status}
-        message={adminState.fetchResult?.message}
-        filed={adminState.fetchResult?.field}
-        adminDispatch={adminDispatch}
-      />
-      <Linear show={adminState.isFetching} />
-      <Navbar
-        events={eventsState.events}
-        editMode={eventsState.editMode}
-        dependentState={eventsState.dependentState}
-        saveButton={eventsState.saveButton}
-        login={adminState.login}
-        avatar={adminState.avatar}
-        adminDispatch={adminDispatch}
+      <Events
+        eventsList={eventsState.eventsList}
+        selectedEvent={eventsState.selectedEvent}
         eventsDispatch={eventsDispatch}
         filesDispatch={filesDispatch}
       />
+      <Navbar
+        login={adminState.login}
+        avatar={adminState.avatar}
+      />
       <Suspense fallback={<Linear show={true} />}>
         <Routes>
-          <Route index element={<Home adminDispatch={adminDispatch} />} />
+          <Route
+            index
+            element={
+              <Home eventsState={eventsState} adminDispatch={adminDispatch} />
+            }
+          />
           <Route
             path="/profile"
             element={
               <Profile
                 files={filesState.files}
-                editMode={eventsState.editMode}
-                errorField={adminState.fetchResult?.field}
-                errorMessage={adminState.fetchResult?.message}
+                selectedEvent={eventsState.selectedEvent}
+                eventsList={eventsState.eventsList}
+                errorField={adminState.operationResult?.field}
+                errorMessage={adminState.operationResult?.message}
+                copyInputValues={eventsState.copyInputValues}
                 adminDispatch={adminDispatch}
                 eventsDispatch={eventsDispatch}
                 filesDispatch={filesDispatch}
@@ -114,6 +113,12 @@ function AdminRoutes({
         </Routes>
       </Suspense>
       <FilesSheet files={filesState.files} filesDispatch={filesDispatch} />
+      <Snackbar
+        status={adminState.operationResult?.status}
+        message={adminState.operationResult?.message}
+        filed={adminState.operationResult?.field}
+        adminDispatch={adminDispatch}
+      />
     </>
   );
 }

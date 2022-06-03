@@ -22,7 +22,7 @@ export async function storeOwnerPII(
   })) as OwnerPII | undefined;
   if (!ownerPII) return
   profileDispatch({
-    type: ProfileStrAction.SaveOwnerPersonalData,
+    type: ProfileStrAction.SaveOwnerPII,
     payload: { ownerPII },
   });
 }

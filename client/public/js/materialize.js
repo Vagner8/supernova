@@ -59,7 +59,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
   }
 
   function onReady(fn) {
-    if (doc.readyState !== "fetchResult") {
+    if (doc.readyState !== "operationResult") {
       fn();
     } else {
       doc.addEventListener("DOMContentLoaded", fn);
@@ -542,8 +542,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
   }
 
   function removeEvent(node, eventName, callback) {
-    var events = getData(node, "_cashEvents"),
-        eventCache = events && events[eventName],
+    var eventsList = getData(node, "_cashEvents"),
+        eventCache = eventsList && eventsList[eventName],
         index;
 
     if (!eventCache) {
@@ -5079,7 +5079,7 @@ $jscomp.polyfill = function (e, r, p, m) {
 
   /**
    * Attach Waves to an input element (or any element which doesn't
-   * bubble mouseup/mousedown events).
+   * bubble mouseup/mousedown eventsList).
    *   Intended to be used with dynamically loaded forms/inputs, or
    * where the user doesn't want a delegated click handler.
    */
@@ -8794,8 +8794,8 @@ $jscomp.polyfill = function (e, r, p, m) {
       weekdaysAbbrev: ['S', 'M', 'T', 'W', 'T', 'F', 'S']
     },
 
-    // events array
-    events: [],
+    // eventsList array
+    eventsList: [],
 
     // callback function
     onSelect: null,
@@ -9091,7 +9091,7 @@ $jscomp.polyfill = function (e, r, p, m) {
           var day = new Date(year, month, 1 + (i - before)),
               isSelected = Datepicker._isDate(this.date) ? Datepicker._compareDates(day, this.date) : false,
               isToday = Datepicker._compareDates(day, now),
-              hasEvent = opts.events.indexOf(day.toDateString()) !== -1 ? true : false,
+              hasEvent = opts.eventsList.indexOf(day.toDateString()) !== -1 ? true : false,
               isEmpty = i < before || i >= days + before,
               dayNumber = 1 + (i - before),
               monthNumber = month,

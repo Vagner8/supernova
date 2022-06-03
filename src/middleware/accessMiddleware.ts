@@ -64,7 +64,7 @@ export const accessMiddleware =
             if (err) {
               throw new Err({
                 status: 403,
-                message: "refresh token is expired",
+                message: "your token is expired",
                 field: null,
                 logout: true,
               });

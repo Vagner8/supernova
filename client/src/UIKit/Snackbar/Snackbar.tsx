@@ -1,16 +1,17 @@
 import {
   AdminReducerActions,
   AdminStrAction,
-  FetchResult,
+  OperationResult,
 } from 'admin/adminReducer';
+import { capitalizer } from 'helpers';
 import { Dispatch, useEffect, useState } from 'react';
 import { Icon } from 'UIKit';
 import styles from './snackbar.module.css';
 
 export interface SnackbarProps {
-  status: FetchResult['status'] | undefined;
-  message: FetchResult['message'] | undefined;
-  filed: FetchResult['field'] | undefined;
+  status: OperationResult['status'] | undefined;
+  message: OperationResult['message'] | undefined;
+  filed: OperationResult['field'] | undefined;
   adminDispatch: Dispatch<AdminReducerActions>;
 }
 
@@ -23,7 +24,7 @@ export function Snackbar({
   filed,
   adminDispatch,
 }: SnackbarProps) {
-  const [show, setShow] = useState(true)
+  const [show, setShow] = useState(true);
   const icons: {
     ok: 'task_alt';
     error: 'error';
@@ -39,7 +40,7 @@ export function Snackbar({
       started = true;
       timer = setTimeout(() => {
         if (status === 'error') return;
-        setShow(false)
+        setShow(false);
         started = false;
       }, 3000);
     };
@@ -50,17 +51,19 @@ export function Snackbar({
 
   const onClick = () => {
     adminDispatch({
-      type: AdminStrAction.DeleteFetchResult,
+      type: AdminStrAction.DeleteOperationResult,
     });
   };
 
   if (!message || !status || filed) return null;
-  if (!show) return null
+  if (!show) return null;
 
   return (
     <div className={`${styles.Snackbar} ${styles[status]}`}>
       <Icon icon={icons[status]} />
-      <p className={styles.message}>{message}</p>
+      <p className={styles.message}>
+        {capitalizer({index: 0, str: message})}
+      </p>
       <button onClick={onClick} className={styles.button}>
         <Icon icon="close" />
       </button>

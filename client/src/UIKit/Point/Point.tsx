@@ -9,7 +9,7 @@ export function Point({ keyText, valueText }: PointProps) {
   return (
     <div className={styles.Point}>
       <small className={styles.small}>{keyText}</small>
-      <p>{valueText || 'empty'}</p>
+      <p>{valueText || '-'}</p>
     </div>
   );
 }

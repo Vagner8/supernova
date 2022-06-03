@@ -39,3 +39,12 @@
 .label.error {
   color: #F44336;
 }
+
+.Star {
+  color: #F44336;
+  margin-left: -.25rem;
+}
+
+.error .Star {
+  display: none;
+}

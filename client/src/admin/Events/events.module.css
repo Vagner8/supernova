@@ -1,3 +1,6 @@
 .Events {
-  
+  position: fixed;
+  z-index: 6;
+  left: 3.25rem;
+  top: 14px;
 }

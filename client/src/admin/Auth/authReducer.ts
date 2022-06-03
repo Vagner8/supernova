@@ -9,6 +9,7 @@ interface AuthInput {
   label: string;
   type: 'password' | 'text';
   value: string;
+  required: boolean
 }
 
 interface AuthState {
@@ -34,11 +35,13 @@ export const authInitState: AuthState = {
       label: 'login',
       type: 'text',
       value: '',
+      required: true
     },
     {
       label: 'password',
       type: 'password',
       value: '',
+      required: true
     },
   ],
   disabledSubmit: true,

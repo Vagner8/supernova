@@ -35,7 +35,7 @@ class UseToken {
         return __awaiter(this, void 0, void 0, function* () {
             const refreshToken = jsonwebtoken_1.default.sign({ ownerId }, process.env.REFRESH_SECRET, {
                 expiresIn: "1h",
-                // expiresIn: '20s'
+                // expiresIn: '10s'
             });
             if (this.collection) {
                 yield this.collection.updateOne({ ownerId }, { $set: { refreshToken } });

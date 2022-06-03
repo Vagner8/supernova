@@ -1,4 +1,4 @@
-import { FetchResult } from 'admin/adminReducer';
+import { OperationResult } from 'admin/adminReducer';
 import { ChangeEvent, FocusEvent, memo, useEffect, useState } from 'react';
 import { Visibility } from 'UIKit';
 import styles from './input.module.css';
@@ -7,9 +7,10 @@ export interface InputProps {
   label: string;
   value: string;
   type: 'password' | 'text';
-  errorMessage: FetchResult['message'] | undefined;
-  errorField: FetchResult['field'] | undefined;
+  errorMessage: OperationResult['message'] | undefined;
+  errorField: OperationResult['field'] | undefined;
   formName?: string;
+  required?: boolean;
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
 }
 
@@ -20,6 +21,7 @@ export function Input({
   errorMessage,
   errorField,
   formName,
+  required,
   onChange,
 }: InputProps) {
   const [active, setActive] = useState<'active' | ''>('');
@@ -62,6 +64,7 @@ export function Input({
         htmlFor={label}
       >
         {`${label} ${showError() ? `- ${errorMessage}` : ''}`}
+        <Star required={required} />
       </label>
       <input
         id={label}
@@ -79,6 +82,15 @@ export function Input({
       ) : null}
     </div>
   );
+}
+
+interface StarProps {
+  required: InputProps['required'];
+}
+
+function Star({ required }: StarProps) {
+  if (!required) return null;
+  return <span className={styles.Star}>*</span>;
 }
 
 export const InputMemo = memo(Input);

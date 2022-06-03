@@ -1,27 +1,19 @@
-import { Err } from 'api/fetcher';
 import { Reducer } from 'react';
 import { OwnerCommonData } from './adminApi';
 
 export enum AdminStrAction {
   SaveOwnerid = 'SaveOwnerid',
   SaveOwnerCommonData = 'SaveOwnerCommonData',
-  SaveFetchResult = 'SaveFetchResult',
-  DeleteFetchResult = 'DeleteFetchResult',
+  SaveOperationResult = 'SaveOperationResult',
+  DeleteOperationResult = 'DeleteOperationResult',
   SetIsFetching = 'SetIsFetching',
 }
 
-export interface FetchResult {
-  status: 'ok' | 'error' | 'warning' | null;
-  message: string | null;
+export interface OperationResult {
+  status: 'ok' | 'error' | 'warning';
+  message: string;
   field: string | null;
-  logout: boolean
-}
-
-export interface AdminState {
-  isFetching: boolean;
-  fetchResult: FetchResult | null;
-  avatar: string | null;
-  login: string | null;
+  logout: boolean;
 }
 
 interface SetIsFetching {
@@ -34,17 +26,14 @@ interface SaveOwnerCommonData {
   payload: { ownerCommonData: OwnerCommonData };
 }
 
-interface DeleteFetchResult {
-  type: AdminStrAction.DeleteFetchResult;
+interface DeleteOperationResult {
+  type: AdminStrAction.DeleteOperationResult;
 }
 
-interface SaveFetchResult {
-  type: AdminStrAction.SaveFetchResult;
+interface SaveOperationResult {
+  type: AdminStrAction.SaveOperationResult;
   payload: {
-    fetchResult:
-      | Err
-      | { status: FetchResult['status']; message: string }
-      | undefined
+    operationResult: OperationResult;
   };
 }
 
@@ -57,12 +46,19 @@ export type AdminReducerActions =
   | SetIsFetching
   | SaveOwnerid
   | SaveOwnerCommonData
-  | DeleteFetchResult
-  | SaveFetchResult;
+  | DeleteOperationResult
+  | SaveOperationResult;
+
+export interface AdminState {
+  isFetching: boolean;
+  operationResult: Omit<OperationResult, 'logout'> | null;
+  avatar: string | null;
+  login: string | null;
+}
 
 export const adminInitState: AdminState = {
   isFetching: false,
-  fetchResult: null,
+  operationResult: null,
   avatar: null,
   login: null,
 };
@@ -89,48 +85,18 @@ export const adminReducer: Reducer<AdminState, AdminReducerActions> = (
         avatar: action.payload.ownerCommonData.personal.avatar,
         login: action.payload.ownerCommonData.login,
       };
-    case AdminStrAction.SaveFetchResult:
-      const { fetchResult } = action.payload
-      if (!fetchResult) {
-        return {
-          ...state,
-          fetchResult: {
-            ...state.fetchResult,
-            status: 'error',
-            message: 'unexpected error',
-            field: null,
-            logout: false
-          },
-        };
-      }
-      if ('logout' in fetchResult) {
-        fetchResult.logout && localStorage.removeItem('ownerId');
-        return {
-          ...state,
-          fetchResult: {
-            ...state.fetchResult,
-            status: 'error',
-            message: fetchResult.message,
-            field: fetchResult.field,
-            logout: fetchResult.logout
-          },
-        };
-      }
+    case AdminStrAction.SaveOperationResult:
+      const { operationResult } = action.payload;
+      operationResult.logout && localStorage.removeItem('ownerId');
       return {
         ...state,
-        fetchResult: {
-          ...state.fetchResult,
-          status: fetchResult.status,
-          message: fetchResult.message,
-          field: null,
-          logout: false
-        }
-      }
-    case AdminStrAction.DeleteFetchResult:
+        operationResult,
+      };
+    case AdminStrAction.DeleteOperationResult:
       return {
         ...state,
-        fetchResult: null
-      }
+        operationResult: null,
+      };
     default:
       return state;
   }
