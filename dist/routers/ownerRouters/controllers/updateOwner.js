@@ -35,16 +35,34 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-var express_1 = __importDefault(require("express"));
-var router = express_1.default.Router();
-router.get("/", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    return __generator(this, function (_a) {
-        return [2 /*return*/];
+exports.updateOwner = void 0;
+var connectMongo_1 = require("./../../../middleware/connectMongo");
+var types_1 = require("./../../../types");
+var errorMiddleware_1 = require("./../../../middleware/errorMiddleware");
+function updateOwner(req, res, next) {
+    return __awaiter(this, void 0, void 0, function () {
+        var ownersColl;
+        return __generator(this, function (_a) {
+            try {
+                ownersColl = connectMongo_1.MONGO_DB.collection(types_1.CollName.Owners);
+                console.log(req.body);
+                if (!ownersColl) {
+                    throw new errorMiddleware_1.Err({
+                        status: 500,
+                        message: "no connection",
+                        field: null,
+                        logout: false,
+                    });
+                }
+                // const result = await ownersColl.updateOne({ownerId: OWNER_ID})
+            }
+            catch (err) {
+                next(err);
+            }
+            return [2 /*return*/];
+        });
     });
-}); });
-exports.default = router;
-//# sourceMappingURL=users.js.map
+}
+exports.updateOwner = updateOwner;
+//# sourceMappingURL=updateOwner.js.map

@@ -1,37 +1,40 @@
-import { FilesReducerActions, FilesStrAction } from 'admin/filesReducer';
 import { Dispatch } from 'react';
+import { useLocation } from 'react-router-dom';
 import { Dropdown } from 'UIKit';
 import styles from './events.module.css';
 import {
+  deleteAllFiles,
   EventNames,
   EventsReducerActions,
   EventsState,
-  EventsStrAction,
+  saveSelectedEvent,
+  showSaveEvent,
 } from './eventsReducer';
 
 interface EventsProps {
   eventsList: EventsState['eventsList'];
   selectedEvent: EventsState['selectedEvent']
   eventsDispatch: Dispatch<EventsReducerActions>;
-  filesDispatch: Dispatch<FilesReducerActions>;
 }
 
 export function Events({
   eventsList,
   eventsDispatch,
-  filesDispatch,
 }: EventsProps) {
+
+  const location = useLocation()
+
   const handleTarget = (target: HTMLButtonElement) => {
     if (!target.textContent) return;
-    const selectedEvent = target.textContent as EventNames;
-    eventsDispatch({
-      type: EventsStrAction.SaveSelectedEvent,
-      payload: { selectedEvent },
-    });
+    const selectedEvent = target.dataset.eventName as EventNames;
+    saveSelectedEvent(eventsDispatch, selectedEvent)
     if (selectedEvent === EventNames.EditOff) {
-      filesDispatch({ type: FilesStrAction.DeleteAllFiles });
+      deleteAllFiles(eventsDispatch)
+      showSaveEvent(eventsDispatch, false)
     }
   };
+
+  if (location.pathname === '/admin') return null
 
   return (
     <div className={styles.Events}>

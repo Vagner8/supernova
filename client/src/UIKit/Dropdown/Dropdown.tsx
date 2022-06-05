@@ -50,7 +50,8 @@ export function Dropdown({ title, list, handleTarget }: DropdownProps) {
             return (
               <li key={item}>
                 <button
-                  className={`${styles.li_button} ${styles[item]}`}
+                  data-event-name={item}
+                  className={styles.li_button}
                   onClick={buttonClick}
                 >
                   {item}

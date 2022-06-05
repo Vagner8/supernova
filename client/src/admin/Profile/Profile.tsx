@@ -4,42 +4,38 @@ import {
   EventsReducerActions,
   EventsState,
   EventsStrAction,
+  saveFiles,
+  showSaveEvent,
 } from 'admin/Events/eventsReducer';
-import {
-  FilesReducerActions,
-  FilesState,
-  FilesStrAction,
-} from 'admin/filesReducer';
 import { useCopyInputValues } from 'hooks';
+import { useUpdateData, useEventsList } from 'hooks';
 import {
   ChangeEvent,
   Dispatch,
   useCallback,
   useEffect,
   useReducer,
-  useRef,
 } from 'react';
 import { Avatar, Container, FileInput, Form } from 'UIKit';
 import styles from './profile.module.css';
-import { storeOwnerPII } from './profileApi';
+import { fetchAndSaveOwnerPII } from './profileApi';
 import {
   OwnerPIIKeys,
   profileInitState,
   profileReducer,
   ProfileState,
-  ProfileStrAction,
+  saveProfileInputsOutputs,
 } from './profileReducer';
 
 interface ProfileProps {
   selectedEvent: EventsState['selectedEvent'];
   eventsList: EventsState['eventsList'];
-  files: FilesState['files'];
+  files: EventsState['files'];
   errorField: OperationResult['field'] | undefined;
   errorMessage: OperationResult['message'] | undefined;
   copyInputValues: ProfileState['ownerPII'];
   adminDispatch: Dispatch<AdminReducerActions>;
   eventsDispatch: Dispatch<EventsReducerActions>;
-  filesDispatch: Dispatch<FilesReducerActions>;
 }
 
 export default function Profile({
@@ -48,9 +44,9 @@ export default function Profile({
   errorMessage,
   copyInputValues,
   eventsList,
+  files,
   adminDispatch,
   eventsDispatch,
-  filesDispatch,
 }: ProfileProps) {
   console.log('Profile');
   const [profileState, profileDispatch] = useReducer(
@@ -58,35 +54,32 @@ export default function Profile({
     profileInitState,
   );
 
-  // const count = useRef(0)
   let count = 0;
 
   useEffect(() => {
-    storeOwnerPII(profileDispatch, adminDispatch);
+    fetchAndSaveOwnerPII(profileDispatch, adminDispatch);
   }, [adminDispatch]);
 
-  useEffect(() => {
-    eventsDispatch({
-      type: EventsStrAction.SaveEventsList,
-      payload: { eventsList: [EventNames.Edit, EventNames.Delete] },
-    });
-  }, [eventsDispatch]);
+  useEventsList({
+    eventsList: [EventNames.Edit],
+    isEventsListExist: Boolean(eventsList.length),
+    eventsDispatch,
+  });
 
-  useEffect(() => {
-    if (selectedEvent === EventNames.EditOff && copyInputValues) {
-      profileDispatch({
-        type: ProfileStrAction.SaveOwnerPII,
-        payload: {
-          ownerPII: copyInputValues,
-        },
-      });
-    }
-  }, [copyInputValues, eventsDispatch, selectedEvent]);
+  useUpdateData({
+    selectedEvent,
+    data: profileState.ownerPII,
+    files,
+    adminDispatch,
+    eventsDispatch,
+  });
 
   useCopyInputValues({
     copyInputValues,
-    InputValues: profileState.ownerPII,
+    inputValues: profileState.ownerPII,
+    selectedEvent,
     eventsDispatch,
+    profileDispatch,
   });
 
   const inputsOnChange = useCallback(
@@ -94,30 +87,19 @@ export default function Profile({
       if (!e.target) return;
       if (!e.target.dataset.formName) return;
       const { name, value } = e.target;
-      profileDispatch({
-        type: ProfileStrAction.SaveInputsOutputs,
-        payload: {
-          name,
-          value,
-          formName: e.target.dataset.formName as OwnerPIIKeys,
-        },
-      });
+      const formName = e.target.dataset.formName as OwnerPIIKeys;
+      saveProfileInputsOutputs(profileDispatch, name, value, formName);
       if (count !== 0) return;
       count++;
-      eventsDispatch({
-        type: EventsStrAction.SaveSelectedEvent,
-        payload: { selectedEvent: EventNames.Save },
-      });
+      showSaveEvent(eventsDispatch, true);
     },
     [eventsDispatch, count],
   );
 
   const fileInputOnChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) return;
-    filesDispatch({
-      type: FilesStrAction.SaveFiles,
-      payload: { files: Array.from(e.target.files) },
-    });
+    saveFiles(eventsDispatch, Array.from(e.target.files));
+    e.target.value = '';
   };
 
   if (!profileState.ownerPII) return null;

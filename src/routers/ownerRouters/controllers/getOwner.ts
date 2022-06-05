@@ -1,8 +1,9 @@
 import { NextFunction, Request, Response } from "express";
-import { db, restartServer } from "../../../app";
 import { CollName } from "../../../types";
 import { Err } from "../../../middleware/errorMiddleware";
 import { Owner } from "./../../../../common/owner"
+import { MONGO_DB } from "./../../../middleware/connectMongo";
+import { OWNER_ID } from "./../../../middleware/accessMiddleware";
 
 export async function getOwner(
   req: Request,
@@ -10,19 +11,17 @@ export async function getOwner(
   next: NextFunction
 ) {
   try {
-    const ownerId = req.headers.ownerid as undefined | string;
     const projection = req.query.projection as undefined | string;
-    if (!ownerId || !projection) {
+    if (!projection) {
       throw new Err({
         status: 403,
-        message: "no ownerId or projection",
+        message: "no projection",
         field: null,
         logout: false,
       });
     }
-    const ownersColl = db.collection<Owner>(CollName.Owners)
+    const ownersColl = MONGO_DB.collection<Owner>(CollName.Owners)
     if (!ownersColl) {
-      restartServer()
       throw new Err({
         status: 500,
         message: "no connection",
@@ -31,7 +30,7 @@ export async function getOwner(
       });
     }
     const owner = await ownersColl.findOne(
-      { ownerId },
+      { ownerId: OWNER_ID },
       { projection: JSON.parse(projection) }
     )
     if (!owner) {

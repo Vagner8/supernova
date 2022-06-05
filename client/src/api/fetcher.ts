@@ -1,4 +1,9 @@
-import { AdminReducerActions, AdminStrAction } from 'admin/adminReducer';
+import {
+  AdminReducerActions,
+  AdminStrAction,
+  saveOperationResult,
+  setIsFetching,
+} from 'admin/adminReducer';
 import { Dispatch } from 'react';
 
 export interface Err {
@@ -9,8 +14,9 @@ export interface Err {
 }
 
 export enum API {
-  Registration = '/auth/login',
+  Login = '/auth/login',
   Owner = '/owner',
+  OwnerUpdate = '/owner/update',
 }
 
 interface Fetcher {
@@ -28,10 +34,7 @@ export async function fetcher({
   body,
   message,
 }: Fetcher) {
-  adminDispatch({
-    type: AdminStrAction.SetIsFetching,
-    payload: { isFetching: true },
-  });
+  setIsFetching(adminDispatch, true)
   try {
     const response = await fetch(url, {
       method,
@@ -44,62 +47,39 @@ export async function fetcher({
     });
     const json = (await response.json()) as undefined | Err | Object;
     if (!json) {
-      adminDispatch({
-        type: AdminStrAction.SaveOperationResult,
-        payload: {
-          operationResult: {
-            status: 'error',
-            message: 'unexpected error',
-            field: null,
-            logout: false,
-          },
-        },
+      saveOperationResult(adminDispatch, {
+        status: 'error',
+        message: 'unexpected error',
+        field: null,
+        logout: false,
       });
       return undefined;
     }
     if ('logout' in json) {
-      adminDispatch({
-        type: AdminStrAction.SaveOperationResult,
-        payload: {
-          operationResult: {
-            status: 'error',
-            message: json.message,
-            field: json.field,
-            logout: json.logout,
-          },
-        },
-      });
+      saveOperationResult(adminDispatch, {
+        status: 'error',
+        message: json.message,
+        field: json.field,
+        logout: json.logout,
+      })
       return undefined;
     }
-    adminDispatch({
-      type: AdminStrAction.SaveOperationResult,
-      payload: {
-        operationResult: {
-          status: 'ok',
-          message,
-          field: null,
-          logout: false,
-        },
-      },
-    });
+    saveOperationResult(adminDispatch, {
+      status: 'ok',
+      message,
+      field: null,
+      logout: false,
+    })
     return json;
   } catch (err) {
     console.log(err);
-    adminDispatch({
-      type: AdminStrAction.SaveOperationResult,
-      payload: {
-        operationResult: {
-          status: 'error',
-          message: 'server error',
-          field: null,
-          logout: false,
-        },
-      },
-    });
+    saveOperationResult(adminDispatch, {
+      status: 'error',
+      message: 'server error',
+      field: null,
+      logout: false,
+    })
   } finally {
-    adminDispatch({
-      type: AdminStrAction.SetIsFetching,
-      payload: { isFetching: false },
-    });
+    setIsFetching(adminDispatch, false)
   }
 }

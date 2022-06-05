@@ -3,8 +3,11 @@ import { CollName } from "../types";
 import { Err } from "./errorMiddleware";
 import jwt from "jsonwebtoken";
 import { UseToken } from "./../UseToken";
-import { db, restartServer } from "./../app";
+import { restartServer } from "./../app";
 import { Owner } from './../../common/owner'
+import { MONGO_DB } from "./connectMongo";
+
+export let OWNER_ID: string
 
 export const accessMiddleware =
   () => async (req: Request, res: Response, next: NextFunction) => {
@@ -20,22 +23,15 @@ export const accessMiddleware =
       }
 
       const accessToken = req.cookies.accessToken;
-
       if (accessToken) {
-        jwt.verify(accessToken, process.env.ACCESS_SECRET, (err: any) => {
-          if (err) {
-            throw new Err({
-              status: 403,
-              message: "access token is expired",
-              field: null,
-              logout: true,
-            });
-          }
+        jwt.verify(accessToken, process.env.ACCESS_SECRET, (err: any, decoded: any) => {
+          if (err) return next(err)
+          OWNER_ID = decoded.ownerId
         });
       }
 
       if (!accessToken) {
-        const ownersColl = db.collection<Owner>(CollName.Owners)
+        const ownersColl = MONGO_DB.collection<Owner>(CollName.Owners)
         if (!ownersColl) {
           restartServer()
           throw new Err({
@@ -60,22 +56,15 @@ export const accessMiddleware =
         jwt.verify(
           result.refreshToken,
           process.env.REFRESH_SECRET,
-          (err: any) => {
-            if (err) {
-              throw new Err({
-                status: 403,
-                message: "your token is expired",
-                field: null,
-                logout: true,
-              });
-            }
+          (err: any, decoded: any) => {
+            if (err) return next(err)
+            OWNER_ID = decoded.ownerId
             new UseToken(res).createAccessToken(ownerId);
           }
         );
       }
+      next();
     } catch (err) {
       next(err);
-    } finally {
-      next();
     }
   };

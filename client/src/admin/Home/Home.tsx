@@ -10,8 +10,6 @@ interface HomeProps {
 
 export default function Home({ adminDispatch, eventsState }: HomeProps) {
 
-  console.log(eventsState)
-
   return (
     <Container>
       <Circular color='white' />

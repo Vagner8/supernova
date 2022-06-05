@@ -8,8 +8,6 @@ interface ChipsProps {
 }
 
 export function Chips({ onClick, url, text }: ChipsProps) {
-  console.log('text', text, typeof text)
-  console.log('url', url, typeof url)
   return (
     <div className={`${styles.Chips} ${url ? styles.with_img : null}`}>
       {url ? (

@@ -1,5 +1,5 @@
 import { OwnerPII } from 'admin/Profile/profileApi';
-import { Reducer } from 'react';
+import { Dispatch, Reducer } from 'react';
 
 export enum EventNames {
   New = 'new',
@@ -11,9 +11,28 @@ export enum EventNames {
 }
 
 export enum EventsStrAction {
+  SaveFiles = 'SaveFiles',
+  DeleteOneFile = 'DeleteOneFile',
+  DeleteAllFiles = 'DeleteAllFiles',
+
   SaveEventsList = 'SaveEventsList',
   CopyInputValues = 'CopyInputValues',
   SaveSelectedEvent = 'SaveSelectedEvent',
+  ShowSaveEvent = 'ShowSaveEvent',
+}
+
+interface SaveFiles {
+  type: EventsStrAction.SaveFiles;
+  payload: { files: File[] };
+}
+
+interface DeleteOneFile {
+  type: EventsStrAction.DeleteOneFile;
+  payload: { fileName: string };
+}
+
+interface DeleteAllFiles {
+  type: EventsStrAction.DeleteAllFiles;
 }
 
 interface SaveEventsList {
@@ -31,10 +50,16 @@ interface SaveSelectedEvent {
   payload: { selectedEvent: EventNames };
 }
 
+interface ShowSaveEvent {
+  type: EventsStrAction.ShowSaveEvent;
+  payload: { show: boolean };
+}
+
 export interface EventsState {
   eventsList: string[];
   selectedEvent: EventNames | null;
   copyInputValues: CopiesInputValues | null;
+  files: File[] | null;
 }
 
 export type CopiesInputValues = OwnerPII;
@@ -42,12 +67,17 @@ export type CopiesInputValues = OwnerPII;
 export type EventsReducerActions =
   | SaveEventsList
   | CopyInputValues
-  | SaveSelectedEvent;
+  | SaveSelectedEvent
+  | ShowSaveEvent
+  | SaveFiles
+  | DeleteOneFile
+  | DeleteAllFiles;
 
 export const eventsInitState: EventsState = {
   selectedEvent: null,
   eventsList: [],
   copyInputValues: null,
+  files: null,
 };
 
 interface SetEventsList {
@@ -74,15 +104,9 @@ const setEventsList = ({
         if (event === EventNames.EditOff) {
           return EventNames.Edit;
         }
-        if (event === EventNames.Save) {
-          return ''
-        }
         return event;
       });
     }
-  }
-  if (selectedEvent === EventNames.Save) {
-    return [...prevEventList, EventNames.Save];
   }
   return prevEventList;
 };
@@ -112,7 +136,92 @@ export const eventsReducer: Reducer<EventsState, EventsReducerActions> = (
           prevEventList: state.eventsList,
         }),
       };
+    case EventsStrAction.ShowSaveEvent:
+      return {
+        ...state,
+        eventsList: action.payload.show
+          ? [...state.eventsList, EventNames.Save]
+          : state.eventsList.slice(0, state.eventsList.length - 1),
+      };
+    case EventsStrAction.SaveFiles:
+      return {
+        ...state,
+        files: action.payload.files,
+      };
+    case EventsStrAction.DeleteOneFile:
+      if (!state.files) return state;
+      return {
+        ...state,
+        files: state.files.filter(
+          (file) => file.name !== action.payload.fileName,
+        ),
+      };
+    case EventsStrAction.DeleteAllFiles:
+      return {
+        ...state,
+        files: null,
+      };
     default:
       return state;
   }
+};
+
+// events
+
+export const saveEventsList = (
+  eventsDispatch: Dispatch<EventsReducerActions>,
+  eventsList: string[]
+) => {
+  eventsDispatch({
+    type: EventsStrAction.SaveEventsList,
+    payload: { eventsList },
+  });
+}
+
+export const saveSelectedEvent = (
+  eventsDispatch: Dispatch<EventsReducerActions>,
+  selectedEvent: EventNames
+) => {
+  eventsDispatch({
+    type: EventsStrAction.SaveSelectedEvent,
+    payload: { selectedEvent },
+  });
+}
+
+export const showSaveEvent = (
+  eventsDispatch: Dispatch<EventsReducerActions>,
+  show: boolean,
+) => {
+  eventsDispatch({
+    type: EventsStrAction.ShowSaveEvent,
+    payload: { show },
+  });
+};
+
+// files
+
+export const saveFiles = (
+  eventsDispatch: Dispatch<EventsReducerActions>,
+  files: File[],
+) => {
+  eventsDispatch({
+    type: EventsStrAction.SaveFiles,
+    payload: { files },
+  });
+};
+
+export const deleteOneFile = (
+  eventsDispatch: Dispatch<EventsReducerActions>,
+  fileName: string,
+) => {
+  eventsDispatch({
+    type: EventsStrAction.DeleteOneFile,
+    payload: { fileName },
+  });
+};
+
+export const deleteAllFiles = (
+  eventsDispatch: Dispatch<EventsReducerActions>,
+) => {
+  eventsDispatch({ type: EventsStrAction.DeleteAllFiles });
 };

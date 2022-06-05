@@ -45,15 +45,16 @@
   cursor: pointer;
 }
 
-.li_button.save {
+.ikon {
+  margin-left: 0.55rem;
+  font-size: 1.3rem;
+}
+
+[data-event-name="save"] {
   color: white;
   background-color: #26a69a;
 }
 
-.li_button.save:hover {
+[data-event-name="save"]:hover {
   background-color: #2bbbad;
-}
-
-.ikon {
-  margin-left: 0.55rem;
 }

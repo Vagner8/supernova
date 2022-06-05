@@ -1,7 +1,7 @@
-import { Reducer } from 'react';
+import { Dispatch, Reducer } from 'react';
 
 export enum AuthStrAction {
-  SetOnChange = 'SetOnChange',
+  SaveAuthInputsOutput = 'SaveAuthInputsOutput',
   SetDisabledSubmit = 'SetDisabledSubmit',
 }
 
@@ -9,7 +9,7 @@ interface AuthInput {
   label: string;
   type: 'password' | 'text';
   value: string;
-  required: boolean
+  required: boolean;
 }
 
 interface AuthState {
@@ -17,8 +17,8 @@ interface AuthState {
   disabledSubmit: boolean;
 }
 
-interface SetOnChange {
-  type: AuthStrAction.SetOnChange;
+interface SaveAuthInputsOutput {
+  type: AuthStrAction.SaveAuthInputsOutput;
   payload: { name: string; value: string };
 }
 
@@ -27,7 +27,7 @@ interface SetDisabledSubmit {
   payload: { disabledSubmit: boolean };
 }
 
-export type AuthReducerActions = SetOnChange | SetDisabledSubmit;
+export type AuthReducerActions = SaveAuthInputsOutput | SetDisabledSubmit;
 
 export const authInitState: AuthState = {
   inputs: [
@@ -35,13 +35,13 @@ export const authInitState: AuthState = {
       label: 'login',
       type: 'text',
       value: '',
-      required: true
+      required: true,
     },
     {
       label: 'password',
       type: 'password',
       value: '',
-      required: true
+      required: true,
     },
   ],
   disabledSubmit: true,
@@ -52,7 +52,7 @@ export const authReducer: Reducer<AuthState, AuthReducerActions> = (
   action,
 ) => {
   switch (action.type) {
-    case AuthStrAction.SetOnChange:
+    case AuthStrAction.SaveAuthInputsOutput:
       const { name, value } = action.payload;
       return {
         ...state,
@@ -74,4 +74,15 @@ export const authReducer: Reducer<AuthState, AuthReducerActions> = (
     default:
       return state;
   }
+};
+
+export const saveAuthInputsOutputs = (
+  authDispatch: Dispatch<AuthReducerActions>,
+  name: string,
+  value: string,
+) => {
+  authDispatch({
+    type: AuthStrAction.SaveAuthInputsOutput,
+    payload: { name, value },
+  });
 };

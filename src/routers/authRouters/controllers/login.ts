@@ -5,8 +5,9 @@ import { Err } from "../../../middleware/errorMiddleware";
 import { v4 as uuidv4 } from "uuid";
 import { UseToken } from "../../../UseToken";
 import jwt from "jsonwebtoken";
-import { db, restartServer } from "../../../app";
+import { restartServer } from "../../../app";
 import { Owner } from './../../../../common/owner'
+import { MONGO_DB } from "./../../../middleware/connectMongo";
 
 interface EeqBody {
   login: string;
@@ -20,7 +21,7 @@ export async function login(
 ) {
   const { login, password } = req.body as EeqBody;
   try {
-    const ownersColl = db.collection<Owner>(CollName.Owners)
+    const ownersColl = MONGO_DB.collection<Owner>(CollName.Owners)
     if (!ownersColl) {
       restartServer()
       throw new Err({

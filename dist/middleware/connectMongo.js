@@ -35,16 +35,33 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-var express_1 = __importDefault(require("express"));
-var router = express_1.default.Router();
-router.get("/", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+exports.connectMongo = exports.MONGO_DB = void 0;
+var mongodb_1 = require("mongodb");
+var types_1 = require("./../types");
+var settings_1 = require("./../settings");
+var connectMongo = function () { return function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+    var client, err_1;
     return __generator(this, function (_a) {
-        return [2 /*return*/];
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                if (exports.MONGO_DB)
+                    return [2 /*return*/, next()];
+                client = new mongodb_1.MongoClient(settings_1.url);
+                return [4 /*yield*/, client.connect()];
+            case 1:
+                _a.sent();
+                exports.MONGO_DB = client.db(types_1.DataBase.Supernova);
+                next();
+                return [3 /*break*/, 3];
+            case 2:
+                err_1 = _a.sent();
+                next(err_1);
+                return [3 /*break*/, 3];
+            case 3: return [2 /*return*/];
+        }
     });
-}); });
-exports.default = router;
-//# sourceMappingURL=users.js.map
+}); }; };
+exports.connectMongo = connectMongo;
+//# sourceMappingURL=connectMongo.js.map

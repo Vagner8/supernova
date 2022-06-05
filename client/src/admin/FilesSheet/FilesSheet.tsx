@@ -1,16 +1,16 @@
-import { FilesReducerActions, FilesStrAction } from "admin/filesReducer";
+import { deleteOneFile, EventsReducerActions } from "admin/Events/eventsReducer";
 import { Dispatch } from "react";
 import { BottomSheetModals, Chips } from "UIKit";
 import { v4 as uuidv4 } from 'uuid';
 
 interface FilesSheetProps {
   files: File[] | null
-  filesDispatch: Dispatch<FilesReducerActions>
+  eventsDispatch: Dispatch<EventsReducerActions>
 }
 
-export function FilesSheet({files, filesDispatch}: FilesSheetProps) {
+export function FilesSheet({files, eventsDispatch}: FilesSheetProps) {
   const onClick = (fileName: string) => () => {
-    filesDispatch({type: FilesStrAction.DeleteOneFile, payload: { fileName }})
+    deleteOneFile(eventsDispatch, fileName)
   }
   if (!files) return null
   return (

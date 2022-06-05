@@ -1,17 +1,23 @@
-import { ChangeEvent, Dispatch, FormEvent, useCallback, useReducer } from 'react';
+import {
+  ChangeEvent,
+  Dispatch,
+  FormEvent,
+  useCallback,
+  useReducer,
+} from 'react';
 import styles from './auth.module.css';
 import {
   authReducer,
   authInitState,
-  AuthStrAction,
+  saveAuthInputsOutputs,
 } from 'admin/Auth/authReducer';
 import { Button, Icon, Linear, Snackbar, InputMemo } from 'UIKit';
 import {
   AdminReducerActions,
   AdminState,
-  AdminStrAction,
+  deleteOperationResult,
 } from 'admin/adminReducer';
-import { API, fetcher } from 'api/fetcher';
+import { login } from './authApi';
 
 interface AuthProps {
   adminDispatch: Dispatch<AdminReducerActions>;
@@ -20,34 +26,22 @@ interface AuthProps {
 
 export function Auth({ adminDispatch, adminState }: AuthProps) {
   const [authState, authDispatch] = useReducer(authReducer, authInitState);
-  // const [isPending, startTransition] = useTransition()
 
-  const onChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    authDispatch({
-      type: AuthStrAction.SetOnChange,
-      payload: { name, value },
-    });
-    if (!adminState.operationResult) return;
-    adminDispatch({ type: AdminStrAction.DeleteOperationResult });
-  }, [adminDispatch, adminState.operationResult]);
+  const onChange = useCallback(
+    (e: ChangeEvent<HTMLInputElement>) => {
+      const { name, value } = e.target;
+      saveAuthInputsOutputs(authDispatch, name, value);
+      if (!adminState.operationResult) return;
+      deleteOperationResult(adminDispatch);
+    },
+    [adminDispatch, adminState.operationResult],
+  );
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const res = (await fetcher({
-      method: 'POST',
-      url: API.Registration,
-      adminDispatch,
-      message: 'Success',
-      body: {
-        login: authState.inputs[0].value,
-        password: authState.inputs[1].value,
-      },
-    })) as undefined | { ownerId: string };
-    if (!res) return;
-    adminDispatch({
-      type: AdminStrAction.SaveOwnerid,
-      payload: { ownerId: res.ownerId },
+    login(adminDispatch, {
+      login: authState.inputs[0].value,
+      password: authState.inputs[1].value,
     });
   };
 
@@ -70,11 +64,7 @@ export function Auth({ adminDispatch, adminState }: AuthProps) {
                 onChange={onChange}
               />
             ))}
-            <Button
-              title="Send"
-              type="submit"
-              icon={<Icon icon="send" />}
-            />
+            <Button title="Send" type="submit" icon={<Icon icon="send" />} />
           </form>
         </div>
       </div>

@@ -10,7 +10,7 @@ export interface OwnerPII {
   address: Address;
 }
 
-export async function storeOwnerPII(
+export async function fetchAndSaveOwnerPII(
   profileDispatch: Dispatch<ProfileReducerActions>,
   adminDispatch: Dispatch<AdminReducerActions>,
 ) {

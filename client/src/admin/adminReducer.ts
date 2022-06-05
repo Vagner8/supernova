@@ -1,8 +1,8 @@
-import { Reducer } from 'react';
+import { Dispatch, Reducer } from 'react';
 import { OwnerCommonData } from './adminApi';
 
 export enum AdminStrAction {
-  SaveOwnerid = 'SaveOwnerid',
+  SaveOwnerId = 'SaveOwnerId',
   SaveOwnerCommonData = 'SaveOwnerCommonData',
   SaveOperationResult = 'SaveOperationResult',
   DeleteOperationResult = 'DeleteOperationResult',
@@ -37,14 +37,14 @@ interface SaveOperationResult {
   };
 }
 
-interface SaveOwnerid {
-  type: AdminStrAction.SaveOwnerid;
+interface SaveOwnerId {
+  type: AdminStrAction.SaveOwnerId;
   payload: { ownerId: string };
 }
 
 export type AdminReducerActions =
   | SetIsFetching
-  | SaveOwnerid
+  | SaveOwnerId
   | SaveOwnerCommonData
   | DeleteOperationResult
   | SaveOperationResult;
@@ -68,7 +68,7 @@ export const adminReducer: Reducer<AdminState, AdminReducerActions> = (
   action,
 ) => {
   switch (action.type) {
-    case AdminStrAction.SaveOwnerid:
+    case AdminStrAction.SaveOwnerId:
       localStorage.setItem('ownerId', action.payload.ownerId);
       return {
         ...state,
@@ -101,3 +101,39 @@ export const adminReducer: Reducer<AdminState, AdminReducerActions> = (
       return state;
   }
 };
+
+export const setIsFetching = (
+  adminDispatch: Dispatch<AdminReducerActions>,
+  isFetching: boolean,
+) => {
+  adminDispatch({
+    type: AdminStrAction.SetIsFetching,
+    payload: { isFetching },
+  });
+};
+
+export const saveOperationResult = (
+  adminDispatch: Dispatch<AdminReducerActions>,
+  operationResult: OperationResult,
+) => {
+  adminDispatch({
+    type: AdminStrAction.SaveOperationResult,
+    payload: { operationResult },
+  });
+};
+
+export const deleteOperationResult = (
+  adminDispatch: Dispatch<AdminReducerActions>,
+) => {
+  adminDispatch({ type: AdminStrAction.DeleteOperationResult })
+}
+
+export const saveOwnerId = (
+  adminDispatch: Dispatch<AdminReducerActions>,
+  ownerId: string
+) => {
+  adminDispatch({
+    type: AdminStrAction.SaveOwnerId,
+    payload: { ownerId },
+  });
+}

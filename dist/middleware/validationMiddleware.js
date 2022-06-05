@@ -1,13 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.validationMiddleware = void 0;
-const errorMiddleware_1 = require("./errorMiddleware");
+var errorMiddleware_1 = require("./errorMiddleware");
 function validate(errorField, item, length) {
-    const str = item.toString();
+    var str = item.toString();
     if (str.length < length.min) {
         throw new errorMiddleware_1.Err({
             status: 400,
-            message: `min ${length.min} characters`,
+            message: "min ".concat(length.min, " characters"),
             logout: false,
             field: errorField
         });
@@ -15,7 +15,7 @@ function validate(errorField, item, length) {
     if (str.length > length.max) {
         throw new errorMiddleware_1.Err({
             status: 400,
-            message: `max ${length.max} characters`,
+            message: "max ".concat(length.max, " characters"),
             logout: false,
             field: errorField
         });
@@ -25,7 +25,7 @@ function validate(errorField, item, length) {
             if (!str.split("").includes("@")) {
                 throw new errorMiddleware_1.Err({
                     status: 400,
-                    message: `incorrect ${errorField}`,
+                    message: "incorrect ".concat(errorField),
                     logout: false,
                     field: errorField
                 });
@@ -33,7 +33,7 @@ function validate(errorField, item, length) {
     }
 }
 function validationMiddleware() {
-    return (req, res, next) => {
+    return function (req, res, next) {
         if (!req.body)
             next();
         if (req.body.login)

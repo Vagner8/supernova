@@ -14,12 +14,6 @@ import {
   EventsReducerActions,
   EventsState,
 } from './Events/eventsReducer';
-import {
-  filesInitState,
-  filesReducer,
-  FilesReducerActions,
-  FilesState,
-} from './filesReducer';
 import { FilesSheet } from './FilesSheet/FilesSheet';
 import { storeOwnerCommonData } from './adminApi';
 import { Events } from './Events/Events';
@@ -33,7 +27,6 @@ export function Admin() {
     eventsReducer,
     eventsInitState,
   );
-  const [filesState, filesDispatch] = useReducer(filesReducer, filesInitState);
 
   if (!localStorage.getItem('ownerId')) {
     return <Auth adminState={adminState} adminDispatch={adminDispatch} />;
@@ -45,8 +38,6 @@ export function Admin() {
       adminDispatch={adminDispatch}
       eventsState={eventsState}
       eventsDispatch={eventsDispatch}
-      filesState={filesState}
-      filesDispatch={filesDispatch}
     />
   );
 }
@@ -56,8 +47,6 @@ interface AdminRoutesProps {
   adminDispatch: Dispatch<AdminReducerActions>;
   eventsState: EventsState;
   eventsDispatch: Dispatch<EventsReducerActions>;
-  filesState: FilesState;
-  filesDispatch: Dispatch<FilesReducerActions>;
 }
 
 function AdminRoutes({
@@ -65,8 +54,6 @@ function AdminRoutes({
   adminDispatch,
   eventsState,
   eventsDispatch,
-  filesState,
-  filesDispatch,
 }: AdminRoutesProps) {
 
   useEffect(() => {
@@ -80,7 +67,6 @@ function AdminRoutes({
         eventsList={eventsState.eventsList}
         selectedEvent={eventsState.selectedEvent}
         eventsDispatch={eventsDispatch}
-        filesDispatch={filesDispatch}
       />
       <Navbar
         login={adminState.login}
@@ -98,21 +84,20 @@ function AdminRoutes({
             path="/profile"
             element={
               <Profile
-                files={filesState.files}
                 selectedEvent={eventsState.selectedEvent}
                 eventsList={eventsState.eventsList}
                 errorField={adminState.operationResult?.field}
                 errorMessage={adminState.operationResult?.message}
                 copyInputValues={eventsState.copyInputValues}
+                files={eventsState.files}
                 adminDispatch={adminDispatch}
                 eventsDispatch={eventsDispatch}
-                filesDispatch={filesDispatch}
               />
             }
           />
         </Routes>
       </Suspense>
-      <FilesSheet files={filesState.files} filesDispatch={filesDispatch} />
+      <FilesSheet files={eventsState.files} eventsDispatch={eventsDispatch} />
       <Snackbar
         status={adminState.operationResult?.status}
         message={adminState.operationResult?.message}
