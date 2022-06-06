@@ -4,6 +4,7 @@ import { OWNER_ID } from "./../../../middleware/accessMiddleware";
 import { CollName } from "./../../../types";
 import { Owner } from "./../../../../common/owner"
 import { Err } from "./../../../middleware/errorMiddleware";
+import { OwnerPII } from "./../../../../common/owner"
 
 export async function updateOwner(
   req: Request,
@@ -12,7 +13,7 @@ export async function updateOwner(
 ) {
   try {
     const ownersColl = MONGO_DB.collection<Owner>(CollName.Owners)
-    console.log(req.body)
+    const ownerPII = req.body as OwnerPII
     if (!ownersColl) {
       throw new Err({
         status: 500,
@@ -21,7 +22,14 @@ export async function updateOwner(
         logout: false,
       });
     }
-    // const result = await ownersColl.updateOne({ownerId: OWNER_ID})
+    const result = await ownersColl.updateOne(
+      {ownerId: OWNER_ID},
+      {
+        personal: ownerPII.personal,
+        contacts: ownerPII.contacts,
+        address: ownerPII.address,
+      }
+    )
   } catch (err) {
     next(err);
   }

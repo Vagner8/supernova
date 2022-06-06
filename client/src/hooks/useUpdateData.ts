@@ -3,7 +3,6 @@ import {
   EventNames,
   EventsReducerActions,
   EventsState,
-  EventsStrAction,
   showSaveEvent,
 } from 'admin/Events/eventsReducer';
 import { ProfileState } from 'admin/Profile/profileReducer';
@@ -13,7 +12,7 @@ import { Dispatch, useEffect } from 'react';
 
 interface UseUpdateData {
   selectedEvent: EventsState['selectedEvent'];
-  data: ProfileState['ownerPII'];
+  ownerPII: ProfileState['ownerPII'];
   files: EventsState['files'];
   adminDispatch: Dispatch<AdminReducerActions>;
   eventsDispatch: Dispatch<EventsReducerActions>;
@@ -21,20 +20,25 @@ interface UseUpdateData {
 
 export function useUpdateData({
   selectedEvent,
-  data,
+  ownerPII,
   files,
   adminDispatch,
   eventsDispatch,
 }: UseUpdateData) {
   useEffect(() => {
     const asyncer = async () => {
-      if (selectedEvent === EventNames.Save && data) {
-        showSaveEvent(eventsDispatch, false)
-        const imgUrl = await uploadFiles({files, adminDispatch});
-        // profileState.ownerPII.personal.avatar = imgUrl[0]
-        await updateOwner({ adminDispatch, ownerPII: data });
+      if (selectedEvent === EventNames.Save && ownerPII) {
+        showSaveEvent(eventsDispatch, false);
+        let imgUrl: string[] | undefined
+        if (files) {
+          imgUrl = await uploadFiles({ files, adminDispatch });
+        }
+        if (imgUrl) {
+          ownerPII.personal.avatar = imgUrl[0]
+        }
+        await updateOwner({ adminDispatch, ownerPII });
       }
     };
     asyncer();
-  }, [adminDispatch, eventsDispatch, files, data, selectedEvent]);
+  }, [adminDispatch, eventsDispatch, files, ownerPII, selectedEvent]);
 }

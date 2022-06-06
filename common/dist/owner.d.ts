@@ -22,4 +22,9 @@ export interface Address {
     street: string;
     number: string;
 }
+export interface OwnerPII {
+    contacts: Contacts;
+    address: Address;
+    personal: Personal;
+}
 //# sourceMappingURL=owner.d.ts.map

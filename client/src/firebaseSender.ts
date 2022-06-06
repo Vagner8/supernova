@@ -1,4 +1,4 @@
-import { AdminReducerActions, AdminStrAction, setIsFetching } from 'admin/adminReducer';
+import { AdminReducerActions, saveOperationResult, setIsFetching } from 'admin/adminReducer';
 import { EventsState } from 'admin/Events/eventsReducer';
 import { initializeApp } from 'firebase/app';
 import { getStorage, ref, getDownloadURL, uploadBytes } from 'firebase/storage';
@@ -41,6 +41,12 @@ export async function uploadFiles({ files, adminDispatch }: UploadFiles) {
     );
   } catch (err) {
     console.log(err);
+    saveOperationResult(adminDispatch, {
+      status: 'error',
+      message: 'files not update',
+      field: null,
+      logout: false
+    })
   } finally {
     setIsFetching(adminDispatch, true)
   }

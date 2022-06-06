@@ -38,29 +38,40 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.updateOwner = void 0;
 var connectMongo_1 = require("./../../../middleware/connectMongo");
+var accessMiddleware_1 = require("./../../../middleware/accessMiddleware");
 var types_1 = require("./../../../types");
 var errorMiddleware_1 = require("./../../../middleware/errorMiddleware");
 function updateOwner(req, res, next) {
     return __awaiter(this, void 0, void 0, function () {
-        var ownersColl;
+        var ownersColl, ownerPII, result, err_1;
         return __generator(this, function (_a) {
-            try {
-                ownersColl = connectMongo_1.MONGO_DB.collection(types_1.CollName.Owners);
-                console.log(req.body);
-                if (!ownersColl) {
-                    throw new errorMiddleware_1.Err({
-                        status: 500,
-                        message: "no connection",
-                        field: null,
-                        logout: false,
-                    });
-                }
-                // const result = await ownersColl.updateOne({ownerId: OWNER_ID})
+            switch (_a.label) {
+                case 0:
+                    _a.trys.push([0, 2, , 3]);
+                    ownersColl = connectMongo_1.MONGO_DB.collection(types_1.CollName.Owners);
+                    ownerPII = req.body;
+                    if (!ownersColl) {
+                        throw new errorMiddleware_1.Err({
+                            status: 500,
+                            message: "no connection",
+                            field: null,
+                            logout: false,
+                        });
+                    }
+                    return [4 /*yield*/, ownersColl.updateOne({ ownerId: accessMiddleware_1.OWNER_ID }, {
+                            personal: ownerPII.personal,
+                            contacts: ownerPII.contacts,
+                            address: ownerPII.address,
+                        })];
+                case 1:
+                    result = _a.sent();
+                    return [3 /*break*/, 3];
+                case 2:
+                    err_1 = _a.sent();
+                    next(err_1);
+                    return [3 /*break*/, 3];
+                case 3: return [2 /*return*/];
             }
-            catch (err) {
-                next(err);
-            }
-            return [2 /*return*/];
         });
     });
 }

@@ -4,6 +4,7 @@ import {
   EventsReducerActions,
   EventsState,
   EventsStrAction,
+  saveChangedFormName,
   saveFiles,
   showSaveEvent,
 } from 'admin/Events/eventsReducer';
@@ -66,20 +67,20 @@ export default function Profile({
     eventsDispatch,
   });
 
-  useUpdateData({
-    selectedEvent,
-    data: profileState.ownerPII,
-    files,
-    adminDispatch,
-    eventsDispatch,
-  });
-
   useCopyInputValues({
     copyInputValues,
     inputValues: profileState.ownerPII,
     selectedEvent,
     eventsDispatch,
     profileDispatch,
+  });
+
+  useUpdateData({
+    selectedEvent,
+    ownerPII: profileState.ownerPII,
+    files,
+    adminDispatch,
+    eventsDispatch,
   });
 
   const inputsOnChange = useCallback(
@@ -89,6 +90,7 @@ export default function Profile({
       const { name, value } = e.target;
       const formName = e.target.dataset.formName as OwnerPIIKeys;
       saveProfileInputsOutputs(profileDispatch, name, value, formName);
+      saveChangedFormName(eventsDispatch, formName)
       if (count !== 0) return;
       count++;
       showSaveEvent(eventsDispatch, true);

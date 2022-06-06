@@ -19,6 +19,7 @@ export enum EventsStrAction {
   CopyInputValues = 'CopyInputValues',
   SaveSelectedEvent = 'SaveSelectedEvent',
   ShowSaveEvent = 'ShowSaveEvent',
+  SaveChangedFormName = 'SaveChangedFormName',
 }
 
 interface SaveFiles {
@@ -55,11 +56,17 @@ interface ShowSaveEvent {
   payload: { show: boolean };
 }
 
+interface SaveChangedFormName {
+  type: EventsStrAction.SaveChangedFormName;
+  payload: { formName: keyof OwnerPII };
+}
+
 export interface EventsState {
   eventsList: string[];
   selectedEvent: EventNames | null;
   copyInputValues: CopiesInputValues | null;
   files: File[] | null;
+  changedFormName: Set<keyof OwnerPII>;
 }
 
 export type CopiesInputValues = OwnerPII;
@@ -71,13 +78,15 @@ export type EventsReducerActions =
   | ShowSaveEvent
   | SaveFiles
   | DeleteOneFile
-  | DeleteAllFiles;
+  | DeleteAllFiles
+  | SaveChangedFormName;
 
 export const eventsInitState: EventsState = {
   selectedEvent: null,
   eventsList: [],
   copyInputValues: null,
   files: null,
+  changedFormName: new Set(),
 };
 
 interface SetEventsList {
@@ -161,32 +170,49 @@ export const eventsReducer: Reducer<EventsState, EventsReducerActions> = (
         ...state,
         files: null,
       };
+    case EventsStrAction.SaveChangedFormName:
+      return {
+        ...state,
+        changedFormName: state.changedFormName.add(action.payload.formName),
+      };
     default:
       return state;
   }
+};
+
+// onChange
+
+export const saveChangedFormName = (
+  eventsDispatch: Dispatch<EventsReducerActions>,
+  formName: keyof OwnerPII,
+) => {
+  eventsDispatch({
+    type: EventsStrAction.SaveChangedFormName,
+    payload: { formName },
+  });
 };
 
 // events
 
 export const saveEventsList = (
   eventsDispatch: Dispatch<EventsReducerActions>,
-  eventsList: string[]
+  eventsList: string[],
 ) => {
   eventsDispatch({
     type: EventsStrAction.SaveEventsList,
     payload: { eventsList },
   });
-}
+};
 
 export const saveSelectedEvent = (
   eventsDispatch: Dispatch<EventsReducerActions>,
-  selectedEvent: EventNames
+  selectedEvent: EventNames,
 ) => {
   eventsDispatch({
     type: EventsStrAction.SaveSelectedEvent,
     payload: { selectedEvent },
   });
-}
+};
 
 export const showSaveEvent = (
   eventsDispatch: Dispatch<EventsReducerActions>,
