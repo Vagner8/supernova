@@ -10,7 +10,7 @@
     "start": "node dist/app.js",
     "server": "tsc-watch --onSuccess \"nodemon dist/app.js\"",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "concurrently \"npm run server\" \"cd ./client && npm run start\""
+    "dev": "concurrently \"npm run server\" \"cd ./../client && npm run start\""
   },
   "author": "",
   "license": "ISC",

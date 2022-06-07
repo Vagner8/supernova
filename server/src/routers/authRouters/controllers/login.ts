@@ -1,13 +1,12 @@
 import { NextFunction, Request, Response } from "express";
 import { CollName } from "../../../types";
 import bcrypt from "bcryptjs";
-import { Err } from "../../../middleware/errorMiddleware";
 import { v4 as uuidv4 } from "uuid";
 import { UseToken } from "../../../UseToken";
 import jwt from "jsonwebtoken";
-import { restartServer } from "../../../app";
 import { Owner } from './../../../../../common/owner'
 import { MONGO_DB } from "./../../../middleware/connectMongo";
+import { Err } from "./../../../middleware/errorMiddleware";
 
 interface EeqBody {
   login: string;
@@ -23,7 +22,6 @@ export async function login(
   try {
     const ownersColl = MONGO_DB.collection<Owner>(CollName.Owners)
     if (!ownersColl) {
-      restartServer()
       throw new Err({
         status: 500,
         message: "no connection",

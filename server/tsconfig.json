@@ -1,23 +1,17 @@
 {
   "compilerOptions": {
-    "baseUrl": "./src",
-    "target": "es5",
-    "module": "commonjs",
+    "baseUrl": "src",
+    "target": "ES2015",
+    "module": "CommonJS",
     "esModuleInterop": true,
     "noImplicitAny": true,
     "moduleResolution": "node",
     "sourceMap": true,
     "outDir": "dist",
-    "paths": {
-      "middleware/*": ["server/src/middleware/*"],
-      "*": [
-        "node_modules/*",
-      ]
-    },
     "strictNullChecks": true,
   },
   "include": [
-    "./src"
+    "src"
   ],
   "references": [
     {

@@ -23,7 +23,3 @@ console.log(
     } }
   ])
 )
-
-function fuu() {
-  
-}
