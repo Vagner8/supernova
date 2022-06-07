@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "baseUrl": "./src",
+    "target": "es5",
+    "module": "commonjs",
+    "esModuleInterop": true,
+    "noImplicitAny": true,
+    "moduleResolution": "node",
+    "sourceMap": true,
+    "outDir": "dist",
+    "paths": {
+      "middleware/*": ["server/src/middleware/*"],
+      "*": [
+        "node_modules/*",
+      ]
+    },
+    "strictNullChecks": true,
+  },
+  "include": [
+    "./src"
+  ],
+  "references": [
+    {
+      "path": "./../common"
+    }
+  ]
+}
