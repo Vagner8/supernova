@@ -10,6 +10,7 @@ export class Err extends Error {
   }
   ) {
     super();
+    Object.setPrototypeOf(this, Err.prototype)
   }
 }
 
