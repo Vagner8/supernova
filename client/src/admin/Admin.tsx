@@ -90,6 +90,7 @@ function AdminRoutes({
                 errorMessage={adminState.operationResult?.message}
                 copyInputValues={eventsState.copyInputValues}
                 files={eventsState.files}
+                changedPoints={eventsState.changedPoints}
                 adminDispatch={adminDispatch}
                 eventsDispatch={eventsDispatch}
               />

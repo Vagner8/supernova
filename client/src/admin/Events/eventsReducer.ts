@@ -19,7 +19,8 @@ export enum EventsStrAction {
   CopyInputValues = 'CopyInputValues',
   SaveSelectedEvent = 'SaveSelectedEvent',
   ShowSaveEvent = 'ShowSaveEvent',
-  SaveChangedFormName = 'SaveChangedFormName',
+  SaveChangedPoints = 'SaveChangedPoints',
+  DeleteChangedPoints = 'DeleteChangedPoints',
 }
 
 interface SaveFiles {
@@ -43,7 +44,7 @@ interface SaveEventsList {
 
 interface CopyInputValues {
   type: EventsStrAction.CopyInputValues;
-  payload: { copyInputValues: CopiesInputValues | null };
+  payload: { copyInputValues: OwnerPII | null };
 }
 
 interface SaveSelectedEvent {
@@ -56,20 +57,22 @@ interface ShowSaveEvent {
   payload: { show: boolean };
 }
 
-interface SaveChangedFormName {
-  type: EventsStrAction.SaveChangedFormName;
-  payload: { formName: keyof OwnerPII };
+interface SaveChangedPoints {
+  type: EventsStrAction.SaveChangedPoints;
+  payload: { pointName: keyof OwnerPII; points: OwnerPII };
+}
+
+interface DeleteChangedPoints {
+  type: EventsStrAction.DeleteChangedPoints;
 }
 
 export interface EventsState {
   eventsList: string[];
   selectedEvent: EventNames | null;
-  copyInputValues: CopiesInputValues | null;
+  copyInputValues: OwnerPII | null;
   files: File[] | null;
-  changedFormName: Set<keyof OwnerPII>;
+  changedPoints: Partial<OwnerPII> | null;
 }
-
-export type CopiesInputValues = OwnerPII;
 
 export type EventsReducerActions =
   | SaveEventsList
@@ -79,14 +82,15 @@ export type EventsReducerActions =
   | SaveFiles
   | DeleteOneFile
   | DeleteAllFiles
-  | SaveChangedFormName;
+  | SaveChangedPoints
+  | DeleteChangedPoints;
 
 export const eventsInitState: EventsState = {
   selectedEvent: null,
   eventsList: [],
   copyInputValues: null,
   files: null,
-  changedFormName: new Set(),
+  changedPoints: null,
 };
 
 interface SetEventsList {
@@ -170,10 +174,19 @@ export const eventsReducer: Reducer<EventsState, EventsReducerActions> = (
         ...state,
         files: null,
       };
-    case EventsStrAction.SaveChangedFormName:
+    case EventsStrAction.SaveChangedPoints:
+      const { pointName, points } = action.payload;
       return {
         ...state,
-        changedFormName: state.changedFormName.add(action.payload.formName),
+        changedPoints: {
+          ...state.changedPoints,
+          [pointName]: points[pointName],
+        },
+      };
+    case EventsStrAction.DeleteChangedPoints:
+      return {
+        ...state,
+        changedPoints: null,
       };
     default:
       return state;
@@ -182,13 +195,22 @@ export const eventsReducer: Reducer<EventsState, EventsReducerActions> = (
 
 // onChange
 
-export const saveChangedFormName = (
+export const saveChangedPoints = (
   eventsDispatch: Dispatch<EventsReducerActions>,
-  formName: keyof OwnerPII,
+  pointName: keyof OwnerPII,
+  points: OwnerPII,
 ) => {
   eventsDispatch({
-    type: EventsStrAction.SaveChangedFormName,
-    payload: { formName },
+    type: EventsStrAction.SaveChangedPoints,
+    payload: { points, pointName },
+  });
+};
+
+export const deleteChangedPoints = (
+  eventsDispatch: Dispatch<EventsReducerActions>,
+) => {
+  eventsDispatch({
+    type: EventsStrAction.DeleteChangedPoints,
   });
 };
 

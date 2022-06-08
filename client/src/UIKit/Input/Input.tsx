@@ -9,7 +9,7 @@ export interface InputProps {
   type: 'password' | 'text';
   errorMessage: OperationResult['message'] | undefined;
   errorField: OperationResult['field'] | undefined;
-  formName?: string;
+  pointName?: string;
   required?: boolean;
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
 }
@@ -20,7 +20,7 @@ export function Input({
   label,
   errorMessage,
   errorField,
-  formName,
+  pointName,
   required,
   onChange,
 }: InputProps) {
@@ -72,7 +72,7 @@ export function Input({
         name={label}
         type={type === 'password' ? switchInputType(hidePassword) : type}
         value={value}
-        data-form-name={formName}
+        data-point-name={pointName}
         onChange={onChange}
         onFocus={onFocus}
         onBlur={onBlur}

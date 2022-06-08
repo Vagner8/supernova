@@ -23,12 +23,9 @@ export async function updateOwner(
     }
     const result = await ownersColl.updateOne(
       {ownerId: OWNER_ID},
-      {
-        personal: ownerPII.personal,
-        contacts: ownerPII.contacts,
-        address: ownerPII.address,
-      }
+      {$set: ownerPII}
     )
+    console.log(result)
   } catch (err) {
     next(err);
   }

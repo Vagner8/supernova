@@ -1,8 +1,6 @@
 import { Dispatch, Reducer } from 'react';
 import { OwnerPII } from './profileApi';
 
-export type OwnerPIIKeys = keyof OwnerPII;
-
 export enum ProfileStrAction {
   SaveOwnerPII = 'SaveOwnerPII',
   SaveInputsOutputs = 'SaveInputsOutputs',
@@ -15,7 +13,7 @@ interface SaveOwnerPII {
 
 interface SaveInputsOutputs {
   type: ProfileStrAction.SaveInputsOutputs;
-  payload: { name: string; value: string; formName: OwnerPIIKeys };
+  payload: { name: string; value: string; pointName: keyof OwnerPII };
 }
 
 export interface ProfileState {
@@ -40,13 +38,13 @@ export const profileReducer: Reducer<ProfileState, ProfileReducerActions> = (
       };
     case ProfileStrAction.SaveInputsOutputs:
       if (!state.ownerPII) return state;
-      const { name, value, formName } = action.payload;
+      const { name, value, pointName } = action.payload;
       return {
         ...state,
         ownerPII: {
           ...state.ownerPII,
-          [formName]: {
-            ...state.ownerPII[formName],
+          [pointName]: {
+            ...state.ownerPII[pointName],
             [name]: value,
           },
         },
@@ -60,10 +58,10 @@ export const saveProfileInputsOutputs = (
   profileDispatch: Dispatch<ProfileReducerActions>,
   name: string,
   value: string,
-  formName: OwnerPIIKeys,
+  pointName: keyof OwnerPII,
 ) => {
   profileDispatch({
     type: ProfileStrAction.SaveInputsOutputs,
-    payload: { name, value, formName },
+    payload: { name, value, pointName },
   });
 };

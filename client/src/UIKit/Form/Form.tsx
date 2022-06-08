@@ -2,7 +2,6 @@ import { InputMemo, Point } from 'UIKit';
 import styles from './form.module.css';
 import { ChangeEvent, Fragment } from 'react';
 import { OwnerPII } from 'admin/Profile/profileApi';
-import { EventNames, EventsState } from 'admin/Events/eventsReducer';
 import { OperationResult } from 'admin/adminReducer';
 
 interface PrintPointsProps {
@@ -24,11 +23,11 @@ export function Form({
 }: PrintPointsProps) {
   return (
     <form className={styles.Form}>
-      {sort.map((formName) => (
-        <Fragment key={formName}>
-          <h6 className={styles.form_name}>{formName}</h6>
+      {sort.map((pointName) => (
+        <Fragment key={pointName}>
+          <h6 className={styles.form_name}>{pointName}</h6>
           <div className={styles.form_wrapper}>
-            {Object.entries(data[formName as keyof typeof data]).map(
+            {Object.entries(data[pointName as keyof typeof data]).map(
               ([keyText, valueText]) => {
                 if (keyText === 'avatar') return;
                 return (
@@ -40,7 +39,7 @@ export function Form({
                         value={valueText}
                         errorField={errorField}
                         errorMessage={errorMessage}
-                        formName={formName}
+                        pointName={pointName}
                         onChange={inputsOnChange}
                       />
                     ) : (

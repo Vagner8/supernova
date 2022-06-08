@@ -5,14 +5,13 @@ import {
   EventsState,
   showSaveEvent,
 } from 'admin/Events/eventsReducer';
-import { ProfileState } from 'admin/Profile/profileReducer';
 import { updateOwner } from 'api/updateOwner';
 import { uploadFiles } from 'firebaseSender';
 import { Dispatch, useEffect } from 'react';
 
 interface UseUpdateData {
   selectedEvent: EventsState['selectedEvent'];
-  ownerPII: ProfileState['ownerPII'];
+  changedPoints: EventsState['changedPoints'];
   files: EventsState['files'];
   adminDispatch: Dispatch<AdminReducerActions>;
   eventsDispatch: Dispatch<EventsReducerActions>;
@@ -20,25 +19,25 @@ interface UseUpdateData {
 
 export function useUpdateData({
   selectedEvent,
-  ownerPII,
+  changedPoints,
   files,
   adminDispatch,
   eventsDispatch,
 }: UseUpdateData) {
   useEffect(() => {
     const asyncer = async () => {
-      if (selectedEvent === EventNames.Save && ownerPII) {
+      if (selectedEvent === EventNames.Save && changedPoints) {
         showSaveEvent(eventsDispatch, false);
-        let imgUrl: string[] | undefined
+        let imgUrl: string[] | undefined;
         if (files) {
           imgUrl = await uploadFiles({ files, adminDispatch });
         }
-        if (imgUrl) {
-          ownerPII.personal.avatar = imgUrl[0]
+        if (imgUrl && changedPoints.personal) {
+          changedPoints.personal.avatar = imgUrl[0];
         }
-        await updateOwner({ adminDispatch, ownerPII });
+        await updateOwner({ adminDispatch, changedPoints });
       }
     };
     asyncer();
-  }, [adminDispatch, eventsDispatch, files, ownerPII, selectedEvent]);
+  }, [adminDispatch, eventsDispatch, files, changedPoints, selectedEvent]);
 }

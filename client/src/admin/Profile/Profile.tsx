@@ -3,8 +3,7 @@ import {
   EventNames,
   EventsReducerActions,
   EventsState,
-  EventsStrAction,
-  saveChangedFormName,
+  saveChangedPoints,
   saveFiles,
   showSaveEvent,
 } from 'admin/Events/eventsReducer';
@@ -18,10 +17,10 @@ import {
   useReducer,
 } from 'react';
 import { Avatar, Container, FileInput, Form } from 'UIKit';
+import { OwnerPII } from '../../../../common/owner';
 import styles from './profile.module.css';
 import { fetchAndSaveOwnerPII } from './profileApi';
 import {
-  OwnerPIIKeys,
   profileInitState,
   profileReducer,
   ProfileState,
@@ -35,6 +34,7 @@ interface ProfileProps {
   errorField: OperationResult['field'] | undefined;
   errorMessage: OperationResult['message'] | undefined;
   copyInputValues: ProfileState['ownerPII'];
+  changedPoints: EventsState['changedPoints']
   adminDispatch: Dispatch<AdminReducerActions>;
   eventsDispatch: Dispatch<EventsReducerActions>;
 }
@@ -46,6 +46,7 @@ export default function Profile({
   copyInputValues,
   eventsList,
   files,
+  changedPoints,
   adminDispatch,
   eventsDispatch,
 }: ProfileProps) {
@@ -77,7 +78,7 @@ export default function Profile({
 
   useUpdateData({
     selectedEvent,
-    ownerPII: profileState.ownerPII,
+    changedPoints,
     files,
     adminDispatch,
     eventsDispatch,
@@ -86,21 +87,28 @@ export default function Profile({
   const inputsOnChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
       if (!e.target) return;
-      if (!e.target.dataset.formName) return;
+      if (!e.target.dataset.pointName) return;
       const { name, value } = e.target;
-      const formName = e.target.dataset.formName as OwnerPIIKeys;
-      saveProfileInputsOutputs(profileDispatch, name, value, formName);
-      saveChangedFormName(eventsDispatch, formName)
-      if (count !== 0) return;
-      count++;
-      showSaveEvent(eventsDispatch, true);
+      const pointName = e.target.dataset.pointName as keyof OwnerPII;
+      saveProfileInputsOutputs(profileDispatch, name, value, pointName);
+      if (profileState.ownerPII) {
+        if (changedPoints && pointName in changedPoints) return
+        saveChangedPoints(eventsDispatch, pointName, profileState.ownerPII)
+      }
+      if (count === 0) {
+        count++;
+        showSaveEvent(eventsDispatch, true);
+      }
     },
-    [eventsDispatch, count],
+    [eventsDispatch, count, profileState.ownerPII, changedPoints],
   );
 
   const fileInputOnChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) return;
     saveFiles(eventsDispatch, Array.from(e.target.files));
+    if (profileState.ownerPII) {
+      saveChangedPoints(eventsDispatch, 'personal', profileState.ownerPII)
+    }
     e.target.value = '';
   };
 

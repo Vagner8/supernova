@@ -1,5 +1,4 @@
 import {
-  CopiesInputValues,
   EventNames,
   EventsReducerActions,
   EventsState,
@@ -10,10 +9,11 @@ import {
   ProfileStrAction,
 } from 'admin/Profile/profileReducer';
 import { Dispatch, useEffect } from 'react';
+import { OwnerPII } from '../../../common/owner';
 
 interface UseCopyInputValues {
   copyInputValues: EventsState['copyInputValues'];
-  inputValues: CopiesInputValues | null;
+  inputValues: OwnerPII | null;
   selectedEvent: EventsState['selectedEvent'];
   eventsDispatch: Dispatch<EventsReducerActions>;
   profileDispatch: Dispatch<ProfileReducerActions>;
