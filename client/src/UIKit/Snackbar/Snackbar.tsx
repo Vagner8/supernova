@@ -1,10 +1,11 @@
 import {
   AdminReducerActions,
   AdminStrAction,
+  deleteOperationResult,
   OperationResult,
 } from 'admin/adminReducer';
 import { capitalizer } from 'helpers';
-import { Dispatch, useEffect, useState } from 'react';
+import { Dispatch, useEffect } from 'react';
 import { Icon } from 'UIKit';
 import styles from './snackbar.module.css';
 
@@ -24,7 +25,6 @@ export function Snackbar({
   filed,
   adminDispatch,
 }: SnackbarProps) {
-  const [show, setShow] = useState(true);
   const icons: {
     ok: 'task_alt';
     error: 'error';
@@ -40,7 +40,7 @@ export function Snackbar({
       started = true;
       timer = setTimeout(() => {
         if (status === 'error') return;
-        setShow(false);
+        // deleteOperationResult(adminDispatch);
         started = false;
       }, 3000);
     };
@@ -56,7 +56,6 @@ export function Snackbar({
   };
 
   if (!message || !status || filed) return null;
-  if (!show) return null;
 
   return (
     <div className={`${styles.Snackbar} ${styles[status]}`}>

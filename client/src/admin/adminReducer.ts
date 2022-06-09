@@ -7,6 +7,7 @@ export enum AdminStrAction {
   SaveOperationResult = 'SaveOperationResult',
   DeleteOperationResult = 'DeleteOperationResult',
   SetIsFetching = 'SetIsFetching',
+  SaveNewAvatar = 'SaveNewAvatar',
 }
 
 export interface OperationResult {
@@ -14,6 +15,11 @@ export interface OperationResult {
   message: string;
   field: string | null;
   logout: boolean;
+}
+
+interface SaveNewAvatar {
+  type: AdminStrAction.SaveNewAvatar;
+  payload: { newAvatar: AdminState['avatar'] };
 }
 
 interface SetIsFetching {
@@ -47,7 +53,8 @@ export type AdminReducerActions =
   | SaveOwnerId
   | SaveOwnerCommonData
   | DeleteOperationResult
-  | SaveOperationResult;
+  | SaveOperationResult
+  | SaveNewAvatar;
 
 export interface AdminState {
   isFetching: boolean;
@@ -68,39 +75,60 @@ export const adminReducer: Reducer<AdminState, AdminReducerActions> = (
   action,
 ) => {
   switch (action.type) {
-    case AdminStrAction.SaveOwnerId:
+    case AdminStrAction.SaveNewAvatar: {
+      return {
+        ...state,
+        avatar: action.payload.newAvatar
+      }
+    }
+    case AdminStrAction.SaveOwnerId: {
       localStorage.setItem('ownerId', action.payload.ownerId);
       return {
         ...state,
         ownerId: action.payload.ownerId,
       };
-    case AdminStrAction.SetIsFetching:
+    }
+    case AdminStrAction.SetIsFetching: {
       return {
         ...state,
         isFetching: action.payload.isFetching,
       };
-    case AdminStrAction.SaveOwnerCommonData:
+    }
+    case AdminStrAction.SaveOwnerCommonData: {
       return {
         ...state,
         avatar: action.payload.ownerCommonData.personal.avatar,
         login: action.payload.ownerCommonData.login,
       };
-    case AdminStrAction.SaveOperationResult:
+    }
+    case AdminStrAction.SaveOperationResult: {
       const { operationResult } = action.payload;
       operationResult.logout && localStorage.removeItem('ownerId');
       return {
         ...state,
         operationResult,
       };
-    case AdminStrAction.DeleteOperationResult:
+    }
+    case AdminStrAction.DeleteOperationResult: {
       return {
         ...state,
         operationResult: null,
       };
+    }
     default:
       return state;
   }
 };
+
+export const saveNewAvatar = (
+  adminDispatch: Dispatch<AdminReducerActions>,
+  newAvatar: AdminState['avatar']
+) => {
+  adminDispatch({
+    type: AdminStrAction.SaveNewAvatar,
+    payload: { newAvatar },
+  });
+}
 
 export const setIsFetching = (
   adminDispatch: Dispatch<AdminReducerActions>,
@@ -109,6 +137,16 @@ export const setIsFetching = (
   adminDispatch({
     type: AdminStrAction.SetIsFetching,
     payload: { isFetching },
+  });
+};
+
+export const saveOwnerCommonData = (
+  adminDispatch: Dispatch<AdminReducerActions>,
+  ownerCommonData: OwnerCommonData,
+) => {
+  adminDispatch({
+    type: AdminStrAction.SaveOwnerCommonData,
+    payload: { ownerCommonData },
   });
 };
 
@@ -125,15 +163,15 @@ export const saveOperationResult = (
 export const deleteOperationResult = (
   adminDispatch: Dispatch<AdminReducerActions>,
 ) => {
-  adminDispatch({ type: AdminStrAction.DeleteOperationResult })
-}
+  adminDispatch({ type: AdminStrAction.DeleteOperationResult });
+};
 
 export const saveOwnerId = (
   adminDispatch: Dispatch<AdminReducerActions>,
-  ownerId: string
+  ownerId: string,
 ) => {
   adminDispatch({
     type: AdminStrAction.SaveOwnerId,
     payload: { ownerId },
   });
-}
+};

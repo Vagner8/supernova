@@ -3,119 +3,71 @@ import {
   EventNames,
   EventsReducerActions,
   EventsState,
-  saveChangedPoints,
+  pointsOnChange,
   saveFiles,
-  showSaveEvent,
+  switchSaveEvent,
 } from 'admin/Events/eventsReducer';
-import { useCopyInputValues } from 'hooks';
-import { useUpdateData, useEventsList } from 'hooks';
-import {
-  ChangeEvent,
-  Dispatch,
-  useCallback,
-  useEffect,
-  useReducer,
-} from 'react';
+import { UrlAddress } from 'api/fetcher';
+import { useEventsList } from 'hooks';
+import { ChangeEvent, Dispatch, useCallback, useEffect } from 'react';
 import { Avatar, Container, FileInput, Form } from 'UIKit';
-import { OwnerPII } from '../../../../common/owner';
 import styles from './profile.module.css';
-import { fetchAndSaveOwnerPII } from './profileApi';
-import {
-  profileInitState,
-  profileReducer,
-  ProfileState,
-  saveProfileInputsOutputs,
-} from './profileReducer';
+import { fetchAndSavePoints } from './profileApi';
 
 interface ProfileProps {
-  selectedEvent: EventsState['selectedEvent'];
   eventsList: EventsState['eventsList'];
-  files: EventsState['files'];
   errorField: OperationResult['field'] | undefined;
   errorMessage: OperationResult['message'] | undefined;
-  copyInputValues: ProfileState['ownerPII'];
-  changedPoints: EventsState['changedPoints']
+  points: EventsState['points'];
   adminDispatch: Dispatch<AdminReducerActions>;
   eventsDispatch: Dispatch<EventsReducerActions>;
 }
 
 export default function Profile({
-  selectedEvent,
   errorField,
   errorMessage,
-  copyInputValues,
   eventsList,
-  files,
-  changedPoints,
+  points,
   adminDispatch,
   eventsDispatch,
 }: ProfileProps) {
   console.log('Profile');
-  const [profileState, profileDispatch] = useReducer(
-    profileReducer,
-    profileInitState,
-  );
-
-  let count = 0;
 
   useEffect(() => {
-    fetchAndSaveOwnerPII(profileDispatch, adminDispatch);
-  }, [adminDispatch]);
+    fetchAndSavePoints({
+      eventsDispatch,
+      adminDispatch,
+      url: UrlAddress.Owner,
+    });
+  }, [adminDispatch, eventsDispatch]);
 
-  useEventsList({
-    eventsList: [EventNames.Edit],
-    isEventsListExist: Boolean(eventsList.length),
-    eventsDispatch,
-  });
+  useEventsList({ eventsDispatch, eventsList: [EventNames.Edit] });
 
-  useCopyInputValues({
-    copyInputValues,
-    inputValues: profileState.ownerPII,
-    selectedEvent,
-    eventsDispatch,
-    profileDispatch,
-  });
-
-  useUpdateData({
-    selectedEvent,
-    changedPoints,
-    files,
-    adminDispatch,
-    eventsDispatch,
-  });
-
-  const inputsOnChange = useCallback(
+  const onChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
-      if (!e.target) return;
-      if (!e.target.dataset.pointName) return;
-      const { name, value } = e.target;
-      const pointName = e.target.dataset.pointName as keyof OwnerPII;
-      saveProfileInputsOutputs(profileDispatch, name, value, pointName);
-      if (profileState.ownerPII) {
-        if (changedPoints && pointName in changedPoints) return
-        saveChangedPoints(eventsDispatch, pointName, profileState.ownerPII)
-      }
-      if (count === 0) {
-        count++;
-        showSaveEvent(eventsDispatch, true);
-      }
+      pointsOnChange({
+        eventsDispatch,
+        name: e.target.name,
+        value: e.target.value,
+        pointName: e.target.dataset.pointName as keyof EventsState['points'],
+      });
+      switchSaveEvent(eventsDispatch, 'show');
     },
-    [eventsDispatch, count, profileState.ownerPII, changedPoints],
+    [eventsDispatch],
   );
 
-  const fileInputOnChange = (e: ChangeEvent<HTMLInputElement>) => {
-    if (!e.target.files) return;
-    saveFiles(eventsDispatch, Array.from(e.target.files));
-    if (profileState.ownerPII) {
-      saveChangedPoints(eventsDispatch, 'personal', profileState.ownerPII)
-    }
+  const onChangeFiles = (e: ChangeEvent<HTMLInputElement>) => {
+    saveFiles({
+      eventsDispatch,
+      files: Array.from(e.target.files || []),
+      isFileInputMultiple: e.target.multiple,
+      fileInputName: e.target.name,
+    });
     e.target.value = '';
   };
 
-  if (!profileState.ownerPII) return null;
-
-  const { personal } = profileState.ownerPII;
-
+  if (!points) return null;
+  const { personal } = points;
   return (
     <Container>
       <div className={styles.Profile}>
@@ -125,14 +77,18 @@ export default function Profile({
             {personal.name || '-'} {personal.surname || '-'}
           </h6>
           {eventsList.includes(EventNames.EditOff) ? (
-            <FileInput multiple={true} onChange={fileInputOnChange} />
+            <FileInput
+              name="avatar"
+              multiple={false}
+              onChange={onChangeFiles}
+            />
           ) : null}
         </div>
         <div className={styles.middle}>
           <Form
-            showInputs={eventsList.includes(EventNames.EditOff)}
-            data={profileState.ownerPII}
-            inputsOnChange={inputsOnChange}
+            hideInput={eventsList.includes(EventNames.Edit)}
+            points={points}
+            onChange={onChange}
             errorField={errorField}
             errorMessage={errorMessage}
             sort={['personal', 'contacts', 'address']}

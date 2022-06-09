@@ -1,5 +1,5 @@
 import { AdminReducerActions, saveOwnerId } from 'admin/adminReducer';
-import { API, fetcher } from 'api/fetcher';
+import { UrlAddress, fetcher } from 'api/fetcher';
 import { Dispatch } from 'react';
 
 export async function login(
@@ -11,7 +11,7 @@ export async function login(
 ) {
   const res = (await fetcher({
     method: 'POST',
-    url: API.Login,
+    url: UrlAddress.Login,
     adminDispatch,
     message: 'Success',
     body,

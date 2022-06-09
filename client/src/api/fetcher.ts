@@ -1,6 +1,5 @@
 import {
   AdminReducerActions,
-  AdminStrAction,
   saveOperationResult,
   setIsFetching,
 } from 'admin/adminReducer';
@@ -13,7 +12,7 @@ export interface Err {
   field: string | null;
 }
 
-export enum API {
+export enum UrlAddress {
   Login = '/auth/login',
   Owner = '/owner',
   OwnerUpdate = '/owner/update',
@@ -34,7 +33,7 @@ export async function fetcher({
   body,
   message,
 }: Fetcher) {
-  setIsFetching(adminDispatch, true)
+  setIsFetching(adminDispatch, true);
   try {
     const response = await fetch(url, {
       method,
@@ -45,7 +44,10 @@ export async function fetcher({
         ownerId: localStorage.getItem('ownerId') || 'idle',
       },
     });
-    const json = (await response.json()) as undefined | Err | Object;
+    const json = (await response.json()) as
+      | undefined
+      | Err
+      | Object;
     if (!json) {
       saveOperationResult(adminDispatch, {
         status: 'error',
@@ -61,7 +63,7 @@ export async function fetcher({
         message: json.message,
         field: json.field,
         logout: json.logout,
-      })
+      });
       return undefined;
     }
     saveOperationResult(adminDispatch, {
@@ -69,7 +71,7 @@ export async function fetcher({
       message,
       field: null,
       logout: false,
-    })
+    });
     return json;
   } catch (err) {
     console.log(err);
@@ -78,8 +80,8 @@ export async function fetcher({
       message: 'server error',
       field: null,
       logout: false,
-    })
+    });
   } finally {
-    setIsFetching(adminDispatch, false)
+    setIsFetching(adminDispatch, false);
   }
 }

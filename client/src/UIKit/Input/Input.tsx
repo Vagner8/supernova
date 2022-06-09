@@ -9,6 +9,7 @@ export interface InputProps {
   type: 'password' | 'text';
   errorMessage: OperationResult['message'] | undefined;
   errorField: OperationResult['field'] | undefined;
+  hide?: boolean;
   pointName?: string;
   required?: boolean;
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
@@ -22,6 +23,7 @@ export function Input({
   errorField,
   pointName,
   required,
+  hide,
   onChange,
 }: InputProps) {
   const [active, setActive] = useState<'active' | ''>('');
@@ -55,8 +57,8 @@ export function Input({
     return true;
   };
 
+  if (hide) return null
   console.log('input');
-
   return (
     <div role="group" className={`${styles.Input} ${styles[active]}`}>
       <label

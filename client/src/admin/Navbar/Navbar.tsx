@@ -1,5 +1,4 @@
 import { AdminState } from 'admin/adminReducer';
-import { Events } from 'admin/Events/Events';
 import { NavLink } from 'react-router-dom';
 import { Icon, Avatar } from 'UIKit';
 import styles from './navbar.module.css';
@@ -21,7 +20,7 @@ export function Navbar({
         </button>
       </div>
       <div className={styles.right}>
-        <NavLink className={styles.avatar_link} to="/admin/profile">
+        <NavLink className={styles.avatar_link} to="/admin/owner">
           <p className={styles.login}>{login}</p>
           <Avatar url={avatar} size="xs" />
         </NavLink>

@@ -1,5 +1,5 @@
-import { OwnerPII } from 'admin/Profile/profileApi';
 import { Dispatch, Reducer } from 'react';
+import { OwnerPII } from '../../../../common/owner';
 
 export enum EventNames {
   New = 'new',
@@ -14,18 +14,41 @@ export enum EventsStrAction {
   SaveFiles = 'SaveFiles',
   DeleteOneFile = 'DeleteOneFile',
   DeleteAllFiles = 'DeleteAllFiles',
-
   SaveEventsList = 'SaveEventsList',
-  CopyInputValues = 'CopyInputValues',
-  SaveSelectedEvent = 'SaveSelectedEvent',
-  ShowSaveEvent = 'ShowSaveEvent',
-  SaveChangedPoints = 'SaveChangedPoints',
-  DeleteChangedPoints = 'DeleteChangedPoints',
+  SavePoints = 'SavePoints',
+  PointsOnChange = 'PointsOnChange',
+  ResetEventState = 'ResetEventState',
+  SwitchEditAndEditOf = 'SwitchEditAndEditOf',
+  SwitchSaveEvent = 'SwitchSaveEvent',
+  OverwriteCopyOfPoints = 'OverwriteCopyOfPoints',
+}
+
+interface ResetEventState {
+  type: EventsStrAction.ResetEventState;
+}
+
+interface SavePoints {
+  type: EventsStrAction.SavePoints;
+  payload: { points: OwnerPII };
+}
+
+interface PointsOnChange {
+  type: EventsStrAction.PointsOnChange;
+  payload: { name: string; value: string; pointName: keyof OwnerPII };
+}
+
+interface SaveEventsList {
+  type: EventsStrAction.SaveEventsList;
+  payload: { eventsList: string[] };
 }
 
 interface SaveFiles {
   type: EventsStrAction.SaveFiles;
-  payload: { files: File[] };
+  payload: {
+    files: File[];
+    isFileInputMultiple: boolean;
+    fileInputName: string;
+  };
 }
 
 interface DeleteOneFile {
@@ -37,91 +60,50 @@ interface DeleteAllFiles {
   type: EventsStrAction.DeleteAllFiles;
 }
 
-interface SaveEventsList {
-  type: EventsStrAction.SaveEventsList;
-  payload: { eventsList: EventsState['eventsList'] };
+interface SwitchEditAndEditOf {
+  type: EventsStrAction.SwitchEditAndEditOf;
+  payload: { switchTo: EventNames.Edit | EventNames.EditOff };
 }
 
-interface CopyInputValues {
-  type: EventsStrAction.CopyInputValues;
-  payload: { copyInputValues: OwnerPII | null };
+interface SwitchSaveEvent {
+  type: EventsStrAction.SwitchSaveEvent;
+  payload: { saveEvent: 'show' | 'hide' };
 }
 
-interface SaveSelectedEvent {
-  type: EventsStrAction.SaveSelectedEvent;
-  payload: { selectedEvent: EventNames };
-}
-
-interface ShowSaveEvent {
-  type: EventsStrAction.ShowSaveEvent;
-  payload: { show: boolean };
-}
-
-interface SaveChangedPoints {
-  type: EventsStrAction.SaveChangedPoints;
-  payload: { pointName: keyof OwnerPII; points: OwnerPII };
-}
-
-interface DeleteChangedPoints {
-  type: EventsStrAction.DeleteChangedPoints;
+interface OverwriteCopyOfPoints {
+  type: EventsStrAction.OverwriteCopyOfPoints;
 }
 
 export interface EventsState {
-  eventsList: string[];
-  selectedEvent: EventNames | null;
-  copyInputValues: OwnerPII | null;
-  files: File[] | null;
+  copyPoints: OwnerPII | null;
+  points: OwnerPII | null;
   changedPoints: Partial<OwnerPII> | null;
+  eventsList: string[];
+  files: File[] | null;
+  isFileInputMultiple: boolean | null;
+  fileInputName: string | null
 }
 
 export type EventsReducerActions =
+  | ResetEventState
+  | SavePoints
+  | PointsOnChange
   | SaveEventsList
-  | CopyInputValues
-  | SaveSelectedEvent
-  | ShowSaveEvent
   | SaveFiles
   | DeleteOneFile
   | DeleteAllFiles
-  | SaveChangedPoints
-  | DeleteChangedPoints;
+  | SwitchEditAndEditOf
+  | SwitchSaveEvent
+  | OverwriteCopyOfPoints;
 
 export const eventsInitState: EventsState = {
-  selectedEvent: null,
-  eventsList: [],
-  copyInputValues: null,
-  files: null,
+  copyPoints: null,
+  points: null,
   changedPoints: null,
-};
-
-interface SetEventsList {
-  selectedEvent: EventsState['selectedEvent'];
-  prevEventList: EventsState['eventsList'];
-}
-
-const setEventsList = ({
-  selectedEvent,
-  prevEventList,
-}: SetEventsList): EventsState['eventsList'] => {
-  if (!selectedEvent) return prevEventList;
-  if (prevEventList.includes(selectedEvent)) {
-    if (selectedEvent === EventNames.Edit) {
-      return prevEventList.map((event) => {
-        if (event === EventNames.Edit) {
-          return EventNames.EditOff;
-        }
-        return event;
-      });
-    }
-    if (selectedEvent === EventNames.EditOff) {
-      return prevEventList.map((event) => {
-        if (event === EventNames.EditOff) {
-          return EventNames.Edit;
-        }
-        return event;
-      });
-    }
-  }
-  return prevEventList;
+  eventsList: [],
+  files: null,
+  isFileInputMultiple: null,
+  fileInputName: null,
 };
 
 export const eventsReducer: Reducer<EventsState, EventsReducerActions> = (
@@ -129,39 +111,64 @@ export const eventsReducer: Reducer<EventsState, EventsReducerActions> = (
   action,
 ) => {
   switch (action.type) {
-    case EventsStrAction.SaveEventsList:
+    case EventsStrAction.SavePoints: {
+      return {
+        ...state,
+        points: action.payload.points,
+      };
+    }
+    case EventsStrAction.OverwriteCopyOfPoints: {
+      return {
+        ...state,
+        copyPoints: state.points,
+      };
+    }
+    case EventsStrAction.PointsOnChange: {
+      if (!state.points) return state;
+      const { name, value, pointName } = action.payload;
+      return {
+        ...state,
+        points: {
+          ...state.points,
+          [pointName]: {
+            ...state.points[pointName],
+            [name]: value,
+          },
+        },
+        changedPoints: {
+          ...state.changedPoints,
+          [pointName]: {
+            ...state.points[pointName],
+            [name]: value,
+          },
+        },
+      };
+    }
+    case EventsStrAction.ResetEventState: {
+      return {
+        ...state,
+        points: state.copyPoints,
+        files: null,
+        changedPoints: null,
+        eventsList: state.eventsList.filter((item) => item !== EventNames.Save),
+      };
+    }
+    case EventsStrAction.SaveEventsList: {
+      if (state.eventsList.length) return state;
       return {
         ...state,
         eventsList: action.payload.eventsList,
       };
-    case EventsStrAction.CopyInputValues:
-      return {
-        ...state,
-        copyInputValues: action.payload.copyInputValues,
-      };
-    case EventsStrAction.SaveSelectedEvent:
-      const { selectedEvent } = action.payload;
-      return {
-        ...state,
-        selectedEvent: selectedEvent,
-        eventsList: setEventsList({
-          selectedEvent,
-          prevEventList: state.eventsList,
-        }),
-      };
-    case EventsStrAction.ShowSaveEvent:
-      return {
-        ...state,
-        eventsList: action.payload.show
-          ? [...state.eventsList, EventNames.Save]
-          : state.eventsList.slice(0, state.eventsList.length - 1),
-      };
-    case EventsStrAction.SaveFiles:
+    }
+    case EventsStrAction.SaveFiles: {
       return {
         ...state,
         files: action.payload.files,
+        isFileInputMultiple: action.payload.isFileInputMultiple,
+        fileInputName: action.payload.fileInputName
       };
-    case EventsStrAction.DeleteOneFile:
+    }
+    case EventsStrAction.DeleteOneFile: {
       if (!state.files) return state;
       return {
         ...state,
@@ -169,52 +176,81 @@ export const eventsReducer: Reducer<EventsState, EventsReducerActions> = (
           (file) => file.name !== action.payload.fileName,
         ),
       };
-    case EventsStrAction.DeleteAllFiles:
+    }
+    case EventsStrAction.DeleteAllFiles: {
       return {
         ...state,
         files: null,
       };
-    case EventsStrAction.SaveChangedPoints:
-      const { pointName, points } = action.payload;
+    }
+    case EventsStrAction.SwitchEditAndEditOf: {
       return {
         ...state,
-        changedPoints: {
-          ...state.changedPoints,
-          [pointName]: points[pointName],
-        },
+        eventsList: state.eventsList.map((event) => {
+          if (event.match(/edit/i)) {
+            return action.payload.switchTo;
+          }
+          return event;
+        }),
       };
-    case EventsStrAction.DeleteChangedPoints:
-      return {
-        ...state,
-        changedPoints: null,
-      };
+    }
+    case EventsStrAction.SwitchSaveEvent: {
+      if (
+        action.payload.saveEvent === 'show' &&
+        !state.eventsList.includes(EventNames.Save)
+      ) {
+        return {
+          ...state,
+          eventsList: [...state.eventsList, EventNames.Save],
+        };
+      }
+      if (action.payload.saveEvent === 'hide') {
+        return {
+          ...state,
+          eventsList: state.eventsList.filter(
+            (item) => item !== EventNames.Save,
+          ),
+        };
+      }
+      return state;
+    }
     default:
       return state;
   }
 };
 
-// onChange
-
-export const saveChangedPoints = (
+export const savePoints = (
   eventsDispatch: Dispatch<EventsReducerActions>,
-  pointName: keyof OwnerPII,
   points: OwnerPII,
 ) => {
   eventsDispatch({
-    type: EventsStrAction.SaveChangedPoints,
-    payload: { points, pointName },
+    type: EventsStrAction.SavePoints,
+    payload: { points },
   });
 };
 
-export const deleteChangedPoints = (
+export const overwriteCopyOfPoints = (
   eventsDispatch: Dispatch<EventsReducerActions>,
 ) => {
-  eventsDispatch({
-    type: EventsStrAction.DeleteChangedPoints,
-  });
+  eventsDispatch({ type: EventsStrAction.OverwriteCopyOfPoints });
 };
 
-// events
+export const pointsOnChange = ({
+  eventsDispatch,
+  name,
+  value,
+  pointName,
+}: {
+  eventsDispatch: Dispatch<EventsReducerActions>;
+  name: string;
+  value: string;
+  pointName: keyof EventsState['points'];
+}) => {
+  eventsDispatch({
+    type: EventsStrAction.PointsOnChange,
+    payload: { name, value, pointName },
+  });
+};
 
 export const saveEventsList = (
   eventsDispatch: Dispatch<EventsReducerActions>,
@@ -226,35 +262,20 @@ export const saveEventsList = (
   });
 };
 
-export const saveSelectedEvent = (
-  eventsDispatch: Dispatch<EventsReducerActions>,
-  selectedEvent: EventNames,
-) => {
-  eventsDispatch({
-    type: EventsStrAction.SaveSelectedEvent,
-    payload: { selectedEvent },
-  });
-};
-
-export const showSaveEvent = (
-  eventsDispatch: Dispatch<EventsReducerActions>,
-  show: boolean,
-) => {
-  eventsDispatch({
-    type: EventsStrAction.ShowSaveEvent,
-    payload: { show },
-  });
-};
-
-// files
-
-export const saveFiles = (
-  eventsDispatch: Dispatch<EventsReducerActions>,
-  files: File[],
-) => {
+export const saveFiles = ({
+  eventsDispatch,
+  files,
+  isFileInputMultiple,
+  fileInputName,
+}: {
+  eventsDispatch: Dispatch<EventsReducerActions>;
+  files: File[];
+  isFileInputMultiple: boolean;
+  fileInputName: string;
+}) => {
   eventsDispatch({
     type: EventsStrAction.SaveFiles,
-    payload: { files },
+    payload: { files, fileInputName, isFileInputMultiple },
   });
 };
 
@@ -271,5 +292,35 @@ export const deleteOneFile = (
 export const deleteAllFiles = (
   eventsDispatch: Dispatch<EventsReducerActions>,
 ) => {
-  eventsDispatch({ type: EventsStrAction.DeleteAllFiles });
+  eventsDispatch({
+    type: EventsStrAction.DeleteAllFiles,
+  });
+};
+
+export const resetEventState = (
+  eventsDispatch: Dispatch<EventsReducerActions>,
+) => {
+  eventsDispatch({
+    type: EventsStrAction.ResetEventState,
+  });
+};
+
+export const switchEditAndEditOf = (
+  eventsDispatch: Dispatch<EventsReducerActions>,
+  switchTo: EventNames.Edit | EventNames.EditOff,
+) => {
+  eventsDispatch({
+    type: EventsStrAction.SwitchEditAndEditOf,
+    payload: { switchTo },
+  });
+};
+
+export const switchSaveEvent = (
+  eventsDispatch: Dispatch<EventsReducerActions>,
+  saveEvent: 'show' | 'hide',
+) => {
+  eventsDispatch({
+    type: EventsStrAction.SwitchSaveEvent,
+    payload: { saveEvent },
+  });
 };

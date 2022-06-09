@@ -24,4 +24,23 @@
 //   ])
 // )
 
+const a = {
+  data: null,
+  copy: null
+}
 
+const b = {
+  b: 2
+}
+
+const c = {
+  ...a,
+  data: {
+    ...b
+  },
+  copy: b
+}
+
+
+
+console.log(c.copy === c.data)

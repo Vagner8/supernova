@@ -1,7 +1,8 @@
-import { getOwner } from 'api/getOwner';
+import { AdminReducerActions, saveOwnerCommonData } from 'admin/adminReducer';
+import { UrlAddress } from 'api/fetcher';
+import { getData } from 'api/getData';
 import { Dispatch } from 'react';
 import { Personal, Owner } from './../../../common/owner';
-import { AdminReducerActions, AdminStrAction } from './adminReducer';
 
 export interface OwnerCommonData {
   login: Owner['login'];
@@ -10,19 +11,26 @@ export interface OwnerCommonData {
   };
 }
 
-export async function storeOwnerCommonData(
-  adminDispatch: Dispatch<AdminReducerActions>,
-) {
-  const ownerCommonData = (await getOwner(adminDispatch, {
-    _id: 0,
-    login: 1,
-    personal: {
-      avatar: 1
-    }
+interface FetchAndSaveOwnerCommonData {
+  adminDispatch: Dispatch<AdminReducerActions>;
+  url: UrlAddress;
+}
+
+export async function fetchAndSaveOwnerCommonData({
+  adminDispatch,
+  url,
+}: FetchAndSaveOwnerCommonData) {
+  const ownerCommonData = (await getData({
+    adminDispatch,
+    url,
+    projection: {
+      _id: 0,
+      login: 1,
+      personal: {
+        avatar: 1,
+      },
+    },
   })) as OwnerCommonData | undefined;
-  if (!ownerCommonData) return
-  adminDispatch({
-    type: AdminStrAction.SaveOwnerCommonData,
-    payload: { ownerCommonData },
-  });
+  if (!ownerCommonData) return;
+  saveOwnerCommonData(adminDispatch, ownerCommonData)
 }

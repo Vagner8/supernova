@@ -1,7 +1,11 @@
-import { AdminReducerActions, saveOperationResult, setIsFetching } from 'admin/adminReducer';
+import {
+  AdminReducerActions,
+  saveOperationResult,
+  setIsFetching,
+} from 'admin/adminReducer';
 import { EventsState } from 'admin/Events/eventsReducer';
 import { initializeApp } from 'firebase/app';
-import { getStorage, ref, getDownloadURL, uploadBytes } from 'firebase/storage';
+import { getStorage, ref, getDownloadURL, uploadBytes, deleteObject } from 'firebase/storage';
 import { Dispatch } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -18,20 +22,37 @@ const firebaseApp = initializeApp(firebaseConfig);
 const storage = getStorage(firebaseApp);
 const references: any[] = [];
 
-interface UploadFiles {
+interface FirebaseSender {
+  ownerId: string | null;
   files: EventsState['files'];
+  isFileInputMultiple: EventsState['isFileInputMultiple'];
+  fileInputName: EventsState['fileInputName'];
   adminDispatch: Dispatch<AdminReducerActions>;
 }
 
-export async function uploadFiles({ files, adminDispatch }: UploadFiles) {
+export async function firebaseSender({
+  files,
+  ownerId,
+  fileInputName,
+  isFileInputMultiple,
+  adminDispatch,
+}: FirebaseSender) {
   if (!files) return;
   try {
-    setIsFetching(adminDispatch, true)
+    setIsFetching(adminDispatch, true);
+    if (!isFileInputMultiple) {
+      const desertRef = ref(storage, `img/${ownerId}/${fileInputName}/*`);
+      await deleteObject(desertRef)
+      return
+    }
     await Promise.all(
       files.map((file) => {
         console.log(file);
         const id = uuidv4();
-        const storageRef = ref(storage, `img/${id}.${file.name}`);
+        const storageRef = ref(
+          storage,
+          `img/${ownerId}/${fileInputName}/${id}`,
+        );
         references.push(storageRef);
         return uploadBytes(storageRef, file);
       }),
@@ -43,11 +64,11 @@ export async function uploadFiles({ files, adminDispatch }: UploadFiles) {
     console.log(err);
     saveOperationResult(adminDispatch, {
       status: 'error',
-      message: 'files not update',
+      message: 'files did not update',
       field: null,
-      logout: false
-    })
+      logout: false,
+    });
   } finally {
-    setIsFetching(adminDispatch, true)
+    setIsFetching(adminDispatch, false);
   }
 }

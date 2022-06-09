@@ -25,7 +25,15 @@ export async function updateOwner(
       {ownerId: OWNER_ID},
       {$set: ownerPII}
     )
-    console.log(result)
+    if (!result.acknowledged) {
+      throw new Err({
+        status: 500,
+        message: "data did not update",
+        field: null,
+        logout: false,
+      });
+    }
+    res.status(200).json(result)
   } catch (err) {
     next(err);
   }

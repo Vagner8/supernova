@@ -1,28 +1,36 @@
 import { AdminReducerActions } from 'admin/adminReducer';
-import { getOwner } from 'api/getOwner';
+import {
+  EventsReducerActions,
+  EventsState,
+  overwriteCopyOfPoints,
+  savePoints,
+} from 'admin/Events/eventsReducer';
+import { UrlAddress } from 'api/fetcher';
+import { getData } from 'api/getData';
 import { Dispatch } from 'react';
-import { ProfileReducerActions, ProfileStrAction } from './profileReducer';
-import { Personal, Contacts, Address } from './../../../../common/owner'
 
-export interface OwnerPII {
-  personal: Personal;
-  contacts: Contacts;
-  address: Address;
+interface FetchAndSavePoints {
+  eventsDispatch: Dispatch<EventsReducerActions>;
+  adminDispatch: Dispatch<AdminReducerActions>;
+  url: UrlAddress;
 }
 
-export async function fetchAndSaveOwnerPII(
-  profileDispatch: Dispatch<ProfileReducerActions>,
-  adminDispatch: Dispatch<AdminReducerActions>,
-) {
-  const ownerPII = (await getOwner(adminDispatch, {
-    _id: 0,
-    personal: 1,
-    contacts: 1,
-    address: 1,
-  })) as OwnerPII | undefined;
-  if (!ownerPII) return
-  profileDispatch({
-    type: ProfileStrAction.SaveOwnerPII,
-    payload: { ownerPII },
-  });
+export async function fetchAndSavePoints({
+  eventsDispatch,
+  adminDispatch,
+  url,
+}: FetchAndSavePoints) {
+  const points = (await getData({
+    adminDispatch,
+    url,
+    projection: {
+      _id: 0,
+      personal: 1,
+      contacts: 1,
+      address: 1,
+    },
+  })) as EventsState['points'];
+  if (!points) return;
+  savePoints(eventsDispatch, points);
+  overwriteCopyOfPoints(eventsDispatch);
 }

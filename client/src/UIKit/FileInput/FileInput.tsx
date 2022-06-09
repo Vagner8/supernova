@@ -4,10 +4,11 @@ import styles from './fileInput.module.css';
 
 interface FileInputProps {
   multiple: boolean;
+  name: string;
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
 }
 
-export function FileInput({ multiple, onChange }: FileInputProps) {
+export function FileInput({ multiple, name, onChange }: FileInputProps) {
   return (
     <div className={styles.FileInput}>
       <Button
@@ -19,6 +20,7 @@ export function FileInput({ multiple, onChange }: FileInputProps) {
           multiple={multiple}
           className={styles.input}
           type="file"
+          name={name}
           onChange={onChange}
         />
       </Button>

@@ -15,8 +15,9 @@ import {
   EventsState,
 } from './Events/eventsReducer';
 import { FilesSheet } from './FilesSheet/FilesSheet';
-import { storeOwnerCommonData } from './adminApi';
 import { Events } from './Events/Events';
+import { UrlAddress } from 'api/fetcher';
+import { fetchAndSaveOwnerCommonData } from './adminApi';
 
 const Home = lazy(() => import('./Home/Home'));
 const Profile = lazy(() => import('./Profile/Profile'));
@@ -57,15 +58,18 @@ function AdminRoutes({
 }: AdminRoutesProps) {
 
   useEffect(() => {
-    storeOwnerCommonData(adminDispatch);
+    fetchAndSaveOwnerCommonData({adminDispatch, url: UrlAddress.Owner})
   }, [adminDispatch]);
-
   return (
     <>
       <Linear show={adminState.isFetching} />
       <Events
         eventsList={eventsState.eventsList}
-        selectedEvent={eventsState.selectedEvent}
+        changedPoints={eventsState.changedPoints}
+        files={eventsState.files}
+        fileInputName={eventsState.fileInputName}
+        isFileInputMultiple={eventsState.isFileInputMultiple}
+        adminDispatch={adminDispatch}
         eventsDispatch={eventsDispatch}
       />
       <Navbar
@@ -81,16 +85,13 @@ function AdminRoutes({
             }
           />
           <Route
-            path="/profile"
+            path="/owner"
             element={
               <Profile
-                selectedEvent={eventsState.selectedEvent}
                 eventsList={eventsState.eventsList}
                 errorField={adminState.operationResult?.field}
                 errorMessage={adminState.operationResult?.message}
-                copyInputValues={eventsState.copyInputValues}
-                files={eventsState.files}
-                changedPoints={eventsState.changedPoints}
+                points={eventsState.points}
                 adminDispatch={adminDispatch}
                 eventsDispatch={eventsDispatch}
               />
