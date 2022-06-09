@@ -31,10 +31,8 @@ export function Auth({ adminDispatch, adminState }: AuthProps) {
     (e: ChangeEvent<HTMLInputElement>) => {
       const { name, value } = e.target;
       saveAuthInputsOutputs(authDispatch, name, value);
-      if (!adminState.operationResult) return;
-      deleteOperationResult(adminDispatch);
     },
-    [adminDispatch, adminState.operationResult],
+    [adminDispatch],
   );
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -55,8 +53,16 @@ export function Auth({ adminDispatch, adminState }: AuthProps) {
             {authState.inputs.map((input) => (
               <InputMemo
                 key={input.label}
-                errorMessage={adminState.operationResult?.message}
-                errorField={adminState.operationResult?.field}
+                errorMessage={
+                  adminState.operationResults.filter(
+                    (result) => result.field,
+                  )[0]?.message
+                }
+                errorField={
+                  adminState.operationResults.filter(
+                    (result) => result.field,
+                  )[0]?.field
+                }
                 label={input.label}
                 type={input.type}
                 value={input.value}
@@ -68,12 +74,12 @@ export function Auth({ adminDispatch, adminState }: AuthProps) {
           </form>
         </div>
       </div>
-      <Snackbar
+      {/* <Snackbar
         status={adminState.operationResult?.status}
         message={adminState.operationResult?.message}
         filed={adminState.operationResult?.field}
         adminDispatch={adminDispatch}
-      />
+      /> */}
     </>
   );
 }

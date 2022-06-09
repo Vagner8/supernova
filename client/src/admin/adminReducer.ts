@@ -58,14 +58,14 @@ export type AdminReducerActions =
 
 export interface AdminState {
   isFetching: boolean;
-  operationResult: Omit<OperationResult, 'logout'> | null;
+  operationResults: OperationResult[],
   avatar: string | null;
   login: string | null;
 }
 
 export const adminInitState: AdminState = {
   isFetching: false,
-  operationResult: null,
+  operationResults: [],
   avatar: null,
   login: null,
 };
@@ -106,15 +106,15 @@ export const adminReducer: Reducer<AdminState, AdminReducerActions> = (
       operationResult.logout && localStorage.removeItem('ownerId');
       return {
         ...state,
-        operationResult,
+        operationResults: [...state.operationResults, operationResult]
       };
     }
-    case AdminStrAction.DeleteOperationResult: {
-      return {
-        ...state,
-        operationResult: null,
-      };
-    }
+    // case AdminStrAction.DeleteOperationResult: {
+    //   return {
+    //     ...state,
+    //     operationResult: null,
+    //   };
+    // }
     default:
       return state;
   }

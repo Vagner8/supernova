@@ -35,6 +35,8 @@ export function Snackbar({
     warning: 'warning',
   };
 
+  console.log(status, message, filed);
+
   useEffect(() => {
     const go = () => {
       started = true;
@@ -61,7 +63,7 @@ export function Snackbar({
     <div className={`${styles.Snackbar} ${styles[status]}`}>
       <Icon icon={icons[status]} />
       <p className={styles.message}>
-        {capitalizer({index: 0, str: message})}
+        {capitalizer({ index: 0, str: message })}
       </p>
       <button onClick={onClick} className={styles.button}>
         <Icon icon="close" />

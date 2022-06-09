@@ -1,7 +1,4 @@
 .Snackbar {
-  position: fixed;
-  left: 1.25rem;
-  bottom: 1.25rem;
   display: flex;
   align-items: center;
   justify-content: space-between;

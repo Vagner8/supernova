@@ -18,6 +18,7 @@ import { FilesSheet } from './FilesSheet/FilesSheet';
 import { Events } from './Events/Events';
 import { UrlAddress } from 'api/fetcher';
 import { fetchAndSaveOwnerCommonData } from './adminApi';
+import { OperationResultsSheet } from './OperationResultsSheet/OperationResultsSheet';
 
 const Home = lazy(() => import('./Home/Home'));
 const Profile = lazy(() => import('./Profile/Profile'));
@@ -56,9 +57,8 @@ function AdminRoutes({
   eventsState,
   eventsDispatch,
 }: AdminRoutesProps) {
-
   useEffect(() => {
-    fetchAndSaveOwnerCommonData({adminDispatch, url: UrlAddress.Owner})
+    fetchAndSaveOwnerCommonData({ adminDispatch, url: UrlAddress.Owner });
   }, [adminDispatch]);
   return (
     <>
@@ -72,10 +72,7 @@ function AdminRoutes({
         adminDispatch={adminDispatch}
         eventsDispatch={eventsDispatch}
       />
-      <Navbar
-        login={adminState.login}
-        avatar={adminState.avatar}
-      />
+      <Navbar login={adminState.login} avatar={adminState.avatar} />
       <Suspense fallback={<Linear show={true} />}>
         <Routes>
           <Route
@@ -89,8 +86,16 @@ function AdminRoutes({
             element={
               <Profile
                 eventsList={eventsState.eventsList}
-                errorField={adminState.operationResult?.field}
-                errorMessage={adminState.operationResult?.message}
+                errorField={
+                  adminState.operationResults.filter(
+                    (result) => result.field,
+                  )[0]?.field
+                }
+                errorMessage={
+                  adminState.operationResults.filter(
+                    (result) => result.field,
+                  )[0]?.message
+                }
                 points={eventsState.points}
                 adminDispatch={adminDispatch}
                 eventsDispatch={eventsDispatch}
@@ -100,10 +105,8 @@ function AdminRoutes({
         </Routes>
       </Suspense>
       <FilesSheet files={eventsState.files} eventsDispatch={eventsDispatch} />
-      <Snackbar
-        status={adminState.operationResult?.status}
-        message={adminState.operationResult?.message}
-        filed={adminState.operationResult?.field}
+      <OperationResultsSheet
+        operationResults={adminState.operationResults}
         adminDispatch={adminDispatch}
       />
     </>
