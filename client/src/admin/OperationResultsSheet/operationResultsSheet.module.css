@@ -3,3 +3,7 @@
   left: 1.25rem;
   bottom: 1.25rem;
 }
+
+.snackbar_wrap {
+  margin-bottom: .75rem;
+}

@@ -13,19 +13,21 @@ export function OperationResultsSheet({
   operationResults,
   adminDispatch,
 }: OperationResultsSheetProps) {
-  console.log(operationResults);
   return (
     <div className={style.OperationResultsSheet}>
-      <h1>OperationResultsSheet</h1>
-      {operationResults.map((result) => (
-        <Snackbar
-          key={uuidv4()}
-          status={result.status}
-          message={result.message}
-          filed={result.field}
-          adminDispatch={adminDispatch}
-        />
-      ))}
+      {operationResults.map((result, index) => {
+        return (
+          <div className={style.snackbar_wrap} key={uuidv4()}>
+            <Snackbar
+              index={index}
+              status={result.status}
+              message={result.message}
+              filed={result.field}
+              adminDispatch={adminDispatch}
+            />
+          </div>
+        );
+      })}
     </div>
   );
 }

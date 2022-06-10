@@ -67,7 +67,7 @@ export async function fetcher({
       return undefined;
     }
     saveOperationResult(adminDispatch, {
-      status: 'ok',
+      status: 'success',
       message,
       field: null,
       logout: false,

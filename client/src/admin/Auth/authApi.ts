@@ -13,7 +13,7 @@ export async function login(
     method: 'POST',
     url: UrlAddress.Login,
     adminDispatch,
-    message: 'Success',
+    message: 'Success login',
     body,
   })) as undefined | { ownerId: string };
   if (!res) return;

@@ -11,7 +11,7 @@ export enum AdminStrAction {
 }
 
 export interface OperationResult {
-  status: 'ok' | 'error' | 'warning';
+  status: 'success' | 'error' | 'warning';
   message: string;
   field: string | null;
   logout: boolean;
@@ -34,6 +34,7 @@ interface SaveOwnerCommonData {
 
 interface DeleteOperationResult {
   type: AdminStrAction.DeleteOperationResult;
+  payload: { index: number };
 }
 
 interface SaveOperationResult {
@@ -58,7 +59,7 @@ export type AdminReducerActions =
 
 export interface AdminState {
   isFetching: boolean;
-  operationResults: OperationResult[],
+  operationResults: OperationResult[];
   avatar: string | null;
   login: string | null;
 }
@@ -78,8 +79,8 @@ export const adminReducer: Reducer<AdminState, AdminReducerActions> = (
     case AdminStrAction.SaveNewAvatar: {
       return {
         ...state,
-        avatar: action.payload.newAvatar
-      }
+        avatar: action.payload.newAvatar,
+      };
     }
     case AdminStrAction.SaveOwnerId: {
       localStorage.setItem('ownerId', action.payload.ownerId);
@@ -104,17 +105,30 @@ export const adminReducer: Reducer<AdminState, AdminReducerActions> = (
     case AdminStrAction.SaveOperationResult: {
       const { operationResult } = action.payload;
       operationResult.logout && localStorage.removeItem('ownerId');
+      if (state.operationResults.length === 0) {
+        return {
+          ...state,
+          operationResults: [...state.operationResults, operationResult],
+        };
+      }
       return {
         ...state,
-        operationResults: [...state.operationResults, operationResult]
+        operationResults: state.operationResults.some(
+          (result) => result.message === operationResult.message,
+        )
+          ? state.operationResults
+          : [...state.operationResults, operationResult],
       };
     }
-    // case AdminStrAction.DeleteOperationResult: {
-    //   return {
-    //     ...state,
-    //     operationResult: null,
-    //   };
-    // }
+    case AdminStrAction.DeleteOperationResult: {
+      if (!state.operationResults[action.payload.index]) return state
+      return {
+        ...state,
+        operationResults: state.operationResults.filter((_, index) => {
+          return index !== action.payload.index;
+        }),
+      };
+    }
     default:
       return state;
   }
@@ -122,13 +136,13 @@ export const adminReducer: Reducer<AdminState, AdminReducerActions> = (
 
 export const saveNewAvatar = (
   adminDispatch: Dispatch<AdminReducerActions>,
-  newAvatar: AdminState['avatar']
+  newAvatar: AdminState['avatar'],
 ) => {
   adminDispatch({
     type: AdminStrAction.SaveNewAvatar,
     payload: { newAvatar },
   });
-}
+};
 
 export const setIsFetching = (
   adminDispatch: Dispatch<AdminReducerActions>,
@@ -162,8 +176,12 @@ export const saveOperationResult = (
 
 export const deleteOperationResult = (
   adminDispatch: Dispatch<AdminReducerActions>,
+  index: number,
 ) => {
-  adminDispatch({ type: AdminStrAction.DeleteOperationResult });
+  adminDispatch({
+    type: AdminStrAction.DeleteOperationResult,
+    payload: { index },
+  });
 };
 
 export const saveOwnerId = (

@@ -24,23 +24,6 @@
 //   ])
 // )
 
-const a = {
-  data: null,
-  copy: null
-}
+const arr = [1, 5]
 
-const b = {
-  b: 2
-}
-
-const c = {
-  ...a,
-  data: {
-    ...b
-  },
-  copy: b
-}
-
-
-
-console.log(c.copy === c.data)
+console.log(arr[6])

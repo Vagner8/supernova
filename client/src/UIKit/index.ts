@@ -15,6 +15,8 @@ export * from './Dropdown/Dropdown';
 export * from './BottomSheetModals/BottomSheetModals';
 export * from './Chips/Chips';
 export * from './Form/Form';
+export * from './Headerblock/Headerblock'
+export * from './Close/Close'
 
 export * from './Typography/Text/Text';
 export * from './Typography/Title/Title';

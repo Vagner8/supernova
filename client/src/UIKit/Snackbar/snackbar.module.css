@@ -1,33 +1,46 @@
 .Snackbar {
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  padding: .75rem 1.25rem;
-  color: rgb(255, 255, 255);
+  padding: 0.55rem 0.75rem;
   border-radius: 4px;
-  box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 5px -1px, rgba(0, 0, 0, 0.14) 0px 6px 10px 0px, rgba(0, 0, 0, 0.12) 0px 1px 18px 0px;
+  min-width: 250px;
 }
 
-.ok {
-  background-color: #66bb6a;
+.success {
+  background-color: rgb(237, 247, 237);
+  color: rgb(30, 70, 32);
+}
+
+.success i:first-child {
+  color: rgb(76, 175, 80);
+}
+
+.success i:last-child {
+  color: rgb(30, 70, 32);
 }
 
 .error {
-  background-color: #e57373;
+  background-color: rgb(253, 237, 237);
+  color: rgb(95, 33, 32);
+}
+
+.error i:first-child {
+  color: rgb(239, 83, 80);
+}
+
+.error i:last-child {
+  color: rgb(95, 33, 32);
 }
 
 .warning {
-  background-color: #ffee58;
+  background-color: rgb(255, 244, 229);
+  color: rgb(102, 60, 0);
 }
 
-.message {
-  padding: 0 0.75rem;
+.warning i:first-child {
+  color: rgb(255, 152, 0);
 }
 
-.button {
-  border-radius: 50%;
-}
-
-.button:hover {
-  background-color: rgb(0 0 0 / 10%);
+.warning i:last-child {
+  color: rgb(102, 60, 0);
 }

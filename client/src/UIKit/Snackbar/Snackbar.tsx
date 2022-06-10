@@ -1,73 +1,55 @@
 import {
   AdminReducerActions,
-  AdminStrAction,
   deleteOperationResult,
   OperationResult,
 } from 'admin/adminReducer';
-import { capitalizer } from 'helpers';
 import { Dispatch, useEffect } from 'react';
-import { Icon } from 'UIKit';
+import { Close, Headerblock } from 'UIKit';
 import styles from './snackbar.module.css';
 
 export interface SnackbarProps {
   status: OperationResult['status'] | undefined;
   message: OperationResult['message'] | undefined;
   filed: OperationResult['field'] | undefined;
+  index: number;
   adminDispatch: Dispatch<AdminReducerActions>;
 }
-
-let started: boolean = false;
-let timer: any;
 
 export function Snackbar({
   status,
   message,
   filed,
+  index,
   adminDispatch,
 }: SnackbarProps) {
   const icons: {
-    ok: 'task_alt';
+    success: 'task_alt';
     error: 'error';
     warning: 'warning';
   } = {
-    ok: 'task_alt',
+    success: 'task_alt',
     error: 'error',
     warning: 'warning',
   };
 
-  console.log(status, message, filed);
-
   useEffect(() => {
-    const go = () => {
-      started = true;
-      timer = setTimeout(() => {
-        if (status === 'error') return;
-        // deleteOperationResult(adminDispatch);
-        started = false;
-      }, 3000);
-    };
-    if (!started) return go();
-    clearTimeout(timer);
-    go();
-  }, [adminDispatch, status]);
+    if (status !== 'error') {
+      setTimeout(() => {
+        deleteOperationResult(adminDispatch, index)
+      }, 3000)
+    }
+  }, [adminDispatch, index, status]);
 
   const onClick = () => {
-    adminDispatch({
-      type: AdminStrAction.DeleteOperationResult,
-    });
+    deleteOperationResult(adminDispatch, index)
   };
 
   if (!message || !status || filed) return null;
 
   return (
     <div className={`${styles.Snackbar} ${styles[status]}`}>
-      <Icon icon={icons[status]} />
-      <p className={styles.message}>
-        {capitalizer({ index: 0, str: message })}
-      </p>
-      <button onClick={onClick} className={styles.button}>
-        <Icon icon="close" />
-      </button>
+      <Headerblock icon={icons[status]} title={status} text={message} />
+      <Close onClick={onClick} />
     </div>
   );
 }

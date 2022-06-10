@@ -1,0 +1,17 @@
+.Headerblock {
+  display: grid;
+  font-size: 0.875rem;
+}
+
+.header {
+  margin: 0;
+  align-self: center;
+}
+
+.header, .text {
+  grid-column-start: 2;
+}
+
+.icon {
+  margin-right: .55rem;
+}
