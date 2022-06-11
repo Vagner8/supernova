@@ -1,6 +1,6 @@
 import '@testing-library/jest-dom';
 import { cleanup } from '@testing-library/react';
-import { capitalizer } from './string';
+import { capitalizer } from './stringHelpers';
 
 describe('capitalizer', () => {
   afterEach(cleanup)

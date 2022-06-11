@@ -6,10 +6,10 @@ import styles from './dropdown.module.css';
 interface DropdownProps {
   title: string;
   list: string[] | null;
-  handleTarget: (target: HTMLButtonElement) => void;
+  handleEvents: (target: HTMLButtonElement) => void;
 }
 
-export function Dropdown({ title, list, handleTarget }: DropdownProps) {
+export function Dropdown({ title, list, handleEvents }: DropdownProps) {
   const [show, setSow] = useState(false);
 
   useEffect(() => {
@@ -33,7 +33,7 @@ export function Dropdown({ title, list, handleTarget }: DropdownProps) {
     setSow(false);
     if (!e.target) return;
     const target = e.target as HTMLButtonElement;
-    handleTarget(target);
+    handleEvents(target);
   };
 
   if (!list) return null;

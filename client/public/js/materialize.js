@@ -11310,10 +11310,10 @@ $jscomp.polyfill = function (e, r, p, m) {
       key: "_setupEventHandlers",
       value: function _setupEventHandlers() {
         this._handleDocumentClickBound = this._handleDocumentClick.bind(this);
-        this._handleTargetClickBound = this._handleTargetClick.bind(this);
+        this._handleEventsClickBound = this._handleEventsClick.bind(this);
         this._handleOriginClickBound = this._handleOriginClick.bind(this);
 
-        this.el.addEventListener('click', this._handleTargetClickBound);
+        this.el.addEventListener('click', this._handleEventsClickBound);
         this.originEl.addEventListener('click', this._handleOriginClickBound);
 
         // Resize
@@ -11330,7 +11330,7 @@ $jscomp.polyfill = function (e, r, p, m) {
     }, {
       key: "_removeEventHandlers",
       value: function _removeEventHandlers() {
-        this.el.removeEventListener('click', this._handleTargetClickBound);
+        this.el.removeEventListener('click', this._handleEventsClickBound);
         this.originEl.removeEventListener('click', this._handleOriginClickBound);
         window.removeEventListener('resize', this._handleThrottledResizeBound);
       }
@@ -11341,8 +11341,8 @@ $jscomp.polyfill = function (e, r, p, m) {
        */
 
     }, {
-      key: "_handleTargetClick",
-      value: function _handleTargetClick(e) {
+      key: "_handleEventsClick",
+      value: function _handleEventsClick(e) {
         this.open();
       }
 

@@ -21,6 +21,6 @@ export async function getData({ adminDispatch, url, projection }: GetData) {
     method: 'GET',
     url: `${url}/?projection=${json}`,
     adminDispatch,
-    message: 'data received',
+    message: 'data did receive',
   });
 }

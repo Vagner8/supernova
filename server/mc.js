@@ -24,6 +24,8 @@
 //   ])
 // )
 
-const arr = [1, 5]
+const arr = [1, 5, null, 9]
 
-console.log(arr[6])
+console.log(
+  arr.includes(null)
+)

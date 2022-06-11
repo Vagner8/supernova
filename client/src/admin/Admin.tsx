@@ -7,7 +7,7 @@ import {
   AdminReducerActions,
   AdminState,
 } from './adminReducer';
-import { Linear, Navbar, Snackbar } from 'UIKit';
+import { Linear, Navbar } from 'UIKit';
 import {
   eventsInitState,
   eventsReducer,

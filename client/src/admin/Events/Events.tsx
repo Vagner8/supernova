@@ -1,6 +1,7 @@
 import { AdminReducerActions, saveNewAvatar } from 'admin/adminReducer';
-import { firebaseSender } from 'api/firebaseSender';
+import { downloadFilesFirebase } from 'api/firebaseStorage/downloadFilesFirebase';
 import { updateData } from 'api/updateData';
+import { firebaseError } from 'helpers';
 import { Dispatch } from 'react';
 import { useParams } from 'react-router-dom';
 import { Dropdown } from 'UIKit';
@@ -20,8 +21,8 @@ interface EventsProps {
   eventsList: EventsState['eventsList'];
   changedPoints: EventsState['changedPoints'];
   files: EventsState['files'];
-  isFileInputMultiple: EventsState['isFileInputMultiple'];
   fileInputName: EventsState['fileInputName'];
+  isFileInputMultiple: EventsState['isFileInputMultiple'];
   eventsDispatch: Dispatch<EventsReducerActions>;
   adminDispatch: Dispatch<AdminReducerActions>;
 }
@@ -30,16 +31,17 @@ export function Events({
   eventsList,
   changedPoints,
   files,
-  isFileInputMultiple,
   fileInputName,
+  isFileInputMultiple,
   adminDispatch,
   eventsDispatch,
 }: EventsProps) {
   const params = useParams();
 
-  const handleTarget = (target: HTMLButtonElement) => {
+  const handleEvents = (target: HTMLButtonElement) => {
     const selectedEvent = target.dataset.eventName as EventNames;
     const ownerId = localStorage.getItem('ownerId');
+    let imgUrls: string[] | undefined = [];
     const asyncer = async () => {
       switch (selectedEvent) {
         case EventNames.Edit: {
@@ -56,13 +58,15 @@ export function Events({
           switchSaveEvent(eventsDispatch, 'hide');
           switchEditAndEditOf(eventsDispatch, EventNames.Edit);
           deleteAllFiles(eventsDispatch);
-          const imgUrls = await firebaseSender({
-            adminDispatch,
-            files,
-            isFileInputMultiple,
-            fileInputName,
-            ownerId,
-          });
+          if (files && files.length > 0) {
+            imgUrls = await downloadFilesFirebase({
+              files,
+              path: ['owner-img', ownerId, fileInputName],
+              isFileInputMultiple,
+              adminDispatch,
+            });
+            if (!imgUrls) return firebaseError(adminDispatch, 'no img urls');
+          }
           if (imgUrls && changedPoints?.personal?.avatar) {
             changedPoints.personal.avatar = imgUrls[0];
             saveNewAvatar(adminDispatch, imgUrls[0]);
@@ -83,7 +87,7 @@ export function Events({
 
   return (
     <div className={styles.Events}>
-      <Dropdown title="events" handleTarget={handleTarget} list={eventsList} />
+      <Dropdown title="events" handleEvents={handleEvents} list={eventsList} />
     </div>
   );
 }

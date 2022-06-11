@@ -1,1 +1,2 @@
-export * from './string'
+export * from './stringHelpers'
+export * from './errorHelpers'

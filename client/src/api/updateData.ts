@@ -19,6 +19,6 @@ export async function updateData({
     method: 'PUT',
     url: `/${params}/update`,
     adminDispatch,
-    message: 'successful update'
+    message: 'data did update'
   });
 }

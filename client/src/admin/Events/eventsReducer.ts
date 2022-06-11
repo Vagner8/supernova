@@ -80,7 +80,7 @@ export interface EventsState {
   changedPoints: Partial<OwnerPII> | null;
   eventsList: string[];
   files: File[] | null;
-  isFileInputMultiple: boolean | null;
+  isFileInputMultiple: boolean;
   fileInputName: string | null
 }
 
@@ -102,7 +102,7 @@ export const eventsInitState: EventsState = {
   changedPoints: null,
   eventsList: [],
   files: null,
-  isFileInputMultiple: null,
+  isFileInputMultiple: false,
   fileInputName: null,
 };
 
