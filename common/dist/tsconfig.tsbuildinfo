@@ -27,8 +27,8 @@
         "affectsGlobalScope": true
       },
       "../owner.ts": {
-        "version": "e990c6e34fb4433e9985ac9643815b93671c8da80081f5e63171bd495c0be67c",
-        "signature": "e5d0f778f82bcbca43b16c3874df8b278c1b2a46a3180032f45f813f1c7115c1",
+        "version": "108a69f3e1604deb5c735517041f27e5fbf2e27a55d4569d89e538b7d7f1a01b",
+        "signature": "95998937fcdba13602a7c03d317b3eeba062df2529d5ee68d985e503b24ebc5e",
         "affectsGlobalScope": false
       }
     },

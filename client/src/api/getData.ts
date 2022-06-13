@@ -1,13 +1,7 @@
 import { AdminReducerActions } from 'admin/adminReducer';
 import { Dispatch } from 'react';
 import { UrlAddress, fetcher } from './fetcher';
-import { Owner, Personal, Contacts, Address } from '../../../common/owner';
-
-type Projection<T> = {
-  [Prop in keyof T]?: T[Prop] extends Personal | Contacts | Address
-    ? Projection<T[Prop]> | 0 | 1
-    : 1 | 0;
-};
+import { Owner, Projection } from '../../../common/owner';
 
 interface GetData {
   adminDispatch: Dispatch<AdminReducerActions>;

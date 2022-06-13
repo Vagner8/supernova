@@ -5,13 +5,13 @@ export interface Owner {
   personal: Personal;
   contacts: Contacts;
   address: Address;
+  imgUrls: ImgUrls
   password: string;
 }
 
 export interface Personal {
   name: string;
   surname: string;
-  avatar: string;
 }
 
 export interface Contacts {
@@ -26,8 +26,21 @@ export interface Address {
   number: string;
 }
 
+export interface ImgUrls {
+  avatar: string[],
+  photos: string[]
+}
+
 export interface OwnerPII {
   contacts: Contacts;
   address: Address;
   personal: Personal;
+  imgUrls: ImgUrls
 }
+
+
+export type Projection<T> = {
+  [Key in keyof T]?: T[Key] extends Object
+    ? Projection<T[Key]> | 0 | 1
+    : 1 | 0;
+};

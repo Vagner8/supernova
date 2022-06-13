@@ -37,7 +37,7 @@ export async function downloadFilesFirebase({
     return await downloadFiles(files, path)
   } catch (err) {
     firebaseError(adminDispatch, 'files did not download');
-    console.log(err)
+    console.error(err)
   } finally {
     setIsFetching(adminDispatch, false);
   }

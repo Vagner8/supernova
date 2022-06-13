@@ -18,3 +18,7 @@
 .middle, .right {
   width: 40%;
 }
+
+.lift i {
+  color: rgba(0, 0, 0, 0.54);
+}

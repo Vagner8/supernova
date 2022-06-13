@@ -11,6 +11,7 @@ import { UrlAddress } from 'api/fetcher';
 import { useEventsList } from 'hooks';
 import { ChangeEvent, Dispatch, useCallback, useEffect } from 'react';
 import { Avatar, Container, FileInput, Form } from 'UIKit';
+import { ImgUrls } from '../../../../common/owner';
 import styles from './profile.module.css';
 import { fetchAndSavePoints } from './profileApi';
 
@@ -61,18 +62,18 @@ export default function Profile({
       eventsDispatch,
       files: Array.from(e.target.files || []),
       isFileInputMultiple: e.target.multiple,
-      fileInputName: e.target.name,
+      fileInputName: e.target.name as keyof ImgUrls,
     });
     e.target.value = '';
   };
 
   if (!points) return null;
-  const { personal } = points;
+  const { personal, imgUrls } = points;
   return (
     <Container>
       <div className={styles.Profile}>
         <div className={styles.lift}>
-          <Avatar url={personal.avatar} size="m" />
+          <Avatar url={imgUrls.avatar[0]} iconFontSize="50px" size="m" />
           <h6>
             {personal.name || '-'} {personal.surname || '-'}
           </h6>

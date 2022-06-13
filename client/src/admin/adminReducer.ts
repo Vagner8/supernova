@@ -1,13 +1,12 @@
 import { Dispatch, Reducer } from 'react';
-import { OwnerCommonData } from './adminApi';
+import { FetchAndSaveAvatarAndLoginResponse } from './adminApi';
 
 export enum AdminStrAction {
   SaveOwnerId = 'SaveOwnerId',
-  SaveOwnerCommonData = 'SaveOwnerCommonData',
   SaveOperationResult = 'SaveOperationResult',
   DeleteOperationResult = 'DeleteOperationResult',
   SetIsFetching = 'SetIsFetching',
-  SaveNewAvatar = 'SaveNewAvatar',
+  SaveAvatarAndLogin = 'SaveAvatarAndLogin',
 }
 
 export interface OperationResult {
@@ -17,19 +16,9 @@ export interface OperationResult {
   logout: boolean;
 }
 
-interface SaveNewAvatar {
-  type: AdminStrAction.SaveNewAvatar;
-  payload: { newAvatar: AdminState['avatar'] };
-}
-
 interface SetIsFetching {
   type: AdminStrAction.SetIsFetching;
   payload: { isFetching: boolean };
-}
-
-interface SaveOwnerCommonData {
-  type: AdminStrAction.SaveOwnerCommonData;
-  payload: { ownerCommonData: OwnerCommonData };
 }
 
 interface DeleteOperationResult {
@@ -49,26 +38,30 @@ interface SaveOwnerId {
   payload: { ownerId: string };
 }
 
+interface SaveAvatarAndLogin {
+  type: AdminStrAction.SaveAvatarAndLogin;
+  payload: { avatarAndLogin: FetchAndSaveAvatarAndLoginResponse };
+}
+
 export type AdminReducerActions =
   | SetIsFetching
   | SaveOwnerId
-  | SaveOwnerCommonData
   | DeleteOperationResult
   | SaveOperationResult
-  | SaveNewAvatar;
+  | SaveAvatarAndLogin;
 
 export interface AdminState {
   isFetching: boolean;
   operationResults: OperationResult[];
-  avatar: string | null;
-  login: string | null;
+  ownerLogin: string | null;
+  ownerAvatar: string | null;
 }
 
 export const adminInitState: AdminState = {
   isFetching: false,
   operationResults: [],
-  avatar: null,
-  login: null,
+  ownerLogin: null,
+  ownerAvatar: null,
 };
 
 export const adminReducer: Reducer<AdminState, AdminReducerActions> = (
@@ -76,12 +69,6 @@ export const adminReducer: Reducer<AdminState, AdminReducerActions> = (
   action,
 ) => {
   switch (action.type) {
-    case AdminStrAction.SaveNewAvatar: {
-      return {
-        ...state,
-        avatar: action.payload.newAvatar,
-      };
-    }
     case AdminStrAction.SaveOwnerId: {
       localStorage.setItem('ownerId', action.payload.ownerId);
       return {
@@ -93,13 +80,6 @@ export const adminReducer: Reducer<AdminState, AdminReducerActions> = (
       return {
         ...state,
         isFetching: action.payload.isFetching,
-      };
-    }
-    case AdminStrAction.SaveOwnerCommonData: {
-      return {
-        ...state,
-        avatar: action.payload.ownerCommonData.personal.avatar,
-        login: action.payload.ownerCommonData.login,
       };
     }
     case AdminStrAction.SaveOperationResult: {
@@ -121,7 +101,7 @@ export const adminReducer: Reducer<AdminState, AdminReducerActions> = (
       };
     }
     case AdminStrAction.DeleteOperationResult: {
-      if (!state.operationResults[action.payload.index]) return state
+      if (!state.operationResults[action.payload.index]) return state;
       return {
         ...state,
         operationResults: state.operationResults.filter((_, index) => {
@@ -129,19 +109,16 @@ export const adminReducer: Reducer<AdminState, AdminReducerActions> = (
         }),
       };
     }
+    case AdminStrAction.SaveAvatarAndLogin: {
+      return {
+        ...state,
+        ownerAvatar: action.payload.avatarAndLogin.imgUrls.avatar[0],
+        ownerLogin: action.payload.avatarAndLogin.login,
+      };
+    }
     default:
       return state;
   }
-};
-
-export const saveNewAvatar = (
-  adminDispatch: Dispatch<AdminReducerActions>,
-  newAvatar: AdminState['avatar'],
-) => {
-  adminDispatch({
-    type: AdminStrAction.SaveNewAvatar,
-    payload: { newAvatar },
-  });
 };
 
 export const setIsFetching = (
@@ -151,16 +128,6 @@ export const setIsFetching = (
   adminDispatch({
     type: AdminStrAction.SetIsFetching,
     payload: { isFetching },
-  });
-};
-
-export const saveOwnerCommonData = (
-  adminDispatch: Dispatch<AdminReducerActions>,
-  ownerCommonData: OwnerCommonData,
-) => {
-  adminDispatch({
-    type: AdminStrAction.SaveOwnerCommonData,
-    payload: { ownerCommonData },
   });
 };
 
@@ -191,5 +158,15 @@ export const saveOwnerId = (
   adminDispatch({
     type: AdminStrAction.SaveOwnerId,
     payload: { ownerId },
+  });
+};
+
+export const saveOwnerNameAndAvatar = (
+  adminDispatch: Dispatch<AdminReducerActions>,
+  avatarAndLogin: FetchAndSaveAvatarAndLoginResponse,
+) => {
+  adminDispatch({
+    type: AdminStrAction.SaveAvatarAndLogin,
+    payload: { avatarAndLogin },
   });
 };

@@ -1,4 +1,4 @@
-import { AdminReducerActions, saveNewAvatar } from 'admin/adminReducer';
+import { AdminReducerActions } from 'admin/adminReducer';
 import { downloadFilesFirebase } from 'api/firebaseStorage/downloadFilesFirebase';
 import { updateData } from 'api/updateData';
 import { firebaseError } from 'helpers';
@@ -11,7 +11,7 @@ import {
   EventsReducerActions,
   EventsState,
   resetEventState,
-  overwriteCopyOfPoints,
+  saveCopyOfPoints,
   switchEditAndEditOf,
   switchSaveEvent,
   deleteAllFiles,
@@ -54,7 +54,7 @@ export function Events({
           break;
         }
         case EventNames.Save: {
-          overwriteCopyOfPoints(eventsDispatch);
+          saveCopyOfPoints(eventsDispatch);
           switchSaveEvent(eventsDispatch, 'hide');
           switchEditAndEditOf(eventsDispatch, EventNames.Edit);
           deleteAllFiles(eventsDispatch);
@@ -65,17 +65,18 @@ export function Events({
               isFileInputMultiple,
               adminDispatch,
             });
-            if (!imgUrls) return firebaseError(adminDispatch, 'no img urls');
-          }
-          if (imgUrls && changedPoints?.personal?.avatar) {
-            changedPoints.personal.avatar = imgUrls[0];
-            saveNewAvatar(adminDispatch, imgUrls[0]);
+            if (!imgUrls)
+              return firebaseError(adminDispatch, 'no img url to show');
+            if (!changedPoints?.imgUrls?.avatar)
+              return firebaseError(adminDispatch, 'no img to show');
+            changedPoints.imgUrls.avatar = imgUrls;
           }
           await updateData({
             adminDispatch,
             params: params['*'],
             changedPoints,
           });
+          
           break;
         }
       }

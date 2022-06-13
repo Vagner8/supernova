@@ -1,8 +1,10 @@
-import { AdminReducerActions } from 'admin/adminReducer';
+import {
+  AdminReducerActions
+} from 'admin/adminReducer';
 import {
   EventsReducerActions,
   EventsState,
-  overwriteCopyOfPoints,
+  saveCopyOfPoints,
   savePoints,
 } from 'admin/Events/eventsReducer';
 import { UrlAddress } from 'api/fetcher';
@@ -28,9 +30,10 @@ export async function fetchAndSavePoints({
       personal: 1,
       contacts: 1,
       address: 1,
+      imgUrls: 1
     },
   })) as EventsState['points'];
   if (!points) return;
   savePoints(eventsDispatch, points);
-  overwriteCopyOfPoints(eventsDispatch);
+  saveCopyOfPoints(eventsDispatch);
 }

@@ -17,10 +17,18 @@ export type IconName =
   | 'save';
 
 interface IconProps {
-  className?: string;
   icon: IconName;
+  fontSize?: string;
+  className?: string;
 }
 
-export function Icon({ icon, className }: IconProps) {
-  return <i className={`${styles.Icon} ${className} material-icons`}>{icon}</i>;
+export function Icon({ icon, className, fontSize }: IconProps) {
+  return (
+    <i
+      style={{ fontSize }}
+      className={`${styles.Icon} ${className} material-icons`}
+    >
+      {icon}
+    </i>
+  );
 }

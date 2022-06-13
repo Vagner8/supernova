@@ -74,7 +74,7 @@ export async function fetcher({
     });
     return json;
   } catch (err) {
-    console.log(err);
+    console.error(err);
     saveOperationResult(adminDispatch, {
       status: 'error',
       message: 'server error',

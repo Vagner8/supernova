@@ -1,36 +1,32 @@
-import { AdminReducerActions, saveOwnerCommonData } from 'admin/adminReducer';
 import { UrlAddress } from 'api/fetcher';
 import { getData } from 'api/getData';
 import { Dispatch } from 'react';
-import { Personal, Owner } from './../../../common/owner';
+import { AdminReducerActions, saveOwnerNameAndAvatar } from './adminReducer';
 
-export interface OwnerCommonData {
-  login: Owner['login'];
-  personal: {
-    avatar: Personal['avatar'];
-  };
-}
-
-interface FetchAndSaveOwnerCommonData {
-  adminDispatch: Dispatch<AdminReducerActions>;
+interface FetchAndSaveAvatarAndLogin {
   url: UrlAddress;
+  adminDispatch: Dispatch<AdminReducerActions>;
 }
 
-export async function fetchAndSaveOwnerCommonData({
-  adminDispatch,
+export interface FetchAndSaveAvatarAndLoginResponse {
+  login: string;
+  imgUrls: { avatar: string[] };
+}
+
+export async function fetchAndSaveAvatarAndLogin({
   url,
-}: FetchAndSaveOwnerCommonData) {
-  const ownerCommonData = (await getData({
+  adminDispatch,
+}: FetchAndSaveAvatarAndLogin) {
+  const avatarAndLogin = (await getData({
     adminDispatch,
     url,
     projection: {
       _id: 0,
       login: 1,
-      personal: {
+      imgUrls: {
         avatar: 1,
       },
     },
-  })) as OwnerCommonData | undefined;
-  if (!ownerCommonData) return;
-  saveOwnerCommonData(adminDispatch, ownerCommonData)
+  })) as FetchAndSaveAvatarAndLoginResponse;
+  saveOwnerNameAndAvatar(adminDispatch, avatarAndLogin)
 }

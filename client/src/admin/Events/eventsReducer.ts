@@ -1,5 +1,5 @@
 import { Dispatch, Reducer } from 'react';
-import { OwnerPII } from '../../../../common/owner';
+import { ImgUrls, OwnerPII } from '../../../../common/owner';
 
 export enum EventNames {
   New = 'new',
@@ -20,7 +20,7 @@ export enum EventsStrAction {
   ResetEventState = 'ResetEventState',
   SwitchEditAndEditOf = 'SwitchEditAndEditOf',
   SwitchSaveEvent = 'SwitchSaveEvent',
-  OverwriteCopyOfPoints = 'OverwriteCopyOfPoints',
+  SaveCopyOfPoints = 'SaveCopyOfPoints',
 }
 
 interface ResetEventState {
@@ -47,7 +47,7 @@ interface SaveFiles {
   payload: {
     files: File[];
     isFileInputMultiple: boolean;
-    fileInputName: string;
+    fileInputName: keyof ImgUrls;
   };
 }
 
@@ -70,8 +70,8 @@ interface SwitchSaveEvent {
   payload: { saveEvent: 'show' | 'hide' };
 }
 
-interface OverwriteCopyOfPoints {
-  type: EventsStrAction.OverwriteCopyOfPoints;
+interface SaveCopyOfPoints {
+  type: EventsStrAction.SaveCopyOfPoints;
 }
 
 export interface EventsState {
@@ -94,7 +94,7 @@ export type EventsReducerActions =
   | DeleteAllFiles
   | SwitchEditAndEditOf
   | SwitchSaveEvent
-  | OverwriteCopyOfPoints;
+  | SaveCopyOfPoints;
 
 export const eventsInitState: EventsState = {
   copyPoints: null,
@@ -117,7 +117,7 @@ export const eventsReducer: Reducer<EventsState, EventsReducerActions> = (
         points: action.payload.points,
       };
     }
-    case EventsStrAction.OverwriteCopyOfPoints: {
+    case EventsStrAction.SaveCopyOfPoints: {
       return {
         ...state,
         copyPoints: state.points,
@@ -161,11 +161,19 @@ export const eventsReducer: Reducer<EventsState, EventsReducerActions> = (
       };
     }
     case EventsStrAction.SaveFiles: {
+      if (!state.points) return state;
       return {
         ...state,
         files: action.payload.files,
         isFileInputMultiple: action.payload.isFileInputMultiple,
-        fileInputName: action.payload.fileInputName
+        fileInputName: action.payload.fileInputName,
+        changedPoints: {
+          ...state.changedPoints,
+          imgUrls: {
+            ...state.points.imgUrls,
+            [action.payload.fileInputName]: []
+          }
+        }
       };
     }
     case EventsStrAction.DeleteOneFile: {
@@ -229,10 +237,10 @@ export const savePoints = (
   });
 };
 
-export const overwriteCopyOfPoints = (
+export const saveCopyOfPoints = (
   eventsDispatch: Dispatch<EventsReducerActions>,
 ) => {
-  eventsDispatch({ type: EventsStrAction.OverwriteCopyOfPoints });
+  eventsDispatch({ type: EventsStrAction.SaveCopyOfPoints });
 };
 
 export const pointsOnChange = ({
@@ -271,7 +279,7 @@ export const saveFiles = ({
   eventsDispatch: Dispatch<EventsReducerActions>;
   files: File[];
   isFileInputMultiple: boolean;
-  fileInputName: string;
+  fileInputName: keyof ImgUrls;
 }) => {
   eventsDispatch({
     type: EventsStrAction.SaveFiles,

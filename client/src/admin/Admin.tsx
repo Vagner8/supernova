@@ -16,9 +16,9 @@ import {
 } from './Events/eventsReducer';
 import { FilesSheet } from './FilesSheet/FilesSheet';
 import { Events } from './Events/Events';
-import { UrlAddress } from 'api/fetcher';
-import { fetchAndSaveOwnerCommonData } from './adminApi';
 import { OperationResultsSheet } from './OperationResultsSheet/OperationResultsSheet';
+import { fetchAndSaveAvatarAndLogin } from './adminApi';
+import { UrlAddress } from 'api/fetcher';
 
 const Home = lazy(() => import('./Home/Home'));
 const Profile = lazy(() => import('./Profile/Profile'));
@@ -58,8 +58,8 @@ function AdminRoutes({
   eventsDispatch,
 }: AdminRoutesProps) {
   useEffect(() => {
-    fetchAndSaveOwnerCommonData({ adminDispatch, url: UrlAddress.Owner });
-  }, [adminDispatch]);
+    fetchAndSaveAvatarAndLogin({adminDispatch, url: UrlAddress.Owner})
+  }, [adminDispatch])
   return (
     <>
       <Linear show={adminState.isFetching} />
@@ -72,7 +72,10 @@ function AdminRoutes({
         adminDispatch={adminDispatch}
         eventsDispatch={eventsDispatch}
       />
-      <Navbar login={adminState.login} avatar={adminState.avatar} />
+      <Navbar
+        ownerLogin={adminState.ownerLogin}
+        ownerAvatar={adminState.ownerAvatar}
+      />
       <Suspense fallback={<Linear show={true} />}>
         <Routes>
           <Route

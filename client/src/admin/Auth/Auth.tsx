@@ -11,11 +11,10 @@ import {
   authInitState,
   saveAuthInputsOutputs,
 } from 'admin/Auth/authReducer';
-import { Button, Icon, Linear, Snackbar, InputMemo } from 'UIKit';
+import { Button, Icon, Linear, InputMemo } from 'UIKit';
 import {
   AdminReducerActions,
   AdminState,
-  deleteOperationResult,
 } from 'admin/adminReducer';
 import { login } from './authApi';
 
@@ -32,7 +31,7 @@ export function Auth({ adminDispatch, adminState }: AuthProps) {
       const { name, value } = e.target;
       saveAuthInputsOutputs(authDispatch, name, value);
     },
-    [adminDispatch],
+    [],
   );
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
