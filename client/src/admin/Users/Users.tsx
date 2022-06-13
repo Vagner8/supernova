@@ -1,6 +1,6 @@
 import styles from './users.module.css'
 
-export function Users() {
+export default function Users() {
   return (
     <div className={styles.Users}>
       Users

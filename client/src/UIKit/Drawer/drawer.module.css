@@ -1,0 +1,18 @@
+.Drawer {
+  width: 250px;
+  top: 0;
+  bottom: 0;
+  box-shadow: rgb(0 0 0 / 20%) 0px 8px 10px -5px, rgb(0 0 0 / 14%) 0px 16px 24px 2px, rgb(0 0 0 / 12%) 0px 6px 30px 5px;
+  background-color: white;
+  z-index: 6;
+  position: fixed;
+  transition: 200ms;
+}
+
+.Drawer.hide {
+  left: -250px;
+}
+
+.Drawer.show {
+  left: 0;
+}

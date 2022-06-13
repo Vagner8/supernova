@@ -7,7 +7,7 @@ import {
   AdminReducerActions,
   AdminState,
 } from './adminReducer';
-import { Linear, Navbar } from 'UIKit';
+import { Drawer, Linear, Navbar } from 'UIKit';
 import {
   eventsInitState,
   eventsReducer,
@@ -22,6 +22,7 @@ import { UrlAddress } from 'api/fetcher';
 
 const Home = lazy(() => import('./Home/Home'));
 const Profile = lazy(() => import('./Profile/Profile'));
+const Users = lazy(() => import('./Users/Users'));
 
 export function Admin() {
   const [adminState, adminDispatch] = useReducer(adminReducer, adminInitState);
@@ -75,7 +76,9 @@ function AdminRoutes({
       <Navbar
         ownerLogin={adminState.ownerLogin}
         ownerAvatar={adminState.ownerAvatar}
+        adminDispatch={adminDispatch}
       />
+      <Drawer drawer={adminState.drawer}/>
       <Suspense fallback={<Linear show={true} />}>
         <Routes>
           <Route
@@ -105,6 +108,7 @@ function AdminRoutes({
               />
             }
           />
+          <Route path='/users' element={<Users/>} />
         </Routes>
       </Suspense>
       <FilesSheet files={eventsState.files} eventsDispatch={eventsDispatch} />
