@@ -18,6 +18,8 @@ export * from './Form/Form';
 export * from './Headerblock/Headerblock'
 export * from './Close/Close'
 export * from './Drawer/Drawer'
+export * from './MenuItem/MenuItem'
+export * from './ButtonIcon/ButtonIcon'
 
 export * from './Typography/Text/Text';
 export * from './Typography/Title/Title';

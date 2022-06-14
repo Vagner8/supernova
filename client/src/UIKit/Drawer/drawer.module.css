@@ -2,17 +2,48 @@
   width: 250px;
   top: 0;
   bottom: 0;
-  box-shadow: rgb(0 0 0 / 20%) 0px 8px 10px -5px, rgb(0 0 0 / 14%) 0px 16px 24px 2px, rgb(0 0 0 / 12%) 0px 6px 30px 5px;
-  background-color: white;
+  box-shadow: var(--l-shadow);
+  background-color: var(--white-color);
   z-index: 6;
   position: fixed;
   transition: 200ms;
+  border-right: var(--border-solid);
 }
 
 .Drawer.hide {
   left: -250px;
+  visibility: hidden;
 }
 
 .Drawer.show {
   left: 0;
+  visibility: visible;
+}
+
+.top {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  height: 64px;
+  border-bottom: var(--border-solid);
+  padding: 0 var(--s-rem);
+}
+
+.close {
+  color: var(--icon-color);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+.top:hover .close {
+  background-color: var(--hover-background);
+}
+
+.top:hover {
+  cursor: pointer;
+}
+
+.staffs {
+  margin-top: var(--s-rem);
 }

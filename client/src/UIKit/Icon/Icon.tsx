@@ -14,19 +14,20 @@ export type IconName =
   | 'warning'
   | 'edit'
   | 'block'
-  | 'save';
+  | 'save'
+  | 'chevron_left'
+  | 'home'
+  | 'people';
 
 interface IconProps {
   icon: IconName;
-  fontSize?: string;
-  className?: string;
+  type?: 'normal' | 'in-button';
 }
 
-export function Icon({ icon, className, fontSize }: IconProps) {
+export function Icon({ icon, type = 'normal' }: IconProps) {
   return (
     <i
-      style={{ fontSize }}
-      className={`${styles.Icon} ${className} material-icons`}
+      className={`${styles.Icon} ${styles[type]} material-icons-outlined`}
     >
       {icon}
     </i>

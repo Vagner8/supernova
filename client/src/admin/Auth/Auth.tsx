@@ -12,10 +12,7 @@ import {
   saveAuthInputsOutputs,
 } from 'admin/Auth/authReducer';
 import { Button, Icon, Linear, InputMemo } from 'UIKit';
-import {
-  AdminReducerActions,
-  AdminState,
-} from 'admin/adminReducer';
+import { AdminReducerActions, AdminState } from 'admin/adminReducer';
 import { login } from './authApi';
 
 interface AuthProps {
@@ -26,13 +23,10 @@ interface AuthProps {
 export function Auth({ adminDispatch, adminState }: AuthProps) {
   const [authState, authDispatch] = useReducer(authReducer, authInitState);
 
-  const onChange = useCallback(
-    (e: ChangeEvent<HTMLInputElement>) => {
-      const { name, value } = e.target;
-      saveAuthInputsOutputs(authDispatch, name, value);
-    },
-    [],
-  );
+  const onChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    saveAuthInputsOutputs(authDispatch, name, value);
+  }, []);
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -69,7 +63,11 @@ export function Auth({ adminDispatch, adminState }: AuthProps) {
                 onChange={onChange}
               />
             ))}
-            <Button title="Send" type="submit" icon={<Icon icon="send" />} />
+            <Button
+              title="Send"
+              type="submit"
+              icon={<Icon icon="send" type="in-button" />}
+            />
           </form>
         </div>
       </div>

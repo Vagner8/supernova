@@ -73,7 +73,7 @@ export default function Profile({
     <Container>
       <div className={styles.Profile}>
         <div className={styles.lift}>
-          <Avatar url={imgUrls.avatar[0]} iconFontSize="50px" size="m" />
+          <Avatar url={imgUrls.avatar[0]} size="m" />
           <h6>
             {personal.name || '-'} {personal.surname || '-'}
           </h6>

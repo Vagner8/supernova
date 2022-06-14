@@ -1,9 +1,12 @@
-import styles from './users.module.css'
+import { Container } from 'UIKit';
+import styles from './users.module.css';
 
 export default function Users() {
   return (
-    <div className={styles.Users}>
-      Users
-    </div>
-  )
+    <Container>
+      <div className={styles.Users}>
+        <h1>Users</h1>
+      </div>
+    </Container>
+  );
 }

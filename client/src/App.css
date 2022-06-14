@@ -23,6 +23,7 @@ button {
   padding: 0;
   display: flex;
   align-items: center;
+  justify-content: center;
   color: white
 }
 
@@ -60,4 +61,22 @@ h6 {
   line-height: 110%;
   margin: .7666666667rem 0 .46rem 0;
   font-weight: 400;
+}
+
+:root {
+  --xs-rem: 0.25rem;
+  --s-rem: 0.55rem;
+  --m-rem: 0.75rem;
+  --l-rem: 1.25rem;
+
+  --icon-color: rgba(0, 0, 0, 0.54);
+  --white-color: #ffffff;
+  --red-mui-color: #ee6e73;
+
+  --hover-background: rgba(0, 0, 0, 0.04);
+
+  --border-solid: 1px solid rgba(0, 0, 0, 0.12);
+
+  --m-shadow: rgb(0 0 0 / 20%) 0px 2px 4px -1px, rgb(0 0 0 / 14%) 0px 4px 5px 0px, rgb(0 0 0 / 12%) 0px 1px 10px 0px;
+  --l-shadow: rgb(0 0 0 / 20%) 0px 8px 10px -5px, rgb(0 0 0 / 14%) 0px 16px 24px 2px, rgb(0 0 0 / 12%) 0px 6px 30px 5px;
 }

@@ -56,7 +56,7 @@ export function Dropdown({ title, list, handleEvents }: DropdownProps) {
                 >
                   {item}
                   {item === EventNames.Save ? (
-                    <Icon className={styles.ikon} icon="save" />
+                    <Icon icon="save" type='in-button' />
                   ) : null}
                 </button>
               </li>

@@ -15,7 +15,7 @@ export function Chips({ onClick, url, text }: ChipsProps) {
       ) : null}
       <p className={styles.text}>{text}</p>
       <button onClick={onClick(text)}>
-        <Icon className={styles.icon} icon="cancel" />
+        <Icon icon="cancel" />
       </button>
     </div>
   );

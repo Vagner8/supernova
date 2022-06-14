@@ -19,6 +19,7 @@ import { Events } from './Events/Events';
 import { OperationResultsSheet } from './OperationResultsSheet/OperationResultsSheet';
 import { fetchAndSaveAvatarAndLogin } from './adminApi';
 import { UrlAddress } from 'api/fetcher';
+import { useWindowClick } from 'hooks/useWindowClick';
 
 const Home = lazy(() => import('./Home/Home'));
 const Profile = lazy(() => import('./Profile/Profile'));
@@ -61,6 +62,7 @@ function AdminRoutes({
   useEffect(() => {
     fetchAndSaveAvatarAndLogin({adminDispatch, url: UrlAddress.Owner})
   }, [adminDispatch])
+  useWindowClick({adminDispatch, drawer: adminState.drawer})
   return (
     <>
       <Linear show={adminState.isFetching} />
@@ -76,7 +78,6 @@ function AdminRoutes({
       <Navbar
         ownerLogin={adminState.ownerLogin}
         ownerAvatar={adminState.ownerAvatar}
-        adminDispatch={adminDispatch}
       />
       <Drawer drawer={adminState.drawer}/>
       <Suspense fallback={<Linear show={true} />}>

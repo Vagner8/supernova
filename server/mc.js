@@ -27,5 +27,5 @@
 const arr = [1, 5, null, 9]
 
 console.log(
-  arr.includes(null)
+  7 ** 5
 )

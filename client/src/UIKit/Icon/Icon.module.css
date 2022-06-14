@@ -2,3 +2,13 @@
   display: flex;
   align-items: center;
 }
+
+.normal {
+  color: var(--icon-color)
+}
+
+.in-button {
+  color: var(--white-color);
+  font-size: var(--l-rem);
+  margin-left: var(--m-rem);
+}

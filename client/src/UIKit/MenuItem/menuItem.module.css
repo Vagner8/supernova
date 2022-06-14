@@ -1,0 +1,18 @@
+.MenuItem {
+  display: flex;
+  align-items: center;
+  padding: var(--m-rem);
+}
+
+.MenuItem i {
+  margin-right: var(--m-rem);
+}
+
+.MenuItem:hover {
+  background-color: var(--hover-background);
+  cursor: pointer;
+}
+
+.link {
+  color: inherit;
+}
