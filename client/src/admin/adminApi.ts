@@ -27,6 +27,7 @@ export async function fetchAndSaveAvatarAndLogin({
         avatar: 1,
       },
     },
-  })) as FetchAndSaveAvatarAndLoginResponse;
+  })) as FetchAndSaveAvatarAndLoginResponse | undefined;
+  if (!avatarAndLogin) return
   saveOwnerNameAndAvatar(adminDispatch, avatarAndLogin)
 }

@@ -42,6 +42,7 @@ export function Admin() {
     return (
       <Auth
         isFetching={adminState.isFetching}
+        operationResults={adminState.operationResults}
         adminDispatch={adminDispatch}
         errorMessage={resultWithField()?.message}
         errorField={resultWithField()?.field}

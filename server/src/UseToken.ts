@@ -1,7 +1,7 @@
 import { Response } from "express";
 import jwt from "jsonwebtoken";
 import { Collection } from "mongodb";
-import { Owner } from "./../../common/owner";
+import { Owner } from "../../common/src/owner";
 
 export class UseToken {
   constructor(

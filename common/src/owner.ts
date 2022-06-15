@@ -31,16 +31,4 @@ export interface ImgUrls {
   photos: string[]
 }
 
-export interface OwnerPII {
-  contacts: Contacts;
-  address: Address;
-  personal: Personal;
-  imgUrls: ImgUrls
-}
-
-
-export type Projection<T> = {
-  [Key in keyof T]?: T[Key] extends Object
-    ? Projection<T[Key]> | 0 | 1
-    : 1 | 0;
-};
+export type OwnerPII = Pick<Owner, 'personal' | 'contacts' | 'address' | 'imgUrls'>

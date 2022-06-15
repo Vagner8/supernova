@@ -1,5 +1,5 @@
 import { Dispatch, Reducer } from 'react';
-import { ImgUrls, OwnerPII } from '../../../../common/owner';
+import { ImgUrls, OwnerPII } from '../../../../common/src/owner';
 
 export enum EventNames {
   New = 'new',

@@ -10,7 +10,8 @@
     "start": "nodemon dist/bundle.js",
     "build": "webpack --watch",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "concurrently \"yarn run build\" \"yarn run start\" \"cd ./../client && yarn run start\""
+    "buildCommon": "cd ./../common && yarn run build",
+    "dev": "concurrently \"yarn run buildCommon\" \"yarn run build\" \"yarn run start\" \"cd ./../client && yarn run start\""
   },
   "author": "",
   "license": "ISC",

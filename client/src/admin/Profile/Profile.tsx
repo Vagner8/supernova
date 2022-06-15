@@ -11,7 +11,7 @@ import { UrlAddress } from 'api/fetcher';
 import { useEventsList } from 'hooks';
 import { ChangeEvent, Dispatch, useCallback, useEffect } from 'react';
 import { Avatar, Container, FileInput, Form } from 'UIKit';
-import { ImgUrls } from '../../../../common/owner';
+import { ImgUrls } from '../../../../common/src/owner';
 import styles from './profile.module.css';
 import { fetchAndSavePoints } from './profileApi';
 

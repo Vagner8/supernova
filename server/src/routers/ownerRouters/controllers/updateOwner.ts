@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { MONGO_DB } from "./../../../middleware/connectMongo";
 import { OWNER_ID } from "./../../../middleware/accessMiddleware";
 import { CollName } from "./../../../types";
-import { Owner, OwnerPII } from "./../../../../../common/owner"
+import { Owner, OwnerPII } from "../../../../../common/src/owner"
 import { Err } from "./../../../middleware/errorMiddleware";
 
 export async function updateOwner(

@@ -15,7 +15,6 @@ export * from './BottomSheetModals/BottomSheetModals';
 export * from './Chips/Chips';
 export * from './Form/Form';
 export * from './Headerblock/Headerblock'
-export * from './Close/Close'
 export * from './Drawer/Drawer'
 export * from './MenuItem/MenuItem'
 export * from './ButtonIcon/ButtonIcon'

@@ -4,7 +4,7 @@ import bcrypt from "bcryptjs";
 import { v4 as uuidv4 } from "uuid";
 import { UseToken } from "../../../UseToken";
 import jwt from "jsonwebtoken";
-import { Owner } from './../../../../../common/owner'
+import { Owner } from '../../../../../common/src/owner'
 import { MONGO_DB } from "./../../../middleware/connectMongo";
 import { Err } from "./../../../middleware/errorMiddleware";
 

@@ -1,7 +1,8 @@
 import { AdminReducerActions } from 'admin/adminReducer';
 import { Dispatch } from 'react';
+import { Owner } from '../../../common/src/owner';
+import { Projection } from '../../../common/src/types';
 import { UrlAddress, fetcher } from './fetcher';
-import { Owner, Projection } from '../../../common/owner';
 
 interface GetData {
   adminDispatch: Dispatch<AdminReducerActions>;

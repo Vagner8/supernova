@@ -26,13 +26,5 @@ export interface ImgUrls {
     avatar: string[];
     photos: string[];
 }
-export interface OwnerPII {
-    contacts: Contacts;
-    address: Address;
-    personal: Personal;
-    imgUrls: ImgUrls;
-}
-export declare type Projection<T> = {
-    [Prop in keyof T]?: T[Prop] extends Object ? Projection<T[Prop]> | 0 | 1 : 1 | 0;
-};
+export declare type OwnerPII = Pick<Owner, 'personal' | 'contacts' | 'address' | 'imgUrls'>;
 //# sourceMappingURL=owner.d.ts.map

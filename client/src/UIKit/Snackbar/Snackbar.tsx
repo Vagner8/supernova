@@ -4,7 +4,7 @@ import {
   OperationResult,
 } from 'admin/adminReducer';
 import { Dispatch, useEffect } from 'react';
-import { Close, Headerblock } from 'UIKit';
+import { ButtonIcon, Headerblock } from 'UIKit';
 import styles from './snackbar.module.css';
 
 export interface SnackbarProps {
@@ -49,7 +49,7 @@ export function Snackbar({
   return (
     <div className={`${styles.Snackbar} ${styles[status]}`}>
       <Headerblock icon={icons[status]} title={status} text={message} />
-      <Close onClick={onClick} />
+      <ButtonIcon icon='close' onClick={onClick} />
     </div>
   );
 }

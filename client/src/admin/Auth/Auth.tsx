@@ -12,13 +12,19 @@ import {
   saveAuthInputsOutputs,
 } from 'admin/Auth/authReducer';
 import { Button, Icon, Linear, InputMemo } from 'UIKit';
-import { AdminReducerActions, AdminState, deleteAllOperationResults, deleteOperationResult } from 'admin/adminReducer';
+import {
+  AdminReducerActions,
+  AdminState,
+  deleteAllOperationResults,
+} from 'admin/adminReducer';
 import { login } from './authApi';
+import { OperationResultsSheet } from 'admin/OperationResultsSheet/OperationResultsSheet';
 
 interface AuthProps {
   isFetching: AdminState['isFetching'];
   errorMessage: string | undefined;
   errorField: string | null | undefined;
+  operationResults: AdminState['operationResults'];
   adminDispatch: Dispatch<AdminReducerActions>;
 }
 
@@ -26,15 +32,19 @@ export function Auth({
   errorMessage,
   errorField,
   isFetching,
+  operationResults,
   adminDispatch,
 }: AuthProps) {
   const [authState, authDispatch] = useReducer(authReducer, authInitState);
 
-  const onChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    saveAuthInputsOutputs(authDispatch, name, value);
-    deleteAllOperationResults(adminDispatch)
-  }, [adminDispatch]);
+  const onChange = useCallback(
+    (e: ChangeEvent<HTMLInputElement>) => {
+      const { name, value } = e.target;
+      saveAuthInputsOutputs(authDispatch, name, value);
+      deleteAllOperationResults(adminDispatch);
+    },
+    [adminDispatch],
+  );
 
   const onClick = async (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -71,12 +81,10 @@ export function Auth({
           </form>
         </div>
       </div>
-      {/* <Snackbar
-        status={adminState.operationResult?.status}
-        message={adminState.operationResult?.message}
-        filed={adminState.operationResult?.field}
+      <OperationResultsSheet
         adminDispatch={adminDispatch}
-      /> */}
+        operationResults={operationResults}
+      />
     </>
   );
 }

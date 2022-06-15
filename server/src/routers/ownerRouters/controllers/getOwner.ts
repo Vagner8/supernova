@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { CollName } from "../../../types";
 import { Err } from "../../../middleware/errorMiddleware";
-import { Owner } from "./../../../../../common/owner"
+import { Owner } from "../../../../../common/src/owner"
 import { MONGO_DB } from "./../../../middleware/connectMongo";
 import { OWNER_ID } from "./../../../middleware/accessMiddleware";
 

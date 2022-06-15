@@ -4,7 +4,7 @@ import { Err } from "./errorMiddleware";
 import jwt from "jsonwebtoken";
 import { UseToken } from "./../UseToken";
 import { restartServer } from "./../app";
-import { Owner } from './../../../common/owner'
+import { Owner } from '../../../common/src/owner'
 import { MONGO_DB } from "./connectMongo";
 
 export let OWNER_ID: string
