@@ -1,5 +1,5 @@
 {
-  "baseUrl": "src",
+  // "baseUrl": "src",
   "compilerOptions": {
       "target": "es5",
       "module": "es2015",

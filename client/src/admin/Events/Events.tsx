@@ -3,9 +3,10 @@ import { downloadFilesFirebase } from 'api/firebaseStorage/downloadFilesFirebase
 import { updateData } from 'api/updateData';
 import { firebaseError } from 'helpers';
 import { Dispatch } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Dropdown } from 'UIKit';
 import styles from './events.module.css';
+import { usersEvents } from './eventsHelpers/usersEvents';
 import {
   EventNames,
   EventsReducerActions,
@@ -37,12 +38,14 @@ export function Events({
   eventsDispatch,
 }: EventsProps) {
   const params = useParams();
+  let navigate = useNavigate();
 
   const handleEvents = (target: HTMLButtonElement) => {
     const selectedEvent = target.dataset.eventName as EventNames;
     const ownerId = localStorage.getItem('ownerId');
     let imgUrls: string[] | undefined = [];
     const asyncer = async () => {
+      usersEvents({selectedEvent, navigate})
       switch (selectedEvent) {
         case EventNames.Edit: {
           switchEditAndEditOf(eventsDispatch, EventNames.EditOff);

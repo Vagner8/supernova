@@ -7,24 +7,24 @@ export interface InputProps {
   label: string;
   value: string;
   type: 'password' | 'text';
-  errorMessage: OperationResult['message'] | undefined;
-  errorField: OperationResult['field'] | undefined;
   hide?: boolean;
   pointName?: string;
   required?: boolean;
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
+  errorMessage?: OperationResult['message'];
+  errorField?: OperationResult['field'];
 }
 
 export function Input({
   type,
   value,
   label,
-  errorMessage,
-  errorField,
   pointName,
   required,
   hide,
   onChange,
+  errorMessage,
+  errorField,
 }: InputProps) {
   const [active, setActive] = useState<'active' | ''>('');
   const [hidePassword, setHidePassword] = useState(true);

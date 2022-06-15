@@ -1,1 +1,82 @@
-{"program":{"fileNames":["../../server/node_modules/typescript/lib/lib.d.ts","../../server/node_modules/typescript/lib/lib.es5.d.ts","../../server/node_modules/typescript/lib/lib.dom.d.ts","../../server/node_modules/typescript/lib/lib.webworker.importscripts.d.ts","../../server/node_modules/typescript/lib/lib.scripthost.d.ts","../src/commontypes.ts","../src/ownertypes.ts","../src/usertypes.ts"],"fileInfos":["2dc8c927c9c162a773c6bb3cdc4f3286c23f10eedc67414028f9cb5951610f60",{"version":"f5c28122bee592cfaf5c72ed7bcc47f453b79778ffa6e301f45d21a0970719d4","affectsGlobalScope":true},{"version":"3f149f903dd20dfeb7c80e228b659f0e436532de772469980dbd00702cc05cc1","affectsGlobalScope":true},{"version":"7fac8cb5fc820bc2a59ae11ef1c5b38d3832c6d0dfaec5acdb5569137d09a481","affectsGlobalScope":true},{"version":"097a57355ded99c68e6df1b738990448e0bf170e606707df5a7c0481ff2427cd","affectsGlobalScope":true},{"version":"291e28f0bba0d190502f216c9b90188efef195a4d195dd5c4b789168323dee57","signature":"a6ff1f3175ed22883d61c74b1ff3f0a018278d19b45f4c9efd9119e3242f40c1"},{"version":"dde9dd9ca805f052d33341d8bb3a323d7891764da751cb2ba456ba06d236e7f3","signature":"f4a1b94f1da873e1d35de9e20e00c825e9ee83dd116cfd12d7dc3d212a6d7d1b"},{"version":"2b6923190f184e06805ebc92cedecec2ed3df5ed28d1445201e5afa5739ee9c7","signature":"b745f7bde03893c6a3cf855f80d56f1f5f726598f2a3b0b3ab1c0b4e3ed92d34"}],"options":{"composite":true,"declaration":true,"declarationMap":true,"module":5,"outDir":"./","target":1},"fileIdsList":[[6]],"referencedMap":[[7,1],[8,1]],"exportedModulesMap":[[7,1],[8,1]],"semanticDiagnosticsPerFile":[6,7,8,1,3,2,5,4]},"version":"4.7.3"}
+{
+  "program": {
+    "fileInfos": {
+      "c:/users/vagner/appdata/roaming/npm/node_modules/typescript/lib/lib.d.ts": {
+        "version": "2dc8c927c9c162a773c6bb3cdc4f3286c23f10eedc67414028f9cb5951610f60",
+        "signature": "2dc8c927c9c162a773c6bb3cdc4f3286c23f10eedc67414028f9cb5951610f60",
+        "affectsGlobalScope": false
+      },
+      "c:/users/vagner/appdata/roaming/npm/node_modules/typescript/lib/lib.es5.d.ts": {
+        "version": "b3584bc5798ed422ce2516df360ffa9cf2d80b5eae852867db9ba3743145f895",
+        "signature": "b3584bc5798ed422ce2516df360ffa9cf2d80b5eae852867db9ba3743145f895",
+        "affectsGlobalScope": true
+      },
+      "c:/users/vagner/appdata/roaming/npm/node_modules/typescript/lib/lib.dom.d.ts": {
+        "version": "feeeb1dd8a80fb76be42b0426e8f3ffa9bdef3c2f3c12c147e7660b1c5ba8b3b",
+        "signature": "feeeb1dd8a80fb76be42b0426e8f3ffa9bdef3c2f3c12c147e7660b1c5ba8b3b",
+        "affectsGlobalScope": true
+      },
+      "c:/users/vagner/appdata/roaming/npm/node_modules/typescript/lib/lib.webworker.importscripts.d.ts": {
+        "version": "7fac8cb5fc820bc2a59ae11ef1c5b38d3832c6d0dfaec5acdb5569137d09a481",
+        "signature": "7fac8cb5fc820bc2a59ae11ef1c5b38d3832c6d0dfaec5acdb5569137d09a481",
+        "affectsGlobalScope": true
+      },
+      "c:/users/vagner/appdata/roaming/npm/node_modules/typescript/lib/lib.scripthost.d.ts": {
+        "version": "097a57355ded99c68e6df1b738990448e0bf170e606707df5a7c0481ff2427cd",
+        "signature": "097a57355ded99c68e6df1b738990448e0bf170e606707df5a7c0481ff2427cd",
+        "affectsGlobalScope": true
+      },
+      "../src/commontypes.ts": {
+        "version": "291e28f0bba0d190502f216c9b90188efef195a4d195dd5c4b789168323dee57",
+        "signature": "83ef649999c9173bd0a10e098512c89fa0e145c0ff14b9f1d27bac45608b6d1f",
+        "affectsGlobalScope": false
+      },
+      "../src/ownertypes.ts": {
+        "version": "dde9dd9ca805f052d33341d8bb3a323d7891764da751cb2ba456ba06d236e7f3",
+        "signature": "8157e1bc833eae6cec6e439c109cce070a78ff4e93af5ab14d32034cb5538fdb",
+        "affectsGlobalScope": false
+      },
+      "../src/usertypes.ts": {
+        "version": "2b6923190f184e06805ebc92cedecec2ed3df5ed28d1445201e5afa5739ee9c7",
+        "signature": "092868a7930cc8cdfb3f5c127a06370cd57f5d38518267a8bdd8951a7b688d68",
+        "affectsGlobalScope": false
+      }
+    },
+    "options": {
+      "target": 1,
+      "module": 5,
+      "declaration": true,
+      "declarationMap": true,
+      "outDir": "./",
+      "composite": true,
+      "configFilePath": "../tsconfig.json"
+    },
+    "referencedMap": {
+      "../src/ownertypes.ts": [
+        "../src/commontypes.ts"
+      ],
+      "../src/usertypes.ts": [
+        "../src/commontypes.ts"
+      ]
+    },
+    "exportedModulesMap": {
+      "../src/ownertypes.ts": [
+        "../src/commontypes.ts"
+      ],
+      "../src/usertypes.ts": [
+        "../src/commontypes.ts"
+      ]
+    },
+    "semanticDiagnosticsPerFile": [
+      "c:/users/vagner/appdata/roaming/npm/node_modules/typescript/lib/lib.d.ts",
+      "c:/users/vagner/appdata/roaming/npm/node_modules/typescript/lib/lib.dom.d.ts",
+      "c:/users/vagner/appdata/roaming/npm/node_modules/typescript/lib/lib.es5.d.ts",
+      "c:/users/vagner/appdata/roaming/npm/node_modules/typescript/lib/lib.scripthost.d.ts",
+      "c:/users/vagner/appdata/roaming/npm/node_modules/typescript/lib/lib.webworker.importscripts.d.ts",
+      "../src/commontypes.ts",
+      "../src/ownertypes.ts",
+      "../src/usertypes.ts"
+    ]
+  },
+  "version": "4.2.2"
+}

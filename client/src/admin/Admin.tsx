@@ -20,6 +20,8 @@ import { OperationResultsSheet } from './OperationResultsSheet/OperationResultsS
 import { fetchAndSaveAvatarAndLogin } from './adminApi';
 import { UrlAddress } from 'api/fetcher';
 import { useWindowClick } from 'hooks/useWindowClick';
+import { UserProfile } from './Users/UserProfile/UserProfile';
+import { useOperationResultWithField } from 'hooks/useOperationResultWithField';
 
 const Home = lazy(() => import('./Home/Home'));
 const Owner = lazy(() => import('./Owner/Owner'));
@@ -32,11 +34,9 @@ export function Admin() {
     eventsInitState,
   );
 
-  const resultWithField = () => {
-    return adminState.operationResults.filter(
-      (result) => typeof result.field === 'string',
-    )[0];
-  };
+  const operationResultWithField = useOperationResultWithField(
+    adminState.operationResults,
+  );
 
   if (!localStorage.getItem('ownerId')) {
     return (
@@ -44,8 +44,8 @@ export function Admin() {
         isFetching={adminState.isFetching}
         operationResults={adminState.operationResults}
         adminDispatch={adminDispatch}
-        errorMessage={resultWithField()?.message}
-        errorField={resultWithField()?.field}
+        errorMessage={operationResultWithField?.errorMessage}
+        errorField={operationResultWithField?.errorField}
       />
     );
   }
@@ -77,6 +77,9 @@ function AdminRoutes({
     fetchAndSaveAvatarAndLogin({ adminDispatch, url: UrlAddress.Owner });
   }, [adminDispatch]);
   useWindowClick({ adminDispatch, drawer: adminState.drawer });
+  const operationResultWithField = useOperationResultWithField(
+    adminState.operationResults,
+  );
   return (
     <>
       <Linear show={adminState.isFetching} />
@@ -108,19 +111,11 @@ function AdminRoutes({
               element={
                 <Owner
                   eventsList={eventsState.eventsList}
-                  errorField={
-                    adminState.operationResults.filter(
-                      (result) => result.field,
-                    )[0]?.field
-                  }
-                  errorMessage={
-                    adminState.operationResults.filter(
-                      (result) => result.field,
-                    )[0]?.message
-                  }
                   points={eventsState.points}
                   adminDispatch={adminDispatch}
                   eventsDispatch={eventsDispatch}
+                  errorField={operationResultWithField?.errorField}
+                  errorMessage={operationResultWithField?.errorMessage}
                 />
               }
             />
@@ -130,6 +125,18 @@ function AdminRoutes({
                 <Users
                   eventsList={eventsState.eventsList}
                   eventsDispatch={eventsDispatch}
+                />
+              }
+            />
+            <Route
+              path="/users/:userId"
+              element={
+                <UserProfile
+                  eventsList={eventsState.eventsList}
+                  points={eventsState.points}
+                  eventsDispatch={eventsDispatch}
+                  errorField={operationResultWithField?.errorField}
+                  errorMessage={operationResultWithField?.errorMessage}
                 />
               }
             />

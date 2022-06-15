@@ -16,14 +16,15 @@ import {
   AdminReducerActions,
   AdminState,
   deleteAllOperationResults,
+  OperationResult,
 } from 'admin/adminReducer';
 import { login } from './authApi';
 import { OperationResultsSheet } from 'admin/OperationResultsSheet/OperationResultsSheet';
 
 interface AuthProps {
   isFetching: AdminState['isFetching'];
-  errorMessage: string | undefined;
-  errorField: string | null | undefined;
+  errorField?: OperationResult['field'];
+  errorMessage?: OperationResult['message'];
   operationResults: AdminState['operationResults'];
   adminDispatch: Dispatch<AdminReducerActions>;
 }

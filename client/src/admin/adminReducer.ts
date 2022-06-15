@@ -65,7 +65,7 @@ export type AdminReducerActions =
 
 export interface AdminState {
   isFetching: boolean;
-  operationResults: OperationResult[];
+  operationResults: OperationResult[] | null;
   ownerLogin: string | null;
   ownerAvatar: string | null;
   drawer: 'show' | 'hide';
@@ -73,7 +73,7 @@ export interface AdminState {
 
 export const adminInitState: AdminState = {
   isFetching: false,
-  operationResults: [],
+  operationResults: null,
   ownerLogin: null,
   ownerAvatar: null,
   drawer: 'hide',
@@ -98,6 +98,7 @@ export const adminReducer: Reducer<AdminState, AdminReducerActions> = (
       };
     }
     case AdminStrAction.SaveOperationResult: {
+      if (!state.operationResults) return state
       const { operationResult } = action.payload;
       operationResult.logout && localStorage.removeItem('ownerId');
       if (state.operationResults.length === 0) {
@@ -116,6 +117,7 @@ export const adminReducer: Reducer<AdminState, AdminReducerActions> = (
       };
     }
     case AdminStrAction.DeleteOperationResult: {
+      if (!state.operationResults) return state
       if (!state.operationResults[action.payload.index]) return state;
       return {
         ...state,

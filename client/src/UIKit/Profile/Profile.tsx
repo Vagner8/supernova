@@ -1,4 +1,4 @@
-import { AdminReducerActions, OperationResult } from 'admin/adminReducer';
+import { OperationResult } from 'admin/adminReducer';
 import {
   EventNames,
   EventsReducerActions,
@@ -7,40 +7,26 @@ import {
   saveFiles,
   switchSaveEvent,
 } from 'admin/Events/eventsReducer';
-import { UrlAddress } from 'api/fetcher';
-import { ChangeEvent, Dispatch, useCallback, useEffect } from 'react';
+import { ChangeEvent, Dispatch, useCallback } from 'react';
 import { Avatar, FileInput, Form } from 'UIKit';
 import styles from './profile.module.css';
-import { fetchAndSavePoints } from '../../admin/Owner/ownerApi';
 import { ImgUrlsType } from '../../../../common/src/commonTypes';
 
 interface ProfileProps {
   eventsList: EventsState['eventsList'];
-  errorField: OperationResult['field'] | undefined;
-  errorMessage: OperationResult['message'] | undefined;
   points: EventsState['points'];
-  url: UrlAddress;
-  adminDispatch: Dispatch<AdminReducerActions>;
   eventsDispatch: Dispatch<EventsReducerActions>;
+  errorField?: OperationResult['field'];
+  errorMessage?: OperationResult['message'];
 }
 
 export function Profile({
-  errorField,
-  errorMessage,
   eventsList,
   points,
-  url,
-  adminDispatch,
   eventsDispatch,
+  errorField,
+  errorMessage,
 }: ProfileProps) {
-
-  useEffect(() => {
-    fetchAndSavePoints({
-      eventsDispatch,
-      adminDispatch,
-      url,
-    });
-  }, [adminDispatch, eventsDispatch, url]);
 
   const onChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {

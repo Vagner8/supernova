@@ -13,6 +13,7 @@ export function OperationResultsSheet({
   operationResults,
   adminDispatch,
 }: OperationResultsSheetProps) {
+  if (!operationResults) return null
   return (
     <div className={style.OperationResultsSheet}>
       {operationResults.map((result, index) => {

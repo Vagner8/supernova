@@ -7,19 +7,19 @@ import { EventsState } from 'admin/Events/eventsReducer';
 interface PrintPointsProps {
   points: EventsState['points'];
   sort: string[];
-  errorField: OperationResult['field'] | undefined;
-  errorMessage: OperationResult['message'] | undefined;
   hideInput: boolean | undefined;
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
+  errorField?: OperationResult['field'];
+  errorMessage?: OperationResult['message'];
 }
 
 export function Form({
   points,
   sort,
-  errorField,
-  errorMessage,
   hideInput,
   onChange,
+  errorField,
+  errorMessage,
 }: PrintPointsProps) {
   if (!points) return null;
   return (

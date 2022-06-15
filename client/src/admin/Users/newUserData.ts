@@ -1,7 +1,5 @@
-import { UserStatus, UserType } from '../../../../common/src/userTypes'
-
-export const userInitialData: Omit<UserType, '_id'> = {
-  userId: '',
+export const newUser: Omit<UserType, '_id'> = {
+  userId: 'new',
   login: '',
   password: '',
   rule: UserStatus.New,

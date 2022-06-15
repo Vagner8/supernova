@@ -1,49 +1,42 @@
-import { AdminReducerActions, OperationResult } from 'admin/adminReducer';
+import { OperationResult } from 'admin/adminReducer';
 import {
   EventNames,
   EventsReducerActions,
   EventsState,
 } from 'admin/Events/eventsReducer';
-import { UrlAddress } from 'api/fetcher';
 import { useEventsList } from 'hooks';
 import { Dispatch, useEffect, useMemo } from 'react';
+import { useParams } from 'react-router-dom';
 import { Profile } from 'UIKit';
-import styles from './owner.module.css';
-import { fetchAndSavePoints } from './ownerApi';
+import styles from './userProfile.module.css';
 
-interface OwnerProps {
+interface UserProfileProps {
   eventsList: EventsState['eventsList'];
   points: EventsState['points'];
   eventsDispatch: Dispatch<EventsReducerActions>;
-  adminDispatch: Dispatch<AdminReducerActions>;
   errorField?: OperationResult['field'];
   errorMessage?: OperationResult['message'];
 }
 
-export default function Owner({
-  errorMessage,
-  points,
-  adminDispatch,
-  eventsDispatch,
+export function UserProfile({
   eventsList,
+  points,
+  eventsDispatch,
   errorField,
-}: OwnerProps) {
-
-  useEffect(() => {
-    fetchAndSavePoints({
-      eventsDispatch,
-      adminDispatch,
-      url: UrlAddress.Owner,
-    });
-  }, [adminDispatch, eventsDispatch]);
-
+  errorMessage,
+}: UserProfileProps) {
+  const { userId } = useParams();
   useEventsList({
     eventsDispatch,
-    newEventsList: useMemo(() => [EventNames.Edit], [])
+    newEventsList: useMemo(
+      () => [EventNames.New, EventNames.Edit, EventNames.Delete],
+      [],
+    ),
   });
-
+  useEffect(() => {}, []);
   return (
-    <div className={styles.Owner}>
+    <div className={styles.UserProfile}>
+      <h1>UserProfile</h1>
       <Profile
         eventsList={eventsList}
         errorField={errorField}
