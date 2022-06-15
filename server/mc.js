@@ -27,5 +27,5 @@
 const arr = [1, 5, null, 9]
 
 console.log(
-  7 ** 5
+  2358 / 2
 )

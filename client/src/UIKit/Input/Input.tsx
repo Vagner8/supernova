@@ -1,6 +1,6 @@
 import { OperationResult } from 'admin/adminReducer';
 import { ChangeEvent, FocusEvent, memo, useEffect, useState } from 'react';
-import { Visibility } from 'UIKit';
+import { ButtonIcon } from 'UIKit';
 import styles from './input.module.css';
 
 export interface InputProps {
@@ -42,9 +42,7 @@ export function Input({
       setActive('');
     }
   };
-  const onClick = () => {
-    setHidePassword(!hidePassword);
-  };
+  const onClick = () => setHidePassword(!hidePassword)
 
   const switchInputType = (trigger: boolean) => {
     return trigger ? 'password' : 'text';
@@ -57,7 +55,7 @@ export function Input({
     return true;
   };
 
-  if (hide) return null
+  if (hide) return null;
   console.log('input');
   return (
     <div role="group" className={`${styles.Input} ${styles[active]}`}>
@@ -80,7 +78,13 @@ export function Input({
         onBlur={onBlur}
       />
       {type === 'password' ? (
-        <Visibility onClick={onClick} visibility={hidePassword} />
+        <div className={styles.button_icon}>
+          <ButtonIcon
+            onClick={onClick}
+            icon="visibility"
+            switchTo="visibility_off"
+          />
+        </div>
       ) : null}
     </div>
   );

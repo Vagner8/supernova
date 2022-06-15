@@ -1,7 +1,7 @@
 import {
   ChangeEvent,
   Dispatch,
-  FormEvent,
+  MouseEvent,
   useCallback,
   useReducer,
 } from 'react';
@@ -12,23 +12,31 @@ import {
   saveAuthInputsOutputs,
 } from 'admin/Auth/authReducer';
 import { Button, Icon, Linear, InputMemo } from 'UIKit';
-import { AdminReducerActions, AdminState } from 'admin/adminReducer';
+import { AdminReducerActions, AdminState, deleteAllOperationResults, deleteOperationResult } from 'admin/adminReducer';
 import { login } from './authApi';
 
 interface AuthProps {
+  isFetching: AdminState['isFetching'];
+  errorMessage: string | undefined;
+  errorField: string | null | undefined;
   adminDispatch: Dispatch<AdminReducerActions>;
-  adminState: AdminState;
 }
 
-export function Auth({ adminDispatch, adminState }: AuthProps) {
+export function Auth({
+  errorMessage,
+  errorField,
+  isFetching,
+  adminDispatch,
+}: AuthProps) {
   const [authState, authDispatch] = useReducer(authReducer, authInitState);
 
   const onChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     saveAuthInputsOutputs(authDispatch, name, value);
-  }, []);
+    deleteAllOperationResults(adminDispatch)
+  }, [adminDispatch]);
 
-  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
+  const onClick = async (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     login(adminDispatch, {
       login: authState.inputs[0].value,
@@ -38,24 +46,16 @@ export function Auth({ adminDispatch, adminState }: AuthProps) {
 
   return (
     <>
-      <Linear show={adminState.isFetching} />
+      <Linear show={isFetching} />
       <div className={styles.Auth}>
         <div>
           <h4>Log in</h4>
-          <form onSubmit={onSubmit}>
+          <form>
             {authState.inputs.map((input) => (
               <InputMemo
                 key={input.label}
-                errorMessage={
-                  adminState.operationResults.filter(
-                    (result) => result.field,
-                  )[0]?.message
-                }
-                errorField={
-                  adminState.operationResults.filter(
-                    (result) => result.field,
-                  )[0]?.field
-                }
+                errorMessage={errorMessage}
+                errorField={errorField}
                 label={input.label}
                 type={input.type}
                 value={input.value}
@@ -65,8 +65,8 @@ export function Auth({ adminDispatch, adminState }: AuthProps) {
             ))}
             <Button
               title="Send"
-              type="submit"
               icon={<Icon icon="send" type="in-button" />}
+              onClick={onClick}
             />
           </form>
         </div>

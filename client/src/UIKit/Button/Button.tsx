@@ -9,23 +9,23 @@ import { Icon } from 'UIKit/Icon/Icon';
 import styles from './button.module.css';
 
 interface ButtonProps {
-  type: 'submit' | 'button';
   size: 'large' | 'normal';
   title: string;
   disabled: boolean;
+  type?: 'submit' | 'button';
   icon?: ReactElement<typeof Icon>;
   children?: ReactNode;
-  clickHandler?: (e: MouseEvent<HTMLButtonElement>) => void;
+  onClick?: (e: MouseEvent<HTMLButtonElement>) => void;
 }
 
 export function Button({
   title,
-  type,
+  type = 'button',
   size,
   disabled,
   icon,
   children,
-  clickHandler,
+  onClick,
 }: ButtonProps) {
   const [coords, setCoords] = useState({ x: -1, y: -1 });
   const [isRippling, setIsRippling] = useState(false);
@@ -49,10 +49,8 @@ export function Button({
     }
   };
 
-  const onClick = (e: MouseEvent<HTMLButtonElement>) => {
-    if (clickHandler) {
-      clickHandler(e);
-    }
+  const handlerClick = (e: MouseEvent<HTMLButtonElement>) => {
+    if (onClick) onClick(e);
     createRipple(e);
   };
 
@@ -63,7 +61,7 @@ export function Button({
       }`}
       type={type}
       disabled={disabled}
-      onClick={onClick}
+      onClick={handlerClick}
     >
       {children ? children : null}
       <span className={styles.title}>{title}</span>

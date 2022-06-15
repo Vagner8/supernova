@@ -1,6 +1,5 @@
 import { AdminState } from 'admin/adminReducer';
-import { Icon, MenuItem } from 'UIKit';
-import { IconName } from 'UIKit/Icon/Icon';
+import { MenuItem, IconName, ButtonIcon } from 'UIKit';
 import styles from './drawer.module.css';
 
 interface DrawerProps {
@@ -17,13 +16,11 @@ const staffs: Staff[] = [
 export function Drawer({ drawer }: DrawerProps) {
   return (
     <div
-      data-not-close-drawer 
       className={`${styles.Drawer} ${styles[drawer]}`}
+      data-set="not-close-drawer"
     >
       <div className={styles.top}>
-        <button className={styles.close}>
-          <Icon icon="chevron_left" />
-        </button>
+        <ButtonIcon icon="chevron_left" />
       </div>
       <div className={styles.staffs}>
         {staffs.map(([to, name, icon]) => {

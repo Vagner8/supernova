@@ -21,7 +21,7 @@ export type IconName =
 
 interface IconProps {
   icon: IconName;
-  type?: 'normal' | 'in-button';
+  type?: 'normal' | 'in-button' | 'white-icon';
 }
 
 export function Icon({ icon, type = 'normal' }: IconProps) {

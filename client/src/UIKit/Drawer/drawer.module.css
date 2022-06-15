@@ -29,15 +29,9 @@
   padding: 0 var(--s-rem);
 }
 
-.close {
-  color: var(--icon-color);
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-}
-
-.top:hover .close {
+.top:hover button {
   background-color: var(--hover-background);
+  border-radius: 50%;
 }
 
 .top:hover {

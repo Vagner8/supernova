@@ -1,0 +1,9 @@
+.button {
+  width: 40px;
+  height: 40px;
+}
+
+.button:hover {
+  border-radius: 50%;
+  background-color: var(--hover-background);
+}

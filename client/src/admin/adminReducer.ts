@@ -7,7 +7,8 @@ export enum AdminStrAction {
   DeleteOperationResult = 'DeleteOperationResult',
   SetIsFetching = 'SetIsFetching',
   SaveAvatarAndLogin = 'SaveAvatarAndLogin',
-  SwitchDrawer = 'SwitchDrawer'
+  SwitchDrawer = 'SwitchDrawer',
+  DeleteAllOperationResults = 'DeleteAllOperationResults'
 }
 
 export interface OperationResult {
@@ -25,6 +26,10 @@ interface SetIsFetching {
 interface DeleteOperationResult {
   type: AdminStrAction.DeleteOperationResult;
   payload: { index: number };
+}
+
+interface DeleteAllOperationResults {
+  type: AdminStrAction.DeleteAllOperationResults
 }
 
 interface SaveOperationResult {
@@ -46,13 +51,14 @@ interface SaveAvatarAndLogin {
 
 interface SwitchDrawer {
   type: AdminStrAction.SwitchDrawer;
-  payload: { drawer: AdminState['drawer'] }
+  payload: { drawer: AdminState['drawer'] };
 }
 
 export type AdminReducerActions =
   | SetIsFetching
   | SaveOwnerId
   | DeleteOperationResult
+  | DeleteAllOperationResults
   | SaveOperationResult
   | SaveAvatarAndLogin
   | SwitchDrawer;
@@ -62,7 +68,7 @@ export interface AdminState {
   operationResults: OperationResult[];
   ownerLogin: string | null;
   ownerAvatar: string | null;
-  drawer: 'show' | 'hide'
+  drawer: 'show' | 'hide';
 }
 
 export const adminInitState: AdminState = {
@@ -70,7 +76,7 @@ export const adminInitState: AdminState = {
   operationResults: [],
   ownerLogin: null,
   ownerAvatar: null,
-  drawer: 'hide'
+  drawer: 'hide',
 };
 
 export const adminReducer: Reducer<AdminState, AdminReducerActions> = (
@@ -118,6 +124,12 @@ export const adminReducer: Reducer<AdminState, AdminReducerActions> = (
         }),
       };
     }
+    case AdminStrAction.DeleteAllOperationResults: {
+      return {
+        ...state,
+        operationResults: []
+      }
+    }
     case AdminStrAction.SaveAvatarAndLogin: {
       return {
         ...state,
@@ -128,8 +140,8 @@ export const adminReducer: Reducer<AdminState, AdminReducerActions> = (
     case AdminStrAction.SwitchDrawer: {
       return {
         ...state,
-        drawer: action.payload.drawer
-      }
+        drawer: action.payload.drawer,
+      };
     }
     default:
       return state;
@@ -166,6 +178,15 @@ export const deleteOperationResult = (
   });
 };
 
+export const deleteAllOperationResults = (
+  adminDispatch: Dispatch<AdminReducerActions>,
+) => {
+  adminDispatch({
+    type: AdminStrAction.DeleteAllOperationResults,
+  });
+};
+
+
 export const saveOwnerId = (
   adminDispatch: Dispatch<AdminReducerActions>,
   ownerId: string,
@@ -188,10 +209,10 @@ export const saveOwnerNameAndAvatar = (
 
 export const switchDrawer = (
   adminDispatch: Dispatch<AdminReducerActions>,
-  drawer: AdminState['drawer']
+  drawer: AdminState['drawer'],
 ) => {
   adminDispatch({
     type: AdminStrAction.SwitchDrawer,
     payload: { drawer },
   });
-}
+};

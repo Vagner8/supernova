@@ -12,7 +12,7 @@ interface UseWindowClick {
 
 export function useWindowClick({ adminDispatch, drawer }: UseWindowClick) {
   useEffect(() => {
-    function onClick(this: HTMLElement, e: Event) {
+    function onClick(this: Window, e: MouseEvent) {
       manageDrawer(e.target, drawer, adminDispatch);
     }
     window.addEventListener('click', onClick);
@@ -25,15 +25,21 @@ const manageDrawer = (
   drawer: AdminState['drawer'],
   adminDispatch: Dispatch<AdminReducerActions>,
 ) => {
-  if ((target as HTMLElement).getAttribute('data-not-close-drawer')) {
-    return
-  }
-  if ((target as HTMLElement).closest('[data-open-drawer]')) {
-    switchDrawer(adminDispatch, 'show');
+  if (target) {
+    if (
+      (target as HTMLElement)
+        .closest('[data-set]')
+        ?.getAttribute('data-set') === 'open-drawer'
+    ) {
+      return switchDrawer(adminDispatch, 'show');
+    }
+    if (
+      (target as HTMLElement).getAttribute('data-set') === 'not-close-drawer'
+    ) {
+      return;
+    }
   }
   if (drawer === 'show') {
-    if (!(target as HTMLElement).closest('[data-open-drawer]')) {
-      switchDrawer(adminDispatch, 'hide');
-    }
+    switchDrawer(adminDispatch, 'hide');
   }
 };

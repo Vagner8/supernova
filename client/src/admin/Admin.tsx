@@ -32,8 +32,21 @@ export function Admin() {
     eventsInitState,
   );
 
+  const resultWithField = () => {
+    return adminState.operationResults.filter(
+      (result) => typeof result.field === 'string',
+    )[0];
+  };
+
   if (!localStorage.getItem('ownerId')) {
-    return <Auth adminState={adminState} adminDispatch={adminDispatch} />;
+    return (
+      <Auth
+        isFetching={adminState.isFetching}
+        adminDispatch={adminDispatch}
+        errorMessage={resultWithField()?.message}
+        errorField={resultWithField()?.field}
+      />
+    );
   }
 
   return (
@@ -60,9 +73,9 @@ function AdminRoutes({
   eventsDispatch,
 }: AdminRoutesProps) {
   useEffect(() => {
-    fetchAndSaveAvatarAndLogin({adminDispatch, url: UrlAddress.Owner})
-  }, [adminDispatch])
-  useWindowClick({adminDispatch, drawer: adminState.drawer})
+    fetchAndSaveAvatarAndLogin({ adminDispatch, url: UrlAddress.Owner });
+  }, [adminDispatch]);
+  useWindowClick({ adminDispatch, drawer: adminState.drawer });
   return (
     <>
       <Linear show={adminState.isFetching} />
@@ -79,7 +92,7 @@ function AdminRoutes({
         ownerLogin={adminState.ownerLogin}
         ownerAvatar={adminState.ownerAvatar}
       />
-      <Drawer drawer={adminState.drawer}/>
+      <Drawer drawer={adminState.drawer} />
       <Suspense fallback={<Linear show={true} />}>
         <Routes>
           <Route
@@ -109,7 +122,7 @@ function AdminRoutes({
               />
             }
           />
-          <Route path='/users' element={<Users/>} />
+          <Route path="/users" element={<Users />} />
         </Routes>
       </Suspense>
       <FilesSheet files={eventsState.files} eventsDispatch={eventsDispatch} />
