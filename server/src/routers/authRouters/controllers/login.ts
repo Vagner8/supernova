@@ -4,9 +4,9 @@ import bcrypt from "bcryptjs";
 import { v4 as uuidv4 } from "uuid";
 import { UseToken } from "../../../UseToken";
 import jwt from "jsonwebtoken";
-import { Owner } from '../../../../../common/src/owner'
 import { MONGO_DB } from "./../../../middleware/connectMongo";
 import { Err } from "./../../../middleware/errorMiddleware";
+import { OwnerType } from "../../../../../common/src/ownerTypes";
 
 interface EeqBody {
   login: string;
@@ -20,7 +20,7 @@ export async function login(
 ) {
   const { login, password } = req.body as EeqBody;
   try {
-    const ownersColl = MONGO_DB.collection<Owner>(CollName.Owners)
+    const ownersColl = MONGO_DB.collection<OwnerType>(CollName.Owners)
     if (!ownersColl) {
       throw new Err({
         status: 500,

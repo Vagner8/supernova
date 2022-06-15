@@ -6,15 +6,15 @@ import {
 import { Dispatch, useEffect } from 'react';
 
 interface UseEventsList {
-  eventsList: EventsState['eventsList'];
+  newEventsList: EventsState['eventsList'];
   eventsDispatch: Dispatch<EventsReducerActions>;
 }
 
 export function useEventsList({
+  newEventsList,
   eventsDispatch,
-  eventsList,
 }: UseEventsList) {
   useEffect(() => {
-    saveEventsList(eventsDispatch, eventsList);
-  }, [eventsDispatch, eventsList]);
+    saveEventsList(eventsDispatch, newEventsList)
+  }, [eventsDispatch, newEventsList]);
 }

@@ -1,5 +1,5 @@
 import { Dispatch, Reducer } from 'react';
-import { ImgUrls, OwnerPII } from '../../../../common/src/owner';
+import { ImgUrlsType, PointsType } from '../../../../common/src/commonTypes';
 
 export enum EventNames {
   New = 'new',
@@ -15,6 +15,7 @@ export enum EventsStrAction {
   DeleteOneFile = 'DeleteOneFile',
   DeleteAllFiles = 'DeleteAllFiles',
   SaveEventsList = 'SaveEventsList',
+  DeleteEventsList = 'DeleteEventsList',
   SavePoints = 'SavePoints',
   PointsOnChange = 'PointsOnChange',
   ResetEventState = 'ResetEventState',
@@ -29,17 +30,21 @@ interface ResetEventState {
 
 interface SavePoints {
   type: EventsStrAction.SavePoints;
-  payload: { points: OwnerPII };
+  payload: { points: PointsType };
 }
 
 interface PointsOnChange {
   type: EventsStrAction.PointsOnChange;
-  payload: { name: string; value: string; pointName: keyof OwnerPII };
+  payload: { name: string; value: string; pointName: keyof PointsType };
 }
 
 interface SaveEventsList {
   type: EventsStrAction.SaveEventsList;
-  payload: { eventsList: string[] };
+  payload: { newEventsList: EventsState['eventsList'] };
+}
+
+interface DeleteEventsList {
+  type: EventsStrAction.DeleteEventsList;
 }
 
 interface SaveFiles {
@@ -47,7 +52,7 @@ interface SaveFiles {
   payload: {
     files: File[];
     isFileInputMultiple: boolean;
-    fileInputName: keyof ImgUrls;
+    fileInputName: keyof ImgUrlsType;
   };
 }
 
@@ -75,13 +80,13 @@ interface SaveCopyOfPoints {
 }
 
 export interface EventsState {
-  copyPoints: OwnerPII | null;
-  points: OwnerPII | null;
-  changedPoints: Partial<OwnerPII> | null;
-  eventsList: string[];
+  copyPoints: PointsType | null;
+  points: PointsType | null;
+  changedPoints: Partial<PointsType> | null;
+  eventsList: null | string[];
   files: File[] | null;
   isFileInputMultiple: boolean;
-  fileInputName: string | null
+  fileInputName: string | null;
 }
 
 export type EventsReducerActions =
@@ -89,6 +94,7 @@ export type EventsReducerActions =
   | SavePoints
   | PointsOnChange
   | SaveEventsList
+  | DeleteEventsList
   | SaveFiles
   | DeleteOneFile
   | DeleteAllFiles
@@ -100,7 +106,7 @@ export const eventsInitState: EventsState = {
   copyPoints: null,
   points: null,
   changedPoints: null,
-  eventsList: [],
+  eventsList: null,
   files: null,
   isFileInputMultiple: false,
   fileInputName: null,
@@ -150,14 +156,22 @@ export const eventsReducer: Reducer<EventsState, EventsReducerActions> = (
         points: state.copyPoints,
         files: null,
         changedPoints: null,
-        eventsList: state.eventsList.filter((item) => item !== EventNames.Save),
+        eventsList:
+          state.eventsList &&
+          state.eventsList.filter((item) => item !== EventNames.Save),
       };
     }
     case EventsStrAction.SaveEventsList: {
-      if (state.eventsList.length) return state;
       return {
         ...state,
-        eventsList: action.payload.eventsList,
+        eventsList: action.payload.newEventsList,
+      };
+    }
+    case EventsStrAction.DeleteEventsList: {
+      if (!state.eventsList) return state;
+      return {
+        ...state,
+        eventsList: null,
       };
     }
     case EventsStrAction.SaveFiles: {
@@ -171,9 +185,9 @@ export const eventsReducer: Reducer<EventsState, EventsReducerActions> = (
           ...state.changedPoints,
           imgUrls: {
             ...state.points.imgUrls,
-            [action.payload.fileInputName]: []
-          }
-        }
+            [action.payload.fileInputName]: [],
+          },
+        },
       };
     }
     case EventsStrAction.DeleteOneFile: {
@@ -194,15 +208,18 @@ export const eventsReducer: Reducer<EventsState, EventsReducerActions> = (
     case EventsStrAction.SwitchEditAndEditOf: {
       return {
         ...state,
-        eventsList: state.eventsList.map((event) => {
-          if (event.match(/edit/i)) {
-            return action.payload.switchTo;
-          }
-          return event;
-        }),
+        eventsList:
+          state.eventsList &&
+          state.eventsList.map((event) => {
+            if (event.match(/edit/i)) {
+              return action.payload.switchTo;
+            }
+            return event;
+          }),
       };
     }
     case EventsStrAction.SwitchSaveEvent: {
+      if (!state.eventsList) return state;
       if (
         action.payload.saveEvent === 'show' &&
         !state.eventsList.includes(EventNames.Save)
@@ -229,7 +246,7 @@ export const eventsReducer: Reducer<EventsState, EventsReducerActions> = (
 
 export const savePoints = (
   eventsDispatch: Dispatch<EventsReducerActions>,
-  points: OwnerPII,
+  points: PointsType,
 ) => {
   eventsDispatch({
     type: EventsStrAction.SavePoints,
@@ -262,11 +279,19 @@ export const pointsOnChange = ({
 
 export const saveEventsList = (
   eventsDispatch: Dispatch<EventsReducerActions>,
-  eventsList: string[],
+  newEventsList: EventsState['eventsList'],
 ) => {
   eventsDispatch({
     type: EventsStrAction.SaveEventsList,
-    payload: { eventsList },
+    payload: { newEventsList },
+  });
+};
+
+export const deleteEventsList = (
+  eventsDispatch: Dispatch<EventsReducerActions>,
+) => {
+  eventsDispatch({
+    type: EventsStrAction.DeleteEventsList,
   });
 };
 
@@ -279,7 +304,7 @@ export const saveFiles = ({
   eventsDispatch: Dispatch<EventsReducerActions>;
   files: File[];
   isFileInputMultiple: boolean;
-  fileInputName: keyof ImgUrls;
+  fileInputName: keyof ImgUrlsType;
 }) => {
   eventsDispatch({
     type: EventsStrAction.SaveFiles,

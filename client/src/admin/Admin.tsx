@@ -7,7 +7,7 @@ import {
   AdminReducerActions,
   AdminState,
 } from './adminReducer';
-import { Drawer, Linear, Navbar } from 'UIKit';
+import { Container, Drawer, Linear, Navbar } from 'UIKit';
 import {
   eventsInitState,
   eventsReducer,
@@ -22,7 +22,7 @@ import { UrlAddress } from 'api/fetcher';
 import { useWindowClick } from 'hooks/useWindowClick';
 
 const Home = lazy(() => import('./Home/Home'));
-const Profile = lazy(() => import('./Profile/Profile'));
+const Owner = lazy(() => import('./Owner/Owner'));
 const Users = lazy(() => import('./Users/Users'));
 
 export function Admin() {
@@ -95,36 +95,46 @@ function AdminRoutes({
       />
       <Drawer drawer={adminState.drawer} />
       <Suspense fallback={<Linear show={true} />}>
-        <Routes>
-          <Route
-            index
-            element={
-              <Home eventsState={eventsState} adminDispatch={adminDispatch} />
-            }
-          />
-          <Route
-            path="/owner"
-            element={
-              <Profile
-                eventsList={eventsState.eventsList}
-                errorField={
-                  adminState.operationResults.filter(
-                    (result) => result.field,
-                  )[0]?.field
-                }
-                errorMessage={
-                  adminState.operationResults.filter(
-                    (result) => result.field,
-                  )[0]?.message
-                }
-                points={eventsState.points}
-                adminDispatch={adminDispatch}
-                eventsDispatch={eventsDispatch}
-              />
-            }
-          />
-          <Route path="/users" element={<Users />} />
-        </Routes>
+        <Container>
+          <Routes>
+            <Route
+              index
+              element={
+                <Home eventsState={eventsState} adminDispatch={adminDispatch} />
+              }
+            />
+            <Route
+              path="/owner"
+              element={
+                <Owner
+                  eventsList={eventsState.eventsList}
+                  errorField={
+                    adminState.operationResults.filter(
+                      (result) => result.field,
+                    )[0]?.field
+                  }
+                  errorMessage={
+                    adminState.operationResults.filter(
+                      (result) => result.field,
+                    )[0]?.message
+                  }
+                  points={eventsState.points}
+                  adminDispatch={adminDispatch}
+                  eventsDispatch={eventsDispatch}
+                />
+              }
+            />
+            <Route
+              path="/users"
+              element={
+                <Users
+                  eventsList={eventsState.eventsList}
+                  eventsDispatch={eventsDispatch}
+                />
+              }
+            />
+          </Routes>
+        </Container>
       </Suspense>
       <FilesSheet files={eventsState.files} eventsDispatch={eventsDispatch} />
       <OperationResultsSheet

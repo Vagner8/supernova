@@ -9,7 +9,7 @@ interface PrintPointsProps {
   sort: string[];
   errorField: OperationResult['field'] | undefined;
   errorMessage: OperationResult['message'] | undefined;
-  hideInput: boolean;
+  hideInput: boolean | undefined;
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
 }
 

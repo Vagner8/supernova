@@ -1,7 +1,6 @@
 import { AdminReducerActions } from 'admin/adminReducer';
 import { EventsState } from 'admin/Events/eventsReducer';
 import { Dispatch } from 'react';
-import { Circular, Container } from 'UIKit';
 
 interface HomeProps {
   eventsState: EventsState
@@ -11,9 +10,8 @@ interface HomeProps {
 export default function Home({ adminDispatch, eventsState }: HomeProps) {
 
   return (
-    <Container>
-      <Circular color='white' />
+    <div>
       <h1>Home</h1>
-    </Container>
+    </div>
   );
 }

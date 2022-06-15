@@ -1,13 +1,13 @@
 import { AdminReducerActions } from 'admin/adminReducer';
 import { Dispatch } from 'react';
-import { Owner } from '../../../common/src/owner';
-import { Projection } from '../../../common/src/types';
+import { Projection } from '../../../common/src/commonTypes';
+import { OwnerType } from '../../../common/src/ownerTypes';
 import { UrlAddress, fetcher } from './fetcher';
 
 interface GetData {
   adminDispatch: Dispatch<AdminReducerActions>;
   url: UrlAddress;
-  projection: Projection<Owner>;
+  projection: Projection<OwnerType>;
 }
 
 export async function getData({ adminDispatch, url, projection }: GetData) {

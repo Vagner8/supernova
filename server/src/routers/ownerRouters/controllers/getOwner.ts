@@ -1,9 +1,9 @@
 import { NextFunction, Request, Response } from "express";
 import { CollName } from "../../../types";
 import { Err } from "../../../middleware/errorMiddleware";
-import { Owner } from "../../../../../common/src/owner"
 import { MONGO_DB } from "./../../../middleware/connectMongo";
 import { OWNER_ID } from "./../../../middleware/accessMiddleware";
+import { OwnerType } from "../../../../../common/src/ownerTypes";
 
 export async function getOwner(
   req: Request,
@@ -20,7 +20,7 @@ export async function getOwner(
         logout: false,
       });
     }
-    const ownersColl = MONGO_DB.collection<Owner>(CollName.Owners)
+    const ownersColl = MONGO_DB.collection<OwnerType>(CollName.Owners)
     if (!ownersColl) {
       throw new Err({
         status: 500,

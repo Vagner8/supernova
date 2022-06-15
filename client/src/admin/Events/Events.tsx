@@ -58,10 +58,10 @@ export function Events({
           switchSaveEvent(eventsDispatch, 'hide');
           switchEditAndEditOf(eventsDispatch, EventNames.Edit);
           deleteAllFiles(eventsDispatch);
-          if (files && files.length > 0) {
+          if (files && files.length > 0 && params['*']) {
             imgUrls = await downloadFilesFirebase({
               files,
-              path: ['owner-img', ownerId, fileInputName],
+              path: [params['*'], ownerId, fileInputName],
               isFileInputMultiple,
               adminDispatch,
             });

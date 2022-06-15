@@ -1,12 +1,12 @@
 import { Response } from "express";
 import jwt from "jsonwebtoken";
 import { Collection } from "mongodb";
-import { Owner } from "../../common/src/owner";
+import { OwnerType } from "../../common/src/ownerTypes";
 
 export class UseToken {
   constructor(
     public res: Response,
-    public collection?: Collection<Owner>
+    public collection?: Collection<OwnerType>
   ) {}
 
   createAccessToken(ownerId: string) {

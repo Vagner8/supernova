@@ -4,8 +4,8 @@ import { Err } from "./errorMiddleware";
 import jwt from "jsonwebtoken";
 import { UseToken } from "./../UseToken";
 import { restartServer } from "./../app";
-import { Owner } from '../../../common/src/owner'
 import { MONGO_DB } from "./connectMongo";
+import { OwnerType } from "../../../common/src/ownerTypes";
 
 export let OWNER_ID: string
 
@@ -31,7 +31,7 @@ export const accessMiddleware =
       }
 
       if (!accessToken) {
-        const ownersColl = MONGO_DB.collection<Owner>(CollName.Owners)
+        const ownersColl = MONGO_DB.collection<OwnerType>(CollName.Owners)
         if (!ownersColl) {
           restartServer()
           throw new Err({

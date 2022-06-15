@@ -8,41 +8,39 @@ import {
   switchSaveEvent,
 } from 'admin/Events/eventsReducer';
 import { UrlAddress } from 'api/fetcher';
-import { useEventsList } from 'hooks';
 import { ChangeEvent, Dispatch, useCallback, useEffect } from 'react';
-import { Avatar, Container, FileInput, Form } from 'UIKit';
-import { ImgUrls } from '../../../../common/src/owner';
+import { Avatar, FileInput, Form } from 'UIKit';
 import styles from './profile.module.css';
-import { fetchAndSavePoints } from './profileApi';
+import { fetchAndSavePoints } from '../../admin/Owner/ownerApi';
+import { ImgUrlsType } from '../../../../common/src/commonTypes';
 
 interface ProfileProps {
   eventsList: EventsState['eventsList'];
   errorField: OperationResult['field'] | undefined;
   errorMessage: OperationResult['message'] | undefined;
   points: EventsState['points'];
+  url: UrlAddress;
   adminDispatch: Dispatch<AdminReducerActions>;
   eventsDispatch: Dispatch<EventsReducerActions>;
 }
 
-export default function Profile({
+export function Profile({
   errorField,
   errorMessage,
   eventsList,
   points,
+  url,
   adminDispatch,
   eventsDispatch,
 }: ProfileProps) {
-  console.log('Profile');
 
   useEffect(() => {
     fetchAndSavePoints({
       eventsDispatch,
       adminDispatch,
-      url: UrlAddress.Owner,
+      url,
     });
-  }, [adminDispatch, eventsDispatch]);
-
-  useEventsList({ eventsDispatch, eventsList: [EventNames.Edit] });
+  }, [adminDispatch, eventsDispatch, url]);
 
   const onChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
@@ -62,7 +60,7 @@ export default function Profile({
       eventsDispatch,
       files: Array.from(e.target.files || []),
       isFileInputMultiple: e.target.multiple,
-      fileInputName: e.target.name as keyof ImgUrls,
+      fileInputName: e.target.name as keyof ImgUrlsType,
     });
     e.target.value = '';
   };
@@ -70,33 +68,27 @@ export default function Profile({
   if (!points) return null;
   const { personal, imgUrls } = points;
   return (
-    <Container>
-      <div className={styles.Profile}>
-        <div className={styles.lift}>
-          <Avatar url={imgUrls.avatar[0]} size="m" />
-          <h6>
-            {personal.name || '-'} {personal.surname || '-'}
-          </h6>
-          {eventsList.includes(EventNames.EditOff) ? (
-            <FileInput
-              name="avatar"
-              multiple={false}
-              onChange={onChangeFiles}
-            />
-          ) : null}
-        </div>
-        <div className={styles.middle}>
-          <Form
-            hideInput={eventsList.includes(EventNames.Edit)}
-            points={points}
-            onChange={onChange}
-            errorField={errorField}
-            errorMessage={errorMessage}
-            sort={['personal', 'contacts', 'address']}
-          />
-        </div>
-        <div className={styles.right}></div>
+    <div className={styles.Profile}>
+      <div className={styles.lift}>
+        <Avatar url={imgUrls.avatar[0]} size="m" />
+        <h6>
+          {personal.name || '-'} {personal.surname || '-'}
+        </h6>
+        {eventsList?.includes(EventNames.EditOff) ? (
+          <FileInput name="avatar" multiple={false} onChange={onChangeFiles} />
+        ) : null}
       </div>
-    </Container>
+      <div className={styles.middle}>
+        <Form
+          hideInput={eventsList?.includes(EventNames.Edit)}
+          points={points}
+          onChange={onChange}
+          errorField={errorField}
+          errorMessage={errorMessage}
+          sort={['personal', 'contacts', 'address']}
+        />
+      </div>
+      <div className={styles.right}></div>
+    </div>
   );
 }
