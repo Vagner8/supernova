@@ -1,12 +1,5 @@
 import { ImgsType } from "./commonTypes";
-export declare enum UserStatus {
-    Owner = "Owner",
-    Admin = "Admin",
-    User = "User",
-    Viewer = "Viewer",
-    fired = "fired",
-    New = "New"
-}
+declare type UserStatus = 'Owner' | "Admin" | "User" | "Viewer" | "fired" | "New";
 export interface UserConfigsType {
     login: string;
     password: string;
@@ -39,4 +32,5 @@ export interface UserType {
     imgs: UserImgsType;
 }
 export declare type UserPointsType = Pick<UserType, "personal" | "contacts" | "address" | "imgs" | "configs">;
+export {};
 //# sourceMappingURL=userTypes.d.ts.map

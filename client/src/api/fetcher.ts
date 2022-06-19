@@ -9,6 +9,7 @@ import { CustomErrorType } from './../../../common/src/customErrorType'
 export enum AddressTo {
   Login = '/login',
   GetUsers = '/users',
+  CreateUser = '/users/new',
   UpdateUsers = '/users/update',
 }
 

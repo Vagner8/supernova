@@ -56,7 +56,6 @@ export function Input({
   };
 
   if (hide) return null;
-  console.log('input');
   return (
     <div role="group" className={`${styles.Input} ${styles[active]}`}>
       <label

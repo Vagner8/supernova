@@ -2,10 +2,10 @@ import { NextFunction, Request, Response } from "express";
 import { MONGO_DB } from "../../middleware/connectMongo";
 import { CollectionName } from "../../types";
 import { UserPointsType, UserType } from "../../../../common/src/userTypes";
-import { USER_ID } from "./../../middleware/accessMiddleware";
+import { USER_ID } from "../../middleware/accessMiddleware";
 import { serverError } from "../../helpers/customErrors";
 
-export async function updateUserController(
+export async function putUserController(
   req: Request,
   res: Response,
   next: NextFunction

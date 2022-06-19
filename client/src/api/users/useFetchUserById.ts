@@ -22,14 +22,14 @@ const projection: Projection<UserType> = {
 };
 
 export interface UseFetchUserByIdResponse {
-  personal: UserType['personal'],
-  contacts: UserType['contacts'],
-  address: UserType['address'],
-  imgs: UserType['imgs'],
+  personal: UserType['personal'];
+  contacts: UserType['contacts'];
+  address: UserType['address'];
+  imgs: UserType['imgs'];
   configs: {
-    login: UserType['configs']['login'],
-    rule: UserType['configs']['rule'],
-  }, 
+    login: UserType['configs']['login'];
+    rule: UserType['configs']['rule'];
+  };
 }
 
 export function useFetchUserById(
@@ -41,13 +41,13 @@ export function useFetchUserById(
     const asyncer = async () => {
       const response = (await fetcher({
         method: 'GET',
-        url: `${AddressTo.GetUsers}/?projection=${JSON.stringify(
-          projection,
-        )}&userId=${userId}`,
+        url: `${AddressTo.GetUsers}/?projection=${
+          userId === 'new' ? null : JSON.stringify(projection)
+        }&userId=${userId}`,
         adminDispatch,
         message: 'received data',
       })) as UseFetchUserByIdResponse | null;
-      if (!response) return
+      if (!response) return;
       savePoints(eventsDispatch, response);
       saveCopyOfPoints(eventsDispatch);
     };

@@ -3,10 +3,9 @@ import { downloadFilesFirebase } from 'api/firebaseStorage/downloadFilesFirebase
 import { updateData } from 'api/updateData';
 import { firebaseError } from 'helpers';
 import { Dispatch } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { Dropdown } from 'UIKit';
 import styles from './events.module.css';
-import { usersEvents } from './eventsHelpers/usersEvents';
 import {
   EventNames,
   EventsReducerActions,
@@ -38,15 +37,19 @@ export function Events({
   eventsDispatch,
 }: EventsProps) {
   const params = useParams();
-  let navigate = useNavigate();
-
+  const navigate = useNavigate();
+  const location = useLocation();
   const handleEvents = (target: HTMLButtonElement) => {
     const selectedEvent = target.dataset.eventName as EventNames;
     const userId = localStorage.getItem('userId');
     let imgs: string[] | undefined = [];
     const asyncer = async () => {
-      usersEvents({selectedEvent, navigate})
       switch (selectedEvent) {
+        case EventNames.New: {
+          console.log(location, 'location')
+          if (params['*']?.match(/users/i)) navigate('/admin/users/new');
+          break;
+        }
         case EventNames.Edit: {
           switchEditAndEditOf(eventsDispatch, EventNames.EditOff);
           break;
@@ -57,6 +60,7 @@ export function Events({
           break;
         }
         case EventNames.Save: {
+          console.log(params.userId, 'params');
           saveCopyOfPoints(eventsDispatch);
           switchSaveEvent(eventsDispatch, 'hide');
           switchEditAndEditOf(eventsDispatch, EventNames.Edit);
@@ -79,7 +83,7 @@ export function Events({
             params: params['*'],
             changedPoints,
           });
-          
+
           break;
         }
       }

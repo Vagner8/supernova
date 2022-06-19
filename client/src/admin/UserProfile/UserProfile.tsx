@@ -1,38 +1,16 @@
 import { AdminReducerActions, OperationResult } from 'admin/adminReducer';
-import { EventsReducerActions, EventsState } from 'admin/Events/eventsReducer';
+import {
+  EventNames,
+  EventsReducerActions,
+  EventsState,
+  switchEditAndEditOf,
+} from 'admin/Events/eventsReducer';
 import { useFetchUserById } from 'api/users/useFetchUserById';
-import { Dispatch } from 'react';
+import { useEventsList } from 'hooks';
+import { Dispatch, useEffect, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import { Profile } from 'UIKit';
-import { UserStatus, UserType } from './../../../../common/src/userTypes';
 import styles from './userProfile.module.css';
-
-export const newUser: Omit<UserType, '_id' | 'refreshToken'> = {
-  userId: 'new',
-  configs: {
-    login: '',
-    password: '',
-    rule: UserStatus.New,
-  },
-  personal: {
-    name: '',
-    surname: '',
-  },
-  contacts: {
-    email: '',
-    phone: '',
-  },
-  address: {
-    city: '',
-    zip: '',
-    street: '',
-    number: '',
-  },
-  imgs: {
-    avatar: [],
-    photos: [],
-  },
-};
 
 interface UserProfileProps {
   eventsList: EventsState['eventsList'];
@@ -53,8 +31,19 @@ export default function UserProfile({
 }: UserProfileProps) {
   const { userId } = useParams();
   useFetchUserById(userId, eventsDispatch, adminDispatch);
+  useEventsList({
+    eventsDispatch,
+    newEventsList: useRef([EventNames.New, EventNames.Edit, EventNames.Delete])
+      .current,
+  });
+  useEffect(() => {
+    if (userId === 'new') {
+      switchEditAndEditOf(eventsDispatch, EventNames.EditOff);
+    }
+  }, [eventsDispatch, userId])
   return (
     <div className={styles.UserProfile}>
+      <h4>Create new user</h4>
       <Profile
         eventsList={eventsList}
         errorField={errorField}

@@ -71,7 +71,7 @@ export function Profile({
           onChange={onChange}
           errorField={errorField}
           errorMessage={errorMessage}
-          sort={['personal', 'contacts', 'address']}
+          sort={['personal', 'configs', 'contacts', 'address']}
         />
       </div>
       <div className={styles.right}></div>

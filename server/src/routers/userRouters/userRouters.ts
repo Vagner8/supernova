@@ -1,10 +1,12 @@
 import express from "express";
 import { getUserController } from "./getUserController";
-import { updateUserController } from "./updateUserController";
+import { putUserController } from "./putUserController";
+import { postUserController } from "./postUserController";
 
 const router = express.Router();
 
 router.get("/", getUserController);
-router.put("/update", updateUserController);
+router.post("/new", postUserController)
+router.put("/update", putUserController);
 
 export default router;

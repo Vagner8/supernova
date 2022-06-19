@@ -1,13 +1,6 @@
 import { ImgsType } from "./commonTypes";
 
-export enum UserStatus {
-  Owner = 'Owner',
-  Admin = "Admin",
-  User = "User",
-  Viewer = "Viewer",
-  fired = "fired",
-  New = "New",
-}
+type UserStatus = 'Owner' | "Admin" | "User" | "Viewer" | "fired" | "New"
 
 export interface UserConfigsType {
   login: string;
