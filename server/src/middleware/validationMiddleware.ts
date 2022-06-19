@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
-import { Err } from "./errorMiddleware";
+import { validateError } from "./../helpers/customErrors";
+import { CustomError } from "./errorMiddleware";
 
 function validate(
   errorField: "login" | "email" | "password",
@@ -9,31 +10,17 @@ function validate(
   const str = item.toString();
 
   if (str.length < length.min) {
-    throw new Err({
-      status: 400,
-      message: `min ${length.min} characters`,
-      logout: false,
-      field: errorField
-    })
+    throw validateError(errorField, `min ${length.min} characters`);
   }
+
   if (str.length > length.max) {
-    throw new Err({
-      status: 400,
-      message: `max ${length.max} characters`,
-      logout: false,
-      field: errorField
-    });
+    throw validateError(errorField, `max ${length.max} characters`);
   }
 
   switch (errorField) {
     case "email":
       if (!str.split("").includes("@")) {
-        throw new Err({
-          status: 400,
-          message: `incorrect ${errorField}`,
-          logout: false,
-          field: errorField
-        });
+        throw validateError(errorField, `incorrect ${errorField}`);
       }
   }
 }

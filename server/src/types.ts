@@ -2,9 +2,8 @@ export enum DataBase {
   Supernova = "supernova",
 }
 
-export enum CollName {
+export enum CollectionName {
   Users = "users",
-  Owners = "owners"
 }
 
 declare global {

@@ -24,6 +24,7 @@ export function OperationResultsSheet({
               status={result.status}
               message={result.message}
               filed={result.field}
+              errorName={result.errorName}
               adminDispatch={adminDispatch}
             />
           </div>

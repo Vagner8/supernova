@@ -10,7 +10,7 @@ import {
 import { ChangeEvent, Dispatch, useCallback } from 'react';
 import { Avatar, FileInput, Form } from 'UIKit';
 import styles from './profile.module.css';
-import { ImgUrlsType } from '../../../../common/src/commonTypes';
+import { ImgsType } from '../../../../common/src/commonTypes';
 
 interface ProfileProps {
   eventsList: EventsState['eventsList'];
@@ -46,17 +46,17 @@ export function Profile({
       eventsDispatch,
       files: Array.from(e.target.files || []),
       isFileInputMultiple: e.target.multiple,
-      fileInputName: e.target.name as keyof ImgUrlsType,
+      fileInputName: e.target.name as keyof ImgsType,
     });
     e.target.value = '';
   };
 
   if (!points) return null;
-  const { personal, imgUrls } = points;
+  const { personal, imgs } = points;
   return (
     <div className={styles.Profile}>
       <div className={styles.lift}>
-        <Avatar url={imgUrls.avatar[0]} size="m" />
+        <Avatar url={imgs.avatar[0]} size="m" />
         <h6>
           {personal.name || '-'} {personal.surname || '-'}
         </h6>

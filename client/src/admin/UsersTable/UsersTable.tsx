@@ -3,19 +3,21 @@ import {
   EventsReducerActions,
   EventsState,
 } from 'admin/Events/eventsReducer';
+import { useFetchUsersForTable } from 'api/users/useFetchUsersForTable';
 import { useEventsList } from 'hooks';
-import { Dispatch, useMemo } from 'react';
-import styles from './users.module.css';
+import { Dispatch, useRef } from 'react';
+import styles from './usersTable.module.css';
 
 interface UsersProps {
   eventsList: EventsState['eventsList'];
   eventsDispatch: Dispatch<EventsReducerActions>;
 }
 
-export default function Users({ eventsDispatch, eventsList }: UsersProps) {
+export default function Users({ eventsList,  eventsDispatch }: UsersProps) {
+  useFetchUsersForTable()
   useEventsList({
     eventsDispatch,
-    newEventsList: useMemo(() => [EventNames.New], []),
+    newEventsList: useRef([EventNames.New, EventNames.Delete]).current
   });
   return (
     <div className={styles.Users}>

@@ -4,18 +4,12 @@ import {
   setIsFetching,
 } from 'admin/adminReducer';
 import { Dispatch } from 'react';
+import { CustomErrorType } from './../../../common/src/customErrorType'
 
-export interface Err {
-  status: 400 | 403 | 500;
-  message: string;
-  logout: boolean;
-  field: string | null;
-}
-
-export enum UrlAddress {
-  Login = '/auth/login',
-  Owner = '/owner',
-  OwnerUpdate = '/owner/update',
+export enum AddressTo {
+  Login = '/login',
+  GetUsers = '/users',
+  UpdateUsers = '/users/update',
 }
 
 interface Fetcher {
@@ -41,12 +35,12 @@ export async function fetcher({
       headers: {
         'Content-type': 'application/json',
         credentials: 'include',
-        ownerId: localStorage.getItem('ownerId') || 'idle',
+        userId: localStorage.getItem('userId') || 'idle',
       },
     });
     const json = (await response.json()) as
-      | undefined
-      | Err
+      | null
+      | CustomErrorType
       | Object;
     if (!json) {
       saveOperationResult(adminDispatch, {
@@ -55,16 +49,27 @@ export async function fetcher({
         field: null,
         logout: false,
       });
-      return undefined;
+      return null;
     }
-    if ('logout' in json) {
+    if ('errorName' in json) {
+      if (json.errorName === 'token warning') {
+        saveOperationResult(adminDispatch, {
+          status: 'warning',
+          errorName: json.errorName,
+          message: json.message,
+          field: json.field,
+          logout: json.logout,
+        });
+        return null;
+      }
       saveOperationResult(adminDispatch, {
         status: 'error',
+        errorName: json.errorName,
         message: json.message,
         field: json.field,
         logout: json.logout,
       });
-      return undefined;
+      return null;
     }
     saveOperationResult(adminDispatch, {
       status: 'success',

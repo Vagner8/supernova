@@ -1,16 +1,13 @@
 import { NextFunction, Request, Response } from "express";
 import { TokenExpiredError } from "jsonwebtoken";
+import { CustomErrorType } from './../../../common/src/customErrorType'
 
-export class Err extends Error {
-  constructor(public description: {
-    status: 400 | 403 | 500,
-    message: string,
-    logout: boolean,
-    field: string | null
-  }
+export class CustomError extends Error {
+  constructor(
+    public description: CustomErrorType
   ) {
     super();
-    Object.setPrototypeOf(this, Err.prototype)
+    Object.setPrototypeOf(this, CustomError.prototype);
   }
 }
 
@@ -20,16 +17,18 @@ export function errorMiddleware(
   res: Response,
   next: NextFunction
 ) {
-  if (error instanceof Err) {
+  if (error instanceof CustomError) {
     return res.status(error.description.status).json(error.description);
   }
   if (error instanceof TokenExpiredError) {
-    return res.status(403).json({
+    const response: CustomErrorType = {
+      errorName: 'token warning',
       status: 403,
-      message: "token is expired",
+      message: "expired token, please relogin",
       field: null,
       logout: true,
-    })
+    }
+    return res.status(403).json(response);
   }
   next(error);
 }

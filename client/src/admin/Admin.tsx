@@ -17,15 +17,14 @@ import {
 import { FilesSheet } from './FilesSheet/FilesSheet';
 import { Events } from './Events/Events';
 import { OperationResultsSheet } from './OperationResultsSheet/OperationResultsSheet';
-import { fetchAndSaveAvatarAndLogin } from './adminApi';
-import { UrlAddress } from 'api/fetcher';
+import { AddressTo } from 'api/fetcher';
 import { useWindowClick } from 'hooks/useWindowClick';
-import { UserProfile } from './Users/UserProfile/UserProfile';
 import { useOperationResultWithField } from 'hooks/useOperationResultWithField';
+import { useFetchAvatarAndLogin } from 'api/users/useFetchAvatarAndLogin';
 
 const Home = lazy(() => import('./Home/Home'));
-const Owner = lazy(() => import('./Owner/Owner'));
-const Users = lazy(() => import('./Users/Users'));
+const UserProfile = lazy(() => import('./UserProfile/UserProfile'));
+const UsersTable = lazy(() => import('./UsersTable/UsersTable'));
 
 export function Admin() {
   const [adminState, adminDispatch] = useReducer(adminReducer, adminInitState);
@@ -38,7 +37,7 @@ export function Admin() {
     adminState.operationResults,
   );
 
-  if (!localStorage.getItem('ownerId')) {
+  if (!localStorage.getItem('userId')) {
     return (
       <Auth
         isFetching={adminState.isFetching}
@@ -73,9 +72,7 @@ function AdminRoutes({
   eventsState,
   eventsDispatch,
 }: AdminRoutesProps) {
-  useEffect(() => {
-    fetchAndSaveAvatarAndLogin({ adminDispatch, url: UrlAddress.Owner });
-  }, [adminDispatch]);
+  useFetchAvatarAndLogin(adminDispatch)
   useWindowClick({ adminDispatch, drawer: adminState.drawer });
   const operationResultWithField = useOperationResultWithField(
     adminState.operationResults,
@@ -107,22 +104,9 @@ function AdminRoutes({
               }
             />
             <Route
-              path="/owner"
-              element={
-                <Owner
-                  eventsList={eventsState.eventsList}
-                  points={eventsState.points}
-                  adminDispatch={adminDispatch}
-                  eventsDispatch={eventsDispatch}
-                  errorField={operationResultWithField?.errorField}
-                  errorMessage={operationResultWithField?.errorMessage}
-                />
-              }
-            />
-            <Route
               path="/users"
               element={
-                <Users
+                <UsersTable
                   eventsList={eventsState.eventsList}
                   eventsDispatch={eventsDispatch}
                 />
@@ -135,6 +119,7 @@ function AdminRoutes({
                   eventsList={eventsState.eventsList}
                   points={eventsState.points}
                   eventsDispatch={eventsDispatch}
+                  adminDispatch={adminDispatch}
                   errorField={operationResultWithField?.errorField}
                   errorMessage={operationResultWithField?.errorMessage}
                 />

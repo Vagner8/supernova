@@ -1,27 +1,42 @@
-import { ContactsType, ImgUrlsType, PersonalType, AddressType } from "./commonTypes";
+import { ImgsType } from "./commonTypes";
 export declare enum UserStatus {
+    Owner = "Owner",
     Admin = "Admin",
     User = "User",
     Viewer = "Viewer",
     fired = "fired",
     New = "New"
 }
-export interface PersonalUserType extends PersonalType {
-}
-export interface ContactsUserType extends ContactsType {
-}
-export interface AddressUserType extends AddressType {
-}
-export declare type UserPIIType = Pick<UserType, 'personal' | 'contacts' | 'address' | 'imgUrls'>;
-export interface UserType {
-    _id: string;
-    userId: string;
+export interface UserConfigsType {
     login: string;
     password: string;
     rule: UserStatus;
-    personal: PersonalUserType;
-    contacts: ContactsUserType;
-    address: AddressUserType;
-    imgUrls: ImgUrlsType;
 }
+export interface UserPersonalType {
+    name: string;
+    surname: string;
+}
+export interface UserContactsType {
+    email: string;
+    phone: string;
+}
+export interface UserAddressType {
+    city: string;
+    zip: string;
+    street: string;
+    number: string;
+}
+export interface UserImgsType extends ImgsType {
+}
+export interface UserType {
+    _id: Object;
+    userId: string;
+    refreshToken: string;
+    configs: UserConfigsType;
+    personal: UserPersonalType;
+    contacts: UserContactsType;
+    address: UserAddressType;
+    imgs: UserImgsType;
+}
+export declare type UserPointsType = Pick<UserType, "personal" | "contacts" | "address" | "imgs" | "configs">;
 //# sourceMappingURL=userTypes.d.ts.map

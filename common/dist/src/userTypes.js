@@ -1,5 +1,6 @@
 export var UserStatus;
 (function (UserStatus) {
+    UserStatus["Owner"] = "Owner";
     UserStatus["Admin"] = "Admin";
     UserStatus["User"] = "User";
     UserStatus["Viewer"] = "Viewer";

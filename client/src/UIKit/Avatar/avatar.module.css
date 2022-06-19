@@ -26,3 +26,8 @@
   width: 180px;
   height: 180px;
 }
+
+.Avatar i {
+  color: var(--white-color);
+  font-size: 2.25rem;
+}

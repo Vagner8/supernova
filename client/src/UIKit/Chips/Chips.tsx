@@ -1,4 +1,4 @@
-import { Icon, Avatar } from 'UIKit';
+import { Avatar, ButtonIcon } from 'UIKit';
 import styles from './chips.module.css';
 
 interface ChipsProps {
@@ -14,9 +14,7 @@ export function Chips({ onClick, url, text }: ChipsProps) {
         <Avatar url={url} size='chips' />
       ) : null}
       <p className={styles.text}>{text}</p>
-      <button onClick={onClick(text)}>
-        <Icon icon="cancel" />
-      </button>
+      <ButtonIcon icon='cancel' onClick={onClick(text)} />
     </div>
   );
 }

@@ -12,10 +12,13 @@ export function Navbar({ ownerLogin, ownerAvatar }: NavbarProps) {
   return (
     <nav className={styles.Navbar}>
       <div className={styles.lift}>
-        <ButtonIcon icon='menu' type='white-icon' dataSet={'open-drawer'}/>
+        <ButtonIcon icon="menu" type="white-icon" dataSet={'open-drawer'} />
       </div>
       <div className={styles.right}>
-        <NavLink className={styles.avatar_link} to="/admin/owner">
+        <NavLink
+          className={styles.avatar_link}
+          to={`/admin/users/${localStorage.getItem('userId')}`}
+        >
           <p className={styles.login}>{ownerLogin}</p>
           <Avatar url={ownerAvatar} size="xs" />
         </NavLink>

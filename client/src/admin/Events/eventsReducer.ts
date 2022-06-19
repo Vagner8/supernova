@@ -1,5 +1,8 @@
+import { UseFetchUserByIdResponse } from 'api/users/useFetchUserById';
 import { Dispatch, Reducer } from 'react';
-import { ImgUrlsType, PointsType } from '../../../../common/src/commonTypes';
+import { ImgsType } from '../../../../common/src/commonTypes';
+
+type PointsType = UseFetchUserByIdResponse
 
 export enum EventNames {
   New = 'new',
@@ -52,7 +55,7 @@ interface SaveFiles {
   payload: {
     files: File[];
     isFileInputMultiple: boolean;
-    fileInputName: keyof ImgUrlsType;
+    fileInputName: keyof ImgsType;
   };
 }
 
@@ -183,8 +186,8 @@ export const eventsReducer: Reducer<EventsState, EventsReducerActions> = (
         fileInputName: action.payload.fileInputName,
         changedPoints: {
           ...state.changedPoints,
-          imgUrls: {
-            ...state.points.imgUrls,
+          imgs: {
+            ...state.points.imgs,
             [action.payload.fileInputName]: [],
           },
         },
@@ -304,7 +307,7 @@ export const saveFiles = ({
   eventsDispatch: Dispatch<EventsReducerActions>;
   files: File[];
   isFileInputMultiple: boolean;
-  fileInputName: keyof ImgUrlsType;
+  fileInputName: keyof ImgsType;
 }) => {
   eventsDispatch({
     type: EventsStrAction.SaveFiles,

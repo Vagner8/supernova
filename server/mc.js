@@ -1,3 +1,14 @@
 console.log(
-  db.users.insertMany()
+
+  db.users.updateOne(
+    { "configs.login": 'Dima' },
+    {
+      $set: {
+        contacts: {
+          address: 'KV'
+        }
+      },
+    }
+
+  )
 )

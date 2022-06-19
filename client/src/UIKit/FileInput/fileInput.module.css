@@ -1,6 +1,7 @@
 .FileInput {
   position: relative;
   display: flex;
+  cursor: pointer;
 }
 
 .input {

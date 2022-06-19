@@ -63,6 +63,11 @@ h6 {
   font-weight: 400;
 }
 
+input[type=file],
+input[type=file]::-webkit-file-upload-button {
+  cursor: pointer; 
+}
+
 :root {
   --xs-rem: 0.25rem;
   --s-rem: 0.55rem;

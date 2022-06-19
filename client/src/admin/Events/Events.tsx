@@ -42,8 +42,8 @@ export function Events({
 
   const handleEvents = (target: HTMLButtonElement) => {
     const selectedEvent = target.dataset.eventName as EventNames;
-    const ownerId = localStorage.getItem('ownerId');
-    let imgUrls: string[] | undefined = [];
+    const userId = localStorage.getItem('userId');
+    let imgs: string[] | undefined = [];
     const asyncer = async () => {
       usersEvents({selectedEvent, navigate})
       switch (selectedEvent) {
@@ -62,17 +62,17 @@ export function Events({
           switchEditAndEditOf(eventsDispatch, EventNames.Edit);
           deleteAllFiles(eventsDispatch);
           if (files && files.length > 0 && params['*']) {
-            imgUrls = await downloadFilesFirebase({
+            imgs = await downloadFilesFirebase({
               files,
-              path: [params['*'], ownerId, fileInputName],
+              path: [params['*'], userId, fileInputName],
               isFileInputMultiple,
               adminDispatch,
             });
-            if (!imgUrls)
+            if (!imgs)
               return firebaseError(adminDispatch, 'no img url to show');
-            if (!changedPoints?.imgUrls?.avatar)
+            if (!changedPoints?.imgs?.avatar)
               return firebaseError(adminDispatch, 'no img to show');
-            changedPoints.imgUrls.avatar = imgUrls;
+            changedPoints.imgs.avatar = imgs;
           }
           await updateData({
             adminDispatch,

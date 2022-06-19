@@ -1,65 +1,47 @@
 import { NextFunction, Request, Response } from "express";
-import { CollName } from "../types";
-import { Err } from "./errorMiddleware";
+import { CollectionName } from "../types";
 import jwt from "jsonwebtoken";
-import { UseToken } from "./../UseToken";
-import { restartServer } from "./../app";
 import { MONGO_DB } from "./connectMongo";
-import { OwnerType } from "../../../common/src/ownerTypes";
+import { UserType } from "../../../common/src/userTypes";
+import { accessError, serverError } from "./../helpers/customErrors";
+import { createAccessToken } from "../token/createAccessToken";
 
-export let OWNER_ID: string
+export let USER_ID: string;
 
 export const accessMiddleware =
   () => async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const ownerId = req.headers.ownerid;
-      if (ownerId === "idle" || !ownerId || Array.isArray(ownerId)) {
-        throw new Err({
-          status: 403,
-          message: "no ownerId header",
-          field: null,
-          logout: true,
-        });
+      const userId = req.headers.userid;
+      if (userId === "idle" || !userId || Array.isArray(userId)) {
+        throw accessError({message: "no userId", logout: true});
       }
-
       const accessToken = req.cookies.accessToken;
       if (accessToken) {
-        jwt.verify(accessToken, process.env.ACCESS_SECRET, (err: any, decoded: any) => {
-          if (err) return next(err)
-          OWNER_ID = decoded.ownerId
-        });
+        jwt.verify(
+          accessToken,
+          process.env.ACCESS_SECRET,
+          (err: any, decoded: any) => {
+            if (err) return
+            USER_ID = decoded.userId;
+          }
+        );
       }
 
       if (!accessToken) {
-        const ownersColl = MONGO_DB.collection<OwnerType>(CollName.Owners)
-        if (!ownersColl) {
-          restartServer()
-          throw new Err({
-            status: 500,
-            message: `no connection ${CollName.Owners}`,
-            field: null,
-            logout: true,
-          });
-        }
-        const result = await ownersColl.findOne<{ refreshToken: string }>(
-          { ownerId },
+        const usersColl = MONGO_DB.collection<UserType>(CollectionName.Users);
+        if (!usersColl) throw serverError("bad connection");
+        const result = await usersColl.findOne<{ refreshToken: string }>(
+          { userId },
           { projection: { _id: 0, refreshToken: 1 } }
         );
-        if (!result) {
-          throw new Err({
-            status: 500,
-            message: "no refreshToken",
-            field: null,
-            logout: true,
-          });
-        }
+        if (!result) throw serverError("no refreshToken");
         jwt.verify(
           result.refreshToken,
           process.env.REFRESH_SECRET,
           (err: any, decoded: any) => {
-            if (err) return next(err)
-            OWNER_ID = decoded.ownerId
-            new UseToken(res).createAccessToken(ownerId);
+            if (err) return next(err);
+            USER_ID = decoded.userId;
+            createAccessToken(userId, res);
           }
         );
       }
