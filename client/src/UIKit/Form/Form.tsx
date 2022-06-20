@@ -33,21 +33,22 @@ export function Form({
                 if (keyText === 'avatar') return;
                 return (
                   <Fragment key={keyText}>
-                    <InputMemo
-                      editMode={editMode}
-                      type="text"
-                      label={keyText}
-                      value={valueText}
-                      errorField={errorField}
-                      errorMessage={errorMessage}
-                      pointName={pointName}
-                      onChange={onChange}
-                    />
-                    <Point
-                      editMode={editMode}
-                      keyText={keyText}
-                      valueText={valueText as string}
-                    />
+                    {editMode ? (
+                      <InputMemo
+                        type="text"
+                        label={keyText}
+                        value={valueText}
+                        errorField={errorField}
+                        errorMessage={errorMessage}
+                        pointName={pointName}
+                        onChange={onChange}
+                      />
+                    ) : (
+                      <Point
+                        keyText={keyText}
+                        valueText={valueText as string}
+                      />
+                    )}
                   </Fragment>
                 );
               },

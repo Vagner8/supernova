@@ -64,7 +64,6 @@ export function Auth({
           <form>
             {authState.inputs.map((input) => (
               <InputMemo
-                editMode={true}
                 key={input.label}
                 errorMessage={errorMessage}
                 errorField={errorField}

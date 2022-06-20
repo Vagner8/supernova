@@ -1,5 +1,4 @@
 import { OperationResult } from 'admin/adminReducer';
-import { EventsState } from 'admin/Events/eventsReducer';
 import { ChangeEvent, FocusEvent, memo, useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { ButtonIcon } from 'UIKit';
@@ -9,7 +8,6 @@ export interface InputProps {
   label: string;
   value: string;
   type: 'password' | 'text';
-  editMode: EventsState['editMode'];
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
   errorMessage?: OperationResult['message'];
   errorField?: OperationResult['field'];
@@ -21,7 +19,6 @@ export function Input({
   type,
   value,
   label,
-  editMode,
   onChange,
   errorMessage,
   errorField,
@@ -63,8 +60,7 @@ export function Input({
   };
 
   // console.log('Input')
-
-  if (!editMode) return null;
+  
   return (
     <div role="group" className={`${styles.Input} ${styles[active]}`}>
       <label

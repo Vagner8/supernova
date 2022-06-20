@@ -39,9 +39,9 @@ export function Admin() {
       <Auth
         isFetching={adminState.isFetching}
         operationResults={adminState.operationResults}
-        adminDispatch={adminDispatch}
         errorMessage={operationResultWithField?.errorMessage}
         errorField={operationResultWithField?.errorField}
+        adminDispatch={adminDispatch}
       />
     );
   }
