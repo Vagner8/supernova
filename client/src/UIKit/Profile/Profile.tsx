@@ -1,11 +1,9 @@
-import { OperationResult } from 'admin/adminReducer';
+import { AdminState, OperationResult } from 'admin/adminReducer';
 import {
-  EventNames,
   EventsReducerActions,
   EventsState,
   pointsOnChange,
   saveFiles,
-  switchSaveEvent,
 } from 'admin/Events/eventsReducer';
 import { ChangeEvent, Dispatch, useCallback } from 'react';
 import { Avatar, FileInput, Form } from 'UIKit';
@@ -13,20 +11,23 @@ import styles from './profile.module.css';
 import { ImgsType } from '../../../../common/src/commonTypes';
 
 interface ProfileProps {
-  eventsList: EventsState['eventsList'];
+  editMode: EventsState['editMode']
   points: EventsState['points'];
+  isFetching: AdminState['isFetching']
   eventsDispatch: Dispatch<EventsReducerActions>;
   errorField?: OperationResult['field'];
   errorMessage?: OperationResult['message'];
 }
 
 export function Profile({
-  eventsList,
+  isFetching,
   points,
+  editMode,
   eventsDispatch,
   errorField,
   errorMessage,
 }: ProfileProps) {
+
   const onChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
       pointsOnChange({
@@ -35,7 +36,6 @@ export function Profile({
         value: e.target.value,
         pointName: e.target.dataset.pointName as keyof EventsState['points'],
       });
-      switchSaveEvent(eventsDispatch, 'show');
     },
     [eventsDispatch],
   );
@@ -50,7 +50,7 @@ export function Profile({
     e.target.value = '';
   };
 
-  if (!points) return null;
+  if (!points || isFetching) return null;
   const { personal, imgs } = points;
   return (
     <div className={styles.Profile}>
@@ -59,13 +59,13 @@ export function Profile({
         <h5>
           {personal.name || '-'} {personal.surname || '-'}
         </h5>
-        {eventsList?.includes(EventNames.EditOff) ? (
+        {editMode ? (
           <FileInput name="avatar" multiple={false} onChange={onChangeFiles} />
         ) : null}
       </div>
       <div className={styles.middle}>
         <Form
-          hideInput={eventsList?.includes(EventNames.Edit)}
+          editMode={editMode}
           points={points}
           onChange={onChange}
           errorField={errorField}

@@ -20,24 +20,24 @@ export async function loginController(
   try {
     const usersColl = MONGO_DB.collection<UserType>(CollectionName.Users);
     if (!usersColl) throw serverError("bad connection");
-    const user = await usersColl.findOne({ "configs.login": login });
-    if (!user) throw loginError();
+    const admin = await usersColl.findOne({ "configs.login": login });
+    if (!admin) throw loginError();
 
-    if (user.userId) {
-      if (!bcrypt.compareSync(password, user.configs.password)) loginError();
-      createAccessToken(user.userId, res);
-      const refreshToken = createRefreshToken(user.userId);
+    if (admin.userId) {
+      if (!bcrypt.compareSync(password, admin.configs.password)) loginError();
+      createAccessToken(admin.userId, res);
+      const refreshToken = createRefreshToken(admin.userId);
       const result = await writeRefreshToken(
-        user.userId,
+        admin.userId,
         refreshToken,
         usersColl
       );
       if (!result.acknowledged) throw serverError("bad update");
-      res.status(201).json({ userId: user.userId });
+      res.status(201).json({ adminId: admin.userId });
     }
 
-    if (!user.userId) {
-      if (password !== user.configs.password) throw loginError();
+    if (!admin.userId) {
+      if (password !== admin.configs.password) throw loginError();
       const uniqueId = uuidv4();
       const result = await writeRefreshTokenWithoutUserId({
         usersColl,
@@ -48,7 +48,7 @@ export async function loginController(
       });
       if (!result.acknowledged) throw serverError("bad update");
       createAccessToken(uniqueId, res);
-      res.status(201).json({ userId: uniqueId });
+      res.status(201).json({ adminId: uniqueId });
     }
   } catch (err) {
     next(err);

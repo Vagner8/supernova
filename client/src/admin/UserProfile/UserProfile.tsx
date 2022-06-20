@@ -1,20 +1,22 @@
-import { AdminReducerActions, OperationResult } from 'admin/adminReducer';
 import {
-  EventNames,
+  AdminReducerActions,
+  AdminState,
+  OperationResult,
+} from 'admin/adminReducer';
+import {
   EventsReducerActions,
   EventsState,
-  switchEditAndEditOf,
 } from 'admin/Events/eventsReducer';
 import { useFetchUserById } from 'api/users/useFetchUserById';
-import { useEventsList } from 'hooks';
-import { Dispatch, useEffect, useRef } from 'react';
+import { Dispatch } from 'react';
 import { useParams } from 'react-router-dom';
 import { Profile } from 'UIKit';
 import styles from './userProfile.module.css';
 
 interface UserProfileProps {
-  eventsList: EventsState['eventsList'];
+  editMode: EventsState['editMode'];
   points: EventsState['points'];
+  isFetching: AdminState['isFetching'];
   eventsDispatch: Dispatch<EventsReducerActions>;
   adminDispatch: Dispatch<AdminReducerActions>;
   errorField?: OperationResult['field'];
@@ -22,29 +24,22 @@ interface UserProfileProps {
 }
 
 export default function UserProfile({
-  errorMessage,
+  isFetching,
   points,
+  editMode,
   adminDispatch,
   eventsDispatch,
-  eventsList,
   errorField,
+  errorMessage,
 }: UserProfileProps) {
   const { userId } = useParams();
   useFetchUserById(userId, eventsDispatch, adminDispatch);
-  useEventsList({
-    eventsDispatch,
-    newEventsList: useRef([EventNames.New, EventNames.Edit, EventNames.Delete])
-      .current,
-  });
-  useEffect(() => {
-    if (userId === 'new') {
-      switchEditAndEditOf(eventsDispatch, EventNames.EditOff);
-    }
-  }, [eventsDispatch, userId])
+
   return (
     <div className={styles.UserProfile}>
       <Profile
-        eventsList={eventsList}
+        isFetching={isFetching}
+        editMode={editMode}
         errorField={errorField}
         errorMessage={errorMessage}
         points={points}

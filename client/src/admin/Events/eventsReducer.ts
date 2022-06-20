@@ -2,7 +2,7 @@ import { UseFetchUserByIdResponse } from 'api/users/useFetchUserById';
 import { Dispatch, Reducer } from 'react';
 import { ImgsType } from '../../../../common/src/commonTypes';
 
-type PointsType = UseFetchUserByIdResponse
+type PointsType = UseFetchUserByIdResponse;
 
 export enum EventNames {
   New = 'new',
@@ -14,21 +14,25 @@ export enum EventNames {
 }
 
 export enum EventsStrAction {
+  SwitchEditMode = 'SwitchEditMode',
+  SwitchSaveButton = 'SwitchSaveButton',
   SaveFiles = 'SaveFiles',
   DeleteOneFile = 'DeleteOneFile',
   DeleteAllFiles = 'DeleteAllFiles',
   SaveEventsList = 'SaveEventsList',
-  DeleteEventsList = 'DeleteEventsList',
   SavePoints = 'SavePoints',
   PointsOnChange = 'PointsOnChange',
-  ResetEventState = 'ResetEventState',
-  SwitchEditAndEditOf = 'SwitchEditAndEditOf',
-  SwitchSaveEvent = 'SwitchSaveEvent',
   SaveCopyOfPoints = 'SaveCopyOfPoints',
 }
 
-interface ResetEventState {
-  type: EventsStrAction.ResetEventState;
+interface SwitchEditMode {
+  type: EventsStrAction.SwitchEditMode;
+  payload: { editMode: EventsState['editMode'] };
+}
+
+interface SwitchSaveButton {
+  type: EventsStrAction.SwitchSaveButton;
+  payload: { saveButton: EventsState['saveButton'] };
 }
 
 interface SavePoints {
@@ -44,10 +48,6 @@ interface PointsOnChange {
 interface SaveEventsList {
   type: EventsStrAction.SaveEventsList;
   payload: { newEventsList: EventsState['eventsList'] };
-}
-
-interface DeleteEventsList {
-  type: EventsStrAction.DeleteEventsList;
 }
 
 interface SaveFiles {
@@ -68,21 +68,13 @@ interface DeleteAllFiles {
   type: EventsStrAction.DeleteAllFiles;
 }
 
-interface SwitchEditAndEditOf {
-  type: EventsStrAction.SwitchEditAndEditOf;
-  payload: { switchTo: EventNames.Edit | EventNames.EditOff };
-}
-
-interface SwitchSaveEvent {
-  type: EventsStrAction.SwitchSaveEvent;
-  payload: { saveEvent: 'show' | 'hide' };
-}
-
 interface SaveCopyOfPoints {
   type: EventsStrAction.SaveCopyOfPoints;
 }
 
 export interface EventsState {
+  editMode: boolean;
+  saveButton: boolean;
   copyPoints: PointsType | null;
   points: PointsType | null;
   changedPoints: Partial<PointsType> | null;
@@ -93,19 +85,19 @@ export interface EventsState {
 }
 
 export type EventsReducerActions =
-  | ResetEventState
+  | SwitchEditMode
+  | SwitchSaveButton
   | SavePoints
   | PointsOnChange
   | SaveEventsList
-  | DeleteEventsList
   | SaveFiles
   | DeleteOneFile
   | DeleteAllFiles
-  | SwitchEditAndEditOf
-  | SwitchSaveEvent
   | SaveCopyOfPoints;
 
 export const eventsInitState: EventsState = {
+  editMode: false,
+  saveButton: false,
   copyPoints: null,
   points: null,
   changedPoints: null,
@@ -120,6 +112,18 @@ export const eventsReducer: Reducer<EventsState, EventsReducerActions> = (
   action,
 ) => {
   switch (action.type) {
+    case EventsStrAction.SwitchEditMode: {
+      return {
+        ...state,
+        editMode: action.payload.editMode,
+      };
+    }
+    case EventsStrAction.SwitchSaveButton: {
+      return {
+        ...state,
+        saveButton: action.payload.saveButton,
+      };
+    }
     case EventsStrAction.SavePoints: {
       return {
         ...state,
@@ -153,28 +157,10 @@ export const eventsReducer: Reducer<EventsState, EventsReducerActions> = (
         },
       };
     }
-    case EventsStrAction.ResetEventState: {
-      return {
-        ...state,
-        points: state.copyPoints,
-        files: null,
-        changedPoints: null,
-        eventsList:
-          state.eventsList &&
-          state.eventsList.filter((item) => item !== EventNames.Save),
-      };
-    }
     case EventsStrAction.SaveEventsList: {
       return {
         ...state,
         eventsList: action.payload.newEventsList,
-      };
-    }
-    case EventsStrAction.DeleteEventsList: {
-      if (!state.eventsList) return state;
-      return {
-        ...state,
-        eventsList: null,
       };
     }
     case EventsStrAction.SaveFiles: {
@@ -207,40 +193,6 @@ export const eventsReducer: Reducer<EventsState, EventsReducerActions> = (
         ...state,
         files: null,
       };
-    }
-    case EventsStrAction.SwitchEditAndEditOf: {
-      return {
-        ...state,
-        eventsList:
-          state.eventsList &&
-          state.eventsList.map((event) => {
-            if (event.match(/edit/i)) {
-              return action.payload.switchTo;
-            }
-            return event;
-          }),
-      };
-    }
-    case EventsStrAction.SwitchSaveEvent: {
-      if (!state.eventsList) return state;
-      if (
-        action.payload.saveEvent === 'show' &&
-        !state.eventsList.includes(EventNames.Save)
-      ) {
-        return {
-          ...state,
-          eventsList: [...state.eventsList, EventNames.Save],
-        };
-      }
-      if (action.payload.saveEvent === 'hide') {
-        return {
-          ...state,
-          eventsList: state.eventsList.filter(
-            (item) => item !== EventNames.Save,
-          ),
-        };
-      }
-      return state;
     }
     default:
       return state;
@@ -290,14 +242,6 @@ export const saveEventsList = (
   });
 };
 
-export const deleteEventsList = (
-  eventsDispatch: Dispatch<EventsReducerActions>,
-) => {
-  eventsDispatch({
-    type: EventsStrAction.DeleteEventsList,
-  });
-};
-
 export const saveFiles = ({
   eventsDispatch,
   files,
@@ -333,30 +277,22 @@ export const deleteAllFiles = (
   });
 };
 
-export const resetEventState = (
+export const switchEditMode = (
   eventsDispatch: Dispatch<EventsReducerActions>,
+  editMode: EventsState['editMode'],
 ) => {
   eventsDispatch({
-    type: EventsStrAction.ResetEventState,
+    type: EventsStrAction.SwitchEditMode,
+    payload: { editMode },
   });
 };
 
-export const switchEditAndEditOf = (
+export const switchSaveButton = (
   eventsDispatch: Dispatch<EventsReducerActions>,
-  switchTo: EventNames.Edit | EventNames.EditOff,
+  saveButton: EventsState['saveButton'],
 ) => {
   eventsDispatch({
-    type: EventsStrAction.SwitchEditAndEditOf,
-    payload: { switchTo },
-  });
-};
-
-export const switchSaveEvent = (
-  eventsDispatch: Dispatch<EventsReducerActions>,
-  saveEvent: 'show' | 'hide',
-) => {
-  eventsDispatch({
-    type: EventsStrAction.SwitchSaveEvent,
-    payload: { saveEvent },
+    type: EventsStrAction.SwitchSaveButton,
+    payload: { saveButton },
   });
 };

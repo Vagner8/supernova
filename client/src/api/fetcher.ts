@@ -36,7 +36,7 @@ export async function fetcher({
       headers: {
         'Content-type': 'application/json',
         credentials: 'include',
-        userId: localStorage.getItem('userId') || 'idle',
+        adminId: localStorage.getItem('adminId') || 'idle',
       },
     });
     const json = (await response.json()) as

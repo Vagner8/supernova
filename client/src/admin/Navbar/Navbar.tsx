@@ -1,14 +1,16 @@
 import { AdminState } from 'admin/adminReducer';
+import { useLocalStorageData } from 'hooks';
 import { NavLink } from 'react-router-dom';
 import { Avatar, ButtonIcon } from 'UIKit';
 import styles from './navbar.module.css';
 
 interface NavbarProps {
-  ownerLogin: AdminState['ownerLogin'];
-  ownerAvatar: AdminState['ownerAvatar'];
+  adminLogin: AdminState['adminLogin'];
+  adminAvatar: AdminState['adminAvatar'];
 }
 
-export function Navbar({ ownerLogin, ownerAvatar }: NavbarProps) {
+export function Navbar({ adminLogin, adminAvatar }: NavbarProps) {
+  const adminId = useLocalStorageData('adminId')
   return (
     <nav className={styles.Navbar}>
       <div className={styles.lift}>
@@ -17,10 +19,10 @@ export function Navbar({ ownerLogin, ownerAvatar }: NavbarProps) {
       <div className={styles.right}>
         <NavLink
           className={styles.avatar_link}
-          to={`/admin/users/${localStorage.getItem('userId')}`}
+          to={`/admin/users/${adminId}`}
         >
-          <p className={styles.login}>{ownerLogin}</p>
-          <Avatar url={ownerAvatar} size="xs" />
+          <p className={styles.login}>{adminLogin}</p>
+          <Avatar url={adminAvatar} size="xs" />
         </NavLink>
       </div>
     </nav>

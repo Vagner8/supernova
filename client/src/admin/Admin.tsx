@@ -17,10 +17,8 @@ import {
 import { FilesSheet } from './FilesSheet/FilesSheet';
 import { Events } from './Events/Events';
 import { OperationResultsSheet } from './OperationResultsSheet/OperationResultsSheet';
-import { useWindowClick } from 'hooks/useWindowClick';
-import { useOperationResultWithField } from 'hooks/useOperationResultWithField';
+import { useWindowClick, useOperationResultWithField, useLocalStorageData } from 'hooks';
 import { useFetchAvatarAndLogin } from 'api/users/useFetchAvatarAndLogin';
-import { setInitState, setReducer } from './setReducer';
 
 const Home = lazy(() => import('./Home/Home'));
 const UserProfile = lazy(() => import('./UserProfile/UserProfile'));
@@ -32,13 +30,11 @@ export function Admin() {
     eventsReducer,
     eventsInitState,
   );
-  const [setState, setDispatch] = useReducer(setReducer, setInitState);
-
   const operationResultWithField = useOperationResultWithField(
     adminState.operationResults,
   );
-
-  if (!localStorage.getItem('userId')) {
+  const adminId = localStorage.getItem('adminId')
+  if (!adminId || adminId === 'undefined') {
     return (
       <Auth
         isFetching={adminState.isFetching}
@@ -73,6 +69,7 @@ function AdminRoutes({
   eventsState,
   eventsDispatch,
 }: AdminRoutesProps) {
+  console.log('AdminRoutes')
   useFetchAvatarAndLogin(adminDispatch)
   useWindowClick({ adminDispatch, drawer: adminState.drawer });
   const operationResultWithField = useOperationResultWithField(
@@ -82,6 +79,8 @@ function AdminRoutes({
     <>
       <Linear show={adminState.isFetching} />
       <Events
+        editMode={eventsState.editMode}
+        saveButton={eventsState.saveButton}
         eventsList={eventsState.eventsList}
         changedPoints={eventsState.changedPoints}
         files={eventsState.files}
@@ -91,8 +90,8 @@ function AdminRoutes({
         eventsDispatch={eventsDispatch}
       />
       <Navbar
-        ownerLogin={adminState.ownerLogin}
-        ownerAvatar={adminState.ownerAvatar}
+        adminLogin={adminState.adminLogin}
+        adminAvatar={adminState.adminAvatar}
       />
       <Drawer drawer={adminState.drawer} />
       <Suspense fallback={<Linear show={true} />}>
@@ -117,7 +116,8 @@ function AdminRoutes({
               path="/users/:userId"
               element={
                 <UserProfile
-                  eventsList={eventsState.eventsList}
+                  isFetching={adminState.isFetching}
+                  editMode={eventsState.editMode}
                   points={eventsState.points}
                   eventsDispatch={eventsDispatch}
                   adminDispatch={adminDispatch}

@@ -6,15 +6,16 @@ import { UserType } from "../../../common/src/userTypes";
 import { accessError, serverError } from "./../helpers/customErrors";
 import { createAccessToken } from "../token/createAccessToken";
 
-export let USER_ID: string;
+export let ADMIN_ID: string;
 
 export const accessMiddleware =
   () => async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const userId = req.headers.userid;
-      if (userId === "idle" || !userId || Array.isArray(userId)) {
-        throw accessError({message: "no userId", logout: true});
+      const adminId = req.headers.adminid;
+      if (adminId === "idle" || !adminId || Array.isArray(adminId)) {
+        throw accessError({message: "no admin id", logout: true});
       }
+
       const accessToken = req.cookies.accessToken;
       if (accessToken) {
         jwt.verify(
@@ -22,7 +23,7 @@ export const accessMiddleware =
           process.env.ACCESS_SECRET,
           (err: any, decoded: any) => {
             if (err) return
-            USER_ID = decoded.userId;
+            ADMIN_ID = decoded.adminId;
           }
         );
       }
@@ -31,17 +32,17 @@ export const accessMiddleware =
         const usersColl = MONGO_DB.collection<UserType>(CollectionName.Users);
         if (!usersColl) throw serverError("bad connection");
         const result = await usersColl.findOne<{ refreshToken: string }>(
-          { userId },
+          { userId: adminId },
           { projection: { _id: 0, refreshToken: 1 } }
         );
-        if (!result) throw serverError("no refreshToken");
+        if (!result.refreshToken) throw serverError("no refresh token");
         jwt.verify(
           result.refreshToken,
           process.env.REFRESH_SECRET,
           (err: any, decoded: any) => {
             if (err) return next(err);
-            USER_ID = decoded.userId;
-            createAccessToken(userId, res);
+            ADMIN_ID = decoded.adminid;
+            createAccessToken(adminId, res);
           }
         );
       }

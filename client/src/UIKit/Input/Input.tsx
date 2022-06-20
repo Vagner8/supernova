@@ -1,5 +1,7 @@
 import { OperationResult } from 'admin/adminReducer';
+import { EventsState } from 'admin/Events/eventsReducer';
 import { ChangeEvent, FocusEvent, memo, useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import { ButtonIcon } from 'UIKit';
 import styles from './input.module.css';
 
@@ -7,36 +9,41 @@ export interface InputProps {
   label: string;
   value: string;
   type: 'password' | 'text';
-  hide?: boolean;
-  pointName?: string;
-  required?: boolean;
+  editMode: EventsState['editMode'];
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
   errorMessage?: OperationResult['message'];
   errorField?: OperationResult['field'];
+  pointName?: string;
+  required?: boolean;
 }
 
 export function Input({
   type,
   value,
   label,
-  pointName,
-  required,
-  hide,
+  editMode,
   onChange,
   errorMessage,
   errorField,
+  pointName,
+  required,
 }: InputProps) {
   const [active, setActive] = useState<'active' | ''>('');
   const [hidePassword, setHidePassword] = useState(true);
+  const location = useLocation();
 
   useEffect(() => {
-    if (!value) return;
-    setActive('active');
+    setActive('');
+  }, [location])
+
+  useEffect(() => {
+    if (value) {
+      setActive('active');
+    }
   }, [value]);
 
-  const onFocus = () => {
-    setActive('active');
-  };
+  const onFocus = () => setActive('active')
+
   const onBlur = (e: FocusEvent<HTMLInputElement>) => {
     if (!e.target.value) {
       setActive('');
@@ -55,9 +62,9 @@ export function Input({
     return true;
   };
 
-  console.log('Input')
+  // console.log('Input')
 
-  if (hide) return null;
+  if (!editMode) return null;
   return (
     <div role="group" className={`${styles.Input} ${styles[active]}`}>
       <label

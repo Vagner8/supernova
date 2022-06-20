@@ -13,11 +13,11 @@
   align-items: center;
   justify-content: center;
   letter-spacing: .5px;
-  color: white;
-  background-color: #26a69a;
+  color: var(--white-color);
+  background-color: var(--green-mui-color);
   border-radius: 2px;
   text-transform: uppercase;
-  box-shadow: 0 3px 3px 0 rgba(0,0,0,0.14),0 1px 7px 0 rgba(0,0,0,0.12),0 3px 1px -1px rgba(0,0,0,0.2);
+  box-shadow: var(--m-shadow);
 }
 
 .button:hover {
@@ -25,37 +25,15 @@
 }
 
 .list {
-  box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14),0 3px 1px -2px rgba(0,0,0,0.12),0 1px 5px 0 rgba(0,0,0,0.2);
-  background-color: white;
+  box-shadow: var(--m-shadow);
+  background-color: var(--white-color);
   position: absolute;
   top: 0;
   right: 0;
   left: 0;
 }
 
-.li_button {
-  color: #26a69a;
-  font-size: 16px;
-  width: 100%;
-  padding: .75rem 1.25rem;
-  justify-content: flex-start;
-}
-
-.li_button:hover {
-  background-color: #eee;
-  cursor: pointer;
-}
-
 .ikon {
   margin-left: 0.55rem;
   font-size: 1.3rem;
-}
-
-[data-event-name="save"] {
-  color: white;
-  background-color: #26a69a;
-}
-
-[data-event-name="save"]:hover {
-  background-color: #2bbbad;
 }

@@ -3,7 +3,7 @@ import { Dispatch, Reducer } from 'react';
 import { CustomErrorType } from '../../../common/src/customErrorType';
 
 export enum AdminStrAction {
-  SaveOwnerId = 'SaveOwnerId',
+  SaveAdminId = 'SaveAdminId',
   SaveOperationResult = 'SaveOperationResult',
   DeleteOperationResult = 'DeleteOperationResult',
   SetIsFetching = 'SetIsFetching',
@@ -41,9 +41,9 @@ interface SaveOperationResult {
   };
 }
 
-interface SaveOwnerId {
-  type: AdminStrAction.SaveOwnerId;
-  payload: { userId: string };
+interface SaveAdminId {
+  type: AdminStrAction.SaveAdminId;
+  payload: { adminId: string };
 }
 
 interface SaveAvatarAndLogin {
@@ -58,7 +58,7 @@ interface SwitchDrawer {
 
 export type AdminReducerActions =
   | SetIsFetching
-  | SaveOwnerId
+  | SaveAdminId
   | DeleteOperationResult
   | DeleteAllOperationResults
   | SaveOperationResult
@@ -68,16 +68,16 @@ export type AdminReducerActions =
 export interface AdminState {
   isFetching: boolean;
   operationResults: OperationResult[] | null;
-  ownerLogin: string | null;
-  ownerAvatar: string | null;
+  adminLogin: string | null;
+  adminAvatar: string | null;
   drawer: 'show' | 'hide';
 }
 
 export const adminInitState: AdminState = {
   isFetching: false,
   operationResults: null,
-  ownerLogin: null,
-  ownerAvatar: null,
+  adminLogin: null,
+  adminAvatar: null,
   drawer: 'hide',
 };
 
@@ -86,12 +86,9 @@ export const adminReducer: Reducer<AdminState, AdminReducerActions> = (
   action,
 ) => {
   switch (action.type) {
-    case AdminStrAction.SaveOwnerId: {
-      localStorage.setItem('userId', action.payload.userId);
-      return {
-        ...state,
-        userId: action.payload.userId,
-      };
+    case AdminStrAction.SaveAdminId: {
+      localStorage.setItem('adminId', action.payload.adminId);
+      return {...state, adminId: action.payload.adminId}
     }
     case AdminStrAction.SetIsFetching: {
       return {
@@ -101,7 +98,7 @@ export const adminReducer: Reducer<AdminState, AdminReducerActions> = (
     }
     case AdminStrAction.SaveOperationResult: {
       const { operationResult } = action.payload;
-      operationResult.logout && localStorage.removeItem('userId');
+      operationResult.logout && localStorage.removeItem('adminId');
       if (!state.operationResults) {
         return {
           ...state,
@@ -135,8 +132,8 @@ export const adminReducer: Reducer<AdminState, AdminReducerActions> = (
     case AdminStrAction.SaveAvatarAndLogin: {
       return {
         ...state,
-        ownerAvatar: action.payload.avatarAndLogin.imgs.avatar[0],
-        ownerLogin: action.payload.avatarAndLogin.configs.login,
+        adminAvatar: action.payload.avatarAndLogin.imgs.avatar[0],
+        adminLogin: action.payload.avatarAndLogin.configs.login,
       };
     }
     case AdminStrAction.SwitchDrawer: {
@@ -189,13 +186,13 @@ export const deleteAllOperationResults = (
 };
 
 
-export const saveOwnerId = (
+export const saveAdminId = (
   adminDispatch: Dispatch<AdminReducerActions>,
-  userId: string,
+  adminId: string,
 ) => {
   adminDispatch({
-    type: AdminStrAction.SaveOwnerId,
-    payload: { userId },
+    type: AdminStrAction.SaveAdminId,
+    payload: { adminId },
   });
 };
 

@@ -1,15 +1,12 @@
-import { EventNames } from 'admin/Events/eventsReducer';
-import { MouseEvent, useEffect, useState } from 'react';
-import { Icon } from 'UIKit';
+import { MouseEvent, ReactNode, useEffect, useState } from 'react';
 import styles from './dropdown.module.css';
 
 interface DropdownProps {
   title: string;
-  list: string[] | null;
-  handleEvents: (target: HTMLButtonElement) => void;
+  children: ReactNode
 }
 
-export function Dropdown({ title, list, handleEvents }: DropdownProps) {
+export function Dropdown({ title, children }: DropdownProps) {
   const [show, setSow] = useState(false);
 
   useEffect(() => {
@@ -27,39 +24,16 @@ export function Dropdown({ title, list, handleEvents }: DropdownProps) {
     setSow(true);
   };
 
-  const buttonClick = (e: MouseEvent<HTMLButtonElement>) => {
-    setSow(false);
-    if (!e.target) return;
-    const target = e.target as HTMLButtonElement;
-    handleEvents(target);
-  };
-
-  if (!list) return null;
+  if (!children) return null;
 
   return (
-    <div className={styles.Dropdown}>
+    <div data-dropdown className={styles.Dropdown}>
       <button onClick={dropdownClick} className={styles.button}>
         {title}
       </button>
       {show ? (
         <ul className={styles.list}>
-          {list.map((item) => {
-            if (!item) return
-            return (
-              <li key={item}>
-                <button
-                  data-event-name={item}
-                  className={styles.li_button}
-                  onClick={buttonClick}
-                >
-                  {item}
-                  {item === EventNames.Save ? (
-                    <Icon icon="save" type='in-button' />
-                  ) : null}
-                </button>
-              </li>
-            );
-          })}
+          {children}
         </ul>
       ) : null}
     </div>

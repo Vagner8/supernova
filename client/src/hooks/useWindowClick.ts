@@ -14,19 +14,10 @@ export function useWindowClick({ adminDispatch, drawer }: UseWindowClick) {
   useEffect(() => {
     function onClick(this: Window, e: MouseEvent) {
       manageDrawer(e.target, drawer, adminDispatch);
-      manageDropdown(e.target)
     }
     window.addEventListener('click', onClick);
     return () => window.removeEventListener('click', onClick);
   }, [adminDispatch, drawer]);
-}
-
-const manageDropdown = (
-  target: EventTarget | null,
-) => {
-  if (!target) return;
-  if ((target as HTMLElement).closest('.dropdown_Dropdown__rppfE')) return
-  
 }
 
 const manageDrawer = (

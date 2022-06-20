@@ -7,7 +7,7 @@ import { EventsState } from 'admin/Events/eventsReducer';
 interface PrintPointsProps {
   points: EventsState['points'];
   sort: string[];
-  hideInput: boolean | undefined;
+  editMode: EventsState['editMode'];
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
   errorField?: OperationResult['field'];
   errorMessage?: OperationResult['message'];
@@ -16,7 +16,7 @@ interface PrintPointsProps {
 export function Form({
   points,
   sort,
-  hideInput,
+  editMode,
   onChange,
   errorField,
   errorMessage,
@@ -34,7 +34,7 @@ export function Form({
                 return (
                   <Fragment key={keyText}>
                     <InputMemo
-                      hide={hideInput}
+                      editMode={editMode}
                       type="text"
                       label={keyText}
                       value={valueText}
@@ -44,7 +44,7 @@ export function Form({
                       onChange={onChange}
                     />
                     <Point
-                      hide={!hideInput}
+                      editMode={editMode}
                       keyText={keyText}
                       valueText={valueText as string}
                     />

@@ -1,13 +1,14 @@
+import { EventsState } from 'admin/Events/eventsReducer';
 import styles from './point.module.css';
 
 interface PointProps {
   keyText: string;
   valueText: string;
-  hide: boolean
+  editMode: EventsState['editMode']
 }
 
-export function Point({ keyText, valueText, hide }: PointProps) {
-  if (hide) return null
+export function Point({ keyText, valueText, editMode }: PointProps) {
+  if (editMode) return null
   return (
     <div className={styles.Point}>
       <small className={styles.small}>{keyText}</small>

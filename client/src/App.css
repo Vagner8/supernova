@@ -77,6 +77,8 @@ input[type=file]::-webkit-file-upload-button {
   --icon-color: rgba(0, 0, 0, 0.54);
   --white-color: #ffffff;
   --red-mui-color: #ee6e73;
+  --green-mui-color: #26a69a;
+  --lite-green-mui-color: #2bbbad;
 
   --hover-background: rgba(0, 0, 0, 0.04);
 

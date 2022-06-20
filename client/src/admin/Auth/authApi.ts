@@ -1,5 +1,5 @@
-import { AdminReducerActions, saveOwnerId } from 'admin/adminReducer';
-import { AddressTo, fetcher } from 'api/fetcher';
+import { AdminReducerActions, saveAdminId } from 'admin/adminReducer';
+import { fetcher } from 'api/fetcher';
 import { Dispatch } from 'react';
 
 export async function login(
@@ -15,7 +15,7 @@ export async function login(
     adminDispatch,
     message: 'you are login',
     body,
-  })) as undefined | { userId: string };
+  })) as undefined | { adminId: string };
   if (!res) return;
-  saveOwnerId(adminDispatch, res.userId);
+  saveAdminId(adminDispatch, res.adminId);
 }
