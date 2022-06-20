@@ -27,7 +27,6 @@ export function Profile({
   errorField,
   errorMessage,
 }: ProfileProps) {
-
   const onChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
       pointsOnChange({
@@ -57,9 +56,9 @@ export function Profile({
     <div className={styles.Profile}>
       <div className={styles.lift}>
         <Avatar url={imgs.avatar[0]} size="m" />
-        <h6>
+        <h5>
           {personal.name || '-'} {personal.surname || '-'}
-        </h6>
+        </h5>
         {eventsList?.includes(EventNames.EditOff) ? (
           <FileInput name="avatar" multiple={false} onChange={onChangeFiles} />
         ) : null}

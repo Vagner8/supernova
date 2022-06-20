@@ -15,9 +15,7 @@ export function Dropdown({ title, list, handleEvents }: DropdownProps) {
   useEffect(() => {
     function onClickDocument(this: HTMLElement, e: Event) {
       if (!e.target) return;
-      if ((e.target as HTMLElement).closest('.dropdown_Dropdown__rppfE')) {
-        return;
-      }
+      if ((e.target as HTMLElement).closest('.dropdown_Dropdown__rppfE')) return
       setSow(false);
     }
     document.addEventListener('click', onClickDocument);

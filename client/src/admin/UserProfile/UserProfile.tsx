@@ -43,7 +43,6 @@ export default function UserProfile({
   }, [eventsDispatch, userId])
   return (
     <div className={styles.UserProfile}>
-      <h4>Create new user</h4>
       <Profile
         eventsList={eventsList}
         errorField={errorField}

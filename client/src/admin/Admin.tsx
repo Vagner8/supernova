@@ -1,4 +1,4 @@
-import { Dispatch, lazy, Suspense, useEffect, useReducer } from 'react';
+import { Dispatch, lazy, Suspense, useReducer } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { Auth } from './Auth/Auth';
 import {
@@ -17,10 +17,10 @@ import {
 import { FilesSheet } from './FilesSheet/FilesSheet';
 import { Events } from './Events/Events';
 import { OperationResultsSheet } from './OperationResultsSheet/OperationResultsSheet';
-import { AddressTo } from 'api/fetcher';
 import { useWindowClick } from 'hooks/useWindowClick';
 import { useOperationResultWithField } from 'hooks/useOperationResultWithField';
 import { useFetchAvatarAndLogin } from 'api/users/useFetchAvatarAndLogin';
+import { setInitState, setReducer } from './setReducer';
 
 const Home = lazy(() => import('./Home/Home'));
 const UserProfile = lazy(() => import('./UserProfile/UserProfile'));
@@ -32,6 +32,7 @@ export function Admin() {
     eventsReducer,
     eventsInitState,
   );
+  const [setState, setDispatch] = useReducer(setReducer, setInitState);
 
   const operationResultWithField = useOperationResultWithField(
     adminState.operationResults,
