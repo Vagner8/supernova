@@ -16,22 +16,20 @@ import {
   AdminReducerActions,
   AdminState,
   deleteAllOperationResults,
-  OperationResult,
 } from 'admin/adminReducer';
 import { login } from './authApi';
 import { OperationResultsSheet } from 'admin/OperationResultsSheet/OperationResultsSheet';
+import { OperationResultType } from '../../../../common/src/operationResultType';
 
 interface AuthProps {
   isFetching: AdminState['isFetching'];
-  errorField?: OperationResult['field'];
-  errorMessage?: OperationResult['message'];
   operationResults: AdminState['operationResults'];
   adminDispatch: Dispatch<AdminReducerActions>;
+  validateErrors?: OperationResultType['validateErrors'];
 }
 
 export function Auth({
-  errorMessage,
-  errorField,
+  validateErrors,
   isFetching,
   operationResults,
   adminDispatch,
@@ -65,8 +63,7 @@ export function Auth({
             {authState.inputs.map((input) => (
               <InputMemo
                 key={input.label}
-                errorMessage={errorMessage}
-                errorField={errorField}
+                validateErrors={validateErrors}
                 label={input.label}
                 type={input.type}
                 value={input.value}

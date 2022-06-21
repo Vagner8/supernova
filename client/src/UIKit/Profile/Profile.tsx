@@ -1,4 +1,4 @@
-import { AdminState, OperationResult } from 'admin/adminReducer';
+import { AdminState } from 'admin/adminReducer';
 import {
   EventsReducerActions,
   EventsState,
@@ -9,14 +9,14 @@ import { ChangeEvent, Dispatch, useCallback } from 'react';
 import { Avatar, FileInput, Form } from 'UIKit';
 import styles from './profile.module.css';
 import { ImgsType } from '../../../../common/src/commonTypes';
+import { OperationResultType } from '../../../../common/src/operationResultType';
 
 interface ProfileProps {
   editMode: EventsState['editMode']
   points: EventsState['points'];
   isFetching: AdminState['isFetching']
   eventsDispatch: Dispatch<EventsReducerActions>;
-  errorField?: OperationResult['field'];
-  errorMessage?: OperationResult['message'];
+  validateErrors?: OperationResultType['validateErrors'];
 }
 
 export function Profile({
@@ -24,8 +24,7 @@ export function Profile({
   points,
   editMode,
   eventsDispatch,
-  errorField,
-  errorMessage,
+  validateErrors,
 }: ProfileProps) {
 
   const onChange = useCallback(
@@ -68,8 +67,7 @@ export function Profile({
           editMode={editMode}
           points={points}
           onChange={onChange}
-          errorField={errorField}
-          errorMessage={errorMessage}
+          validateErrors={validateErrors}
           sort={['personal', 'configs', 'contacts', 'address']}
         />
       </div>

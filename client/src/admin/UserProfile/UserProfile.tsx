@@ -1,7 +1,6 @@
 import {
   AdminReducerActions,
   AdminState,
-  OperationResult,
 } from 'admin/adminReducer';
 import {
   EventsReducerActions,
@@ -11,6 +10,7 @@ import { useFetchUserById } from 'api/users/useFetchUserById';
 import { Dispatch } from 'react';
 import { useParams } from 'react-router-dom';
 import { Profile } from 'UIKit';
+import { OperationResultType } from '../../../../common/src/operationResultType';
 import styles from './userProfile.module.css';
 
 interface UserProfileProps {
@@ -19,8 +19,7 @@ interface UserProfileProps {
   isFetching: AdminState['isFetching'];
   eventsDispatch: Dispatch<EventsReducerActions>;
   adminDispatch: Dispatch<AdminReducerActions>;
-  errorField?: OperationResult['field'];
-  errorMessage?: OperationResult['message'];
+  validateErrors?: OperationResultType['validateErrors'];
 }
 
 export default function UserProfile({
@@ -29,8 +28,7 @@ export default function UserProfile({
   editMode,
   adminDispatch,
   eventsDispatch,
-  errorField,
-  errorMessage,
+  validateErrors
 }: UserProfileProps) {
   const { userId } = useParams();
   useFetchUserById(userId, eventsDispatch, adminDispatch);
@@ -40,8 +38,7 @@ export default function UserProfile({
       <Profile
         isFetching={isFetching}
         editMode={editMode}
-        errorField={errorField}
-        errorMessage={errorMessage}
+        validateErrors={validateErrors}
         points={points}
         eventsDispatch={eventsDispatch}
       />

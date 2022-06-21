@@ -17,7 +17,7 @@ import {
 import { FilesSheet } from './FilesSheet/FilesSheet';
 import { Events } from './Events/Events';
 import { OperationResultsSheet } from './OperationResultsSheet/OperationResultsSheet';
-import { useWindowClick, useOperationResultWithField, useLocalStorageData } from 'hooks';
+import { useWindowClick } from 'hooks';
 import { useFetchAvatarAndLogin } from 'api/users/useFetchAvatarAndLogin';
 
 const Home = lazy(() => import('./Home/Home'));
@@ -30,18 +30,17 @@ export function Admin() {
     eventsReducer,
     eventsInitState,
   );
-  const operationResultWithField = useOperationResultWithField(
-    adminState.operationResults,
-  );
-  const adminId = localStorage.getItem('adminId')
+  const adminId = localStorage.getItem('adminId');
   if (!adminId || adminId === 'undefined') {
     return (
       <Auth
         isFetching={adminState.isFetching}
         operationResults={adminState.operationResults}
-        errorMessage={operationResultWithField?.errorMessage}
-        errorField={operationResultWithField?.errorField}
         adminDispatch={adminDispatch}
+        validateErrors={
+          adminState?.operationResults?.filter((res) => res?.validateErrors)[0]
+            ?.validateErrors
+        }
       />
     );
   }
@@ -69,12 +68,9 @@ function AdminRoutes({
   eventsState,
   eventsDispatch,
 }: AdminRoutesProps) {
-  console.log('AdminRoutes')
-  useFetchAvatarAndLogin(adminDispatch)
+  console.log('AdminRoutes');
+  useFetchAvatarAndLogin(adminDispatch);
   useWindowClick({ adminDispatch, drawer: adminState.drawer });
-  const operationResultWithField = useOperationResultWithField(
-    adminState.operationResults,
-  );
   return (
     <>
       <Linear show={adminState.isFetching} />
@@ -121,8 +117,11 @@ function AdminRoutes({
                   points={eventsState.points}
                   eventsDispatch={eventsDispatch}
                   adminDispatch={adminDispatch}
-                  errorField={operationResultWithField?.errorField}
-                  errorMessage={operationResultWithField?.errorMessage}
+                  validateErrors={
+                    adminState?.operationResults?.filter(
+                      (res) => res?.validateErrors,
+                    )[0]?.validateErrors
+                  }
                 />
               }
             />

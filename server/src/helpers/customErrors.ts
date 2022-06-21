@@ -1,33 +1,29 @@
+import { ValidateError } from "../../../common/src/operationResultType";
 import { CustomError } from "./../middleware/errorMiddleware";
 
 export function loginError() {
   return new CustomError({
-    errorName: 'login error',
-    status: 400,
+    status: 'login error',
+    HTTPStatusCode: 400,
     message: "bad login or password",
-    logout: false,
-    field: null,
   });
 }
 
 export function serverError(message: string) {
   return new CustomError({
-    errorName: 'server error',
-    status: 500,
+    status: 'server error',
+    HTTPStatusCode: 500,
     message,
-    logout: false,
-    field: null,
   });
 }
 
-export function validateError(field: string, message: string) {
+export function validateError(validateErrors: ValidateError[]) {
   return new CustomError({
-    errorName: 'validate error',
-    status: 400,
-    message,
-    logout: false,
-    field,
-  });
+    status: 'validate error',
+    HTTPStatusCode: 400,
+    message: '',
+    validateErrors,
+  })
 }
 
 export function accessError({
@@ -38,10 +34,9 @@ export function accessError({
   logout: boolean;
 }) {
   return new CustomError({
-    errorName: 'access error',
-    status: 403,
+    status: 'access error',
+    HTTPStatusCode: 403,
     message,
     logout,
-    field: null,
   });
 }

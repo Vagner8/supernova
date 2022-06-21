@@ -23,8 +23,6 @@ export function OperationResultsSheet({
               index={index}
               status={result.status}
               message={result.message}
-              filed={result.field}
-              errorName={result.errorName}
               adminDispatch={adminDispatch}
             />
           </div>

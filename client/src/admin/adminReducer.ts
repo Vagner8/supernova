@@ -1,6 +1,6 @@
 import { UseFetchAvatarAndLoginResponse } from 'api/users/useFetchAvatarAndLogin';
 import { Dispatch, Reducer } from 'react';
-import { CustomErrorType } from '../../../common/src/customErrorType';
+import { OperationResultType } from '../../../common/src/operationResultType';
 
 export enum AdminStrAction {
   SaveAdminId = 'SaveAdminId',
@@ -10,14 +10,6 @@ export enum AdminStrAction {
   SaveAvatarAndLogin = 'SaveAvatarAndLogin',
   SwitchDrawer = 'SwitchDrawer',
   DeleteAllOperationResults = 'DeleteAllOperationResults'
-}
-
-export interface OperationResult {
-  status: 'success' | 'error' | 'warning';
-  errorName?: CustomErrorType['errorName'];
-  message: string;
-  field: string | null;
-  logout: boolean;
 }
 
 interface SetIsFetching {
@@ -37,7 +29,7 @@ interface DeleteAllOperationResults {
 interface SaveOperationResult {
   type: AdminStrAction.SaveOperationResult;
   payload: {
-    operationResult: OperationResult;
+    operationResult: OperationResultType;
   };
 }
 
@@ -67,7 +59,7 @@ export type AdminReducerActions =
 
 export interface AdminState {
   isFetching: boolean;
-  operationResults: OperationResult[] | null;
+  operationResults: OperationResultType[] | null;
   adminLogin: string | null;
   adminAvatar: string | null;
   drawer: 'show' | 'hide';
@@ -159,7 +151,7 @@ export const setIsFetching = (
 
 export const saveOperationResult = (
   adminDispatch: Dispatch<AdminReducerActions>,
-  operationResult: OperationResult,
+  operationResult: OperationResultType,
 ) => {
   adminDispatch({
     type: AdminStrAction.SaveOperationResult,

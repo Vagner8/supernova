@@ -6,10 +6,8 @@ const errorOptions = (
   message: string,
 ) => {
   saveOperationResult(adminDispatch, {
-    status: 'error',
-    message,
-    logout: false,
-    field: null,
+    status: 'firebase error',
+    message
   });
 };
 

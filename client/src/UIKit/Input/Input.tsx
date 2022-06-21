@@ -1,7 +1,7 @@
-import { OperationResult } from 'admin/adminReducer';
 import { ChangeEvent, FocusEvent, memo, useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { ButtonIcon } from 'UIKit';
+import { OperationResultType } from '../../../../common/src/operationResultType';
 import styles from './input.module.css';
 
 export interface InputProps {
@@ -9,8 +9,7 @@ export interface InputProps {
   value: string;
   type: 'password' | 'text';
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
-  errorMessage?: OperationResult['message'];
-  errorField?: OperationResult['field'];
+  validateErrors?: OperationResultType['validateErrors'];
   pointName?: string;
   required?: boolean;
 }
@@ -20,8 +19,7 @@ export function Input({
   value,
   label,
   onChange,
-  errorMessage,
-  errorField,
+  validateErrors,
   pointName,
   required,
 }: InputProps) {
@@ -53,10 +51,8 @@ export function Input({
   };
 
   const showError = (): boolean => {
-    if (!errorMessage) return false;
-    if (!errorField) return false;
-    if (errorField !== label) return false;
-    return true;
+    if (!validateErrors) return false;
+    return validateErrors.some(err => err.field === label)
   };
 
   // console.log('Input')
@@ -67,7 +63,7 @@ export function Input({
         className={`${styles.label} ${showError() && styles.error}`}
         htmlFor={label}
       >
-        {`${label} ${showError() ? `- ${errorMessage}` : ''}`}
+        {/* {`${label} ${showError() ? `- ${errorMessage}` : ''}`} */}
         <Star required={required} />
       </label>
       <input

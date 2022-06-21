@@ -24,7 +24,7 @@ export async function loginController(
     if (!admin) throw loginError();
 
     if (admin.userId) {
-      if (!bcrypt.compareSync(password, admin.configs.password)) loginError();
+      if (!bcrypt.compareSync(password, admin.configs.password)) throw loginError();
       createAccessToken(admin.userId, res);
       const refreshToken = createRefreshToken(admin.userId);
       const result = await writeRefreshToken(

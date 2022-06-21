@@ -1,16 +1,15 @@
 import { InputMemo, Point } from 'UIKit';
 import styles from './form.module.css';
 import { ChangeEvent, Fragment } from 'react';
-import { OperationResult } from 'admin/adminReducer';
 import { EventsState } from 'admin/Events/eventsReducer';
+import { OperationResultType } from '../../../../common/src/operationResultType';
 
 interface PrintPointsProps {
   points: EventsState['points'];
   sort: string[];
   editMode: EventsState['editMode'];
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
-  errorField?: OperationResult['field'];
-  errorMessage?: OperationResult['message'];
+  validateErrors?: OperationResultType['validateErrors'];
 }
 
 export function Form({
@@ -18,8 +17,7 @@ export function Form({
   sort,
   editMode,
   onChange,
-  errorField,
-  errorMessage,
+  validateErrors
 }: PrintPointsProps) {
   if (!points) return null;
   return (
@@ -38,8 +36,7 @@ export function Form({
                         type="text"
                         label={keyText}
                         value={valueText}
-                        errorField={errorField}
-                        errorMessage={errorMessage}
+                        validateErrors={validateErrors}
                         pointName={pointName}
                         onChange={onChange}
                       />

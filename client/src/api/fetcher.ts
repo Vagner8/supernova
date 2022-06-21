@@ -4,7 +4,7 @@ import {
   setIsFetching,
 } from 'admin/adminReducer';
 import { Dispatch } from 'react';
-import { CustomErrorType } from './../../../common/src/customErrorType'
+import { OperationResultType } from '../../../common/src/operationResultType';
 
 export enum AddressTo {
   Login = '/login',
@@ -20,6 +20,8 @@ interface Fetcher {
   body?: any;
   message: string;
 }
+
+type Result = undefined | OperationResultType | Object
 
 export async function fetcher({
   method,
@@ -39,53 +41,26 @@ export async function fetcher({
         adminId: localStorage.getItem('adminId') || 'idle',
       },
     });
-    const json = (await response.json()) as
-      | null
-      | CustomErrorType
-      | Object;
-    if (!json) {
-      saveOperationResult(adminDispatch, {
-        status: 'error',
+    const result = (await response.json()) as Result
+    if (!result) {
+      return saveOperationResult(adminDispatch, {
+        status: 'server error',
         message: 'unexpected error',
-        field: null,
-        logout: false,
       });
-      return null;
     }
-    if ('errorName' in json) {
-      if (json.errorName === 'token warning') {
-        saveOperationResult(adminDispatch, {
-          status: 'warning',
-          errorName: json.errorName,
-          message: json.message,
-          field: json.field,
-          logout: json.logout,
-        });
-        return null;
-      }
-      saveOperationResult(adminDispatch, {
-        status: 'error',
-        errorName: json.errorName,
-        message: json.message,
-        field: json.field,
-        logout: json.logout,
-      });
-      return null;
+    if ('status' in result) {
+      return saveOperationResult(adminDispatch, result);
     }
     saveOperationResult(adminDispatch, {
       status: 'success',
       message,
-      field: null,
-      logout: false,
     });
-    return json;
+    return result;
   } catch (err) {
     console.error(err);
     saveOperationResult(adminDispatch, {
-      status: 'error',
-      message: 'server error',
-      field: null,
-      logout: false,
+      status: 'server error',
+      message: 'unexpected error',
     });
   } finally {
     setIsFetching(adminDispatch, false);

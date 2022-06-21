@@ -1,17 +1,15 @@
 import {
   AdminReducerActions,
   deleteOperationResult,
-  OperationResult,
 } from 'admin/adminReducer';
-import { Dispatch, useEffect } from 'react';
+import { Dispatch } from 'react';
 import { ButtonIcon, Headerblock } from 'UIKit';
+import { OperationResultType } from '../../../../common/src/operationResultType';
 import styles from './snackbar.module.css';
 
 export interface SnackbarProps {
-  errorName: OperationResult['errorName'];
-  status: OperationResult['status'] | undefined;
-  message: OperationResult['message'] | undefined;
-  filed: OperationResult['field'] | undefined;
+  status: OperationResultType['status'] | undefined;
+  message: OperationResultType['message'] | undefined;
   index: number;
   adminDispatch: Dispatch<AdminReducerActions>;
 }
@@ -19,20 +17,17 @@ export interface SnackbarProps {
 export function Snackbar({
   status,
   message,
-  filed,
   index,
-  errorName,
   adminDispatch,
 }: SnackbarProps) {
-  const icons: {
-    success: 'task_alt';
-    error: 'error';
-    warning: 'warning';
-  } = {
-    success: 'task_alt',
-    error: 'error',
-    warning: 'warning',
-  };
+
+  const setIcon = (statusProp: string | undefined) => {
+    if (!statusProp) return 'error'
+    if (statusProp.match(/error/i)) return 'error'
+    if (statusProp.match(/warning/i)) return 'warning'
+    if (statusProp.match(/success/i)) return 'task_alt'
+    return 'error'
+  }
 
   // useEffect(() => {
   //   if (status !== 'error') {
@@ -46,13 +41,13 @@ export function Snackbar({
     deleteOperationResult(adminDispatch, index);
   };
 
-  if (!message || !status || filed) return null;
+  if (!message || !status || status === 'validate error') return null;
 
   return (
-    <div className={`${styles.Snackbar} ${styles[status]}`}>
+    <div className={`${styles.Snackbar} ${styles[setIcon(status)]}`}>
       <Headerblock
-        icon={icons[status]}
-        title={errorName || status}
+        icon={setIcon(status)}
+        title={status}
         text={message}
       />
       <ButtonIcon icon="close" onClick={onClick} />
