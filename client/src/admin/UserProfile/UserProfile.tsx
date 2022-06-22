@@ -36,6 +36,7 @@ export default function UserProfile({
   return (
     <div className={styles.UserProfile}>
       <Profile
+        pointsSort={['personal', 'configs', 'contacts', 'address']}
         isFetching={isFetching}
         editMode={editMode}
         validateErrors={validateErrors}

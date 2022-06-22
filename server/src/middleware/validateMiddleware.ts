@@ -16,7 +16,7 @@ interface ValidateOptions {
   requiredChars?: string[];
 }
 
-const validateErrors: ValidateError[] = [];
+let validateErrors: ValidateError[] = [];
 
 function validate(field: Fields, value: string, options: ValidateOptions) {
   if (value.length < options.min)
@@ -29,8 +29,9 @@ export const validateMiddleware =
   () => (req: Request, res: Response, next: NextFunction) => {
     const body = req.body as ReqBody | undefined;
     if (!body) next();
-    if (body.login) validate("login", body.login, { min: 5, max: 10 });
+    validateErrors = []
+    if (body.login) validate("login", body.login, { min: 3, max: 10 });
     if (body.password) validate("password", body.password, { min: 6, max: 15 });
-    if (validateErrors) throw validateError(validateErrors)
+    if (validateErrors.length > 0) throw validateError(validateErrors)
     next();
   };

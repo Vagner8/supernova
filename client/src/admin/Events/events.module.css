@@ -13,7 +13,8 @@
   justify-content: flex-start;
 }
 
-.event_button:hover {
+.event_button:hover,
+.event_new_link:hover {
   background-color: var(--hover-background);
   cursor: pointer;
 }

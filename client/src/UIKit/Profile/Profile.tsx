@@ -10,8 +10,10 @@ import { Avatar, FileInput, Form } from 'UIKit';
 import styles from './profile.module.css';
 import { ImgsType } from '../../../../common/src/commonTypes';
 import { OperationResultType } from '../../../../common/src/operationResultType';
+import { UserKeyPoints } from '../../../../common/src/userTypes';
 
 interface ProfileProps {
+  pointsSort: UserKeyPoints[];
   editMode: EventsState['editMode']
   points: EventsState['points'];
   isFetching: AdminState['isFetching']
@@ -20,6 +22,7 @@ interface ProfileProps {
 }
 
 export function Profile({
+  pointsSort,
   isFetching,
   points,
   editMode,
@@ -64,11 +67,11 @@ export function Profile({
       </div>
       <div className={styles.middle}>
         <Form
+          pointsSort={pointsSort}
           editMode={editMode}
           points={points}
           onChange={onChange}
           validateErrors={validateErrors}
-          sort={['personal', 'configs', 'contacts', 'address']}
         />
       </div>
       <div className={styles.right}></div>

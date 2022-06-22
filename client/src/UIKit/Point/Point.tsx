@@ -1,15 +1,15 @@
 import styles from './point.module.css';
 
 interface PointProps {
-  keyText: string;
-  valueText: string;
+  label: string;
+  text: string;
 }
 
-export function Point({ keyText, valueText }: PointProps) {
+export function Point({ label, text }: PointProps) {
   return (
     <div className={styles.Point}>
-      <small className={styles.small}>{keyText}</small>
-      <p>{valueText || '-'}</p>
+      <small className={styles.small}>{label}</small>
+      <p>{text || '-'}</p>
     </div>
   );
 }

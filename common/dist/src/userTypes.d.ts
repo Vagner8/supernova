@@ -32,5 +32,6 @@ export interface UserType {
     imgs: UserImgsType;
 }
 export declare type UserPointsType = Pick<UserType, "personal" | "contacts" | "address" | "imgs" | "configs">;
+export declare type UserKeyPoints = keyof UserPointsType;
 export {};
 //# sourceMappingURL=userTypes.d.ts.map

@@ -43,3 +43,5 @@ export type UserPointsType = Pick<
   UserType,
   "personal" | "contacts" | "address" | "imgs" | "configs"
 >;
+
+export type UserKeyPoints = keyof UserPointsType

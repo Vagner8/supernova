@@ -3,48 +3,49 @@ import styles from './form.module.css';
 import { ChangeEvent, Fragment } from 'react';
 import { EventsState } from 'admin/Events/eventsReducer';
 import { OperationResultType } from '../../../../common/src/operationResultType';
+import { filterValidateErrors } from 'helpers';
+import { UserKeyPoints } from '../../../../common/src/userTypes';
 
 interface PrintPointsProps {
+  pointsSort: UserKeyPoints[]
   points: EventsState['points'];
-  sort: string[];
   editMode: EventsState['editMode'];
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
   validateErrors?: OperationResultType['validateErrors'];
 }
 
 export function Form({
+  pointsSort,
   points,
-  sort,
   editMode,
   onChange,
-  validateErrors
+  validateErrors,
 }: PrintPointsProps) {
   if (!points) return null;
   return (
     <form className={styles.Form}>
-      {sort.map((pointName) => (
+      {pointsSort.map((pointName) => (
         <Fragment key={pointName}>
           <h6 className={styles.form_name}>{pointName}</h6>
           <div className={styles.form_wrapper}>
             {Object.entries(points[pointName as keyof typeof points]).map(
-              ([keyText, valueText]) => {
-                if (keyText === 'avatar') return;
+              ([label, valueText]) => {
+                if (label === 'avatar') return;
+                const error = filterValidateErrors(label, validateErrors);
                 return (
-                  <Fragment key={keyText}>
+                  <Fragment key={label}>
                     {editMode ? (
                       <InputMemo
                         type="text"
-                        label={keyText}
+                        label={label}
                         value={valueText}
-                        validateErrors={validateErrors}
                         pointName={pointName}
                         onChange={onChange}
+                        fieldError={error?.field}
+                        messageError={error?.message}
                       />
                     ) : (
-                      <Point
-                        keyText={keyText}
-                        valueText={valueText as string}
-                      />
+                      <Point label={label} text={valueText as string} />
                     )}
                   </Fragment>
                 );

@@ -50,7 +50,7 @@
   display: none;
 }
 
-.button_icon {
+.Input button {
   position: absolute;
   right: -10px;
   top: 0.55rem;

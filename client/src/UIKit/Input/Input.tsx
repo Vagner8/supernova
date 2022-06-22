@@ -1,91 +1,67 @@
-import { ChangeEvent, FocusEvent, memo, useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { ChangeEvent, FocusEvent, memo, useState } from 'react';
 import { ButtonIcon } from 'UIKit';
-import { OperationResultType } from '../../../../common/src/operationResultType';
 import styles from './input.module.css';
+import { useActiveClass, useErrorMessage } from './useInput';
 
 export interface InputProps {
   label: string;
   value: string;
   type: 'password' | 'text';
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
-  validateErrors?: OperationResultType['validateErrors'];
+  fieldError?: string;
+  messageError?: string;
   pointName?: string;
   required?: boolean;
 }
+
+type PassType = 'password' | 'text'
 
 export function Input({
   type,
   value,
   label,
   onChange,
-  validateErrors,
+  fieldError,
+  messageError,
   pointName,
   required,
 }: InputProps) {
-  const [active, setActive] = useState<'active' | ''>('');
-  const [hidePassword, setHidePassword] = useState(true);
-  const location = useLocation();
+  const [passType, setPassType] = useState<PassType>('password');
+  const [activeClass, setActiveClass] = useActiveClass(value);
+  const strMessageError = useErrorMessage(messageError);
 
-  useEffect(() => {
-    setActive('');
-  }, [location])
+  const onFocus = () => setActiveClass('active');
+  const onBlur = (e: FocusEvent<HTMLInputElement>) =>
+    e.target.value || setActiveClass('');
+  const onClick = () => setPassType(passType === 'text' ? 'password' : 'text');
 
-  useEffect(() => {
-    if (value) {
-      setActive('active');
-    }
-  }, [value]);
-
-  const onFocus = () => setActive('active')
-
-  const onBlur = (e: FocusEvent<HTMLInputElement>) => {
-    if (!e.target.value) {
-      setActive('');
-    }
-  };
-  const onClick = () => setHidePassword(!hidePassword)
-
-  const switchInputType = (trigger: boolean) => {
-    return trigger ? 'password' : 'text';
-  };
-
-  const showError = (): boolean => {
-    if (!validateErrors) return false;
-    return validateErrors.some(err => err.field === label)
-  };
-
-  // console.log('Input')
-  
   return (
-    <div role="group" className={`${styles.Input} ${styles[active]}`}>
+    <div role="group" className={`${styles.Input} ${styles[activeClass]}`}>
       <label
-        className={`${styles.label} ${showError() && styles.error}`}
+        className={`${styles.label} ${fieldError && styles.error}`}
         htmlFor={label}
       >
-        {/* {`${label} ${showError() ? `- ${errorMessage}` : ''}`} */}
+        {label} {strMessageError}
         <Star required={required} />
       </label>
       <input
         id={label}
-        className={`${styles.field} ${showError() && styles.error}`}
+        className={`${styles.field} ${styles[activeClass]}`}
         name={label}
-        type={type === 'password' ? switchInputType(hidePassword) : type}
+        type={type === 'password' ? passType : type}
         value={value}
         data-point-name={pointName}
         onChange={onChange}
         onFocus={onFocus}
         onBlur={onBlur}
       />
-      {type === 'password' ? (
-        <div className={styles.button_icon}>
-          <ButtonIcon
-            onClick={onClick}
-            icon="visibility"
-            switchTo="visibility_off"
-          />
-        </div>
-      ) : null}
+      {type === 'password' && (
+        <ButtonIcon
+          onClick={onClick}
+          icon="visibility"
+          switchTo="visibility_off"
+        />
+      )}
     </div>
   );
 }

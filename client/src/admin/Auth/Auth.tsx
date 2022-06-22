@@ -20,6 +20,7 @@ import {
 import { login } from './authApi';
 import { OperationResultsSheet } from 'admin/OperationResultsSheet/OperationResultsSheet';
 import { OperationResultType } from '../../../../common/src/operationResultType';
+import { filterValidateErrors } from 'helpers';
 
 interface AuthProps {
   isFetching: AdminState['isFetching'];
@@ -60,17 +61,21 @@ export function Auth({
         <div>
           <h4>Log in</h4>
           <form>
-            {authState.inputs.map((input) => (
-              <InputMemo
-                key={input.label}
-                validateErrors={validateErrors}
-                label={input.label}
-                type={input.type}
-                value={input.value}
-                required={input.required}
-                onChange={onChange}
-              />
-            ))}
+            {authState.inputs.map((input) => {
+              const error = filterValidateErrors(input.label, validateErrors)
+              return (
+                <InputMemo
+                  key={input.label}
+                  label={input.label}
+                  type={input.type}
+                  value={input.value}
+                  required={input.required}
+                  onChange={onChange}
+                  messageError={error?.message}
+                  fieldError={error?.field}
+                />
+              );
+            })}
             <Button
               title="Send"
               icon={<Icon icon="send" type="in-button" />}
