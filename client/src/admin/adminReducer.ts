@@ -8,7 +8,6 @@ export enum AdminStrAction {
   DeleteOperationResult = 'DeleteOperationResult',
   SetIsFetching = 'SetIsFetching',
   SaveAvatarAndLogin = 'SaveAvatarAndLogin',
-  SwitchDrawer = 'SwitchDrawer',
   DeleteAllOperationResults = 'DeleteAllOperationResults'
 }
 
@@ -43,11 +42,6 @@ interface SaveAvatarAndLogin {
   payload: { avatarAndLogin: UseFetchAvatarAndLoginResponse };
 }
 
-interface SwitchDrawer {
-  type: AdminStrAction.SwitchDrawer;
-  payload: { drawer: AdminState['drawer'] };
-}
-
 export type AdminReducerActions =
   | SetIsFetching
   | SaveAdminId
@@ -55,14 +49,12 @@ export type AdminReducerActions =
   | DeleteAllOperationResults
   | SaveOperationResult
   | SaveAvatarAndLogin
-  | SwitchDrawer;
 
 export interface AdminState {
   isFetching: boolean;
   operationResults: OperationResultType[] | null;
   adminLogin: string | null;
   adminAvatar: string | null;
-  drawer: 'show' | 'hide';
 }
 
 export const adminInitState: AdminState = {
@@ -70,7 +62,6 @@ export const adminInitState: AdminState = {
   operationResults: null,
   adminLogin: null,
   adminAvatar: null,
-  drawer: 'hide',
 };
 
 export const adminReducer: Reducer<AdminState, AdminReducerActions> = (
@@ -126,12 +117,6 @@ export const adminReducer: Reducer<AdminState, AdminReducerActions> = (
         ...state,
         adminAvatar: action.payload.avatarAndLogin.imgs.avatar[0],
         adminLogin: action.payload.avatarAndLogin.configs.login,
-      };
-    }
-    case AdminStrAction.SwitchDrawer: {
-      return {
-        ...state,
-        drawer: action.payload.drawer,
       };
     }
     default:
@@ -195,15 +180,5 @@ export const saveOwnerNameAndAvatar = (
   adminDispatch({
     type: AdminStrAction.SaveAvatarAndLogin,
     payload: { avatarAndLogin },
-  });
-};
-
-export const switchDrawer = (
-  adminDispatch: Dispatch<AdminReducerActions>,
-  drawer: AdminState['drawer'],
-) => {
-  adminDispatch({
-    type: AdminStrAction.SwitchDrawer,
-    payload: { drawer },
   });
 };

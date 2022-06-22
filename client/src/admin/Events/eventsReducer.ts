@@ -14,6 +14,7 @@ export enum EventNames {
 }
 
 export enum EventsStrAction {
+  SavePopup = 'SavePopup',
   SwitchEditMode = 'SwitchEditMode',
   SwitchSaveButton = 'SwitchSaveButton',
   SaveFiles = 'SaveFiles',
@@ -23,6 +24,11 @@ export enum EventsStrAction {
   SavePoints = 'SavePoints',
   PointsOnChange = 'PointsOnChange',
   SaveCopyOfPoints = 'SaveCopyOfPoints',
+}
+
+interface SavePopup {
+  type: EventsStrAction.SavePopup;
+  payload: { popup: EventsState['popup'] };
 }
 
 interface SwitchEditMode {
@@ -73,6 +79,7 @@ interface SaveCopyOfPoints {
 }
 
 export interface EventsState {
+  popup: string | null;
   editMode: boolean;
   saveButton: boolean;
   copyPoints: PointsType | null;
@@ -85,6 +92,7 @@ export interface EventsState {
 }
 
 export type EventsReducerActions =
+  | SavePopup
   | SwitchEditMode
   | SwitchSaveButton
   | SavePoints
@@ -96,6 +104,7 @@ export type EventsReducerActions =
   | SaveCopyOfPoints;
 
 export const eventsInitState: EventsState = {
+  popup: null,
   editMode: false,
   saveButton: false,
   copyPoints: null,
@@ -112,6 +121,12 @@ export const eventsReducer: Reducer<EventsState, EventsReducerActions> = (
   action,
 ) => {
   switch (action.type) {
+    case EventsStrAction.SavePopup: {
+      return {
+        ...state,
+        popup: action.payload.popup,
+      };
+    }
     case EventsStrAction.SwitchEditMode: {
       return {
         ...state,
@@ -197,6 +212,16 @@ export const eventsReducer: Reducer<EventsState, EventsReducerActions> = (
     default:
       return state;
   }
+};
+
+export const savePopup = (
+  eventsDispatch: Dispatch<EventsReducerActions>,
+  popup: EventsState['popup'],
+) => {
+  eventsDispatch({
+    type: EventsStrAction.SavePopup,
+    payload: { popup },
+  });
 };
 
 export const savePoints = (

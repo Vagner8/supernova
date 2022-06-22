@@ -5,7 +5,7 @@ import { updateData } from 'api/updateData';
 import { firebaseError } from 'helpers';
 import { Dispatch, Fragment, MouseEvent } from 'react';
 import { Link } from 'react-router-dom';
-import { Dropdown, Icon } from 'UIKit';
+import { ButtonLi, Dropdown, Icon } from 'UIKit';
 import styles from './events.module.css';
 import { useEventsList } from './eventsHooks.ts/useEventsList';
 import { usePageChanged } from './eventsHooks.ts/usePageChanged';
@@ -19,6 +19,7 @@ import {
 } from './eventsReducer';
 
 interface EventsProps {
+  popup: EventsState['popup']
   eventsList: EventsState['eventsList'];
   changedPoints: EventsState['changedPoints'];
   editMode: EventsState['editMode'];
@@ -31,6 +32,7 @@ interface EventsProps {
 }
 
 export function Events({
+  popup,
   eventsList,
   changedPoints,
   editMode,
@@ -96,28 +98,21 @@ export function Events({
 
   return (
     <div className={styles.Events}>
-      <Dropdown title="events">
+      <Dropdown popup={popup} title="events">
         {eventsList.map((eventString) => {
           if (!eventString) return;
           return (
-            <li className={styles.event_item} key={eventString}>
-              {eventString === EventNames.New ? (
-                <Link
-                  className={styles.event_new_link}
-                  to={`/admin/${paramsName}/new`}
-                />
-              ) : null}
-              <button
-                data-event-name={eventString}
-                className={styles.event_button}
-                onClick={onClick}
-              >
-                {eventString}
-                {eventString === EventNames.Save ? (
-                  <Icon icon="save" type="in-button" />
-                ) : null}
-              </button>
-            </li>
+            <ButtonLi
+              key={eventString}
+              linkPath={
+                eventString === EventNames.New
+                  ? `/admin/${paramsName}/new`
+                  : undefined
+              }
+              icon={eventString === EventNames.Save ? 'save' : undefined}
+              title={eventString}
+              onClick={onClick}
+            />
           );
         })}
       </Dropdown>

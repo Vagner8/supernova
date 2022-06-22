@@ -1,4 +1,5 @@
 .Drawer {
+  padding-top: var(--s-rem);
   width: 250px;
   top: 0;
   bottom: 0;
@@ -8,36 +9,4 @@
   position: fixed;
   transition: 200ms;
   border-right: var(--border-solid);
-}
-
-.Drawer.hide {
-  left: -250px;
-  visibility: hidden;
-}
-
-.Drawer.show {
-  left: 0;
-  visibility: visible;
-}
-
-.top {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  height: 64px;
-  border-bottom: var(--border-solid);
-  padding: 0 var(--s-rem);
-}
-
-.top:hover button {
-  background-color: var(--hover-background);
-  border-radius: 50%;
-}
-
-.top:hover {
-  cursor: pointer;
-}
-
-.staffs {
-  margin-top: var(--s-rem);
 }

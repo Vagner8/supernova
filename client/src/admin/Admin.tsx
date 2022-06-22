@@ -70,11 +70,12 @@ function AdminRoutes({
 }: AdminRoutesProps) {
   console.log('AdminRoutes');
   useFetchAvatarAndLogin(adminDispatch);
-  useWindowClick({ adminDispatch, drawer: adminState.drawer });
+  useWindowClick(eventsDispatch);
   return (
     <>
       <Linear show={adminState.isFetching} />
       <Events
+        popup={eventsState.popup}
         editMode={eventsState.editMode}
         saveButton={eventsState.saveButton}
         eventsList={eventsState.eventsList}
@@ -89,7 +90,7 @@ function AdminRoutes({
         adminLogin={adminState.adminLogin}
         adminAvatar={adminState.adminAvatar}
       />
-      <Drawer drawer={adminState.drawer} />
+      <Drawer popup={eventsState.popup} />
       <Suspense fallback={<Linear show={true} />}>
         <Container>
           <Routes>

@@ -1,45 +1,32 @@
 import {
-  AdminReducerActions,
-  AdminState,
-  switchDrawer,
-} from 'admin/adminReducer';
+  EventsReducerActions,
+  EventsState,
+  savePopup,
+} from 'admin/Events/eventsReducer';
 import { Dispatch, useEffect } from 'react';
 
-interface UseWindowClick {
-  drawer: AdminState['drawer'];
-  adminDispatch: Dispatch<AdminReducerActions>;
-}
-
-export function useWindowClick({ adminDispatch, drawer }: UseWindowClick) {
+export function useWindowClick(eventsDispatch: Dispatch<EventsReducerActions>) {
   useEffect(() => {
     function onClick(this: Window, e: MouseEvent) {
-      manageDrawer(e.target, drawer, adminDispatch);
+      managePopups(e.target, eventsDispatch);
     }
     window.addEventListener('click', onClick);
     return () => window.removeEventListener('click', onClick);
-  }, [adminDispatch, drawer]);
+  }, [eventsDispatch]);
 }
 
-const manageDrawer = (
+const managePopups = (
   target: EventTarget | null,
-  drawer: AdminState['drawer'],
-  adminDispatch: Dispatch<AdminReducerActions>,
+  eventsDispatch: Dispatch<EventsReducerActions>,
 ) => {
   if (target) {
-    if (
-      (target as HTMLElement)
-        .closest('[data-set]')
-        ?.getAttribute('data-set') === 'open-drawer'
-    ) {
-      return switchDrawer(adminDispatch, 'show');
-    }
-    if (
-      (target as HTMLElement).getAttribute('data-set') === 'not-close-drawer'
-    ) {
-      return;
+    const closestElement = (target as HTMLElement).closest('[data-popup]');
+    if (closestElement) {
+      const popup = closestElement.getAttribute(
+        'data-popup',
+      ) as EventsState['popup'];
+      return savePopup(eventsDispatch, popup);
     }
   }
-  if (drawer === 'show') {
-    switchDrawer(adminDispatch, 'hide');
-  }
+  savePopup(eventsDispatch, null);
 };

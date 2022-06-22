@@ -1,9 +1,9 @@
-import { AdminState } from 'admin/adminReducer';
-import { MenuItem, IconName, ButtonIcon } from 'UIKit';
+import { EventsState } from 'admin/Events/eventsReducer';
+import { MenuItem, IconName } from 'UIKit';
 import styles from './drawer.module.css';
 
 interface DrawerProps {
-  drawer: AdminState['drawer'];
+  popup: EventsState['popup'];
 }
 
 type Staff = [string, string, IconName];
@@ -13,20 +13,13 @@ const staffs: Staff[] = [
   ['/admin/users', 'users', 'people'],
 ];
 
-export function Drawer({ drawer }: DrawerProps) {
+export function Drawer({ popup }: DrawerProps) {
+  if (popup !== 'drawer') return null;
   return (
-    <div
-      className={`${styles.Drawer} ${styles[drawer]}`}
-      data-set="not-close-drawer"
-    >
-      <div className={styles.top}>
-        <ButtonIcon icon="chevron_left" />
-      </div>
-      <div className={styles.staffs}>
-        {staffs.map(([to, name, icon]) => {
-          return <MenuItem key={name} title={name} icon={icon} to={to} />;
-        })}
-      </div>
+    <div className={styles.Drawer}>
+      {staffs.map(([to, name, icon]) => {
+        return <MenuItem key={name} title={name} icon={icon} to={to} />;
+      })}
     </div>
   );
 }

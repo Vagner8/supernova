@@ -14,7 +14,7 @@ export function Navbar({ adminLogin, adminAvatar }: NavbarProps) {
   return (
     <nav className={styles.Navbar}>
       <div className={styles.lift}>
-        <ButtonIcon icon="menu" type="white-icon" dataSet={'open-drawer'} />
+        <ButtonIcon icon="menu" type="white-icon" dataPopup={'drawer'}  />
       </div>
       <div className={styles.right}>
         <NavLink

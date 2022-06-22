@@ -1,21 +1,22 @@
+import { EventsState } from 'admin/Events/eventsReducer';
 import { MouseEvent, useState } from 'react';
 import { Icon, IconName } from 'UIKit';
 import styles from './buttonIcon.module.css';
 
 interface ButtonIconProps {
   icon: IconName;
-  switchTo?: IconName;
-  dataSet?: string;
-  type?: 'white-icon'
   onClick?: (e: MouseEvent<HTMLButtonElement>) => void;
+  switchTo?: IconName;
+  type?: 'white-icon';
+  dataPopup?: EventsState['popup'];
 }
 
 export function ButtonIcon({
   icon,
-  switchTo,
-  dataSet,
-  type,
   onClick,
+  switchTo,
+  type,
+  dataPopup,
 }: ButtonIconProps) {
   const [toggle, setToggle] = useState(false);
 
@@ -25,8 +26,13 @@ export function ButtonIcon({
   };
 
   return (
-    <div className={styles.ButtonIcon} data-set={dataSet}>
-      <button type="button" onClick={handleClick} className={styles.button}>
+    <div className={styles.ButtonIcon}>
+      <button
+        type="button"
+        onClick={handleClick}
+        className={styles.button}
+        data-popup={dataPopup}
+      >
         <Icon icon={switchTo && toggle ? switchTo : icon} type={type} />
       </button>
     </div>

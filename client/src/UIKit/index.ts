@@ -21,6 +21,8 @@ export * from './ButtonIcon/ButtonIcon';
 export * from './Profile/Profile';
 export * from './Table/Table';
 export * from './PageHeader/PageHeader';
+export * from './Select/Select';
+export * from './ButtonLi/ButtonLi';
 
 export * from './Typography/Text/Text';
 export * from './Typography/Title/Title';
