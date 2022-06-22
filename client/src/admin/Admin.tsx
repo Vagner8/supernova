@@ -17,7 +17,7 @@ import {
 import { FilesSheet } from './FilesSheet/FilesSheet';
 import { Events } from './Events/Events';
 import { OperationResultsSheet } from './OperationResultsSheet/OperationResultsSheet';
-import { useWindowClick } from 'hooks';
+import { useValidateErrors, useWindowClick } from 'hooks';
 import { useFetchAvatarAndLogin } from 'api/users/useFetchAvatarAndLogin';
 
 const Home = lazy(() => import('./Home/Home'));
@@ -70,7 +70,8 @@ function AdminRoutes({
 }: AdminRoutesProps) {
   console.log('AdminRoutes');
   useFetchAvatarAndLogin(adminDispatch);
-  useWindowClick(eventsDispatch);
+  useWindowClick({eventsDispatch, popup: eventsState.popup});
+  const validateErrors = useValidateErrors(adminState.operationResults)
   return (
     <>
       <Linear show={adminState.isFetching} />
@@ -113,16 +114,13 @@ function AdminRoutes({
               path="/users/:userId"
               element={
                 <UserProfile
+                  popup={eventsState.popup}
                   isFetching={adminState.isFetching}
                   editMode={eventsState.editMode}
                   points={eventsState.points}
                   eventsDispatch={eventsDispatch}
                   adminDispatch={adminDispatch}
-                  validateErrors={
-                    adminState?.operationResults?.filter(
-                      (res) => res?.validateErrors,
-                    )[0]?.validateErrors
-                  }
+                  validateErrors={validateErrors}
                 />
               }
             />

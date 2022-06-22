@@ -1,4 +1,4 @@
-import { InputMemo, Point } from 'UIKit';
+import { InputMemo, Point, Select } from 'UIKit';
 import styles from './form.module.css';
 import { ChangeEvent, Fragment } from 'react';
 import { EventsState } from 'admin/Events/eventsReducer';
@@ -7,7 +7,8 @@ import { filterValidateErrors } from 'helpers';
 import { UserKeyPoints } from '../../../../common/src/userTypes';
 
 interface PrintPointsProps {
-  pointsSort: UserKeyPoints[]
+  popup: EventsState['popup']
+  pointsSort: UserKeyPoints[];
   points: EventsState['points'];
   editMode: EventsState['editMode'];
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
@@ -15,6 +16,7 @@ interface PrintPointsProps {
 }
 
 export function Form({
+  popup,
   pointsSort,
   points,
   editMode,
@@ -35,10 +37,10 @@ export function Form({
                 return (
                   <Fragment key={label}>
                     {editMode ? (
-                      <InputMemo
-                        type="text"
+                      <InputSpecies
+                        popup={popup}
                         label={label}
-                        value={valueText}
+                        valueText={valueText}
                         pointName={pointName}
                         onChange={onChange}
                         fieldError={error?.field}
@@ -57,3 +59,52 @@ export function Form({
     </form>
   );
 }
+
+interface InputSpeciesProps {
+  popup: EventsState['popup'];
+  label: string;
+  valueText: string;
+  pointName: string;
+  onChange: (e: ChangeEvent<HTMLInputElement>) => void;
+  fieldError?: string;
+  messageError?: string;
+}
+
+const InputSpecies = ({
+  popup,
+  label,
+  valueText,
+  pointName,
+  onChange,
+  fieldError,
+  messageError,
+}: InputSpeciesProps) => {
+  const species = {
+    textInput: (
+      <InputMemo
+        type={label === 'password' ? 'password' : 'text'}
+        label={label}
+        value={valueText}
+        pointName={pointName}
+        onChange={onChange}
+        fieldError={fieldError}
+        messageError={messageError}
+      />
+    ),
+    select: (
+      <Select selectList={[]} title={label} popup={popup} onChange={onChange} />
+    ),
+  };
+
+  return (
+    <InputMemo
+      type={label === 'password' ? 'password' : 'text'}
+      label={label}
+      value={valueText}
+      pointName={pointName}
+      onChange={onChange}
+      fieldError={fieldError}
+      messageError={messageError}
+    />
+  );
+};

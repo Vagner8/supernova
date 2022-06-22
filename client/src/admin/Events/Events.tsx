@@ -19,7 +19,7 @@ import {
 } from './eventsReducer';
 
 interface EventsProps {
-  popup: EventsState['popup']
+  popup: EventsState['popup'];
   eventsList: EventsState['eventsList'];
   changedPoints: EventsState['changedPoints'];
   editMode: EventsState['editMode'];
@@ -49,8 +49,8 @@ export function Events({
 
   const onClick = (e: MouseEvent<HTMLButtonElement>) => {
     if (!e.target) return;
-    const button = e.target as HTMLButtonElement;
-    const selectedEvent = button.dataset.eventName as EventNames;
+    const selectedEvent = (e.target as HTMLButtonElement).dataset
+      .btnName as EventNames;
     let imgs: string[] | undefined = [];
     const asyncer = async () => {
       switch (selectedEvent) {

@@ -1,5 +1,5 @@
 import { ImgsType } from "./commonTypes";
-declare type UserStatus = 'Owner' | "Admin" | "User" | "Viewer" | "fired" | "New";
+export declare type UserStatus = 'Owner' | "Admin" | "User" | "Viewer" | "fired" | "New";
 export interface UserConfigsType {
     login: string;
     password: string;
@@ -33,5 +33,4 @@ export interface UserType {
 }
 export declare type UserPointsType = Pick<UserType, "personal" | "contacts" | "address" | "imgs" | "configs">;
 export declare type UserKeyPoints = keyof UserPointsType;
-export {};
 //# sourceMappingURL=userTypes.d.ts.map

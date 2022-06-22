@@ -14,6 +14,7 @@ import { OperationResultType } from '../../../../common/src/operationResultType'
 import styles from './userProfile.module.css';
 
 interface UserProfileProps {
+  popup: EventsState['popup']
   editMode: EventsState['editMode'];
   points: EventsState['points'];
   isFetching: AdminState['isFetching'];
@@ -23,6 +24,7 @@ interface UserProfileProps {
 }
 
 export default function UserProfile({
+  popup,
   isFetching,
   points,
   editMode,
@@ -36,6 +38,7 @@ export default function UserProfile({
   return (
     <div className={styles.UserProfile}>
       <Profile
+        popup={popup}
         pointsSort={['personal', 'configs', 'contacts', 'address']}
         isFetching={isFetching}
         editMode={editMode}

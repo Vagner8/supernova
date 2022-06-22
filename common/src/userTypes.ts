@@ -1,6 +1,6 @@
 import { ImgsType } from "./commonTypes";
 
-type UserStatus = 'Owner' | "Admin" | "User" | "Viewer" | "fired" | "New"
+export type UserStatus = 'Owner' | "Admin" | "User" | "Viewer" | "fired" | "New"
 
 export interface UserConfigsType {
   login: string;

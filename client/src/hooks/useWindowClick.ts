@@ -5,28 +5,34 @@ import {
 } from 'admin/Events/eventsReducer';
 import { Dispatch, useEffect } from 'react';
 
-export function useWindowClick(eventsDispatch: Dispatch<EventsReducerActions>) {
+interface UseWindowClick {
+  popup: EventsState['popup']
+  eventsDispatch: Dispatch<EventsReducerActions>
+}
+
+export function useWindowClick({eventsDispatch, popup}: UseWindowClick) {
   useEffect(() => {
     function onClick(this: Window, e: MouseEvent) {
-      managePopups(e.target, eventsDispatch);
+      managePopups(e.target, popup, eventsDispatch);
     }
     window.addEventListener('click', onClick);
     return () => window.removeEventListener('click', onClick);
-  }, [eventsDispatch]);
+  }, [popup, eventsDispatch]);
 }
 
 const managePopups = (
   target: EventTarget | null,
+  popup: EventsState['popup'],
   eventsDispatch: Dispatch<EventsReducerActions>,
 ) => {
   if (target) {
     const closestElement = (target as HTMLElement).closest('[data-popup]');
     if (closestElement) {
-      const popup = closestElement.getAttribute(
+      const dataPopup = closestElement.getAttribute(
         'data-popup',
       ) as EventsState['popup'];
-      return savePopup(eventsDispatch, popup);
+      return savePopup(eventsDispatch, dataPopup);
     }
   }
-  savePopup(eventsDispatch, null);
+  if (popup) savePopup(eventsDispatch, null);
 };

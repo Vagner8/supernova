@@ -13,6 +13,7 @@ import { OperationResultType } from '../../../../common/src/operationResultType'
 import { UserKeyPoints } from '../../../../common/src/userTypes';
 
 interface ProfileProps {
+  popup: EventsState['popup']
   pointsSort: UserKeyPoints[];
   editMode: EventsState['editMode']
   points: EventsState['points'];
@@ -22,6 +23,7 @@ interface ProfileProps {
 }
 
 export function Profile({
+  popup,
   pointsSort,
   isFetching,
   points,
@@ -67,6 +69,7 @@ export function Profile({
       </div>
       <div className={styles.middle}>
         <Form
+          popup={popup}
           pointsSort={pointsSort}
           editMode={editMode}
           points={points}

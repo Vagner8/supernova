@@ -14,12 +14,6 @@ export default function Home({ adminDispatch, eventsState }: HomeProps) {
   return (
     <div>
       <h1>Home</h1>
-      <Select
-        popup={eventsState.popup}
-        title="Choose rule"
-        selectList={['user', 'admin', 'owner']}
-        onClick={onClick}
-      />
     </div>
   );
 }
