@@ -34,7 +34,6 @@ export function useFetchAvatarAndLogin(
           projection,
         )}`,
         adminDispatch,
-        message: 'received data',
       })) as UseFetchAvatarAndLoginResponse | null;
       if (!response) return
       saveOwnerNameAndAvatar(adminDispatch, response)

@@ -2,9 +2,10 @@ import { AdminReducerActions } from 'admin/adminReducer';
 import { switchEditMode, switchSaveButton } from 'admin/Events/eventsReducer';
 import { downloadFilesFirebase } from 'api/firebaseStorage/downloadFilesFirebase';
 import { updateData } from 'api/updateData';
+import { createNewUser } from 'api/users/createNewUser';
 import { firebaseError } from 'helpers';
 import { Dispatch, Fragment, MouseEvent } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { ButtonLi, Dropdown, Icon } from 'UIKit';
 import styles from './events.module.css';
 import { useEventsList } from './eventsHooks.ts/useEventsList';
@@ -21,6 +22,7 @@ import {
 interface EventsProps {
   popup: EventsState['popup'];
   eventsList: EventsState['eventsList'];
+  points: EventsState['points']
   changedPoints: EventsState['changedPoints'];
   editMode: EventsState['editMode'];
   saveButton: EventsState['saveButton'];
@@ -35,6 +37,7 @@ export function Events({
   popup,
   eventsList,
   changedPoints,
+  points,
   editMode,
   saveButton,
   files,
@@ -46,12 +49,14 @@ export function Events({
   usePageChanged({ eventsDispatch });
   useEventsList({ eventsDispatch, editMode });
   const { paramsName, paramsId } = useSplitParams();
+  const navigate = useNavigate()
 
   const onClick = (e: MouseEvent<HTMLButtonElement>) => {
     if (!e.target) return;
-    const selectedEvent = (e.target as HTMLButtonElement).dataset
-      .btnName as EventNames;
-    let imgs: string[] | undefined = [];
+    const selectedEvent = (e.target as HTMLButtonElement).getAttribute(
+      'data-btn-name',
+    );
+    // let imgs: string[] | undefined = [];
     const asyncer = async () => {
       switch (selectedEvent) {
         case EventNames.New: {
@@ -66,6 +71,10 @@ export function Events({
           break;
         }
         case EventNames.Save: {
+          if (paramsId === 'new') {
+            createNewUser(points, adminDispatch)
+            navigate('/admin/users')
+          }
           // saveCopyOfPoints(eventsDispatch);
           // deleteAllFiles(eventsDispatch);
           // if (files && files.length > 0 && params['*']) {

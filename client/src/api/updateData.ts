@@ -18,7 +18,6 @@ export async function updateData({
     body: changedPoints,
     method: 'PUT',
     url: `/${params}/update`,
-    adminDispatch,
-    message: 'data did update'
+    adminDispatch
   });
 }

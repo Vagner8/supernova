@@ -10,8 +10,7 @@ export async function createNewUser(
   await fetcher({
     body: points,
     method: 'POST',
-    url: `${AddressTo.GetUsers}`,
-    adminDispatch,
-    message: 'item created',
+    url: `${AddressTo.CreateUser}`,
+    adminDispatch
   });
 }

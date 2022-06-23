@@ -1,7 +1,6 @@
 import { AdminReducerActions } from 'admin/adminReducer';
 import {
   EventsReducerActions,
-  saveCopyOfPoints,
   savePoints,
 } from 'admin/Events/eventsReducer';
 import { AddressTo, fetcher } from 'api/fetcher';
@@ -45,11 +44,9 @@ export function useFetchUserById(
           userId === 'new' ? null : JSON.stringify(projection)
         }&userId=${userId}`,
         adminDispatch,
-        message: 'received data',
       })) as UseFetchUserByIdResponse | null;
       if (!response) return;
       savePoints(eventsDispatch, response);
-      saveCopyOfPoints(eventsDispatch);
     };
     asyncer();
   }, [eventsDispatch, adminDispatch, userId]);

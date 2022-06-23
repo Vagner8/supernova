@@ -80,6 +80,7 @@ function AdminRoutes({
         editMode={eventsState.editMode}
         saveButton={eventsState.saveButton}
         eventsList={eventsState.eventsList}
+        points={eventsState.points}
         changedPoints={eventsState.changedPoints}
         files={eventsState.files}
         fileInputName={eventsState.fileInputName}

@@ -3,6 +3,7 @@ import { MONGO_DB } from "../../middleware/connectMongo";
 import { CollectionName } from "../../types";
 import { UserPointsType, UserType } from "../../../../common/src/userTypes";
 import { serverError } from "../../helpers/customErrors";
+import { OperationResultType } from "../../../../common/src/operationResultType";
 
 export async function putUserController(
   req: Request,
@@ -16,7 +17,12 @@ export async function putUserController(
     if (!ownersColl) throw serverError("bad connection");
     const result = await ownersColl.updateOne({ userId }, { $set: ownerPII });
     if (!result.acknowledged) throw serverError("bad update");
-    res.status(200).json(result);
+    res
+      .status(200)
+      .json({
+        status: "success",
+        message: 'user updated',
+      } as OperationResultType);
   } catch (err) {
     next(err);
   }

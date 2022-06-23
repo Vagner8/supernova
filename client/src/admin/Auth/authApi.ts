@@ -13,7 +13,6 @@ export async function login(
     method: 'POST',
     url: '/login',
     adminDispatch,
-    message: 'you are login',
     body,
   })) as undefined | { adminId: string };
   if (!res) return;
