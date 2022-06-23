@@ -1,18 +1,7 @@
 .Input {
   position: relative;
   min-width: 300px;
-  margin-bottom: 1.75rem;;
-}
-
-.field:focus-visible {
-  outline: none;
-}
-
-.field {
-  border: none;
-  border-bottom: 1px solid #9e9e9e;
-  height: 3rem;
-  width: 100%;
+  margin-bottom: var(--l-rem);
 }
 
 .active .field {

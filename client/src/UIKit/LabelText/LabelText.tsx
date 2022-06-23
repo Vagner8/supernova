@@ -1,11 +1,11 @@
-import styles from './point.module.css';
+import styles from './labelText.module.css';
 
-interface PointProps {
+interface PLabelTextProps {
   label: string;
   text: string;
 }
 
-export function Point({ label, text }: PointProps) {
+export function LabelText({ label, text }: PLabelTextProps) {
   return (
     <div className={styles.Point}>
       <small className={styles.small}>{label}</small>

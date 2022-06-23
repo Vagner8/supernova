@@ -3,6 +3,7 @@ import jwt from "jsonwebtoken";
 
 export function createAccessToken(adminId: string, res: Response) {
   const expiresIn = 60 * 15
+  // const expiresIn = 3
   const accessToken = jwt.sign({ adminId }, process.env.ACCESS_SECRET, {
     expiresIn
   });

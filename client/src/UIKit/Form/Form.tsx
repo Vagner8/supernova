@@ -1,17 +1,18 @@
-import { InputMemo, Point, Select } from 'UIKit';
+import { InputMemo, LabelText, Select } from 'UIKit';
 import styles from './form.module.css';
-import { ChangeEvent, Fragment } from 'react';
-import { EventsState } from 'admin/Events/eventsReducer';
+import { ChangeEvent, Dispatch, Fragment, ReactNode } from 'react';
+import { EventsReducerActions, EventsState } from 'admin/Events/eventsReducer';
 import { OperationResultType } from '../../../../common/src/operationResultType';
 import { filterValidateErrors } from 'helpers';
 import { UserKeyPoints } from '../../../../common/src/userTypes';
 
-interface PrintPointsProps {
-  popup: EventsState['popup']
+interface FormProps {
+  popup: EventsState['popup'];
   pointsSort: UserKeyPoints[];
   points: EventsState['points'];
   editMode: EventsState['editMode'];
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
+  eventsDispatch: Dispatch<EventsReducerActions>;
   validateErrors?: OperationResultType['validateErrors'];
 }
 
@@ -21,8 +22,9 @@ export function Form({
   points,
   editMode,
   onChange,
+  eventsDispatch,
   validateErrors,
-}: PrintPointsProps) {
+}: FormProps) {
   if (!points) return null;
   return (
     <form className={styles.Form}>
@@ -35,21 +37,41 @@ export function Form({
                 if (label === 'avatar') return;
                 const error = filterValidateErrors(label, validateErrors);
                 return (
-                  <Fragment key={label}>
-                    {editMode ? (
-                      <InputSpecies
-                        popup={popup}
-                        label={label}
-                        valueText={valueText}
-                        pointName={pointName}
-                        onChange={onChange}
-                        fieldError={error?.field}
-                        messageError={error?.message}
-                      />
-                    ) : (
-                      <Point label={label} text={valueText as string} />
-                    )}
-                  </Fragment>
+                  <Point
+                    key={label}
+                    render={() => {
+                      if (editMode) {
+                        if (label === 'rule') {
+                          return (
+                            <Select
+                              selectList={['Admin', 'User', 'Viewer', 'Fired']}
+                              label={label}
+                              value={valueText}
+                              popup={popup}
+                              pointName={
+                                pointName as keyof EventsState['points']
+                              }
+                              eventsDispatch={eventsDispatch}
+                            />
+                          );
+                        }
+                        return (
+                          <InputMemo
+                            type={label === 'password' ? 'password' : 'text'}
+                            label={label}
+                            value={valueText}
+                            pointName={pointName}
+                            onChange={onChange}
+                            fieldError={error?.field}
+                            messageError={error?.message}
+                          />
+                        );
+                      }
+                      return (
+                        <LabelText label={label} text={valueText as string} />
+                      );
+                    }}
+                  />
                 );
               },
             )}
@@ -60,51 +82,10 @@ export function Form({
   );
 }
 
-interface InputSpeciesProps {
-  popup: EventsState['popup'];
-  label: string;
-  valueText: string;
-  pointName: string;
-  onChange: (e: ChangeEvent<HTMLInputElement>) => void;
-  fieldError?: string;
-  messageError?: string;
+interface PointProps {
+  render: () => ReactNode;
 }
 
-const InputSpecies = ({
-  popup,
-  label,
-  valueText,
-  pointName,
-  onChange,
-  fieldError,
-  messageError,
-}: InputSpeciesProps) => {
-  const species = {
-    textInput: (
-      <InputMemo
-        type={label === 'password' ? 'password' : 'text'}
-        label={label}
-        value={valueText}
-        pointName={pointName}
-        onChange={onChange}
-        fieldError={fieldError}
-        messageError={messageError}
-      />
-    ),
-    select: (
-      <Select selectList={[]} title={label} popup={popup} onChange={onChange} />
-    ),
-  };
-
-  return (
-    <InputMemo
-      type={label === 'password' ? 'password' : 'text'}
-      label={label}
-      value={valueText}
-      pointName={pointName}
-      onChange={onChange}
-      fieldError={fieldError}
-      messageError={messageError}
-    />
-  );
+const Point = ({ render }: PointProps) => {
+  return <div className={styles.Point}>{render()}</div>;
 };

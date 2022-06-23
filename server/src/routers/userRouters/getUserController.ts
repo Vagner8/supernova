@@ -2,7 +2,6 @@ import { NextFunction, Request, Response } from "express";
 import { CollectionName } from "../../types";
 import { MONGO_DB } from "../../middleware/connectMongo";
 import { UserType } from "../../../../common/src/userTypes"
-import { ADMIN_ID } from "./../../middleware/accessMiddleware";
 import { serverError } from "../../helpers/customErrors";
 
 
@@ -39,12 +38,13 @@ export async function getUserController(
 ) {
   try {
     const {projection, userId} = req.query as {projection: undefined | string, userId: string};
+    const adminId = req.headers.adminid
     if (userId === 'new') return res.status(200).json(newUser);
     if (!projection) throw serverError('bad projection')
     const usersColl = MONGO_DB.collection<UserType>(CollectionName.Users)
     if (!usersColl) throw serverError("bad connection")
     const user = await usersColl.findOne(
-      { userId: userId || ADMIN_ID },
+      { userId: userId || adminId },
       { projection: JSON.parse(projection) }
     )
     if (!user) throw serverError("no user")

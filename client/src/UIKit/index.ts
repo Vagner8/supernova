@@ -8,7 +8,7 @@ export * from './Img/Img';
 export * from './FileInput/FileInput';
 export * from './Container/Container';
 export * from './Circular/Circular';
-export * from './Point/Point';
+export * from './LabelText/LabelText';
 export * from './Snackbar/Snackbar';
 export * from './Dropdown/Dropdown';
 export * from './BottomSheetModals/BottomSheetModals';

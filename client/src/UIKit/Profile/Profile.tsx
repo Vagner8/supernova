@@ -74,6 +74,7 @@ export function Profile({
           editMode={editMode}
           points={points}
           onChange={onChange}
+          eventsDispatch={eventsDispatch}
           validateErrors={validateErrors}
         />
       </div>

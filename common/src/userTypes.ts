@@ -1,6 +1,12 @@
 import { ImgsType } from "./commonTypes";
 
-export type UserStatus = 'Owner' | "Admin" | "User" | "Viewer" | "fired" | "New"
+export type UserStatus =
+  | "Owner"
+  | "Admin"
+  | "User"
+  | "Viewer"
+  | "Fired"
+  | "New";
 
 export interface UserConfigsType {
   login: string;
@@ -44,4 +50,4 @@ export type UserPointsType = Pick<
   "personal" | "contacts" | "address" | "imgs" | "configs"
 >;
 
-export type UserKeyPoints = keyof UserPointsType
+export type UserKeyPoints = keyof UserPointsType;

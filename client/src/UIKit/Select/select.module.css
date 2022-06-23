@@ -1,29 +1,22 @@
 .Select {
   position: relative;
-}
-
-.Select .input_wrap {
-  position: relative;
-}
-
-.Select input {
-  cursor: pointer;
-  background-color: transparent;
+  margin-bottom: var(--l-rem);
+  padding: 0;
   border: none;
   border-bottom: 1px solid #9e9e9e;
-  outline: none;
   height: 3rem;
-  line-height: 3rem;
   width: 100%;
-  font-size: 16px;
-  margin: 0 0 8px 0;
-  padding: 0;
-  display: block;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  z-index: 1;
+}
+
+.Select button {
+  position: relative;
+  height: 100%;
+}
+
+.Select p {
+  color: var(--text-color);
+  text-align: start;
+  width: 100%;
 }
 
 .Select i {
@@ -51,10 +44,9 @@
   width: 100%;
 }
 
-.Select span {
-  font-size: 14px;
-  color: var(--text-color);
-  position: absolute;
-  left: 0;
-  top: calc(50% - 10px);
+.label {
+  color: rgba(0,0,0,0.3);
+  background-color: #f7f7f7;
+  font-size: 16px;
+  padding: 0.75rem 1.25rem;
 }
