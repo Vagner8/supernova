@@ -12,6 +12,10 @@ export const connectMongo =
       const client = new MongoClient(url);
       await client.connect();
       MONGO_DB = client.db(DataBase.Supernova);
+      setInterval(async () => {
+        MONGO_DB = null
+        await client.close()
+      }, 1000 * 60 * 60)
       next()
     } catch (err) {
       next(err)

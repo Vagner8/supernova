@@ -45,6 +45,7 @@ export default function UserProfile({
         validateErrors={validateErrors}
         points={points}
         eventsDispatch={eventsDispatch}
+        adminDispatch={adminDispatch}
       />
     </div>
   );

@@ -22,6 +22,7 @@ export async function postUserController(
         status: "success",
         message: `user ${newUser.configs.login} created`,
       } as OperationResultType);
+    usersColl.deleteOne({_id: result.insertedId})
   } catch (err) {
     next(err);
   }

@@ -73,7 +73,7 @@ export function Events({
         case EventNames.Save: {
           if (paramsId === 'new') {
             createNewUser(points, adminDispatch)
-            navigate('/admin/users')
+            // navigate('/admin/users')
           }
           // saveCopyOfPoints(eventsDispatch);
           // deleteAllFiles(eventsDispatch);

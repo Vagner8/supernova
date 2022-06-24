@@ -1,4 +1,8 @@
-import { AdminState } from 'admin/adminReducer';
+import {
+  AdminReducerActions,
+  AdminState,
+  deleteAllOperationResults,
+} from 'admin/adminReducer';
 import {
   EventsReducerActions,
   EventsState,
@@ -13,12 +17,13 @@ import { OperationResultType } from '../../../../common/src/operationResultType'
 import { UserKeyPoints } from '../../../../common/src/userTypes';
 
 interface ProfileProps {
-  popup: EventsState['popup']
+  popup: EventsState['popup'];
   pointsSort: UserKeyPoints[];
-  editMode: EventsState['editMode']
+  editMode: EventsState['editMode'];
   points: EventsState['points'];
-  isFetching: AdminState['isFetching']
+  isFetching: AdminState['isFetching'];
   eventsDispatch: Dispatch<EventsReducerActions>;
+  adminDispatch: Dispatch<AdminReducerActions>;
   validateErrors?: OperationResultType['validateErrors'];
 }
 
@@ -29,11 +34,12 @@ export function Profile({
   points,
   editMode,
   eventsDispatch,
+  adminDispatch,
   validateErrors,
 }: ProfileProps) {
-
   const onChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
+      deleteAllOperationResults(adminDispatch);
       pointsOnChange({
         eventsDispatch,
         name: e.target.name,

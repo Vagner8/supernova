@@ -11,7 +11,7 @@ export const accessMiddleware =
       if (accessToken) {
         jwt.verify(accessToken, process.env.ACCESS_SECRET, async (err: any) => {
           if (err) await verifyRefreshToken(adminId, res, next)
-          next();
+          return next();
         });
       }
       if (!accessToken) {
