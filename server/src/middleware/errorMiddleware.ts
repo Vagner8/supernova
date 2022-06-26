@@ -16,7 +16,7 @@ export function errorMiddleware(
   next: NextFunction
 ) {
   if (error instanceof CustomError) {
-    return res.status(error.description.HTTPStatusCode).json(error.description);
+    return res.status(error.description.HTTPStatusCode || 500).json(error.description);
   }
   if (error instanceof TokenExpiredError) {
     const response: OperationResultType = {

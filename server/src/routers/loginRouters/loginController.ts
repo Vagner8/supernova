@@ -1,14 +1,11 @@
 import { NextFunction, Request, Response } from "express";
 import { CollectionName } from "../../types";
 import { v4 as uuidv4 } from "uuid";
-import { MONGO_DB } from "../../middleware/connectMongo";
 import { UserType } from "../../../../common/src/userTypes";
-import { loginError, serverError } from "../../helpers/customErrors";
+import { loginError } from "../../helpers/errors";
 import bcrypt from "bcryptjs";
-import { writeRefreshTokenWithoutUserId } from "../../token/writeRefreshTokenWithoutUserId";
-import { createAccessToken } from "../../token/createAccessToken";
-import { createRefreshToken } from "../../token/createRefreshToken";
-import { writeRefreshToken } from "../../token/writeRefreshToken";
+import { mongo } from "../../helpers/mongo";
+import { token } from "../../helpers/token";
 
 export async function loginController(
   req: Request,
@@ -18,36 +15,34 @@ export async function loginController(
   const { login, password } = req.body as { login: string; password: string };
 
   try {
-    const usersColl = MONGO_DB.collection<UserType>(CollectionName.Users);
-    if (!usersColl) throw serverError("bad connection");
-    const admin = await usersColl.findOne({ "configs.login": login });
+    const usersCollection = mongo.getCollection<UserType>(CollectionName.Users);
+    const admin = await usersCollection.findOne({ "configs.login": login });
     if (!admin) throw loginError();
 
     if (admin.userId) {
-      if (!bcrypt.compareSync(password, admin.configs.password)) throw loginError();
-      createAccessToken(admin.userId, res);
-      const refreshToken = createRefreshToken(admin.userId);
-      const result = await writeRefreshToken(
+      if (!bcrypt.compareSync(password, admin.configs.password))
+        throw loginError();
+      token.setAccessToCookie(token.signAccess(admin.userId), res);
+      token.saveRefresh(
         admin.userId,
-        refreshToken,
-        usersColl
+        token.signRefresh(admin.userId),
+        usersCollection
       );
-      if (!result.acknowledged) throw serverError("bad update");
       res.status(201).json({ adminId: admin.userId });
     }
 
     if (!admin.userId) {
       if (password !== admin.configs.password) throw loginError();
       const uniqueId = uuidv4();
-      const result = await writeRefreshTokenWithoutUserId({
-        usersColl,
+      const encryptedPassword = await bcrypt.hash(password, 10);
+      token.saveCredentials({
+        usersCollection,
         login,
-        password,
-        refreshToken: createRefreshToken(uniqueId),
+        refreshToken: token.signRefresh(uniqueId),
+        encryptedPassword,
         uniqueId,
       });
-      if (!result.acknowledged) throw serverError("bad update");
-      createAccessToken(uniqueId, res);
+      token.setAccessToCookie(token.signAccess(admin.userId), res);
       res.status(201).json({ adminId: uniqueId });
     }
   } catch (err) {

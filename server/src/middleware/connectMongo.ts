@@ -3,7 +3,7 @@ import { Db, MongoClient } from "mongodb";
 import { DataBase } from "./../types";
 import { url } from "./../settings";
 
-export let MONGO_DB: Db;
+export let MONGO_DB: Db | null;
 
 export const connectMongo =
   () => async (req: Request, res: Response, next: NextFunction) => {
