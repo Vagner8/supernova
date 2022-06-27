@@ -14,27 +14,18 @@ class Token {
   // accessExpiresIn: number = 3;
   // refreshExpiresIn: string = "5s";
 
-  signAccess(adminId: string) {
-    return jwt.sign({ adminId }, process.env.ACCESS_SECRET, {
-      expiresIn: '15m',
-    });
+  sign(name: "accessToken" | "refreshToken", adminId: string) {
+    return name === "accessToken"
+      ? jwt.sign({ adminId }, process.env.ACCESS_SECRET, {
+          expiresIn: this.accessExpiresIn,
+        })
+      : jwt.sign({ adminId }, process.env.REFRESH_SECRET, {
+          expiresIn: this.refreshExpiresIn,
+        });
   }
 
-  signRefresh(uniqueId: string) {
-    return jwt.sign({ adminId: uniqueId }, process.env.REFRESH_SECRET, {
-      expiresIn: this.refreshExpiresIn,
-    });
-  }
-
-  checkAdminId(adminId: string) {
-    if (adminId === "idle" || !adminId || Array.isArray(adminId)) {
-      throw accessError({ message: "no admin id", logout: true });
-    }
-  }
-
-  async getRefresh(adminId: string) {
-    this.checkAdminId(adminId)
-    const usersCollection = mongo.getCollection<UserType>(CollectionName.Users)
+  async findRefresh(adminId: string) {
+    const usersCollection = mongo.getCollection<UserType>(CollectionName.Users);
     const result = await usersCollection.findOne<{ refreshToken: string }>(
       { userId: adminId },
       { projection: { _id: 0, refreshToken: 1 } }
@@ -43,7 +34,7 @@ class Token {
     return result;
   }
 
-  setAccessToCookie(accessToken: string, res: Response) {
+  accessSetToCookie(accessToken: string, res: Response) {
     res.cookie("accessToken", accessToken, {
       sameSite: "lax",
       httpOnly: true,
@@ -51,47 +42,50 @@ class Token {
     });
   }
 
-  checkAccess({
+  accessCheck({
     adminId,
     accessToken,
     res,
     next,
   }: {
-    adminId: string;
+    adminId: string | string[] | undefined;
     accessToken: string;
     res: Response;
     next: NextFunction;
   }) {
     jwt.verify(accessToken, process.env.ACCESS_SECRET, async (err: any) => {
       if (err) {
-        return await this.checkRefresh({ adminId, res, next })
-      };
+        return await this.refreshCheck({ adminId, res, next });
+      }
       return next();
     });
   }
 
-  async checkRefresh({
+  async refreshCheck({
     adminId,
     res,
     next,
   }: {
-    adminId: string;
+    adminId: string | string[] | undefined;
     res: Response;
     next: NextFunction;
   }) {
-    const { refreshToken } = await this.getRefresh(adminId);
+    if (typeof adminId !== 'string' ) {
+      throw accessError({ message: "no admin id", logout: true });
+    }
+    const { refreshToken } = await this.findRefresh(adminId);
     jwt.verify(refreshToken, process.env.REFRESH_SECRET, async (err: any) => {
       if (err) {
-        console.log('refreshToken', err)
+        console.log("refreshToken", err);
         return next(err);
       }
-      const newAccessToken = this.signAccess(adminId);
-      this.setAccessToCookie(newAccessToken, res);
+      const newAccessToken = this.sign("accessToken", adminId);
+      this.accessSetToCookie(newAccessToken, res);
       return next();
     });
   }
 
-  async saveRefresh(
+  async refreshSave(
     adminId: string,
     refreshToken: string,
     usersCollection: Collection<UserType>

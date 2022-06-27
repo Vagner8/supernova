@@ -22,10 +22,10 @@ export async function loginController(
     if (admin.userId) {
       if (!bcrypt.compareSync(password, admin.configs.password))
         throw loginError();
-      token.setAccessToCookie(token.signAccess(admin.userId), res);
-      token.saveRefresh(
+      token.accessSetToCookie(token.sign('accessToken', admin.userId), res);
+      token.refreshSave(
         admin.userId,
-        token.signRefresh(admin.userId),
+        token.sign('refreshToken', admin.userId),
         usersCollection
       );
       res.status(201).json({ adminId: admin.userId });
@@ -38,11 +38,11 @@ export async function loginController(
       token.saveCredentials({
         usersCollection,
         login,
-        refreshToken: token.signRefresh(uniqueId),
+        refreshToken: token.sign('refreshToken', uniqueId),
         encryptedPassword,
         uniqueId,
       });
-      token.setAccessToCookie(token.signAccess(admin.userId), res);
+      token.accessSetToCookie(token.sign('accessToken', admin.userId), res);
       res.status(201).json({ adminId: uniqueId });
     }
   } catch (err) {

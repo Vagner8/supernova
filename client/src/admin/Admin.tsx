@@ -70,8 +70,9 @@ function AdminRoutes({
 }: AdminRoutesProps) {
   console.log('AdminRoutes');
   useFetchAvatarAndLogin(adminDispatch);
-  useWindowClick({eventsDispatch, popup: eventsState.popup});
-  const validateErrors = useValidateErrors(adminState.operationResults)
+  useWindowClick({ eventsDispatch, popup: eventsState.popup });
+  const validateErrors = useValidateErrors(adminState.operationResults);
+
   return (
     <>
       <Linear show={adminState.isFetching} />
