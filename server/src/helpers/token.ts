@@ -54,9 +54,7 @@ class Token {
     next: NextFunction;
   }) {
     jwt.verify(accessToken, process.env.ACCESS_SECRET, async (err: any) => {
-      if (err) {
-        return await this.refreshCheck({ adminId, res, next });
-      }
+      if (err) return await this.refreshCheck({ adminId, res, next });
       return next();
     });
   }
@@ -70,15 +68,11 @@ class Token {
     res: Response;
     next: NextFunction;
   }) {
-    if (typeof adminId !== 'string' ) {
+    if (typeof adminId !== "string")
       throw accessError({ message: "no admin id", logout: true });
-    }
     const { refreshToken } = await this.findRefresh(adminId);
     jwt.verify(refreshToken, process.env.REFRESH_SECRET, async (err: any) => {
-      if (err) {
-        console.log("refreshToken", err);
-        return next(err);
-      }
+      if (err) return next(err);
       const newAccessToken = this.sign("accessToken", adminId);
       this.accessSetToCookie(newAccessToken, res);
       return next();

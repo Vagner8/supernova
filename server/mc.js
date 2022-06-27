@@ -1,16 +1,5 @@
-const arr = {
-  a: 1,
-  b: 2
+var obj = {
+  a: 'a',
+  b: 'b',
+  c: 'c'
 }
-
-const foo = () => {
-  Object.keys(arr).forEach(() => {
-    return true
-  })
-
-  return false
-}
-
-console.log(
-  foo()
-)

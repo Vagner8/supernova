@@ -51,3 +51,12 @@ export type UserPointsType = Pick<
 >;
 
 export type UserKeyPoints = keyof UserPointsType;
+
+export type ValidatedFields = UserConfigsType &
+  UserPersonalType &
+  UserContactsType &
+  UserAddressType;
+
+export type ValidatedFieldsKeys = keyof ValidatedFields;
+
+export type RequiredFields = ["login", "password", "email", "name", "surname" , "phone"];

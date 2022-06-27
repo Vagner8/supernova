@@ -4,7 +4,10 @@ import { ChangeEvent, Dispatch, Fragment, ReactNode } from 'react';
 import { EventsReducerActions, EventsState } from 'admin/Events/eventsReducer';
 import { OperationResultType } from '../../../../common/src/operationResultType';
 import { filterValidateErrors } from 'helpers';
-import { UserKeyPoints } from '../../../../common/src/userTypes';
+import {
+  RequiredFields,
+  UserKeyPoints,
+} from '../../../../common/src/userTypes';
 
 interface FormProps {
   popup: EventsState['popup'];
@@ -15,6 +18,15 @@ interface FormProps {
   eventsDispatch: Dispatch<EventsReducerActions>;
   validateErrors?: OperationResultType['validateErrors'];
 }
+
+const requiredFields: RequiredFields = [
+  'login',
+  'password',
+  'email',
+  'name',
+  'surname',
+  'phone'
+];
 
 export function Form({
   popup,
@@ -64,6 +76,7 @@ export function Form({
                             onChange={onChange}
                             fieldError={error?.field}
                             messageError={error?.message}
+                            required={requiredFields.includes(label as any)}
                           />
                         );
                       }

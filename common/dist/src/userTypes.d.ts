@@ -33,4 +33,7 @@ export interface UserType {
 }
 export declare type UserPointsType = Pick<UserType, "personal" | "contacts" | "address" | "imgs" | "configs">;
 export declare type UserKeyPoints = keyof UserPointsType;
+export declare type ValidatedFields = UserConfigsType & UserPersonalType & UserContactsType & UserAddressType;
+export declare type ValidatedFieldsKeys = keyof ValidatedFields;
+export declare type RequiredFields = ["login", "password", "email", "name", "surname", "phone"];
 //# sourceMappingURL=userTypes.d.ts.map

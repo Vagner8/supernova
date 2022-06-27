@@ -1,22 +1,21 @@
 import { ValidateError } from "../../../common/src/operationResultType";
 import {
+  RequiredFields,
   UserAddressType,
   UserConfigsType,
   UserContactsType,
   UserPersonalType,
   UserType,
+  ValidatedFields,
+  ValidatedFieldsKeys,
 } from "../../../common/src/userTypes";
 
 export type BodyFields = keyof UserType;
 
-export type ValidateFields = UserConfigsType &
-  UserPersonalType &
-  UserContactsType &
-  UserAddressType;
-
 interface Options {
   max: number;
   min: number;
+  required?: boolean;
 }
 
 type ValidateOptions<T> = {
@@ -24,45 +23,65 @@ type ValidateOptions<T> = {
 };
 
 class Validator {
-  map: Map<keyof ValidateFields, string> = new Map();
-  validateFields: (keyof ValidateFields)[] = ["login", "password", "name", "surname"];
-  options: ValidateOptions<ValidateFields> = {
+  map: Map<ValidatedFieldsKeys, string> = new Map();
+  validateFields: ValidatedFieldsKeys[] = [
+    "login",
+    "password",
+    'email',
+    "name",
+    "surname",
+  ];
+  requiredFields: RequiredFields = [
+    'login',
+    'password',
+    'email',
+    'name',
+    'surname',
+    'phone'
+  ];
+  options: ValidateOptions<ValidatedFields> = {
     login: {
       min: 4,
       max: 10,
+      required: true,
     },
     password: {
       min: 6,
       max: 10,
+      required: true,
     },
     name: {
       min: 1,
       max: 25,
+      required: true,
     },
     surname: {
       min: 1,
       max: 25,
+      required: true,
     },
     email: {
       min: 4,
       max: 30,
-    }
+      required: true,
+    },
   };
 
   set(body: UserType) {
     Object.entries(body).forEach(([key, value]) => {
       if (typeof value === "object") this.set(value);
-      if (this.validateFields.includes(key as keyof ValidateFields)) {
-        if (value)
-          this.map.set(key as keyof ValidateFields, value);
+      if (this.validateFields.includes(key as ValidatedFieldsKeys)) {
+        this.map.set(key as ValidatedFieldsKeys, value);
       }
     });
     return this.map;
   }
 
-  checkFields(value: string, field: keyof ValidateFields) {
+  checkFields(value: string, field: ValidatedFieldsKeys) {
     const opt = this.options[field];
     if (!opt) return;
+    if (value.length === 0 && this.requiredFields.includes(field as any))
+      return { field, message: 'required' }
     if (value.length > opt.max)
       return { field, message: `max ${opt.max} chars` };
     if (value.length < opt.min)
