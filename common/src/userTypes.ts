@@ -65,7 +65,7 @@ export type RequiredFields = [
   "email",
   "name",
   "surname",
-  "phone"
+  "phone",
 ];
 
 export type Project<T, S extends keyof UserPointsType | 0> = {

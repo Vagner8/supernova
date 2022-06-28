@@ -27,17 +27,17 @@ class Validator {
   validateFields: ValidatedFieldsKeys[] = [
     "login",
     "password",
-    'email',
+    "email",
     "name",
     "surname",
   ];
   requiredFields: RequiredFields = [
-    'login',
-    'password',
-    'email',
-    'name',
-    'surname',
-    'phone'
+    "login",
+    "password",
+    "email",
+    "name",
+    "surname",
+    "phone",
   ];
   options: ValidateOptions<ValidatedFields> = {
     login: {
@@ -80,8 +80,8 @@ class Validator {
   checkFields(value: string, field: ValidatedFieldsKeys) {
     const opt = this.options[field];
     if (!opt) return;
-    if (value.length === 0 && this.requiredFields.includes(field as any))
-      return { field, message: 'required' }
+    if (value.length === 0 && (this.requiredFields as string[]).includes(field))
+      return { field, message: "required" };
     if (value.length > opt.max)
       return { field, message: `max ${opt.max} chars` };
     if (value.length < opt.min)

@@ -107,7 +107,7 @@ function AdminRoutes({
               path="/users"
               element={
                 <UsersTable
-                  eventsList={eventsState.eventsList}
+                  users={eventsState.users}
                   eventsDispatch={eventsDispatch}
                   adminDispatch={adminDispatch}
                 />

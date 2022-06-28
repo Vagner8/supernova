@@ -25,7 +25,7 @@ const requiredFields: RequiredFields = [
   'email',
   'name',
   'surname',
-  'phone'
+  'phone',
 ];
 
 export function Form({
@@ -76,7 +76,9 @@ export function Form({
                             onChange={onChange}
                             fieldError={error?.field}
                             messageError={error?.message}
-                            required={requiredFields.includes(label as any)}
+                            required={(requiredFields as string[]).includes(
+                              label,
+                            )}
                           />
                         );
                       }

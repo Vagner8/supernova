@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { CollectionName } from "../../types";
-import { UserType } from "../../../../common/src/userTypes";
+import { UserProject, UserType } from "../../../../common/src/userTypes";
 import { serverError } from "../../helpers/errors";
 import { mongo } from "../../helpers/mongo";
 
@@ -10,7 +10,7 @@ export async function getUserCertainDataById(
   next: NextFunction
 ) {
   try {
-    const { userId, projection } = req.query as any;
+    const { userId, projection } = req.query as { userId: string, projection: string } ;
     if (!projection) return serverError("no projection");
     const usersCollection = mongo.getCollection<UserType>(CollectionName.Users);
     const match = userId ? { userId } : {};

@@ -11,6 +11,7 @@ const projection: UserProject = {
   email: '$contacts.email',
   phone: '$contacts.phone',
   rule: '$credentials.rule',
+  avatar: '$imgs.avatar'
 };
 
 export interface UseFetchUsersForTableResponse {
@@ -20,6 +21,7 @@ export interface UseFetchUsersForTableResponse {
   email: UserType['contacts']['email'];
   phone: UserType['contacts']['phone'];
   rule: UserType['credentials']['rule'];
+  avatar: UserType['imgs']['avatar'];
 }
 
 export function useFetchUsersForTable(

@@ -23,6 +23,7 @@ export * from './Table/Table';
 export * from './PageHeader/PageHeader';
 export * from './Select/Select';
 export * from './ButtonLi/ButtonLi';
+export * from './Checkbox/Checkbox';
 
 export * from './Typography/Text/Text';
 export * from './Typography/Title/Title';

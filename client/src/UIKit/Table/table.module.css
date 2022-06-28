@@ -1,0 +1,31 @@
+.Row {
+  display: flex;
+  align-items: center;
+  height: 52px;
+}
+
+.Col {
+  padding: 0 var(--l-rem);
+}
+
+.Col i {
+  color: var(--icon-color);
+}
+
+.avatar {
+  width: auto;
+}
+
+.rule {
+  flex: 1;
+}
+
+.name,
+.surname {
+  flex: 2;
+}
+
+.email,
+.phone {
+  flex: 3;
+}

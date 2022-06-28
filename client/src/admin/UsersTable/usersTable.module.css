@@ -1,0 +1,11 @@
+.Users {
+  display: flex;
+}
+
+.right {
+  width: 70%;
+}
+
+.left {
+  width: 50%;
+}

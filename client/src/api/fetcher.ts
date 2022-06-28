@@ -48,11 +48,11 @@ export async function fetcher<Res>({
         status: 'server error',
         message: 'no result',
       });
-      return undefined
+      return undefined;
     }
     if ('status' in json) {
       saveOperationResult(adminDispatch, json);
-      return undefined
+      return undefined;
     }
     return json;
   } catch (err) {

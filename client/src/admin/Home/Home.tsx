@@ -1,7 +1,6 @@
 import { AdminReducerActions } from 'admin/adminReducer';
 import { EventsState } from 'admin/Events/eventsReducer';
 import { Dispatch } from 'react';
-import { Select } from 'UIKit/Select/Select';
 
 interface HomeProps {
   eventsState: EventsState;
@@ -9,7 +8,6 @@ interface HomeProps {
 }
 
 export default function Home({ adminDispatch, eventsState }: HomeProps) {
-  const onClick = () => {};
 
   return (
     <div>
