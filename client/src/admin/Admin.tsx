@@ -109,6 +109,7 @@ function AdminRoutes({
                 <UsersTable
                   eventsList={eventsState.eventsList}
                   eventsDispatch={eventsDispatch}
+                  adminDispatch={adminDispatch}
                 />
               }
             />

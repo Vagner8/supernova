@@ -1,4 +1,5 @@
 import { UseFetchUserByIdResponse } from 'api/users/useFetchUserById';
+import { UseFetchUsersForTableResponse } from 'api/users/useFetchUsersForTable';
 import { Dispatch, Reducer } from 'react';
 import { ImgsType } from '../../../../common/src/commonTypes';
 
@@ -24,6 +25,12 @@ export enum EventsStrAction {
   SavePoints = 'SavePoints',
   PointsOnChange = 'PointsOnChange',
   SaveCopyOfPoints = 'SaveCopyOfPoints',
+  SaveUsers = 'SaveUsers',
+}
+
+interface SaveUsers {
+  type: EventsStrAction.SaveUsers;
+  payload: { users: EventsState['users'] };
 }
 
 interface SavePopup {
@@ -82,13 +89,14 @@ export interface EventsState {
   popup: string | null;
   editMode: boolean;
   saveButton: boolean;
-  copyPoints: PointsType | null;
   points: PointsType | null;
+  copyPoints: PointsType | null;
   changedPoints: Partial<PointsType> | null;
   eventsList: null | string[];
   files: File[] | null;
   isFileInputMultiple: boolean;
   fileInputName: string | null;
+  users: UseFetchUsersForTableResponse[] | null;
 }
 
 export type EventsReducerActions =
@@ -101,7 +109,8 @@ export type EventsReducerActions =
   | SaveFiles
   | DeleteOneFile
   | DeleteAllFiles
-  | SaveCopyOfPoints;
+  | SaveCopyOfPoints
+  | SaveUsers;
 
 export const eventsInitState: EventsState = {
   popup: null,
@@ -114,6 +123,7 @@ export const eventsInitState: EventsState = {
   files: null,
   isFileInputMultiple: false,
   fileInputName: null,
+  users: null,
 };
 
 export const eventsReducer: Reducer<EventsState, EventsReducerActions> = (
@@ -121,6 +131,12 @@ export const eventsReducer: Reducer<EventsState, EventsReducerActions> = (
   action,
 ) => {
   switch (action.type) {
+    case EventsStrAction.SaveUsers: {
+      return {
+        ...state,
+        users: action.payload.users,
+      };
+    }
     case EventsStrAction.SavePopup: {
       return {
         ...state,
@@ -319,5 +335,15 @@ export const switchSaveButton = (
   eventsDispatch({
     type: EventsStrAction.SwitchSaveButton,
     payload: { saveButton },
+  });
+};
+
+export const saveUsers = (
+  eventsDispatch: Dispatch<EventsReducerActions>,
+  users: EventsState['users'],
+) => {
+  eventsDispatch({
+    type: EventsStrAction.SaveUsers,
+    payload: { users },
   });
 };

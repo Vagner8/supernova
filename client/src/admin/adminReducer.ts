@@ -115,8 +115,8 @@ export const adminReducer: Reducer<AdminState, AdminReducerActions> = (
     case AdminStrAction.SaveAvatarAndLogin: {
       return {
         ...state,
-        adminAvatar: action.payload.avatarAndLogin.imgs.avatar[0],
-        adminLogin: action.payload.avatarAndLogin.configs.login,
+        adminAvatar: action.payload.avatarAndLogin.avatar[0],
+        adminLogin: action.payload.avatarAndLogin.login,
       };
     }
     default:

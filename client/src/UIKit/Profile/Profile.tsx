@@ -47,7 +47,7 @@ export function Profile({
         pointName: e.target.dataset.pointName as keyof EventsState['points'],
       });
     },
-    [eventsDispatch],
+    [adminDispatch, eventsDispatch],
   );
 
   const onChangeFiles = (e: ChangeEvent<HTMLInputElement>) => {

@@ -1,26 +1,16 @@
 import { AdminReducerActions, saveOwnerNameAndAvatar } from "admin/adminReducer";
-import { AddressTo, fetcher } from "api/fetcher";
+import { fetcher, GoTo } from "api/fetcher";
 import { Dispatch, useEffect } from "react";
-import { Projection } from "../../../../common/src/commonTypes";
-import { UserType } from "../../../../common/src/userTypes";
+import { UserProject, UserType } from "../../../../common/src/userTypes";
 
-const projection: Projection<UserType> = {
-  _id: 0,
-  configs: {
-    login: 1
-  },
-  imgs: {
-    avatar: 1,
-  },
+const projection: UserProject = {
+  login: '$credentials.login',
+  avatar: '$imgs.avatar'
 };
 
 export interface UseFetchAvatarAndLoginResponse {
-  configs: {
-    login: UserType['configs']['login']
-  },
-  imgs: {
-    avatar: UserType['imgs']['avatar']
-  },
+  login: UserType['credentials']['login'],
+  avatar: UserType['imgs']['avatar']
 }
 
 export function useFetchAvatarAndLogin(
@@ -28,15 +18,15 @@ export function useFetchAvatarAndLogin(
 ) {
   useEffect(() => {
     const asyncer = async () => {
-      const response = (await fetcher({
+      const response = (await fetcher<UseFetchAvatarAndLoginResponse[]>({
         method: 'GET',
-        url: `${AddressTo.GetUsers}/?projection=${JSON.stringify(
+        url: `${GoTo.Aggregate}?projection=${JSON.stringify(
           projection,
-        )}`,
+        )}&userId=${localStorage.getItem('adminId')}`,
         adminDispatch,
-      })) as UseFetchAvatarAndLoginResponse | null;
+      }));
       if (!response) return
-      saveOwnerNameAndAvatar(adminDispatch, response)
+      saveOwnerNameAndAvatar(adminDispatch, response[0])
     };
     asyncer();
   }, [adminDispatch]);

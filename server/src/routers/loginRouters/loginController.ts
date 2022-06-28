@@ -16,11 +16,11 @@ export async function loginController(
 
   try {
     const usersCollection = mongo.getCollection<UserType>(CollectionName.Users);
-    const admin = await usersCollection.findOne({ "configs.login": login });
+    const admin = await usersCollection.findOne({ "credentials.login": login });
     if (!admin) throw loginError();
 
     if (admin.userId) {
-      if (!bcrypt.compareSync(password, admin.configs.password))
+      if (!bcrypt.compareSync(password, admin.credentials.password))
         throw loginError();
       token.accessSetToCookie(token.sign('accessToken', admin.userId), res);
       token.refreshSave(
@@ -32,7 +32,7 @@ export async function loginController(
     }
 
     if (!admin.userId) {
-      if (password !== admin.configs.password) throw loginError();
+      if (password !== admin.credentials.password) throw loginError();
       const uniqueId = uuidv4();
       const encryptedPassword = await bcrypt.hash(password, 10);
       token.saveCredentials({

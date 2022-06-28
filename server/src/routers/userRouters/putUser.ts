@@ -1,12 +1,11 @@
 import { NextFunction, Request, Response } from "express";
-import { MONGO_DB } from "../../middleware/connectMongo";
 import { CollectionName } from "../../types";
 import { UserPointsType, UserType } from "../../../../common/src/userTypes";
 import { serverError } from "../../helpers/errors";
 import { OperationResultType } from "../../../../common/src/operationResultType";
 import { mongo } from "../../helpers/mongo";
 
-export async function putUserController(
+export async function putUser(
   req: Request,
   res: Response,
   next: NextFunction

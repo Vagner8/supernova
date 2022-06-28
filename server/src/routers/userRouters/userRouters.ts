@@ -1,12 +1,14 @@
 import express from "express";
-import { getUserController } from "./getUserController";
-import { putUserController } from "./putUserController";
-import { postUserController } from "./postUserController";
+import { getUserById } from "./getUserById";
+import { putUser } from "./putUser";
+import { postUser } from "./postUser";
+import { getUserCertainDataById } from "./getUserCertainDataById";
 
 const router = express.Router();
 
-router.get("/", getUserController);
-router.post("/new", postUserController)
-router.put("/update", putUserController);
+router.get("/", getUserById);
+router.get("/aggregate", getUserCertainDataById);
+router.post("/new", postUser);
+router.put("/update", putUser);
 
 export default router;

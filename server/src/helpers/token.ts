@@ -105,12 +105,12 @@ class Token {
     uniqueId: string;
   }) {
     const result = await usersCollection.updateOne(
-      { "configs.login": login },
+      { "credentials.login": login },
       {
         $set: {
           refreshToken,
           userId: uniqueId,
-          "configs.password": encryptedPassword,
+          "credentials.password": encryptedPassword,
         },
       }
     );

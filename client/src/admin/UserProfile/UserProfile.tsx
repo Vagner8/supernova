@@ -39,7 +39,7 @@ export default function UserProfile({
     <div className={styles.UserProfile}>
       <Profile
         popup={popup}
-        pointsSort={['personal', 'configs', 'contacts', 'address']}
+        pointsSort={['personal', 'credentials', 'contacts', 'address']}
         isFetching={isFetching}
         editMode={editMode}
         validateErrors={validateErrors}

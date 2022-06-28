@@ -5,7 +5,7 @@ import { serverError } from "../../helpers/errors";
 import { mongo } from "../../helpers/mongo";
 import { CollectionName } from "../../types";
 
-export async function postUserController(
+export async function postUser(
   req: Request,
   res: Response,
   next: NextFunction
@@ -19,7 +19,7 @@ export async function postUserController(
       .status(200)
       .json({
         status: "success",
-        message: `user ${newUser.configs.login} created`,
+        message: `user ${newUser.credentials.login} created`,
       } as OperationResultType);
       usersCollection.deleteOne({_id: result.insertedId})
   } catch (err) {
