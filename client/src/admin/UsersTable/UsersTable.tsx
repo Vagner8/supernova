@@ -17,12 +17,20 @@ export default function Users({
   adminDispatch,
 }: UsersProps) {
   useFetchUsersForTable(eventsDispatch, adminDispatch);
+
+  const onClickCheckbox = (checked: boolean, checkboxId: string) => {
+    console.log(
+      checked, checkboxId
+    )
+  }
+
   return (
     <div className={styles.Users}>
       <div className={styles.right}>
         <Table
           rows={users}
           sort={['avatar', 'name', 'surname', 'phone', 'email', 'rule']}
+          onClickCheckbox={onClickCheckbox}
         />
       </div>
       <div className={styles.left}>

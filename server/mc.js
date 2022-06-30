@@ -1,11 +1,11 @@
 // console.log(
 //   db.users.aggregate([
-    // {
-    //   $project: {
-    //     _id: "$personal.name",
-    //     table: "$personal.name"
-    //   }
-    // }
+//     {
+//       $project: {
+//         userId: "$userId",
+//         table: "$personal.name"
+//       }
+//     }
 //   ])
 // )
 
@@ -22,7 +22,18 @@
 // )
 
 
+// console.log(
+//   db.users.findOne({ userId: 'a2d20632-8d4f-405a-9ba1-f494e169c43d' },
+//     { personal: 1,  } )
+// )
+
+
+const validString = 'john'
+
+function isValid(s) {
+  return validString.indexOf(s) >= 0
+}
+
 console.log(
-  db.users.findOne({ userId: 'a2d20632-8d4f-405a-9ba1-f494e169c43d' },
-    { personal: 1,  } )
+  [].every.call(validString, isValid)
 )

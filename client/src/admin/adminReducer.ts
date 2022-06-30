@@ -8,7 +8,7 @@ export enum AdminStrAction {
   DeleteOperationResult = 'DeleteOperationResult',
   SetIsFetching = 'SetIsFetching',
   SaveAvatarAndLogin = 'SaveAvatarAndLogin',
-  DeleteAllOperationResults = 'DeleteAllOperationResults'
+  DeleteAllOperationResults = 'DeleteAllOperationResults',
 }
 
 interface SetIsFetching {
@@ -22,7 +22,7 @@ interface DeleteOperationResult {
 }
 
 interface DeleteAllOperationResults {
-  type: AdminStrAction.DeleteAllOperationResults
+  type: AdminStrAction.DeleteAllOperationResults;
 }
 
 interface SaveOperationResult {
@@ -48,7 +48,7 @@ export type AdminReducerActions =
   | DeleteOperationResult
   | DeleteAllOperationResults
   | SaveOperationResult
-  | SaveAvatarAndLogin
+  | SaveAvatarAndLogin;
 
 export interface AdminState {
   isFetching: boolean;
@@ -71,7 +71,7 @@ export const adminReducer: Reducer<AdminState, AdminReducerActions> = (
   switch (action.type) {
     case AdminStrAction.SaveAdminId: {
       localStorage.setItem('adminId', action.payload.adminId);
-      return {...state, adminId: action.payload.adminId}
+      return { ...state, adminId: action.payload.adminId };
     }
     case AdminStrAction.SetIsFetching: {
       return {
@@ -98,7 +98,7 @@ export const adminReducer: Reducer<AdminState, AdminReducerActions> = (
       };
     }
     case AdminStrAction.DeleteOperationResult: {
-      if (!state.operationResults) return state
+      if (!state.operationResults) return state;
       return {
         ...state,
         operationResults: state.operationResults.filter((_, index) => {
@@ -109,8 +109,8 @@ export const adminReducer: Reducer<AdminState, AdminReducerActions> = (
     case AdminStrAction.DeleteAllOperationResults: {
       return {
         ...state,
-        operationResults: null
-      }
+        operationResults: null,
+      };
     }
     case AdminStrAction.SaveAvatarAndLogin: {
       return {
@@ -161,7 +161,6 @@ export const deleteAllOperationResults = (
     type: AdminStrAction.DeleteAllOperationResults,
   });
 };
-
 
 export const saveAdminId = (
   adminDispatch: Dispatch<AdminReducerActions>,

@@ -1,7 +1,7 @@
 import {
   AdminReducerActions,
-  deleteOperationResult,
 } from 'admin/adminReducer';
+import { useAdminDispatch } from 'hooks';
 import { Dispatch } from 'react';
 import { ButtonIcon, Headerblock } from 'UIKit';
 import { OperationResultType } from '../../../../common/src/operationResultType';
@@ -21,6 +21,8 @@ export function Snackbar({
   adminDispatch,
 }: SnackbarProps) {
 
+  const {deleteOperationResult} = useAdminDispatch(adminDispatch)
+
   const setIcon = (statusProp: string | undefined) => {
     if (!statusProp) return 'error'
     if (statusProp.match(/error/i)) return 'error'
@@ -37,9 +39,7 @@ export function Snackbar({
   //   }
   // }, [adminDispatch, index, status]);
 
-  const onClick = () => {
-    deleteOperationResult(adminDispatch, index);
-  };
+  const onClick = () => deleteOperationResult(index);
 
   if (!message || !status || status === 'validate error') return null;
 

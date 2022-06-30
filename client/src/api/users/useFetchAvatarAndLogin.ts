@@ -3,7 +3,7 @@ import { fetcher, GoTo } from "api/fetcher";
 import { Dispatch, useEffect } from "react";
 import { UserProject, UserType } from "../../../../common/src/userTypes";
 
-const projection: UserProject = {
+const projection: Partial<UserProject> = {
   login: '$credentials.login',
   avatar: '$imgs.avatar'
 };

@@ -1,6 +1,6 @@
 import { UseFetchUsersForTableResponse } from 'api/users/useFetchUsersForTable';
-import { Fragment, ReactNode } from 'react';
-import { Avatar, Checkbox } from 'UIKit';
+import { ReactNode } from 'react';
+import { Avatar, Checkbox, CheckboxProps } from 'UIKit';
 import styles from './table.module.css';
 
 type RowType = UseFetchUsersForTableResponse;
@@ -8,11 +8,14 @@ type RowType = UseFetchUsersForTableResponse;
 interface TableProps {
   rows: RowType[] | null;
   sort: (keyof UseFetchUsersForTableResponse)[];
+  onClickCheckbox: CheckboxProps['onClickCheckbox'];
 }
 
 interface RowProps {
   row: RowType;
   sort: (keyof UseFetchUsersForTableResponse)[];
+  rowId: string;
+  onClickCheckbox: CheckboxProps['onClickCheckbox'];
 }
 
 interface ColProps {
@@ -26,10 +29,10 @@ const Col = ({ className, children }: ColProps) => {
   );
 };
 
-const Row = ({ row, sort }: RowProps) => {
+const Row = ({ row, sort, rowId, onClickCheckbox }: RowProps) => {
   return (
     <div className={styles.Row}>
-      <Checkbox onClick={() => {}} />
+      <Checkbox checkboxId={rowId} onClickCheckbox={onClickCheckbox} />
       {sort.map((key) => (
         <Col className={key} key={key}>
           {() => {
@@ -44,12 +47,18 @@ const Row = ({ row, sort }: RowProps) => {
   );
 };
 
-export function Table({ rows, sort }: TableProps) {
+export function Table({ rows, sort, onClickCheckbox }: TableProps) {
   if (!rows) return null;
   return (
     <div className={styles.Table}>
       {rows.map((row) => (
-        <Row key={row._id} row={row} sort={sort} />
+        <Row
+          onClickCheckbox={onClickCheckbox}
+          key={row._id}
+          row={row}
+          sort={sort}
+          rowId={row._id}
+        />
       ))}
     </div>
   );

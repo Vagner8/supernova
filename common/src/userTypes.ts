@@ -68,10 +68,10 @@ export type RequiredFields = [
   "phone",
 ];
 
-export type Project<T, S extends keyof UserPointsType | 0> = {
-  [Key in keyof T]?: S extends string
-    ? `$${Lowercase<S & string>}.${Lowercase<Key & string>}`
-    : `$${Lowercase<Key & string>}`;
+export type Project<T, S extends string| 0> = {
+  [Key in keyof T]: S extends string
+    ? `$${Lowercase<S & string>}.${Key & string}`
+    : `$${Key & string}`;
 };
 
 export type UserProject = Project<UserType, 0> &

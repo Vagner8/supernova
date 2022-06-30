@@ -43,8 +43,8 @@ export declare type RequiredFields = [
     "surname",
     "phone"
 ];
-export declare type Project<T, S extends keyof UserPointsType | 0> = {
-    [Key in keyof T]?: S extends string ? `$${Lowercase<S & string>}.${Lowercase<Key & string>}` : `$${Lowercase<Key & string>}`;
+export declare type Project<T, S extends string | 0> = {
+    [Key in keyof T]: S extends string ? `$${Lowercase<S & string>}.${Key & string}` : `$${Key & string}`;
 };
 export declare type UserProject = Project<UserType, 0> & Project<UserImgsType, "imgs"> & Project<UserConfigsType, "credentials"> & Project<UserPersonalType, "personal"> & Project<UserContactsType, "contacts"> & Project<UserAddressType, "address">;
 //# sourceMappingURL=userTypes.d.ts.map
