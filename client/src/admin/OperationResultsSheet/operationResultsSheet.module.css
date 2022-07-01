@@ -1,4 +1,5 @@
 .OperationResultsSheet {
+  z-index: 999;
   position: fixed;
   left: 1.25rem;
   bottom: 1.25rem;

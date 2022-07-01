@@ -30,7 +30,7 @@ export function useFetchUserById(
     const asyncer = async () => {
       const response = (await fetcher<UseFetchUserByIdResponse>({
         method: 'GET',
-        url: `${GoTo.GetUsers}/&userId=${userId}`,
+        url: `${GoTo.GetUsers}/?userId=${userId}`,
         adminDispatch,
       }));
       if (!response) return;

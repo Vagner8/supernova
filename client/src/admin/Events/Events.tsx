@@ -4,6 +4,8 @@ import { downloadFilesFirebase } from 'api/firebaseStorage/downloadFilesFirebase
 import { updateData } from 'api/updateData';
 import { createNewUser } from 'api/users/createNewUser';
 import { firebaseError } from 'helpers';
+import { useEventsDispatch } from 'hooks';
+import { useFirebaseStorage } from 'hooks/useFirebaseStorage';
 import { Dispatch, Fragment, MouseEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ButtonLi, Dropdown, Icon } from 'UIKit';
@@ -22,7 +24,7 @@ import {
 interface EventsProps {
   popup: EventsState['popup'];
   eventsList: EventsState['eventsList'];
-  points: EventsState['points']
+  points: EventsState['points'];
   changedPoints: EventsState['changedPoints'];
   editMode: EventsState['editMode'];
   saveButton: EventsState['saveButton'];
@@ -46,35 +48,47 @@ export function Events({
   adminDispatch,
   eventsDispatch,
 }: EventsProps) {
+  const eventsAction = useEventsDispatch(eventsDispatch)
   usePageChanged({ eventsDispatch });
   useEventsList({ eventsDispatch, editMode });
-  const { paramsName, paramsId } = useSplitParams();
-  const navigate = useNavigate()
+  const { categoryParam, idParam } = useSplitParams();
+  const navigate = useNavigate();
+  const firebaseStorage = useFirebaseStorage({
+    paths: [categoryParam, idParam, fileInputName],
+    isFileInputMultiple,
+    adminDispatch,
+  });
 
   const onClick = (e: MouseEvent<HTMLButtonElement>) => {
     if (!e.target) return;
     const selectedEvent = (e.target as HTMLButtonElement).getAttribute(
       'data-btn-name',
     );
-    // let imgs: string[] | undefined = [];
     const asyncer = async () => {
       switch (selectedEvent) {
         case EventNames.New: {
+          navigate('/admin/users/new');
           break;
         }
         case EventNames.Edit: {
-          switchEditMode(eventsDispatch, true);
+          eventsAction.switchEditMode(true);
           break;
         }
         case EventNames.EditOff: {
-          switchEditMode(eventsDispatch, false);
+          eventsAction.switchEditMode(false);
           break;
         }
         case EventNames.Save: {
-          if (paramsId === 'new') {
-            createNewUser(points, adminDispatch)
-            // navigate('/admin/users')
+          let firebaseUrls: string[] | undefined
+          // if (idParam === 'new') {
+          //   createNewUser(points, adminDispatch);
+          //   // navigate('/admin/users')
+          // }
+          if (files?.length) {
+            firebaseUrls = await firebaseStorage.download(files)
+            eventsAction.deleteAllFiles();
           }
+
           // saveCopyOfPoints(eventsDispatch);
           // deleteAllFiles(eventsDispatch);
           // if (files && files.length > 0 && params['*']) {
@@ -103,7 +117,7 @@ export function Events({
     asyncer();
   };
 
-  if (!eventsList || !paramsName) return null;
+  if (!eventsList || !categoryParam) return null;
 
   return (
     <div className={styles.Events}>
@@ -115,7 +129,7 @@ export function Events({
               key={eventString}
               linkPath={
                 eventString === EventNames.New
-                  ? `/admin/${paramsName}/new`
+                  ? `/admin/${categoryParam}/new`
                   : undefined
               }
               icon={eventString === EventNames.Save ? 'save' : undefined}

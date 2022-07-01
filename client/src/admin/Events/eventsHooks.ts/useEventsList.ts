@@ -17,12 +17,12 @@ export function useEventsList({
   editMode,
   eventsDispatch,
 }: UseEventsList) {
-  const { paramsName, paramsId } = useSplitParams();
+  const { categoryParam, idParam } = useSplitParams();
   const adminId = useLocalStorageData('adminId')
   useEffect(() => {
     const editEvent = () => (editMode ? EventNames.EditOff : EventNames.Edit);
-    const copyEvent = () => (paramsId === adminId ? '' : EventNames.Copy);
-    const deleteEvent = () => (paramsId === adminId ? '' : EventNames.Delete);
+    const copyEvent = () => (idParam === adminId ? '' : EventNames.Copy);
+    const deleteEvent = () => (idParam === adminId ? '' : EventNames.Delete);
     const saveEvent = () => (editMode ? EventNames.Save : '');
 
     saveEventsList(eventsDispatch, [
@@ -32,5 +32,5 @@ export function useEventsList({
       deleteEvent(),
       saveEvent(),
     ]);
-  }, [eventsDispatch, editMode, paramsId, adminId]);
+  }, [eventsDispatch, editMode, idParam, adminId]);
 }

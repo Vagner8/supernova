@@ -21,7 +21,6 @@ export async function postUser(
         status: "success",
         message: `user ${newUser.credentials.login} created`,
       } as OperationResultType);
-      usersCollection.deleteOne({_id: result.insertedId})
   } catch (err) {
     next(err);
   }
