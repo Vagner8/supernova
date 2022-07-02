@@ -1,9 +1,9 @@
 import { UseFetchUserByIdResponse } from 'api/users/useFetchUserById';
 import { UseFetchUsersForTableResponse } from 'api/users/useFetchUsersForTable';
 import { Dispatch, Reducer } from 'react';
-import { ImgsType } from '../../../../common/src/commonTypes';
 
 type PointsType = UseFetchUserByIdResponse;
+export type FileInputName = keyof PointsType['imgs'];
 
 export enum EventNames {
   New = 'new',
@@ -17,7 +17,6 @@ export enum EventNames {
 export enum EventsStrAction {
   SavePopup = 'SavePopup',
   SwitchEditMode = 'SwitchEditMode',
-  SwitchSaveButton = 'SwitchSaveButton',
   SaveFiles = 'SaveFiles',
   DeleteOneFile = 'DeleteOneFile',
   DeleteAllFiles = 'DeleteAllFiles',
@@ -26,6 +25,11 @@ export enum EventsStrAction {
   PointsOnChange = 'PointsOnChange',
   SaveCopyOfPoints = 'SaveCopyOfPoints',
   SaveUsers = 'SaveUsers',
+  RestorePoints = 'RestorePoints',
+}
+
+interface RestorePoints {
+  type: EventsStrAction.RestorePoints;
 }
 
 interface SaveUsers {
@@ -41,11 +45,6 @@ interface SavePopup {
 interface SwitchEditMode {
   type: EventsStrAction.SwitchEditMode;
   payload: { editMode: EventsState['editMode'] };
-}
-
-interface SwitchSaveButton {
-  type: EventsStrAction.SwitchSaveButton;
-  payload: { saveButton: EventsState['saveButton'] };
 }
 
 interface SavePoints {
@@ -68,7 +67,7 @@ interface SaveFiles {
   payload: {
     files: File[];
     isFileInputMultiple: boolean;
-    fileInputName: keyof ImgsType;
+    fileInputName: FileInputName;
   };
 }
 
@@ -88,21 +87,19 @@ interface SaveCopyOfPoints {
 export interface EventsState {
   popup: string | null;
   editMode: boolean;
-  saveButton: boolean;
   points: PointsType | null;
   copyPoints: PointsType | null;
   changedPoints: Partial<PointsType> | null;
   eventsList: null | string[];
   files: File[] | null;
   isFileInputMultiple: boolean;
-  fileInputName: string | null;
+  fileInputName: FileInputName | null;
   users: UseFetchUsersForTableResponse[] | null;
 }
 
 export type EventsReducerActions =
   | SavePopup
   | SwitchEditMode
-  | SwitchSaveButton
   | SavePoints
   | PointsOnChange
   | SaveEventsList
@@ -110,12 +107,12 @@ export type EventsReducerActions =
   | DeleteOneFile
   | DeleteAllFiles
   | SaveCopyOfPoints
-  | SaveUsers;
+  | SaveUsers
+  | RestorePoints;
 
 export const eventsInitState: EventsState = {
   popup: null,
   editMode: false,
-  saveButton: false,
   copyPoints: null,
   points: null,
   changedPoints: null,
@@ -131,6 +128,9 @@ export const eventsReducer: Reducer<EventsState, EventsReducerActions> = (
   action,
 ) => {
   switch (action.type) {
+    case EventsStrAction.RestorePoints: {
+      return { ...state, points: state.copyPoints };
+    }
     case EventsStrAction.SaveUsers: {
       return {
         ...state,
@@ -147,12 +147,6 @@ export const eventsReducer: Reducer<EventsState, EventsReducerActions> = (
       return {
         ...state,
         editMode: action.payload.editMode,
-      };
-    }
-    case EventsStrAction.SwitchSaveButton: {
-      return {
-        ...state,
-        saveButton: action.payload.saveButton,
       };
     }
     case EventsStrAction.SavePoints: {
@@ -195,19 +189,11 @@ export const eventsReducer: Reducer<EventsState, EventsReducerActions> = (
       };
     }
     case EventsStrAction.SaveFiles: {
-      if (!state.points) return state;
       return {
         ...state,
         files: action.payload.files,
         isFileInputMultiple: action.payload.isFileInputMultiple,
         fileInputName: action.payload.fileInputName,
-        changedPoints: {
-          ...state.changedPoints,
-          imgs: {
-            ...state.points.imgs,
-            [action.payload.fileInputName]: [],
-          },
-        },
       };
     }
     case EventsStrAction.DeleteOneFile: {
@@ -292,7 +278,7 @@ export const saveFiles = ({
   eventsDispatch: Dispatch<EventsReducerActions>;
   files: File[];
   isFileInputMultiple: boolean;
-  fileInputName: keyof ImgsType;
+  fileInputName: FileInputName;
 }) => {
   eventsDispatch({
     type: EventsStrAction.SaveFiles,
@@ -325,16 +311,6 @@ export const switchEditMode = (
   eventsDispatch({
     type: EventsStrAction.SwitchEditMode,
     payload: { editMode },
-  });
-};
-
-export const switchSaveButton = (
-  eventsDispatch: Dispatch<EventsReducerActions>,
-  saveButton: EventsState['saveButton'],
-) => {
-  eventsDispatch({
-    type: EventsStrAction.SwitchSaveButton,
-    payload: { saveButton },
   });
 };
 

@@ -6,15 +6,16 @@ import {
 import {
   EventsReducerActions,
   EventsState,
+  FileInputName,
   pointsOnChange,
   saveFiles,
 } from 'admin/Events/eventsReducer';
 import { ChangeEvent, Dispatch, useCallback } from 'react';
 import { Avatar, FileInput, Form } from 'UIKit';
 import styles from './profile.module.css';
-import { ImgsType } from '../../../../common/src/commonTypes';
 import { OperationResultType } from '../../../../common/src/operationResultType';
 import { UserKeyPoints } from '../../../../common/src/userTypes';
+import { useAdminDispatch, useEventsDispatch } from 'hooks';
 
 interface ProfileProps {
   popup: EventsState['popup'];
@@ -37,25 +38,26 @@ export function Profile({
   adminDispatch,
   validateErrors,
 }: ProfileProps) {
+  const eventsAction = useEventsDispatch(eventsDispatch)
+  const adminAction = useAdminDispatch(adminDispatch)
+
   const onChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
-      deleteAllOperationResults(adminDispatch);
-      pointsOnChange({
-        eventsDispatch,
+      adminAction.deleteAllOperationResults();
+      eventsAction.pointsOnChange({
         name: e.target.name,
         value: e.target.value,
         pointName: e.target.dataset.pointName as keyof EventsState['points'],
       });
     },
-    [adminDispatch, eventsDispatch],
+    [adminAction, eventsAction],
   );
 
   const onChangeFiles = (e: ChangeEvent<HTMLInputElement>) => {
-    saveFiles({
-      eventsDispatch,
+    eventsAction.saveFiles({
       files: Array.from(e.target.files || []),
       isFileInputMultiple: e.target.multiple,
-      fileInputName: e.target.name as keyof ImgsType,
+      fileInputName: e.target.name as  FileInputName
     });
     e.target.value = '';
   };
@@ -70,7 +72,7 @@ export function Profile({
           {personal.name || '-'} {personal.surname || '-'}
         </h5>
         {editMode ? (
-          <FileInput name="avatar" multiple={false} onChange={onChangeFiles} />
+          <FileInput name="avatar" multiple={true} onChange={onChangeFiles} />
         ) : null}
       </div>
       <div className={styles.middle}>

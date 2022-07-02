@@ -1,10 +1,6 @@
 import { ValidateError } from "../../../common/src/operationResultType";
 import {
   RequiredFields,
-  UserAddressType,
-  UserConfigsType,
-  UserContactsType,
-  UserPersonalType,
   UserType,
   ValidatedFields,
   ValidatedFieldsKeys,
@@ -77,17 +73,6 @@ class Validator {
     return this.map;
   }
 
-  checkFields(value: string, field: ValidatedFieldsKeys) {
-    const opt = this.options[field];
-    if (!opt) return;
-    if (value.length === 0 && (this.requiredFields as string[]).includes(field))
-      return { field, message: "required" };
-    if (value.length > opt.max)
-      return { field, message: `max ${opt.max} chars` };
-    if (value.length < opt.min)
-      return { field, message: `min ${opt.min} chars` };
-  }
-
   check(map: Validator["map"]) {
     const errs: ValidateError[] = [];
     map.forEach((value, field) => {
@@ -97,6 +82,17 @@ class Validator {
     });
     map.clear();
     return errs;
+  }
+
+  checkFields(value: string, field: ValidatedFieldsKeys) {
+    const opt = this.options[field];
+    if (!opt) return;
+    if (value.length === 0 && (this.requiredFields as string[]).includes(field))
+      return { field, message: "required" };
+    if (value.length > opt.max)
+      return { field, message: `max ${opt.max} chars` };
+    if (value.length < opt.min)
+      return { field, message: `min ${opt.min} chars` };
   }
 }
 

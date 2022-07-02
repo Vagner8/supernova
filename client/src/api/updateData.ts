@@ -5,19 +5,19 @@ import { fetcher } from './fetcher';
 
 interface UpdateData {
   adminDispatch: Dispatch<AdminReducerActions>;
-  params: string | undefined;
-  changedPoints: EventsState['changedPoints'];
+  url: string;
+  points: EventsState['changedPoints'];
 }
 
 export async function updateData({
   adminDispatch,
-  changedPoints,
-  params,
+  points,
+  url,
 }: UpdateData) {
   await fetcher({
-    body: changedPoints,
+    body: points,
     method: 'PUT',
-    url: `/${params}/update`,
+    url,
     adminDispatch
   });
 }

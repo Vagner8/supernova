@@ -2,9 +2,9 @@ import {
   EventsReducerActions,
   EventsState,
   EventsStrAction,
+  FileInputName,
 } from 'admin/Events/eventsReducer';
 import { Dispatch, useMemo } from 'react';
-import { ImgsType } from '../../../common/src/commonTypes';
 import { UserPointsType } from '../../../common/src/userTypes';
 
 export function useEventsDispatch(
@@ -59,7 +59,7 @@ export function useEventsDispatch(
       }: {
         files: File[];
         isFileInputMultiple: boolean;
-        fileInputName: keyof ImgsType;
+        fileInputName: FileInputName;
       }) {
         eventsDispatch({
           type: EventsStrAction.SaveFiles,
@@ -87,18 +87,15 @@ export function useEventsDispatch(
         });
       },
 
-      switchSaveButton(saveButton: EventsState['saveButton']) {
-        eventsDispatch({
-          type: EventsStrAction.SwitchSaveButton,
-          payload: { saveButton },
-        });
-      },
-
       saveUsers(users: EventsState['users']) {
         eventsDispatch({
           type: EventsStrAction.SaveUsers,
           payload: { users },
         });
+      },
+
+      restorePoints() {
+        eventsDispatch({ type: EventsStrAction.RestorePoints });
       },
     };
   }, [eventsDispatch]);

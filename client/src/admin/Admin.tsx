@@ -1,4 +1,4 @@
-import { Dispatch, lazy, Suspense, useReducer } from 'react';
+import { Dispatch, lazy, Suspense, useMemo, useReducer } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { Auth } from './Auth/Auth';
 import {
@@ -14,7 +14,7 @@ import {
   EventsReducerActions,
   EventsState,
 } from './Events/eventsReducer';
-import { FilesSheet } from './FilesSheet/FilesSheet';
+import { FilesSheet, MemoFilesSheet } from './FilesSheet/FilesSheet';
 import { Events } from './Events/Events';
 import { OperationResultsSheet } from './OperationResultsSheet/OperationResultsSheet';
 import { useValidateErrors, useWindowClick } from 'hooks';
@@ -79,7 +79,6 @@ function AdminRoutes({
       <Events
         popup={eventsState.popup}
         editMode={eventsState.editMode}
-        saveButton={eventsState.saveButton}
         eventsList={eventsState.eventsList}
         points={eventsState.points}
         changedPoints={eventsState.changedPoints}
@@ -130,7 +129,7 @@ function AdminRoutes({
           </Routes>
         </Container>
       </Suspense>
-      <FilesSheet files={eventsState.files} eventsDispatch={eventsDispatch} />
+      <MemoFilesSheet files={eventsState.files} eventsDispatch={eventsDispatch} />
       <OperationResultsSheet
         operationResults={adminState.operationResults}
         adminDispatch={adminDispatch}

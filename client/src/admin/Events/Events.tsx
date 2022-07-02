@@ -1,25 +1,15 @@
 import { AdminReducerActions } from 'admin/adminReducer';
-import { switchEditMode, switchSaveButton } from 'admin/Events/eventsReducer';
-import { downloadFilesFirebase } from 'api/firebaseStorage/downloadFilesFirebase';
 import { updateData } from 'api/updateData';
-import { createNewUser } from 'api/users/createNewUser';
-import { firebaseError } from 'helpers';
 import { useEventsDispatch } from 'hooks';
 import { useFirebaseStorage } from 'hooks/useFirebaseStorage';
-import { Dispatch, Fragment, MouseEvent } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { ButtonLi, Dropdown, Icon } from 'UIKit';
+import { Dispatch, MouseEvent } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { ButtonLi, Dropdown } from 'UIKit';
 import styles from './events.module.css';
 import { useEventsList } from './eventsHooks.ts/useEventsList';
 import { usePageChanged } from './eventsHooks.ts/usePageChanged';
 import { useSplitParams } from './eventsHooks.ts/useSplitParams';
-import {
-  EventNames,
-  EventsReducerActions,
-  EventsState,
-  saveCopyOfPoints,
-  deleteAllFiles,
-} from './eventsReducer';
+import { EventNames, EventsReducerActions, EventsState } from './eventsReducer';
 
 interface EventsProps {
   popup: EventsState['popup'];
@@ -27,7 +17,6 @@ interface EventsProps {
   points: EventsState['points'];
   changedPoints: EventsState['changedPoints'];
   editMode: EventsState['editMode'];
-  saveButton: EventsState['saveButton'];
   files: EventsState['files'];
   fileInputName: EventsState['fileInputName'];
   isFileInputMultiple: EventsState['isFileInputMultiple'];
@@ -41,14 +30,13 @@ export function Events({
   changedPoints,
   points,
   editMode,
-  saveButton,
   files,
   fileInputName,
   isFileInputMultiple,
   adminDispatch,
   eventsDispatch,
 }: EventsProps) {
-  const eventsAction = useEventsDispatch(eventsDispatch)
+  const eventsAction = useEventsDispatch(eventsDispatch);
   usePageChanged({ eventsDispatch });
   useEventsList({ eventsDispatch, editMode });
   const { categoryParam, idParam } = useSplitParams();
@@ -72,44 +60,34 @@ export function Events({
         }
         case EventNames.Edit: {
           eventsAction.switchEditMode(true);
+          eventsAction.saveCopyOfPoints();
           break;
         }
         case EventNames.EditOff: {
           eventsAction.switchEditMode(false);
+          eventsAction.restorePoints()
           break;
         }
         case EventNames.Save: {
-          let firebaseUrls: string[] | undefined
-          // if (idParam === 'new') {
-          //   createNewUser(points, adminDispatch);
-          //   // navigate('/admin/users')
-          // }
           if (files?.length) {
-            firebaseUrls = await firebaseStorage.download(files)
-            eventsAction.deleteAllFiles();
+            const firebaseUrls = await firebaseStorage.download(files);
+            if (!firebaseUrls || !fileInputName) return
+            await updateData({
+              adminDispatch,
+              url: `/${categoryParam}/update/?id=${idParam}`,
+              points: {imgs: {
+                [fileInputName]: firebaseUrls
+              }},
+            });
           }
-
-          // saveCopyOfPoints(eventsDispatch);
-          // deleteAllFiles(eventsDispatch);
-          // if (files && files.length > 0 && params['*']) {
-          //   imgs = await downloadFilesFirebase({
-          //     files,
-          //     path: [params['*'], userId, fileInputName],
-          //     isFileInputMultiple,
-          //     adminDispatch,
-          //   });
-          //   if (!imgs)
-          //     return firebaseError(adminDispatch, 'no img url to show');
-          //   if (!changedPoints?.imgs?.avatar)
-          //     return firebaseError(adminDispatch, 'no img to show');
-          //   changedPoints.imgs.avatar = imgs;
-          // }
-          // await updateData({
-          //   adminDispatch,
-          //   params: params['*'],
-          //   changedPoints,
-          // });
-
+          if (changedPoints) {
+            await updateData({
+              adminDispatch,
+              url: `/${categoryParam}/update/?id=${idParam}`,
+              points: idParam === 'new' ? points : changedPoints,
+            });
+          }
+          eventsAction.deleteAllFiles();
           break;
         }
       }
