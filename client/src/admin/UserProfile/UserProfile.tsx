@@ -1,11 +1,5 @@
-import {
-  AdminReducerActions,
-  AdminState,
-} from 'admin/adminReducer';
-import {
-  EventsReducerActions,
-  EventsState,
-} from 'admin/Events/eventsReducer';
+import { AdminReducerActions, AdminState } from 'admin/adminReducer';
+import { EventsReducerActions, EventsState } from 'admin/Events/eventsReducer';
 import { useFetchUserById } from 'api/users/useFetchUserById';
 import { Dispatch } from 'react';
 import { useParams } from 'react-router-dom';
@@ -14,10 +8,11 @@ import { OperationResultType } from '../../../../common/src/operationResultType'
 import styles from './userProfile.module.css';
 
 interface UserProfileProps {
-  popup: EventsState['popup']
+  popup: EventsState['popup'];
   editMode: EventsState['editMode'];
   points: EventsState['points'];
   isFetching: AdminState['isFetching'];
+  isCopyPoints: boolean;
   eventsDispatch: Dispatch<EventsReducerActions>;
   adminDispatch: Dispatch<AdminReducerActions>;
   validateErrors?: OperationResultType['validateErrors'];
@@ -28,9 +23,10 @@ export default function UserProfile({
   isFetching,
   points,
   editMode,
+  isCopyPoints,
   adminDispatch,
   eventsDispatch,
-  validateErrors
+  validateErrors,
 }: UserProfileProps) {
   const { userId } = useParams();
   useFetchUserById(userId, eventsDispatch, adminDispatch);
@@ -38,6 +34,7 @@ export default function UserProfile({
   return (
     <div className={styles.UserProfile}>
       <Profile
+        isCopyPoints={isCopyPoints}
         popup={popup}
         pointsSort={['personal', 'credentials', 'contacts', 'address']}
         isFetching={isFetching}

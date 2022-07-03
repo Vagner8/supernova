@@ -14,11 +14,12 @@ import {
   EventsReducerActions,
   EventsState,
 } from './Events/eventsReducer';
-import { FilesSheet, MemoFilesSheet } from './FilesSheet/FilesSheet';
+import { MemoFilesSheet } from './FilesSheet/FilesSheet';
 import { Events } from './Events/Events';
 import { OperationResultsSheet } from './OperationResultsSheet/OperationResultsSheet';
-import { useValidateErrors, useWindowClick } from 'hooks';
+import { useWhenPageChanged, useValidateErrors, useWindowClick } from 'hooks';
 import { useFetchAvatarAndLogin } from 'api/users/useFetchAvatarAndLogin';
+import { isCopyPoints } from 'helpers';
 
 const Home = lazy(() => import('./Home/Home'));
 const UserProfile = lazy(() => import('./UserProfile/UserProfile'));
@@ -71,6 +72,7 @@ function AdminRoutes({
   console.log('AdminRoutes');
   useFetchAvatarAndLogin(adminDispatch);
   useWindowClick({ eventsDispatch, popup: eventsState.popup });
+  useWhenPageChanged(eventsDispatch)
   const validateErrors = useValidateErrors(adminState.operationResults);
 
   return (
@@ -120,6 +122,7 @@ function AdminRoutes({
                   isFetching={adminState.isFetching}
                   editMode={eventsState.editMode}
                   points={eventsState.points}
+                  isCopyPoints={isCopyPoints(eventsState.copyPoints)}
                   eventsDispatch={eventsDispatch}
                   adminDispatch={adminDispatch}
                   validateErrors={validateErrors}
@@ -129,7 +132,10 @@ function AdminRoutes({
           </Routes>
         </Container>
       </Suspense>
-      <MemoFilesSheet files={eventsState.files} eventsDispatch={eventsDispatch} />
+      <MemoFilesSheet
+        files={eventsState.files}
+        eventsDispatch={eventsDispatch}
+      />
       <OperationResultsSheet
         operationResults={adminState.operationResults}
         adminDispatch={adminDispatch}

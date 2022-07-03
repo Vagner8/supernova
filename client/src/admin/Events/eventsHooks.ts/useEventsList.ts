@@ -17,7 +17,7 @@ export function useEventsList({
   editMode,
   eventsDispatch,
 }: UseEventsList) {
-  const { categoryParam, idParam } = useSplitParams();
+  const { idParam } = useSplitParams();
   const adminId = useLocalStorageData('adminId')
   useEffect(() => {
     const editEvent = () => (editMode ? EventNames.EditOff : EventNames.Edit);

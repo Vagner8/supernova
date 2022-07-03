@@ -26,6 +26,11 @@ export enum EventsStrAction {
   SaveCopyOfPoints = 'SaveCopyOfPoints',
   SaveUsers = 'SaveUsers',
   RestorePoints = 'RestorePoints',
+  CleanupPoints = 'CleanPoints',
+}
+
+interface CleanupPoints {
+  type: EventsStrAction.CleanupPoints
 }
 
 interface RestorePoints {
@@ -108,7 +113,8 @@ export type EventsReducerActions =
   | DeleteAllFiles
   | SaveCopyOfPoints
   | SaveUsers
-  | RestorePoints;
+  | RestorePoints
+  | CleanupPoints;
 
 export const eventsInitState: EventsState = {
   popup: null,
@@ -128,6 +134,16 @@ export const eventsReducer: Reducer<EventsState, EventsReducerActions> = (
   action,
 ) => {
   switch (action.type) {
+    case EventsStrAction.CleanupPoints: {
+      return {
+        ...state,
+        copyPoints: null,
+        changedPoints: null,
+        points: null,
+        files: null,
+        editMode: false,
+      }
+    }
     case EventsStrAction.RestorePoints: {
       return { ...state, points: state.copyPoints };
     }

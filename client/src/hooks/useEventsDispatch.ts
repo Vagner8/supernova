@@ -12,6 +12,12 @@ export function useEventsDispatch(
 ) {
   return useMemo(() => {
     return {
+      cleanupPoints() {
+        eventsDispatch({
+          type: EventsStrAction.CleanupPoints
+        });
+      },
+
       savePopup(popup: EventsState['popup']) {
         eventsDispatch({
           type: EventsStrAction.SavePopup,

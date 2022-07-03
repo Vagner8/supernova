@@ -7,7 +7,6 @@ import { useNavigate } from 'react-router-dom';
 import { ButtonLi, Dropdown } from 'UIKit';
 import styles from './events.module.css';
 import { useEventsList } from './eventsHooks.ts/useEventsList';
-import { usePageChanged } from './eventsHooks.ts/usePageChanged';
 import { useSplitParams } from './eventsHooks.ts/useSplitParams';
 import { EventNames, EventsReducerActions, EventsState } from './eventsReducer';
 
@@ -38,7 +37,6 @@ export function Events({
 }: EventsProps) {
   const eventsAction = useEventsDispatch(eventsDispatch);
   const adminAction = useAdminDispatch(adminDispatch);
-  usePageChanged({ eventsDispatch });
   useEventsList({ eventsDispatch, editMode });
   const { categoryParam, idParam } = useSplitParams();
   const navigate = useNavigate();
@@ -61,7 +59,6 @@ export function Events({
         }
         case EventNames.Edit: {
           eventsAction.switchEditMode(true);
-          eventsAction.saveCopyOfPoints();
           break;
         }
         case EventNames.EditOff: {
@@ -86,7 +83,7 @@ export function Events({
           if (!changedPoints)
             adminAction.saveOperationResult({
               status: 'warning',
-              message: 'no data to save',
+              message: 'nothing to save',
             });
           if (changedPoints) {
             await updateData({
