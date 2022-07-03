@@ -1,5 +1,5 @@
 import { Avatar, ButtonIcon } from 'UIKit';
-import styles from './chips.module.css';
+import styles from './chip.module.css';
 
 interface ChipsProps {
   onClick: (text: string) => () => void;
@@ -8,9 +8,9 @@ interface ChipsProps {
   file?: File
 }
 
-export function Chips({ onClick, text, url, file }: ChipsProps) {
+export function Chip({ onClick, text, url, file }: ChipsProps) {
   return (
-    <div className={`${styles.Chips} ${url || file ? styles.with_img : null}`}>
+    <div className={`${styles.Chip} ${url || file ? styles.with_img : null}`}>
       {url || file ? (
         <Avatar url={ file ? URL.createObjectURL(file) : url} size='chips' />
       ) : null}

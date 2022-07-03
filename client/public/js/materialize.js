@@ -1170,7 +1170,7 @@ M.AutoInit = function (context) {
   var registry = {
     Autocomplete: root.querySelectorAll('.autocomplete:not(.no-autoinit)'),
     Carousel: root.querySelectorAll('.carousel:not(.no-autoinit)'),
-    Chips: root.querySelectorAll('.chips:not(.no-autoinit)'),
+    Chip: root.querySelectorAll('.chips:not(.no-autoinit)'),
     Collapsible: root.querySelectorAll('.collapsible:not(.no-autoinit)'),
     Datepicker: root.querySelectorAll('.datepicker:not(.no-autoinit)'),
     Dropdown: root.querySelectorAll('.dropdown-trigger:not(.no-autoinit)'),
@@ -7629,31 +7629,31 @@ $jscomp.polyfill = function (e, r, p, m) {
    *
    */
 
-  var Chips = function (_Component12) {
-    _inherits(Chips, _Component12);
+  var Chip = function (_Component12) {
+    _inherits(Chip, _Component12);
 
     /**
-     * Construct Chips instance and set up overlay
+     * Construct Chip instance and set up overlay
      * @constructor
      * @param {Element} el
      * @param {Object} options
      */
-    function Chips(el, options) {
-      _classCallCheck(this, Chips);
+    function Chip(el, options) {
+      _classCallCheck(this, Chip);
 
-      var _this45 = _possibleConstructorReturn(this, (Chips.__proto__ || Object.getPrototypeOf(Chips)).call(this, Chips, el, options));
+      var _this45 = _possibleConstructorReturn(this, (Chip.__proto__ || Object.getPrototypeOf(Chip)).call(this, Chip, el, options));
 
       _this45.el.M_Chips = _this45;
 
       /**
        * Options for the modal
-       * @member Chips#options
+       * @member Chip#options
        * @prop {Array} data
        * @prop {String} placeholder
        * @prop {String} secondaryPlaceholder
        * @prop {Object} autocompleteOptions
        */
-      _this45.options = $.extend({}, Chips.defaults, options);
+      _this45.options = $.extend({}, Chip.defaults, options);
 
       _this45.$el.addClass('chips input-field');
       _this45.chipsData = [];
@@ -7683,12 +7683,12 @@ $jscomp.polyfill = function (e, r, p, m) {
       return _this45;
     }
 
-    _createClass(Chips, [{
+    _createClass(Chip, [{
       key: "getData",
 
 
       /**
-       * Get Chips Data
+       * Get Chip Data
        */
       value: function getData() {
         return this.chipsData;
@@ -7719,9 +7719,9 @@ $jscomp.polyfill = function (e, r, p, m) {
         this._handleInputBlurBound = this._handleInputBlur.bind(this);
 
         this.el.addEventListener('click', this._handleChipClickBound);
-        document.addEventListener('keydown', Chips._handleChipsKeydown);
-        document.addEventListener('keyup', Chips._handleChipsKeyup);
-        this.el.addEventListener('blur', Chips._handleChipsBlur, true);
+        document.addEventListener('keydown', Chip._handleChipsKeydown);
+        document.addEventListener('keyup', Chip._handleChipsKeyup);
+        this.el.addEventListener('blur', Chip._handleChipsBlur, true);
         this.$input[0].addEventListener('focus', this._handleInputFocusBound);
         this.$input[0].addEventListener('blur', this._handleInputBlurBound);
         this.$input[0].addEventListener('keydown', this._handleInputKeydownBound);
@@ -7735,9 +7735,9 @@ $jscomp.polyfill = function (e, r, p, m) {
       key: "_removeEventHandlers",
       value: function _removeEventHandlers() {
         this.el.removeEventListener('click', this._handleChipClickBound);
-        document.removeEventListener('keydown', Chips._handleChipsKeydown);
-        document.removeEventListener('keyup', Chips._handleChipsKeyup);
-        this.el.removeEventListener('blur', Chips._handleChipsBlur, true);
+        document.removeEventListener('keydown', Chip._handleChipsKeydown);
+        document.removeEventListener('keyup', Chip._handleChipsKeyup);
+        this.el.removeEventListener('blur', Chip._handleChipsBlur, true);
         this.$input[0].removeEventListener('focus', this._handleInputFocusBound);
         this.$input[0].removeEventListener('blur', this._handleInputBlurBound);
         this.$input[0].removeEventListener('keydown', this._handleInputKeydownBound);
@@ -7771,7 +7771,7 @@ $jscomp.polyfill = function (e, r, p, m) {
       }
 
       /**
-       * Handle Chips Keydown
+       * Handle Chip Keydown
        * @param {Event} e
        */
 
@@ -7804,7 +7804,7 @@ $jscomp.polyfill = function (e, r, p, m) {
     }, {
       key: "_handleInputKeydown",
       value: function _handleInputKeydown(e) {
-        Chips._keydown = true;
+        Chip._keydown = true;
 
         // enter
         if (e.keyCode === 13) {
@@ -7859,7 +7859,7 @@ $jscomp.polyfill = function (e, r, p, m) {
       }
 
       /**
-       * Render Chips
+       * Render Chip
        */
 
     }, {
@@ -8027,7 +8027,7 @@ $jscomp.polyfill = function (e, r, p, m) {
     }], [{
       key: "init",
       value: function init(els, options) {
-        return _get(Chips.__proto__ || Object.getPrototypeOf(Chips), "init", this).call(this, this, els, options);
+        return _get(Chip.__proto__ || Object.getPrototypeOf(Chip), "init", this).call(this, this, els, options);
       }
 
       /**
@@ -8043,7 +8043,7 @@ $jscomp.polyfill = function (e, r, p, m) {
     }, {
       key: "_handleChipsKeydown",
       value: function _handleChipsKeydown(e) {
-        Chips._keydown = true;
+        Chip._keydown = true;
 
         var $chips = $(e.target).closest('.chips');
         var chipsKeydown = e.target && $chips.length;
@@ -8098,25 +8098,25 @@ $jscomp.polyfill = function (e, r, p, m) {
       }
 
       /**
-       * Handle Chips Keyup
+       * Handle Chip Keyup
        * @param {Event} e
        */
 
     }, {
       key: "_handleChipsKeyup",
       value: function _handleChipsKeyup(e) {
-        Chips._keydown = false;
+        Chip._keydown = false;
       }
 
       /**
-       * Handle Chips Blur
+       * Handle Chip Blur
        * @param {Event} e
        */
 
     }, {
       key: "_handleChipsBlur",
       value: function _handleChipsBlur(e) {
-        if (!Chips._keydown) {
+        if (!Chip._keydown) {
           var $chips = $(e.target).closest('.chips');
           var currChips = $chips[0].M_Chips;
 
@@ -8130,21 +8130,21 @@ $jscomp.polyfill = function (e, r, p, m) {
       }
     }]);
 
-    return Chips;
+    return Chip;
   }(Component);
 
   /**
    * @static
-   * @memberof Chips
+   * @memberof Chip
    */
 
 
-  Chips._keydown = false;
+  Chip._keydown = false;
 
-  M.Chips = Chips;
+  M.Chip = Chip;
 
   if (M.jQueryLoaded) {
-    M.initializeJqueryWrapper(Chips, 'chips', 'M_Chips');
+    M.initializeJqueryWrapper(Chip, 'chips', 'M_Chips');
   }
 
   $(document).ready(function () {

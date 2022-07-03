@@ -7,13 +7,14 @@ import {
   EventsState,
   FileInputName,
 } from 'admin/Events/eventsReducer';
-import { ChangeEvent, Dispatch, useCallback, useEffect } from 'react';
+import { ChangeEvent, Dispatch, useCallback } from 'react';
 import { Avatar, FileInput, Form } from 'UIKit';
 import styles from './profile.module.css';
 import { OperationResultType } from '../../../../common/src/operationResultType';
 import { UserKeyPoints } from '../../../../common/src/userTypes';
 import { useAdminDispatch, useEventsDispatch } from 'hooks';
 import { useSplitParams } from 'admin/Events/eventsHooks.ts/useSplitParams';
+import { useProfile } from './useProfile';
 
 interface ProfileProps {
   popup: EventsState['popup'];
@@ -41,10 +42,7 @@ export function Profile({
   const eventsAction = useEventsDispatch(eventsDispatch);
   const adminAction = useAdminDispatch(adminDispatch);
   const { idParam } = useSplitParams();
-
-  useEffect(() => {
-    if (idParam === 'new') eventsAction.switchEditMode(true)
-  }, [isCopyPoints, eventsAction, idParam]);
+  useProfile(eventsDispatch);
 
   const onChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {

@@ -1,17 +1,20 @@
+import { useSplitParams } from 'admin/Events/eventsHooks.ts/useSplitParams';
 import { EventsReducerActions } from 'admin/Events/eventsReducer';
+import { useEventsDispatch } from 'hooks';
 import { Dispatch, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import { useEventsDispatch } from './useEventsDispatch';
 
-export function useWhenPageChanged(
-  eventsDispatch: Dispatch<EventsReducerActions>,
-) {
+export function useProfile(eventsDispatch: Dispatch<EventsReducerActions>) {
   const location = useLocation();
+  const { idParam } = useSplitParams();
   const eventsAction = useEventsDispatch(eventsDispatch);
   useEffect(() => {
     return () => {
-      console.log('eventsAction.cleanupPoint');
       eventsAction.cleanupPoints();
     };
   }, [eventsAction, location]);
+
+  useEffect(() => {
+    if (idParam === 'new') eventsAction.switchEditMode(true);
+  }, [eventsAction, idParam]);
 }

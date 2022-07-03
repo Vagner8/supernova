@@ -1,4 +1,4 @@
-.Chips {
+.Chip {
   display: flex;
   align-items: center;
   color: rgba(0,0,0,0.6);
@@ -14,7 +14,7 @@
   margin-right: .25rem;
 }
 
-.Chips.with_img {
+.Chip.with_img {
   padding-left: 0px;
 }
 
@@ -25,20 +25,20 @@
   text-overflow: ellipsis; 
 }
 
-.Chips button {
+.Chip button {
   margin-left: var(--xs-rem);
   width: auto;
   height: auto;
 }
 
-.Chips button:hover {
+.Chip button:hover {
   background-color: none;
 }
 
-.Chips i {
+.Chip i {
   color: rgba(0, 0, 0, 0.26);
 }
 
-.Chips i:hover {
+.Chip i:hover {
   color: var(--icon-color);
 }

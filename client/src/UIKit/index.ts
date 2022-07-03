@@ -12,7 +12,7 @@ export * from './LabelText/LabelText';
 export * from './Snackbar/Snackbar';
 export * from './Dropdown/Dropdown';
 export * from './BottomSheetModals/BottomSheetModals';
-export * from './Chips/Chips';
+export * from './Chip/Chip';
 export * from './Form/Form';
 export * from './Headerblock/Headerblock';
 export * from './Drawer/Drawer';

@@ -1,4 +1,4 @@
-import { Dispatch, lazy, Suspense, useMemo, useReducer } from 'react';
+import { Dispatch, lazy, Suspense, useReducer } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { Auth } from './Auth/Auth';
 import {
@@ -17,7 +17,7 @@ import {
 import { MemoFilesSheet } from './FilesSheet/FilesSheet';
 import { Events } from './Events/Events';
 import { OperationResultsSheet } from './OperationResultsSheet/OperationResultsSheet';
-import { useWhenPageChanged, useValidateErrors, useWindowClick } from 'hooks';
+import { useValidateErrors, useWindowClick } from 'hooks';
 import { useFetchAvatarAndLogin } from 'api/users/useFetchAvatarAndLogin';
 import { isCopyPoints } from 'helpers';
 
@@ -72,7 +72,6 @@ function AdminRoutes({
   console.log('AdminRoutes');
   useFetchAvatarAndLogin(adminDispatch);
   useWindowClick({ eventsDispatch, popup: eventsState.popup });
-  useWhenPageChanged(eventsDispatch)
   const validateErrors = useValidateErrors(adminState.operationResults);
 
   return (

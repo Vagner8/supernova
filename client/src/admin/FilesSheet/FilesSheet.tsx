@@ -1,6 +1,6 @@
 import { deleteOneFile, EventsReducerActions } from "admin/Events/eventsReducer";
 import { Dispatch, memo } from "react";
-import { BottomSheetModals, Chips } from "UIKit";
+import { BottomSheetModals, Chip } from "UIKit";
 
 interface FilesSheetProps {
   files: File[] | null
@@ -15,7 +15,7 @@ export function FilesSheet({files, eventsDispatch}: FilesSheetProps) {
   return (
     <BottomSheetModals setting={{ show: Boolean(files.length) }}>
       {files.map((file) => (
-        <Chips
+        <Chip
           file={file}
           key={file.name}
           text={file.name}
