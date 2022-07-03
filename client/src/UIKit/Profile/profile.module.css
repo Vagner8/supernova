@@ -17,5 +17,9 @@
 }
 
 .lift i {
-  color: var(--icon-color)
+  font-size: 80px;
+  padding: 40px;
+  color: var(--white-color);
+  background-color: #80deea;
+  border-radius: 50%;
 }

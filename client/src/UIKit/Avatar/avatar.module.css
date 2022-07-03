@@ -28,6 +28,8 @@
 }
 
 .Avatar i {
+  padding: 8px;
   color: var(--white-color);
-  font-size: 2.25rem;
+  background-color: #80deea;
+  border-radius: 50%;
 }

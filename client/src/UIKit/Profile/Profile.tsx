@@ -16,6 +16,7 @@ import styles from './profile.module.css';
 import { OperationResultType } from '../../../../common/src/operationResultType';
 import { UserKeyPoints } from '../../../../common/src/userTypes';
 import { useAdminDispatch, useEventsDispatch } from 'hooks';
+import { useSplitParams } from 'admin/Events/eventsHooks.ts/useSplitParams';
 
 interface ProfileProps {
   popup: EventsState['popup'];
@@ -40,6 +41,7 @@ export function Profile({
 }: ProfileProps) {
   const eventsAction = useEventsDispatch(eventsDispatch)
   const adminAction = useAdminDispatch(adminDispatch)
+  const { idParam } = useSplitParams();
 
   const onChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
@@ -71,7 +73,7 @@ export function Profile({
         <h5>
           {personal.name || '-'} {personal.surname || '-'}
         </h5>
-        {editMode ? (
+        {editMode && idParam !== 'new' ? (
           <FileInput name="avatar" multiple={true} onChange={onChangeFiles} />
         ) : null}
       </div>

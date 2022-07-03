@@ -12,7 +12,6 @@ export async function putUser(req: Request, res: Response, next: NextFunction) {
     const userPoints = req.body as Partial<UserPointsType>;
     const userId = id === "new" ? uuidv4() : id;
     const usersCollection = mongo.getCollection<UserType>(CollectionName.Users);
-    console.log(userPoints, userId)
     const result = await usersCollection.updateOne(
       { userId },
       { $set: userPoints },

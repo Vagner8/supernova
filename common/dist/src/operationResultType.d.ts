@@ -1,4 +1,4 @@
-export declare type CustomErrorStatuses = "success" | "login error" | "server error" | "validate error" | "access error" | "firebase error" | "token warning";
+export declare type CustomErrorStatuses = "success" | "login error" | "server error" | "validate error" | "access error" | "firebase error" | "token warning" | "warning";
 export interface ValidateError {
     field: string;
     message: string;

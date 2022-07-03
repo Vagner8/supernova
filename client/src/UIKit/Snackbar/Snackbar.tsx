@@ -1,8 +1,6 @@
-import {
-  AdminReducerActions,
-} from 'admin/adminReducer';
+import { AdminReducerActions } from 'admin/adminReducer';
 import { useAdminDispatch } from 'hooks';
-import { Dispatch } from 'react';
+import { Dispatch, useEffect } from 'react';
 import { ButtonIcon, Headerblock } from 'UIKit';
 import { OperationResultType } from '../../../../common/src/operationResultType';
 import styles from './snackbar.module.css';
@@ -20,36 +18,31 @@ export function Snackbar({
   index,
   adminDispatch,
 }: SnackbarProps) {
-
-  const {deleteOperationResult} = useAdminDispatch(adminDispatch)
+  const adminAction = useAdminDispatch(adminDispatch);
 
   const setIcon = (statusProp: string | undefined) => {
-    if (!statusProp) return 'error'
-    if (statusProp.match(/error/i)) return 'error'
-    if (statusProp.match(/warning/i)) return 'warning'
-    if (statusProp.match(/success/i)) return 'task_alt'
-    return 'error'
-  }
+    if (!statusProp) return 'error';
+    if (statusProp.match(/error/i)) return 'error';
+    if (statusProp.match(/warning/i)) return 'warning';
+    if (statusProp.match(/success/i)) return 'task_alt';
+    return 'error';
+  };
 
-  // useEffect(() => {
-  //   if (status !== 'error') {
-  //     setTimeout(() => {
-  //       deleteOperationResult(adminDispatch, index)
-  //     }, 3000)
-  //   }
-  // }, [adminDispatch, index, status]);
+  useEffect(() => {
+    if (!status?.match(/error/i)) {
+      setTimeout(() => {
+        adminAction.deleteOperationResult(index);
+      }, 3000);
+    }
+  }, [adminDispatch, index, status, adminAction]);
 
-  const onClick = () => deleteOperationResult(index);
+  const onClick = () => adminAction.deleteOperationResult(index);
 
   if (!message || !status || status === 'validate error') return null;
 
   return (
     <div className={`${styles.Snackbar} ${styles[setIcon(status)]}`}>
-      <Headerblock
-        icon={setIcon(status)}
-        title={status}
-        text={message}
-      />
+      <Headerblock icon={setIcon(status)} title={status} text={message} />
       <ButtonIcon icon="close" onClick={onClick} />
     </div>
   );

@@ -1,6 +1,5 @@
 import { ValidateError } from "../../../common/src/operationResultType";
 import {
-  RequiredFields,
   UserType,
   ValidatedFields,
   ValidatedFieldsKeys,
@@ -12,6 +11,7 @@ interface Options {
   max: number;
   min: number;
   required?: boolean;
+  regex?: RegExp;
 }
 
 type ValidateOptions<T> = {
@@ -21,13 +21,6 @@ type ValidateOptions<T> = {
 class Validator {
   map: Map<ValidatedFieldsKeys, string> = new Map();
   validateFields: ValidatedFieldsKeys[] = [
-    "login",
-    "password",
-    "email",
-    "name",
-    "surname",
-  ];
-  requiredFields: RequiredFields = [
     "login",
     "password",
     "email",
@@ -61,6 +54,12 @@ class Validator {
       max: 30,
       required: true,
     },
+    phone: {
+      min: 5,
+      max: 15,
+      required: true,
+      regex: /\(?([0-9]{3})\)?([ .-]?)([0-9]{3})\2([0-9]{4})/,
+    },
   };
 
   set(body: UserType) {
@@ -87,12 +86,14 @@ class Validator {
   checkFields(value: string, field: ValidatedFieldsKeys) {
     const opt = this.options[field];
     if (!opt) return;
-    if (value.length === 0 && (this.requiredFields as string[]).includes(field))
+    if (value.length === 0 && opt.required)
       return { field, message: "required" };
     if (value.length > opt.max)
       return { field, message: `max ${opt.max} chars` };
     if (value.length < opt.min)
       return { field, message: `min ${opt.min} chars` };
+    if (opt.regex && !value.match(opt.regex))
+      return { field, message: "incorrect" };
   }
 }
 

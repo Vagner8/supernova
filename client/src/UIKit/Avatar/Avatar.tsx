@@ -13,7 +13,7 @@ export function Avatar({ url, size }: ProfileProps) {
         <Img url={url} alt="avatar" />
       ) : (
         <Icon
-          icon="account_circle"
+          icon="person"
         />
       )}
     </div>

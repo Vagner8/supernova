@@ -1,6 +1,6 @@
 import { AdminReducerActions } from 'admin/adminReducer';
 import { updateData } from 'api/updateData';
-import { useEventsDispatch } from 'hooks';
+import { useAdminDispatch, useEventsDispatch } from 'hooks';
 import { useFirebaseStorage } from 'hooks/useFirebaseStorage';
 import { Dispatch, MouseEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -37,6 +37,7 @@ export function Events({
   eventsDispatch,
 }: EventsProps) {
   const eventsAction = useEventsDispatch(eventsDispatch);
+  const adminAction = useAdminDispatch(adminDispatch);
   usePageChanged({ eventsDispatch });
   useEventsList({ eventsDispatch, editMode });
   const { categoryParam, idParam } = useSplitParams();
@@ -65,29 +66,36 @@ export function Events({
         }
         case EventNames.EditOff: {
           eventsAction.switchEditMode(false);
-          eventsAction.restorePoints()
+          eventsAction.restorePoints();
           break;
         }
         case EventNames.Save: {
           if (files?.length) {
             const firebaseUrls = await firebaseStorage.download(files);
-            if (!firebaseUrls || !fileInputName) return
+            if (!firebaseUrls || !fileInputName) return;
             await updateData({
               adminDispatch,
               url: `/${categoryParam}/update/?id=${idParam}`,
-              points: {imgs: {
-                [fileInputName]: firebaseUrls
-              }},
+              points: {
+                imgs: {
+                  [fileInputName]: firebaseUrls,
+                },
+              },
             });
           }
+          if (!changedPoints)
+            adminAction.saveOperationResult({
+              status: 'warning',
+              message: 'no data to save',
+            });
           if (changedPoints) {
             await updateData({
               adminDispatch,
               url: `/${categoryParam}/update/?id=${idParam}`,
               points: idParam === 'new' ? points : changedPoints,
             });
+            eventsAction.deleteAllFiles();
           }
-          eventsAction.deleteAllFiles();
           break;
         }
       }

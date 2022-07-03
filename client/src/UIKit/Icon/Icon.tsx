@@ -18,7 +18,8 @@ export type IconName =
   | 'chevron_left'
   | 'home'
   | 'people'
-  | 'arrow_drop_down';
+  | 'arrow_drop_down'
+  | 'person';
 
 interface IconProps {
   icon: IconName;

@@ -5,7 +5,8 @@ export type CustomErrorStatuses =
   | "validate error"
   | "access error"
   | "firebase error"
-  | "token warning";
+  | "token warning"
+  | "warning";
 
 export interface ValidateError {
   field: string;
