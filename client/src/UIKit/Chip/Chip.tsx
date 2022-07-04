@@ -12,7 +12,7 @@ interface ChipProps {
 export function Chip({ onClick, text, url, file, className }: ChipProps) {
   return (
     <div
-      className={`${styles[className ? className : '']} ${styles.Chip} ${
+      className={`${className} ${styles.Chip} ${
         url || file ? styles.with_img : null
       }`}
     >

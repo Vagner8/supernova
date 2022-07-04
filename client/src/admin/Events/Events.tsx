@@ -19,6 +19,7 @@ interface EventsProps {
   files: EventsState['files'];
   fileInputName: EventsState['fileInputName'];
   isFileInputMultiple: EventsState['isFileInputMultiple'];
+  isSomeRowSelected: boolean | undefined;
   eventsDispatch: Dispatch<EventsReducerActions>;
   adminDispatch: Dispatch<AdminReducerActions>;
 }
@@ -32,12 +33,13 @@ export function Events({
   files,
   fileInputName,
   isFileInputMultiple,
+  isSomeRowSelected,
   adminDispatch,
   eventsDispatch,
 }: EventsProps) {
   const eventsAction = useEventsDispatch(eventsDispatch);
   const adminAction = useAdminDispatch(adminDispatch);
-  useEventsList({ eventsDispatch, editMode });
+  useEventsList({ isSomeRowSelected, editMode, eventsDispatch });
   const { categoryParam, idParam } = useSplitParams();
   const navigate = useNavigate();
   const firebaseStorage = useFirebaseStorage({

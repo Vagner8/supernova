@@ -1,5 +1,8 @@
+import { EventsReducerActions } from 'admin/Events/eventsReducer';
 import { UseFetchUsersForTableResponse } from 'api/users/useFetchUsersForTable';
-import { ReactNode } from 'react';
+import { useEventsDispatch } from 'hooks';
+import { Dispatch, ReactNode } from 'react';
+import { Link } from 'react-router-dom';
 import { Avatar, Checkbox, CheckboxProps, Chip } from 'UIKit';
 import styles from './table.module.css';
 
@@ -8,66 +11,72 @@ type RowType = UseFetchUsersForTableResponse;
 interface TableProps {
   rows: RowType[] | null;
   sort: (keyof UseFetchUsersForTableResponse)[];
-  onClickCheckbox: CheckboxProps['onClickCheckbox'];
+  eventsDispatch: Dispatch<EventsReducerActions>;
 }
 
 interface RowProps {
   row: RowType;
   sort: (keyof UseFetchUsersForTableResponse)[];
-  rowId: string;
   onClickCheckbox: CheckboxProps['onClickCheckbox'];
 }
 
 interface ColProps {
-  className: keyof UseFetchUsersForTableResponse;
+  className: string
   children: () => ReactNode;
 }
 
 const Rule = {
   Col(text: string | string[]) {
-    return <div className={styles.Col}>{text}</div>
+    return <div className={styles.Col}>{text}</div>;
   },
   Avatar(url: string) {
-    return <Avatar url={url} size="xs" />
+    return <Avatar url={url} size="xs" />;
   },
   Chip(text: string) {
-    return <Chip text={text} className="table_chip" />
-  }
-}
+    return <Chip text={text} className={styles.chip} />;
+  },
+};
 
 const Col = ({ className, children }: ColProps) => {
   return (
-    <div className={`${styles.Col} ${styles[className]}`}>{children()}</div>
+    <div className={`${styles.Col} ${className}`}>{children()}</div>
   );
 };
 
-const Row = ({ row, sort, rowId, onClickCheckbox }: RowProps) => {
+const Row = ({ row, sort, onClickCheckbox }: RowProps) => {
   return (
     <div className={styles.Row}>
-      <Checkbox checkboxId={rowId} onClickCheckbox={onClickCheckbox} />
-      {sort.map((key) => (
-        <Col className={key} key={key}>
-          {() => {
-            switch(key) {
-              case 'avatar': {
-                return Rule.Avatar(row[key][0])
+      <Checkbox rowId={row._id} onClickCheckbox={onClickCheckbox} />
+      <Link className={styles.row_link} to={`/admin/users/${row.userId}`}>
+        {sort.map((key) => (
+          <Col className={styles[key]} key={key}>
+            {() => {
+              switch (key) {
+                case 'avatar': {
+                  return Rule.Avatar(row[key][0]);
+                }
+                case 'rule': {
+                  return Rule.Chip(row[key]);
+                }
+                default: {
+                  return Rule.Col(row[key]);
+                }
               }
-              case 'rule': {
-                return Rule.Chip(row[key])
-              }
-              default: {
-                return Rule.Col(row[key])
-              }
-            }
-          }}
-        </Col>
-      ))}
+            }}
+          </Col>
+        ))}
+      </Link>
     </div>
   );
 };
 
-export function Table({ rows, sort, onClickCheckbox }: TableProps) {
+export function Table({ rows, sort, eventsDispatch }: TableProps) {
+  const eventsAction = useEventsDispatch(eventsDispatch)
   if (!rows) return null;
+  const onClickCheckbox = (rowId: string, checked: boolean) => {
+    console.log('onClickCheckbox')
+    eventsAction.selectRow(rowId, checked)
+  }
   return (
     <div className={styles.Table}>
       {rows.map((row) => (
@@ -76,7 +85,6 @@ export function Table({ rows, sort, onClickCheckbox }: TableProps) {
           key={row._id}
           row={row}
           sort={sort}
-          rowId={row._id}
         />
       ))}
     </div>

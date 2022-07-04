@@ -24,22 +24,28 @@ export enum EventsStrAction {
   SavePoints = 'SavePoints',
   PointsOnChange = 'PointsOnChange',
   SaveCopyOfPoints = 'SaveCopyOfPoints',
-  SaveUsers = 'SaveUsers',
+  SaveRows = 'SaveRows',
   RestorePoints = 'RestorePoints',
   CleanupPoints = 'CleanPoints',
+  SelectRow = 'SelectRow',
+}
+
+interface SelectRow {
+  type: EventsStrAction.SelectRow;
+  payload: { rowId: string, select: boolean };
 }
 
 interface CleanupPoints {
-  type: EventsStrAction.CleanupPoints
+  type: EventsStrAction.CleanupPoints;
 }
 
 interface RestorePoints {
   type: EventsStrAction.RestorePoints;
 }
 
-interface SaveUsers {
-  type: EventsStrAction.SaveUsers;
-  payload: { users: EventsState['users'] };
+interface SaveRows {
+  type: EventsStrAction.SaveRows;
+  payload: { rows: EventsState['rows'] };
 }
 
 interface SavePopup {
@@ -89,6 +95,10 @@ interface SaveCopyOfPoints {
   type: EventsStrAction.SaveCopyOfPoints;
 }
 
+interface Row extends UseFetchUsersForTableResponse {
+  selected?: boolean;
+}
+
 export interface EventsState {
   popup: string | null;
   editMode: boolean;
@@ -99,7 +109,7 @@ export interface EventsState {
   files: File[] | null;
   isFileInputMultiple: boolean;
   fileInputName: FileInputName | null;
-  users: UseFetchUsersForTableResponse[] | null;
+  rows: Row[] | null;
 }
 
 export type EventsReducerActions =
@@ -112,9 +122,10 @@ export type EventsReducerActions =
   | DeleteOneFile
   | DeleteAllFiles
   | SaveCopyOfPoints
-  | SaveUsers
+  | SaveRows
   | RestorePoints
-  | CleanupPoints;
+  | CleanupPoints
+  | SelectRow;
 
 export const eventsInitState: EventsState = {
   popup: null,
@@ -126,7 +137,7 @@ export const eventsInitState: EventsState = {
   files: null,
   isFileInputMultiple: false,
   fileInputName: null,
-  users: null,
+  rows: null,
 };
 
 export const eventsReducer: Reducer<EventsState, EventsReducerActions> = (
@@ -134,6 +145,19 @@ export const eventsReducer: Reducer<EventsState, EventsReducerActions> = (
   action,
 ) => {
   switch (action.type) {
+    case EventsStrAction.SelectRow: {
+      if (!state.rows) return state;
+      return {
+        ...state,
+        rows: state.rows.map((row) => {
+          if (action.payload.rowId === row._id) {
+            row.selected = action.payload.select
+            return row;
+          }
+          return row;
+        }),
+      };
+    }
     case EventsStrAction.CleanupPoints: {
       return {
         ...state,
@@ -142,15 +166,15 @@ export const eventsReducer: Reducer<EventsState, EventsReducerActions> = (
         points: null,
         files: null,
         editMode: false,
-      }
+      };
     }
     case EventsStrAction.RestorePoints: {
       return { ...state, points: state.copyPoints };
     }
-    case EventsStrAction.SaveUsers: {
+    case EventsStrAction.SaveRows: {
       return {
         ...state,
-        users: action.payload.users,
+        rows: action.payload.rows,
       };
     }
     case EventsStrAction.SavePopup: {
@@ -332,10 +356,10 @@ export const switchEditMode = (
 
 export const saveUsers = (
   eventsDispatch: Dispatch<EventsReducerActions>,
-  users: EventsState['users'],
+  rows: EventsState['rows'],
 ) => {
   eventsDispatch({
-    type: EventsStrAction.SaveUsers,
-    payload: { users },
+    type: EventsStrAction.SaveRows,
+    payload: { rows },
   });
 };

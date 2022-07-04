@@ -86,6 +86,7 @@ function AdminRoutes({
         files={eventsState.files}
         fileInputName={eventsState.fileInputName}
         isFileInputMultiple={eventsState.isFileInputMultiple}
+        isSomeRowSelected={eventsState.rows?.some(row => row.selected)}
         adminDispatch={adminDispatch}
         eventsDispatch={eventsDispatch}
       />
@@ -107,7 +108,7 @@ function AdminRoutes({
               path="/users"
               element={
                 <UsersTable
-                  users={eventsState.users}
+                  users={eventsState.rows}
                   eventsDispatch={eventsDispatch}
                   adminDispatch={adminDispatch}
                 />

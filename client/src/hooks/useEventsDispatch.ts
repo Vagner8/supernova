@@ -14,7 +14,7 @@ export function useEventsDispatch(
     return {
       cleanupPoints() {
         eventsDispatch({
-          type: EventsStrAction.CleanupPoints
+          type: EventsStrAction.CleanupPoints,
         });
       },
 
@@ -93,15 +93,22 @@ export function useEventsDispatch(
         });
       },
 
-      saveUsers(users: EventsState['users']) {
+      saveUsers(rows: EventsState['rows']) {
         eventsDispatch({
-          type: EventsStrAction.SaveUsers,
-          payload: { users },
+          type: EventsStrAction.SaveRows,
+          payload: { rows },
         });
       },
 
       restorePoints() {
         eventsDispatch({ type: EventsStrAction.RestorePoints });
+      },
+
+      selectRow(rowId: string, select: boolean) {
+        eventsDispatch({
+          type: EventsStrAction.SelectRow,
+          payload: { rowId, select },
+        });
       },
     };
   }, [eventsDispatch]);

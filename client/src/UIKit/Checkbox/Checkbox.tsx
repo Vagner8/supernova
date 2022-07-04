@@ -2,20 +2,25 @@ import { useState } from 'react';
 import styles from './checkbox.module.css';
 
 export interface CheckboxProps {
-  checkboxId: string;
-  onClickCheckbox: (checked: boolean, checkboxId: string) => void;
+  rowId: string;
+  onClickCheckbox: (rowId: string, checked: boolean) => void;
+  className?: string;
 }
 
-export function Checkbox({ checkboxId, onClickCheckbox }: CheckboxProps) {
+export function Checkbox({
+  className,
+  rowId,
+  onClickCheckbox,
+}: CheckboxProps) {
   const [checked, setChecked] = useState(false);
 
   const handleClick = () => {
-    onClickCheckbox(!checked, checkboxId);
+    onClickCheckbox(rowId, !checked);
     setChecked(!checked);
   };
 
   return (
-    <div className={styles.Checkbox}>
+    <div className={`${styles.Checkbox} ${className}`}>
       <label>
         <input type="checkbox" />
         <button

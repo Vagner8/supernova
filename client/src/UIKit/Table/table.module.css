@@ -4,6 +4,21 @@
   height: 52px;
 }
 
+.row_link {
+  display: flex;
+  align-items: center;
+  color: inherit;
+  width: 100%;
+}
+
+.row_checkbox {
+  width: 10%;
+}
+
+.row_link:hover {
+  color: var(--green-mui-color);
+}
+
 .Col {
   padding: 0 var(--l-rem);
 }
@@ -24,4 +39,11 @@
 .email,
 .phone {
   flex: 3;
+}
+
+.Table .chip {
+  padding-left: 0;
+  padding-right: 0;
+  justify-content: center;
+  width: 100%;
 }
