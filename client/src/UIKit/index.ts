@@ -12,7 +12,6 @@ export * from './LabelText/LabelText';
 export * from './Snackbar/Snackbar';
 export * from './Dropdown/Dropdown';
 export * from './BottomSheetModals/BottomSheetModals';
-export * from './Chip/Chip';
 export * from './Form/Form';
 export * from './Headerblock/Headerblock';
 export * from './Drawer/Drawer';
@@ -24,6 +23,7 @@ export * from './PageHeader/PageHeader';
 export * from './Select/Select';
 export * from './ButtonLi/ButtonLi';
 export * from './Checkbox/Checkbox';
+export * from './Chip/Chip';
 
 export * from './Typography/Text/Text';
 export * from './Typography/Title/Title';

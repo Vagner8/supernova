@@ -1,6 +1,6 @@
 import { UseFetchUsersForTableResponse } from 'api/users/useFetchUsersForTable';
 import { ReactNode } from 'react';
-import { Avatar, Checkbox, CheckboxProps } from 'UIKit';
+import { Avatar, Checkbox, CheckboxProps, Chip } from 'UIKit';
 import styles from './table.module.css';
 
 type RowType = UseFetchUsersForTableResponse;
@@ -23,6 +23,18 @@ interface ColProps {
   children: () => ReactNode;
 }
 
+const Rule = {
+  Col(text: string | string[]) {
+    return <div className={styles.Col}>{text}</div>
+  },
+  Avatar(url: string) {
+    return <Avatar url={url} size="xs" />
+  },
+  Chip(text: string) {
+    return <Chip text={text} className="table_chip" />
+  }
+}
+
 const Col = ({ className, children }: ColProps) => {
   return (
     <div className={`${styles.Col} ${styles[className]}`}>{children()}</div>
@@ -36,10 +48,17 @@ const Row = ({ row, sort, rowId, onClickCheckbox }: RowProps) => {
       {sort.map((key) => (
         <Col className={key} key={key}>
           {() => {
-            if (key === 'avatar') {
-              return <Avatar url={row[key][0]} size="xs" />;
+            switch(key) {
+              case 'avatar': {
+                return Rule.Avatar(row[key][0])
+              }
+              case 'rule': {
+                return Rule.Chip(row[key])
+              }
+              default: {
+                return Rule.Col(row[key])
+              }
             }
-            return <div className={styles.Col}>{row[key]}</div>;
           }}
         </Col>
       ))}

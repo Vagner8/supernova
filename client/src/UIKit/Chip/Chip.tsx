@@ -1,21 +1,26 @@
 import { Avatar, ButtonIcon } from 'UIKit';
 import styles from './chip.module.css';
 
-interface ChipsProps {
-  onClick: (text: string) => () => void;
+interface ChipProps {
   text: string;
+  onClick?: (text: string) => () => void;
   url?: string;
-  file?: File
+  file?: File;
+  className?: string;
 }
 
-export function Chip({ onClick, text, url, file }: ChipsProps) {
+export function Chip({ onClick, text, url, file, className }: ChipProps) {
   return (
-    <div className={`${styles.Chip} ${url || file ? styles.with_img : null}`}>
+    <div
+      className={`${styles[className ? className : '']} ${styles.Chip} ${
+        url || file ? styles.with_img : null
+      }`}
+    >
       {url || file ? (
-        <Avatar url={ file ? URL.createObjectURL(file) : url} size='chips' />
+        <Avatar url={file ? URL.createObjectURL(file) : url} size="chips" />
       ) : null}
       <p className={styles.text}>{text}</p>
-      <ButtonIcon icon='cancel' onClick={onClick(text)} />
+      {onClick ? <ButtonIcon icon="cancel" onClick={onClick(text)} /> : null}
     </div>
   );
 }
