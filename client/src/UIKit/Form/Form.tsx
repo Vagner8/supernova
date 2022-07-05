@@ -5,7 +5,7 @@ import { EventsReducerActions, EventsState } from 'admin/Events/eventsReducer';
 import { OperationResultType } from '../../../../common/src/operationResultType';
 import { filterValidateErrors } from 'helpers';
 import {
-  RequiredFields,
+  UserRequiredFields,
   UserKeyPoints,
 } from '../../../../common/src/userTypes';
 
@@ -19,7 +19,7 @@ interface FormProps {
   validateErrors?: OperationResultType['validateErrors'];
 }
 
-const requiredFields: RequiredFields = [
+const requiredFields: UserRequiredFields & string[] = [
   'login',
   'password',
   'email',
@@ -41,62 +41,53 @@ export function Form({
   return (
     <form className={styles.Form}>
       {pointsSort.map((pointName) => {
-        if (!points[pointName as keyof typeof points]) return
+        if (!points[pointName]) return;
         return (
           <Fragment key={pointName}>
             <h6 className={styles.form_name}>{pointName}</h6>
             <div className={styles.form_wrapper}>
-              {Object.entries(points[pointName as keyof typeof points]).map(
-                ([label, valueText]) => {
-                  if (label === 'avatar') return;
-                  const error = filterValidateErrors(label, validateErrors);
-                  return (
-                    <Point
-                      key={label}
-                      render={() => {
-                        if (editMode) {
-                          if (label === 'rule') {
-                            return (
-                              <Select
-                                selectList={[
-                                  'Admin',
-                                  'User',
-                                  'Viewer',
-                                  'Fired',
-                                ]}
-                                label={label}
-                                value={valueText}
-                                popup={popup}
-                                pointName={
-                                  pointName as keyof EventsState['points']
-                                }
-                                eventsDispatch={eventsDispatch}
-                              />
-                            );
-                          }
+              {Object.entries(points[pointName]).map(([label, valueText]) => {
+                if (label === 'avatar') return;
+                const error = filterValidateErrors(label, validateErrors);
+                return (
+                  <Point
+                    key={label}
+                    render={() => {
+                      if (editMode) {
+                        if (label === 'rule') {
                           return (
-                            <InputMemo
-                              type={label === 'password' ? 'password' : 'text'}
+                            <Select
+                              selectList={['Admin', 'User', 'Viewer', 'Fired']}
                               label={label}
                               value={valueText}
-                              pointName={pointName}
-                              onChange={onChange}
-                              fieldError={error?.field}
-                              messageError={error?.message}
-                              required={(requiredFields as string[]).includes(
-                                label,
-                              )}
+                              popup={popup}
+                              pointName={
+                                pointName as keyof EventsState['points']
+                              }
+                              eventsDispatch={eventsDispatch}
                             />
                           );
                         }
                         return (
-                          <LabelText label={label} text={valueText as string} />
+                          <InputMemo
+                            type={label === 'password' ? 'password' : 'text'}
+                            label={label}
+                            value={valueText}
+                            pointName={pointName}
+                            onChange={onChange}
+                            fieldError={error?.field}
+                            messageError={error?.message}
+                            required={requiredFields.includes(label)}
+                          />
                         );
-                      }}
-                    />
-                  );
-                },
-              )}
+                      }
+                      return (
+                        <LabelText label={label} text={valueText} />
+                      );
+                    }}
+                  />
+                );
+              })}
             </div>
           </Fragment>
         );

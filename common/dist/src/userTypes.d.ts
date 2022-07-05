@@ -1,5 +1,5 @@
 import { ImgsType } from "./commonTypes";
-export declare type UserStatus = "Owner" | "Admin" | "User" | "Viewer" | "Fired" | "New";
+export declare type UserStatus = "Owner" | "Admin" | "User" | "Viewer" | "Fired" | "New" | "developer";
 export interface UserConfigsType {
     login: string;
     password: string;
@@ -23,8 +23,10 @@ export interface UserImgsType extends ImgsType {
 }
 export interface UserType {
     _id: Object;
+    selected?: boolean;
     userId: string;
     refreshToken: string;
+    timestamp: string;
     credentials: UserConfigsType;
     personal: UserPersonalType;
     contacts: UserContactsType;
@@ -35,7 +37,7 @@ export declare type UserPointsType = Pick<UserType, "personal" | "contacts" | "a
 export declare type UserKeyPoints = keyof UserPointsType;
 export declare type ValidatedFields = UserConfigsType & UserPersonalType & UserContactsType & UserAddressType;
 export declare type ValidatedFieldsKeys = keyof ValidatedFields;
-export declare type RequiredFields = [
+export declare type UserRequiredFields = [
     "login",
     "password",
     "email",

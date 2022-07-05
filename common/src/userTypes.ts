@@ -6,7 +6,8 @@ export type UserStatus =
   | "User"
   | "Viewer"
   | "Fired"
-  | "New";
+  | "New"
+  | "developer";
 
 export interface UserConfigsType {
   login: string;
@@ -35,8 +36,10 @@ export interface UserImgsType extends ImgsType {}
 
 export interface UserType {
   _id: Object;
+  selected?: boolean;
   userId: string;
   refreshToken: string;
+  timestamp: string;
 
   credentials: UserConfigsType;
   personal: UserPersonalType;
@@ -59,7 +62,7 @@ export type ValidatedFields = UserConfigsType &
 
 export type ValidatedFieldsKeys = keyof ValidatedFields;
 
-export type RequiredFields = [
+export type UserRequiredFields = [
   "login",
   "password",
   "email",

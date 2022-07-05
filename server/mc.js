@@ -1,13 +1,24 @@
-// console.log(
-//   db.users.aggregate([
-//     {
-//       $project: {
-//         userId: "$userId",
-//         table: "$personal.name"
-//       }
-//     }
-//   ])
-// )
+console.log(
+  db.users.aggregate([
+    {
+      $match: { userId: 'a2d20632-8d4f-405a-9ba1-f494e169c43d' }
+    },
+    {
+      $project: {
+        personal: '$personal',
+        contacts: '$contacts',
+        address: '$address',
+        imgs: {
+          avatar: '$imgs.avatar'
+        },
+        credentials: {
+          login: '$credentials.login',
+          rule: '$credentials.rule',
+        },
+      }
+    }
+  ])
+)
 
 // console.log(
 //   db.users.find({},

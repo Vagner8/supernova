@@ -26,7 +26,7 @@ interface ColProps {
 }
 
 const Rule = {
-  Col(text: string | string[]) {
+  Col(text?: string | boolean) {
     return <div className={styles.Col}>{text}</div>;
   },
   Avatar(url: string) {

@@ -4,7 +4,7 @@ import { UserProject, UserType } from "../../../../common/src/userTypes";
 import { serverError } from "../../helpers/errors";
 import { mongo } from "../../helpers/mongo";
 
-export async function getUserCertainDataById(
+export async function getProductCertainData(
   req: Request,
   res: Response,
   next: NextFunction

@@ -11,6 +11,7 @@ type Staff = [string, string, IconName];
 const staffs: Staff[] = [
   ['/admin', 'home', 'home'],
   ['/admin/users', 'users', 'people'],
+  ['/admin/products', 'products', 'widgets'],
 ];
 
 export function Drawer({ popup }: DrawerProps) {

@@ -19,7 +19,8 @@ export type IconName =
   | 'home'
   | 'people'
   | 'arrow_drop_down'
-  | 'person';
+  | 'person'
+  | 'widgets';
 
 interface IconProps {
   icon: IconName;

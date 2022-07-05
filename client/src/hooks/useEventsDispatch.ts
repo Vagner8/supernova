@@ -3,9 +3,9 @@ import {
   EventsState,
   EventsStrAction,
   FileInputName,
+  PointsType,
 } from 'admin/Events/eventsReducer';
 import { Dispatch, useMemo } from 'react';
-import { UserPointsType } from '../../../common/src/userTypes';
 
 export function useEventsDispatch(
   eventsDispatch: Dispatch<EventsReducerActions>,
@@ -25,7 +25,7 @@ export function useEventsDispatch(
         });
       },
 
-      savePoints(points: UserPointsType) {
+      savePoints(points: PointsType) {
         eventsDispatch({
           type: EventsStrAction.SavePoints,
           payload: { points },

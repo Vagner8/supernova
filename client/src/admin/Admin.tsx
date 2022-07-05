@@ -24,6 +24,8 @@ import { isCopyPoints } from 'helpers';
 const Home = lazy(() => import('./Home/Home'));
 const UserProfile = lazy(() => import('./UserProfile/UserProfile'));
 const UsersTable = lazy(() => import('./UsersTable/UsersTable'));
+const ProductProfile = lazy(() => import('./ProductProfile/ProductProfile'));
+const ProductTable = lazy(() => import('./ProductTable/ProductTable'));
 
 export function Admin() {
   const [adminState, adminDispatch] = useReducer(adminReducer, adminInitState);
@@ -86,7 +88,7 @@ function AdminRoutes({
         files={eventsState.files}
         fileInputName={eventsState.fileInputName}
         isFileInputMultiple={eventsState.isFileInputMultiple}
-        isSomeRowSelected={eventsState.rows?.some(row => row.selected)}
+        isSomeRowSelected={eventsState.rows?.some((row) => row.selected)}
         adminDispatch={adminDispatch}
         eventsDispatch={eventsDispatch}
       />
@@ -129,6 +131,16 @@ function AdminRoutes({
                 />
               }
             />
+            <Route
+              path="/products"
+              element={
+                <ProductTable
+                  products={eventsState.rows}
+                  eventsDispatch={eventsDispatch}
+                />
+              }
+            />
+            <Route path="/products/:productId" element={<ProductProfile />} />
           </Routes>
         </Container>
       </Suspense>

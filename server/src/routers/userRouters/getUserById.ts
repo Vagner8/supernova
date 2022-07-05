@@ -5,7 +5,7 @@ import { serverError } from "../../helpers/errors";
 import { mongo } from "../../helpers/mongo";
 import { Projection } from "../../../../common/src/commonTypes";
 
-export const newUser: Omit<UserType, "_id" | "refreshToken" | "userId"> = {
+export const newUser: Omit<UserType, "_id" | "refreshToken" | "userId" | 'timestamp'> = {
   credentials: {
     login: "",
     password: "",

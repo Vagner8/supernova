@@ -2,7 +2,7 @@ import { UseFetchUserByIdResponse } from 'api/users/useFetchUserById';
 import { UseFetchUsersForTableResponse } from 'api/users/useFetchUsersForTable';
 import { Dispatch, Reducer } from 'react';
 
-type PointsType = UseFetchUserByIdResponse;
+export type PointsType = UseFetchUserByIdResponse;
 export type FileInputName = keyof PointsType['imgs'];
 
 export enum EventNames {
@@ -32,7 +32,7 @@ export enum EventsStrAction {
 
 interface SelectRow {
   type: EventsStrAction.SelectRow;
-  payload: { rowId: string, select: boolean };
+  payload: { rowId: string; select: boolean };
 }
 
 interface CleanupPoints {
@@ -95,10 +95,6 @@ interface SaveCopyOfPoints {
   type: EventsStrAction.SaveCopyOfPoints;
 }
 
-interface Row extends UseFetchUsersForTableResponse {
-  selected?: boolean;
-}
-
 export interface EventsState {
   popup: string | null;
   editMode: boolean;
@@ -109,7 +105,7 @@ export interface EventsState {
   files: File[] | null;
   isFileInputMultiple: boolean;
   fileInputName: FileInputName | null;
-  rows: Row[] | null;
+  rows: UseFetchUsersForTableResponse[] | null;
 }
 
 export type EventsReducerActions =
@@ -151,7 +147,7 @@ export const eventsReducer: Reducer<EventsState, EventsReducerActions> = (
         ...state,
         rows: state.rows.map((row) => {
           if (action.payload.rowId === row._id) {
-            row.selected = action.payload.select
+            row.selected = action.payload.select;
             return row;
           }
           return row;
@@ -169,37 +165,22 @@ export const eventsReducer: Reducer<EventsState, EventsReducerActions> = (
       };
     }
     case EventsStrAction.RestorePoints: {
-      return { ...state, points: state.copyPoints };
+      return { ...state, points: state.copyPoints || state.points };
     }
     case EventsStrAction.SaveRows: {
-      return {
-        ...state,
-        rows: action.payload.rows,
-      };
+      return { ...state, rows: action.payload.rows };
     }
     case EventsStrAction.SavePopup: {
-      return {
-        ...state,
-        popup: action.payload.popup,
-      };
+      return { ...state, popup: action.payload.popup };
     }
     case EventsStrAction.SwitchEditMode: {
-      return {
-        ...state,
-        editMode: action.payload.editMode,
-      };
+      return { ...state, editMode: action.payload.editMode };
     }
     case EventsStrAction.SavePoints: {
-      return {
-        ...state,
-        points: action.payload.points,
-      };
+      return { ...state, points: action.payload.points };
     }
     case EventsStrAction.SaveCopyOfPoints: {
-      return {
-        ...state,
-        copyPoints: state.points,
-      };
+      return { ...state, copyPoints: state.points };
     }
     case EventsStrAction.PointsOnChange: {
       if (!state.points) return state;
@@ -209,24 +190,21 @@ export const eventsReducer: Reducer<EventsState, EventsReducerActions> = (
         points: {
           ...state.points,
           [pointName]: {
-            ...state.points[pointName],
+            ...(state.points[pointName] as Object),
             [name]: value,
           },
         },
         changedPoints: {
           ...state.changedPoints,
           [pointName]: {
-            ...state.points[pointName],
+            ...(state.points[pointName] as Object),
             [name]: value,
           },
         },
       };
     }
     case EventsStrAction.SaveEventsList: {
-      return {
-        ...state,
-        eventsList: action.payload.newEventsList,
-      };
+      return { ...state, eventsList: action.payload.newEventsList };
     }
     case EventsStrAction.SaveFiles: {
       return {
@@ -246,10 +224,7 @@ export const eventsReducer: Reducer<EventsState, EventsReducerActions> = (
       };
     }
     case EventsStrAction.DeleteAllFiles: {
-      return {
-        ...state,
-        files: null,
-      };
+      return { ...state, files: null };
     }
     default:
       return state;
