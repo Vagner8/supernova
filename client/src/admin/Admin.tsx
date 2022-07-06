@@ -11,15 +11,15 @@ import { Container, Drawer, Linear, Navbar } from 'UIKit';
 import {
   eventsInitState,
   eventsReducer,
-  EventsReducerActions,
   EventsState,
-} from './Events/eventsReducer';
+} from './Events/eventsState/eventsReducer';
 import { MemoFilesSheet } from './FilesSheet/FilesSheet';
 import { Events } from './Events/Events';
 import { OperationResultsSheet } from './OperationResultsSheet/OperationResultsSheet';
 import { useValidateErrors, useWindowClick } from 'hooks';
 import { useFetchAvatarAndLogin } from 'api/users/useFetchAvatarAndLogin';
 import { isCopyPoints } from 'helpers';
+import { EventsReducerActions } from './Events/eventsState';
 
 const Home = lazy(() => import('./Home/Home'));
 const UserProfile = lazy(() => import('./UserProfile/UserProfile'));

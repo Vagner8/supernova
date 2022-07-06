@@ -1,7 +1,7 @@
 import { InputMemo, LabelText, Select } from 'UIKit';
 import styles from './form.module.css';
 import { ChangeEvent, Dispatch, Fragment, ReactNode } from 'react';
-import { EventsReducerActions, EventsState } from 'admin/Events/eventsReducer';
+import { EventsReducerActions, EventsState } from 'admin/Events/eventsState';
 import { OperationResultType } from '../../../../common/src/operationResultType';
 import { filterValidateErrors } from 'helpers';
 import {

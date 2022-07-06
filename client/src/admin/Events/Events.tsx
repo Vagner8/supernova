@@ -1,14 +1,17 @@
 import { AdminReducerActions } from 'admin/adminReducer';
 import { updateData } from 'api/updateData';
-import { useAdminDispatch, useEventsDispatch } from 'hooks';
-import { useFirebaseStorage } from 'hooks/useFirebaseStorage';
+import {
+  useAdminDispatch,
+  useEventsDispatch,
+  useSplitParams,
+  useFirebaseStorage,
+  useEventsList,
+} from 'hooks';
 import { Dispatch, MouseEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ButtonLi, Dropdown } from 'UIKit';
 import styles from './events.module.css';
-import { useEventsList } from './eventsHooks.ts/useEventsList';
-import { useSplitParams } from './eventsHooks.ts/useSplitParams';
-import { EventNames, EventsReducerActions, EventsState } from './eventsReducer';
+import { EventNames, EventsReducerActions, EventsState } from './eventsState';
 
 interface EventsProps {
   popup: EventsState['popup'];

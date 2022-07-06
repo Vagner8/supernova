@@ -1,4 +1,4 @@
-import { EventsState } from 'admin/Events/eventsReducer';
+import { EventsState } from 'admin/Events/eventsState';
 import { MouseEvent, useState } from 'react';
 import { Icon, IconName } from 'UIKit';
 import styles from './buttonIcon.module.css';

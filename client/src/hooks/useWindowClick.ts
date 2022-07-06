@@ -1,29 +1,27 @@
-import {
-  EventsReducerActions,
-  EventsState,
-  savePopup,
-} from 'admin/Events/eventsReducer';
+import { EventsReducerActions, EventsState } from 'admin/Events/eventsState';
 import { Dispatch, useEffect } from 'react';
+import { useEventsDispatch } from './useEventsDispatch';
 
 interface UseWindowClick {
-  popup: EventsState['popup']
-  eventsDispatch: Dispatch<EventsReducerActions>
+  popup: EventsState['popup'];
+  eventsDispatch: Dispatch<EventsReducerActions>;
 }
 
-export function useWindowClick({eventsDispatch, popup}: UseWindowClick) {
+export function useWindowClick({ eventsDispatch, popup }: UseWindowClick) {
+  const { savePopup } = useEventsDispatch(eventsDispatch);
   useEffect(() => {
     function onClick(this: Window, e: MouseEvent) {
-      managePopups(e.target, popup, eventsDispatch);
+      managePopups(e.target, popup, savePopup);
     }
     window.addEventListener('click', onClick);
     return () => window.removeEventListener('click', onClick);
-  }, [popup, eventsDispatch]);
+  }, [popup, savePopup]);
 }
 
 const managePopups = (
   target: EventTarget | null,
   popup: EventsState['popup'],
-  eventsDispatch: Dispatch<EventsReducerActions>,
+  savePopup: (popup: string | null) => void,
 ) => {
   if (target) {
     const closestElement = (target as HTMLElement).closest('[data-popup]');
@@ -31,8 +29,8 @@ const managePopups = (
       const dataPopup = closestElement.getAttribute(
         'data-popup',
       ) as EventsState['popup'];
-      return savePopup(eventsDispatch, dataPopup);
+      return savePopup(dataPopup);
     }
   }
-  if (popup) savePopup(eventsDispatch, null);
+  if (popup) savePopup(null);
 };

@@ -1,4 +1,4 @@
-import { EventsState } from 'admin/Events/eventsReducer';
+import { EventsState } from 'admin/Events/eventsState';
 import { ReactNode } from 'react';
 import styles from './dropdown.module.css';
 

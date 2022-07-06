@@ -1,10 +1,10 @@
 import {
-  EventsReducerActions,
-  EventsState,
   EventsStrAction,
   FileInputName,
   PointsType,
-} from 'admin/Events/eventsReducer';
+  EventsReducerActions,
+  EventsState,
+} from 'admin/Events/eventsState';
 import { Dispatch, useMemo } from 'react';
 
 export function useEventsDispatch(

@@ -1,4 +1,4 @@
-import { EventsState } from 'admin/Events/eventsReducer';
+import { EventsState } from 'admin/Events/eventsState';
 import { MenuItem, IconName } from 'UIKit';
 import styles from './drawer.module.css';
 

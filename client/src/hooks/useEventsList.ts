@@ -1,11 +1,10 @@
-import { useEventsDispatch, useLocalStorageData } from 'hooks';
+import { useEventsDispatch, useLocalStorageData, useSplitParams } from 'hooks';
 import { Dispatch, useEffect } from 'react';
 import {
   EventNames,
   EventsReducerActions,
   EventsState,
-} from '../eventsReducer';
-import { useSplitParams } from './useSplitParams';
+} from 'admin/Events/eventsState';
 
 interface UseEventsList {
   editMode: EventsState['editMode'];

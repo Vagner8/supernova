@@ -1,5 +1,5 @@
 import { AdminReducerActions } from 'admin/adminReducer';
-import { EventsReducerActions, saveUsers } from 'admin/Events/eventsReducer';
+import { EventsReducerActions } from 'admin/Events/eventsState';
 import { GoTo, fetcher } from 'api/fetcher';
 import { useEventsDispatch } from 'hooks';
 import { Dispatch, useEffect } from 'react';

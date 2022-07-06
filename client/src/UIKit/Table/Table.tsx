@@ -1,4 +1,4 @@
-import { EventsReducerActions } from 'admin/Events/eventsReducer';
+import { EventsReducerActions } from 'admin/Events/eventsState';
 import { UseFetchUsersForTableResponse } from 'api/users/useFetchUsersForTable';
 import { useEventsDispatch } from 'hooks';
 import { Dispatch, ReactNode } from 'react';

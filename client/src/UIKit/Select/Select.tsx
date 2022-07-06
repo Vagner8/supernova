@@ -1,4 +1,5 @@
-import { EventsReducerActions, EventsState, pointsOnChange } from 'admin/Events/eventsReducer';
+import { EventsReducerActions, EventsState } from 'admin/Events/eventsState';
+import { useEventsDispatch } from 'hooks';
 import { Dispatch, MouseEvent, useState } from 'react';
 import { Icon, ButtonLi } from 'UIKit';
 import { UserStatus } from '../../../../common/src/userTypes';
@@ -22,6 +23,7 @@ export function Select({
   eventsDispatch,
 }: SelectProps) {
   const [selectValue, setSelectValue] = useState(value);
+  const eventsAction = useEventsDispatch(eventsDispatch);
 
   const onClick = (e: MouseEvent<HTMLButtonElement>) => {
     if (!e.target) return;
@@ -30,7 +32,7 @@ export function Select({
     );
     if (!btnName) return;
     setSelectValue(btnName);
-    pointsOnChange({eventsDispatch, name: label, value: btnName, pointName})
+    eventsAction.pointsOnChange({ name: label, value: btnName, pointName });
   };
 
   return (

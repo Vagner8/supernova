@@ -1,5 +1,5 @@
 import { AdminReducerActions } from 'admin/adminReducer';
-import { EventsReducerActions, EventsState } from 'admin/Events/eventsReducer';
+import { EventsReducerActions, EventsState } from 'admin/Events/eventsState';
 import { useFetchUsersForTable } from 'api/users/useFetchUsersForTable';
 import { Dispatch } from 'react';
 import { Table } from 'UIKit';

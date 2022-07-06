@@ -1,6 +1,5 @@
-import { useSplitParams } from 'admin/Events/eventsHooks.ts/useSplitParams';
-import { EventsReducerActions } from 'admin/Events/eventsReducer';
-import { useEventsDispatch } from 'hooks';
+import { EventsReducerActions } from 'admin/Events/eventsState';
+import { useEventsDispatch, useSplitParams } from 'hooks';
 import { Dispatch, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 

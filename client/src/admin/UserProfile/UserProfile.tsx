@@ -1,5 +1,5 @@
 import { AdminReducerActions, AdminState } from 'admin/adminReducer';
-import { EventsReducerActions, EventsState } from 'admin/Events/eventsReducer';
+import { EventsReducerActions, EventsState } from 'admin/Events/eventsState';
 import { useFetchUserById } from 'api/users/useFetchUserById';
 import { Dispatch } from 'react';
 import { useParams } from 'react-router-dom';

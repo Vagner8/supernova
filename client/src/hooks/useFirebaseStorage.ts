@@ -8,7 +8,7 @@ import { Dispatch, useMemo } from 'react';
 import { deleteObject, listAll, ref } from 'firebase/storage';
 import { v4 as uuidv4 } from 'uuid';
 import { useAdminDispatch } from './useAdminDispatch';
-import { EventsState } from 'admin/Events/eventsReducer';
+import { EventsState } from 'admin/Events/eventsState';
 
 const isStringArray = (arr: (string | undefined | null)[]): arr is string[] => {
   return arr.every(item => typeof item === 'string')

@@ -1,4 +1,4 @@
-import { EventsState } from 'admin/Events/eventsReducer';
+import { EventsState } from 'admin/Events/eventsState';
 
 export const isCopyPoints = (
   copyPoints: EventsState['copyPoints'],

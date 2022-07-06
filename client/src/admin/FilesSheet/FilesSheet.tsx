@@ -1,4 +1,5 @@
-import { deleteOneFile, EventsReducerActions } from "admin/Events/eventsReducer";
+import { EventsReducerActions } from "admin/Events/eventsState";
+import { useEventsDispatch } from "hooks";
 import { Dispatch, memo } from "react";
 import { BottomSheetModals, Chip } from "UIKit";
 
@@ -8,8 +9,9 @@ interface FilesSheetProps {
 }
 
 export function FilesSheet({files, eventsDispatch}: FilesSheetProps) {
+  const eventsAction = useEventsDispatch(eventsDispatch)
   const onClick = (fileName: string) => () => {
-    deleteOneFile(eventsDispatch, fileName)
+    eventsAction.deleteOneFile(fileName)
   }
   if (!files) return null
   return (

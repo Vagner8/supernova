@@ -1,19 +1,11 @@
-import {
-  AdminReducerActions,
-  AdminState,
-} from 'admin/adminReducer';
-import {
-  EventsReducerActions,
-  EventsState,
-  FileInputName,
-} from 'admin/Events/eventsReducer';
+import { AdminReducerActions, AdminState } from 'admin/adminReducer';
+import { EventsReducerActions, EventsState, FileInputName } from 'admin/Events/eventsState';
 import { ChangeEvent, Dispatch, useCallback } from 'react';
 import { Avatar, FileInput, Form } from 'UIKit';
 import styles from './profile.module.css';
 import { OperationResultType } from '../../../../common/src/operationResultType';
 import { UserKeyPoints } from '../../../../common/src/userTypes';
-import { useAdminDispatch, useEventsDispatch } from 'hooks';
-import { useSplitParams } from 'admin/Events/eventsHooks.ts/useSplitParams';
+import { useAdminDispatch, useEventsDispatch, useSplitParams } from 'hooks';
 import { useProfile } from './useProfile';
 
 interface ProfileProps {

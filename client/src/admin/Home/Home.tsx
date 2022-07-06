@@ -1,5 +1,5 @@
 import { AdminReducerActions } from 'admin/adminReducer';
-import { EventsState } from 'admin/Events/eventsReducer';
+import { EventsState } from 'admin/Events/eventsState';
 import { useAdminDispatch } from 'hooks';
 import { Dispatch } from 'react';
 
