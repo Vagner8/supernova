@@ -9,7 +9,7 @@ export function useProfile(eventsDispatch: Dispatch<EventsReducerActions>) {
   const eventsAction = useEventsDispatch(eventsDispatch);
   useEffect(() => {
     return () => {
-      eventsAction.cleanupPoints();
+      eventsAction.CleanupProfile();
     };
   }, [eventsAction, location]);
 

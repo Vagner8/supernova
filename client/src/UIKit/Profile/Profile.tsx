@@ -4,17 +4,17 @@ import { ChangeEvent, Dispatch, useCallback } from 'react';
 import { Avatar, FileInput, Form } from 'UIKit';
 import styles from './profile.module.css';
 import { OperationResultType } from '../../../../common/src/operationResultType';
-import { UserKeyPoints } from '../../../../common/src/userTypes';
+import { UserProfileKeys } from '../../../../common/src/userTypes';
 import { useAdminDispatch, useEventsDispatch, useSplitParams } from 'hooks';
 import { useProfile } from './useProfile';
 
 interface ProfileProps {
   popup: EventsState['popup'];
-  pointsSort: UserKeyPoints[];
+  pointsSort: UserProfileKeys[];
   editMode: EventsState['editMode'];
-  points: EventsState['points'];
+  profile: EventsState['profile'];
   isFetching: AdminState['isFetching'];
-  isCopyPoints: boolean;
+  isCopyProfile: boolean;
   eventsDispatch: Dispatch<EventsReducerActions>;
   adminDispatch: Dispatch<AdminReducerActions>;
   validateErrors?: OperationResultType['validateErrors'];
@@ -24,9 +24,9 @@ export function Profile({
   popup,
   pointsSort,
   isFetching,
-  points,
+  profile,
   editMode,
-  isCopyPoints,
+  isCopyProfile,
   eventsDispatch,
   adminDispatch,
   validateErrors,
@@ -39,14 +39,14 @@ export function Profile({
   const onChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
       adminAction.deleteAllOperationResults();
-      if (!isCopyPoints) eventsAction.saveCopyOfPoints();
-      eventsAction.pointsOnChange({
+      if (!isCopyProfile) eventsAction.saveProfileCopy();
+      eventsAction.profileOnChange({
         name: e.target.name,
         value: e.target.value,
-        pointName: e.target.dataset.pointName as keyof EventsState['points'],
+        pointName: e.target.dataset.pointName as keyof EventsState['profile'],
       });
     },
-    [adminAction, eventsAction, isCopyPoints],
+    [adminAction, eventsAction, isCopyProfile],
   );
 
   const onChangeFiles = (e: ChangeEvent<HTMLInputElement>) => {
@@ -58,8 +58,8 @@ export function Profile({
     e.target.value = '';
   };
 
-  if (!points || isFetching) return null;
-  const { personal, imgs } = points;
+  if (!profile || isFetching) return null;
+  const { personal, imgs } = profile;
   return (
     <div className={styles.Profile}>
       <div className={styles.lift}>
@@ -76,7 +76,7 @@ export function Profile({
           popup={popup}
           pointsSort={pointsSort}
           editMode={editMode}
-          points={points}
+          profile={profile}
           onChange={onChange}
           eventsDispatch={eventsDispatch}
           validateErrors={validateErrors}

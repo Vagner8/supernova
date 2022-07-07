@@ -48,12 +48,12 @@ export interface UserType {
   imgs: UserImgsType;
 }
 
-export type UserPointsType = Pick<
+export type UserProfileType = Pick<
   UserType,
   "personal" | "contacts" | "address" | "imgs" | "credentials"
 >;
 
-export type UserKeyPoints = keyof UserPointsType;
+export type UserProfileKeys = keyof UserProfileType;
 
 export type ValidatedFields = UserConfigsType &
   UserPersonalType &

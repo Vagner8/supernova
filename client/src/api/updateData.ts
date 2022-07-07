@@ -6,16 +6,16 @@ import { fetcher } from './fetcher';
 interface UpdateData {
   adminDispatch: Dispatch<AdminReducerActions>;
   url: string;
-  points: EventsState['changedPoints'];
+  profile: EventsState['changedProfile'];
 }
 
 export async function updateData({
   adminDispatch,
-  points,
+  profile,
   url,
 }: UpdateData) {
   await fetcher({
-    body: points,
+    body: profile,
     method: 'PUT',
     url,
     adminDispatch

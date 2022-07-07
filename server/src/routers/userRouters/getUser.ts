@@ -1,9 +1,9 @@
 import { NextFunction, Request, Response } from "express";
 import { CollectionName } from "../../types";
-import { getCertainData } from "../controllers/getCertainData";
-import { newUser } from "./getUserById";
+import { getData } from "../controllers/getData";
+import { newUser } from "../newItems/newUser";
 
-export async function getUserCertainData(
+export async function getUser(
   req: Request,
   res: Response,
   next: NextFunction
@@ -12,7 +12,7 @@ export async function getUserCertainData(
     userId: string;
     projection: string;
   };
-  getCertainData({
+  getData({
     newItem: userId === "new" ? newUser : null,
     match: userId ? { userId } : {},
     projection,

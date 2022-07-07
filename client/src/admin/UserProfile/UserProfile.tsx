@@ -10,9 +10,9 @@ import styles from './userProfile.module.css';
 interface UserProfileProps {
   popup: EventsState['popup'];
   editMode: EventsState['editMode'];
-  points: EventsState['points'];
+  profile: EventsState['profile'];
   isFetching: AdminState['isFetching'];
-  isCopyPoints: boolean;
+  isCopyProfile: boolean;
   eventsDispatch: Dispatch<EventsReducerActions>;
   adminDispatch: Dispatch<AdminReducerActions>;
   validateErrors?: OperationResultType['validateErrors'];
@@ -21,9 +21,9 @@ interface UserProfileProps {
 export default function UserProfile({
   popup,
   isFetching,
-  points,
+  profile,
   editMode,
-  isCopyPoints,
+  isCopyProfile,
   adminDispatch,
   eventsDispatch,
   validateErrors,
@@ -34,13 +34,13 @@ export default function UserProfile({
   return (
     <div className={styles.UserProfile}>
       <Profile
-        isCopyPoints={isCopyPoints}
+        isCopyProfile={isCopyProfile}
         popup={popup}
         pointsSort={['personal', 'credentials', 'contacts', 'address']}
         isFetching={isFetching}
         editMode={editMode}
         validateErrors={validateErrors}
-        points={points}
+        profile={profile}
         eventsDispatch={eventsDispatch}
         adminDispatch={adminDispatch}
       />

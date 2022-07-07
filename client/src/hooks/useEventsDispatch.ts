@@ -1,7 +1,7 @@
 import {
   EventsStrAction,
   FileInputName,
-  PointsType,
+  ProfilesType,
   EventsReducerActions,
   EventsState,
 } from 'admin/Events/eventsState';
@@ -12,9 +12,9 @@ export function useEventsDispatch(
 ) {
   return useMemo(() => {
     return {
-      cleanupPoints() {
+      CleanupProfile() {
         eventsDispatch({
-          type: EventsStrAction.CleanupPoints,
+          type: EventsStrAction.CleanupProfile,
         });
       },
 
@@ -25,28 +25,28 @@ export function useEventsDispatch(
         });
       },
 
-      savePoints(points: PointsType) {
+      savePoints(profile: ProfilesType) {
         eventsDispatch({
-          type: EventsStrAction.SavePoints,
-          payload: { points },
+          type: EventsStrAction.SaveProfile,
+          payload: { profile },
         });
       },
 
-      saveCopyOfPoints() {
-        eventsDispatch({ type: EventsStrAction.SaveCopyOfPoints });
+      saveProfileCopy() {
+        eventsDispatch({ type: EventsStrAction.SaveProfileCopy });
       },
 
-      pointsOnChange({
+      profileOnChange({
         name,
         value,
         pointName,
       }: {
         name: string;
         value: string;
-        pointName: keyof EventsState['points'];
+        pointName: keyof EventsState['profile'];
       }) {
         eventsDispatch({
-          type: EventsStrAction.PointsOnChange,
+          type: EventsStrAction.ProfileOnChange,
           payload: { name, value, pointName },
         });
       },
@@ -100,8 +100,8 @@ export function useEventsDispatch(
         });
       },
 
-      restorePoints() {
-        eventsDispatch({ type: EventsStrAction.RestorePoints });
+      restoreProfile() {
+        eventsDispatch({ type: EventsStrAction.RestoreProfile });
       },
 
       selectRow(rowId: string, select: boolean) {

@@ -16,8 +16,8 @@ import { EventNames, EventsReducerActions, EventsState } from './eventsState';
 interface EventsProps {
   popup: EventsState['popup'];
   eventsList: EventsState['eventsList'];
-  points: EventsState['points'];
-  changedPoints: EventsState['changedPoints'];
+  profile: EventsState['profile'];
+  changedProfile: EventsState['changedProfile'];
   editMode: EventsState['editMode'];
   files: EventsState['files'];
   fileInputName: EventsState['fileInputName'];
@@ -30,8 +30,8 @@ interface EventsProps {
 export function Events({
   popup,
   eventsList,
-  changedPoints,
-  points,
+  changedProfile,
+  profile,
   editMode,
   files,
   fileInputName,
@@ -68,7 +68,7 @@ export function Events({
         }
         case EventNames.EditOff: {
           eventsAction.switchEditMode(false);
-          eventsAction.restorePoints();
+          eventsAction.restoreProfile();
           break;
         }
         case EventNames.Save: {
@@ -78,25 +78,20 @@ export function Events({
             await updateData({
               adminDispatch,
               url: `/${categoryParam}/update/?id=${idParam}`,
-              points: {
+              profile: {
                 imgs: {
                   [fileInputName]: firebaseUrls,
                 },
               },
             });
+            eventsAction.deleteAllFiles();
           }
-          if (!changedPoints)
-            adminAction.saveOperationResult({
-              status: 'warning',
-              message: 'nothing to save',
-            });
-          if (changedPoints) {
+          if (changedProfile) {
             await updateData({
               adminDispatch,
               url: `/${categoryParam}/update/?id=${idParam}`,
-              points: idParam === 'new' ? points : changedPoints,
+              profile: idParam === 'new' ? profile : changedProfile,
             });
-            eventsAction.deleteAllFiles();
           }
           break;
         }

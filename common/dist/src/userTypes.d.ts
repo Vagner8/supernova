@@ -33,8 +33,8 @@ export interface UserType {
     address: UserAddressType;
     imgs: UserImgsType;
 }
-export declare type UserPointsType = Pick<UserType, "personal" | "contacts" | "address" | "imgs" | "credentials">;
-export declare type UserKeyPoints = keyof UserPointsType;
+export declare type UserProfileType = Pick<UserType, "personal" | "contacts" | "address" | "imgs" | "credentials">;
+export declare type UserProfileKeys = keyof UserProfileType;
 export declare type ValidatedFields = UserConfigsType & UserPersonalType & UserContactsType & UserAddressType;
 export declare type ValidatedFieldsKeys = keyof ValidatedFields;
 export declare type UserRequiredFields = [

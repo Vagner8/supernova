@@ -2,7 +2,7 @@ import { NextFunction, Response } from "express";
 import { serverError } from "../../helpers/errors";
 import { mongo } from "../../helpers/mongo";
 import { CollectionName } from "../../types";
-import { NewUserType } from "../userRouters/newUser";
+import { NewUserType } from "../newItems/newUser";
 
 interface GetCertainData {
   newItem: NewUserType | null;
@@ -15,7 +15,7 @@ interface GetCertainData {
   next: NextFunction;
 }
 
-export async function getCertainData({
+export async function getData({
   newItem,
   res,
   projection,
@@ -24,7 +24,7 @@ export async function getCertainData({
   next,
 }: GetCertainData) {
   try {
-    if (newItem) return res.status(200).json(newItem);
+    if (newItem) return res.status(200).json([newItem]);
     if (!projection) return serverError("no projection");
     const usersCollection = mongo.getCollection(collectionName);
     const result = await usersCollection

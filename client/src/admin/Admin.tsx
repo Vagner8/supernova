@@ -18,7 +18,7 @@ import { Events } from './Events/Events';
 import { OperationResultsSheet } from './OperationResultsSheet/OperationResultsSheet';
 import { useValidateErrors, useWindowClick } from 'hooks';
 import { useFetchAvatarAndLogin } from 'api/users/useFetchAvatarAndLogin';
-import { isCopyPoints } from 'helpers';
+import { isCopyProfile } from 'helpers';
 import { EventsReducerActions } from './Events/eventsState';
 
 const Home = lazy(() => import('./Home/Home'));
@@ -83,8 +83,8 @@ function AdminRoutes({
         popup={eventsState.popup}
         editMode={eventsState.editMode}
         eventsList={eventsState.eventsList}
-        points={eventsState.points}
-        changedPoints={eventsState.changedPoints}
+        profile={eventsState.profile}
+        changedProfile={eventsState.changedProfile}
         files={eventsState.files}
         fileInputName={eventsState.fileInputName}
         isFileInputMultiple={eventsState.isFileInputMultiple}
@@ -123,8 +123,8 @@ function AdminRoutes({
                   popup={eventsState.popup}
                   isFetching={adminState.isFetching}
                   editMode={eventsState.editMode}
-                  points={eventsState.points}
-                  isCopyPoints={isCopyPoints(eventsState.copyPoints)}
+                  profile={eventsState.profile}
+                  isCopyProfile={isCopyProfile(eventsState.copyProfile)}
                   eventsDispatch={eventsDispatch}
                   adminDispatch={adminDispatch}
                   validateErrors={validateErrors}

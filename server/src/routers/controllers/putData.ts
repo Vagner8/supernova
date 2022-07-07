@@ -1,12 +1,12 @@
 import { NextFunction, Response } from "express";
-import { UserPointsType } from "../../../../common/src/userTypes";
+import { UserProfileType } from "../../../../common/src/userTypes";
 import { mongo } from "../../helpers/mongo";
 import { CollectionName } from "../../types";
 import { serverError } from "../../helpers/errors";
 import { OperationResultType } from "../../../../common/src/operationResultType";
 
 interface PutData {
-  points: Partial<UserPointsType>;
+  profile: Partial<UserProfileType>;
   collectionName: CollectionName;
   filter: {
     [index: string]: string
@@ -15,12 +15,12 @@ interface PutData {
   next: NextFunction;
 }
 
-export async function putData({ points, collectionName, filter, res, next }: PutData) {
+export async function putData({ profile, collectionName, filter, res, next }: PutData) {
   try {
     const usersCollection = mongo.getCollection(collectionName);
     const result = await usersCollection.updateOne(
       filter,
-      { $set: points },
+      { $set: profile },
       { upsert: true }
     );
     if (!result.acknowledged) throw serverError("bad update");

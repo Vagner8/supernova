@@ -6,13 +6,13 @@ import { OperationResultType } from '../../../../common/src/operationResultType'
 import { filterValidateErrors } from 'helpers';
 import {
   UserRequiredFields,
-  UserKeyPoints,
+  UserProfileKeys,
 } from '../../../../common/src/userTypes';
 
 interface FormProps {
   popup: EventsState['popup'];
-  pointsSort: UserKeyPoints[];
-  points: EventsState['points'];
+  pointsSort: UserProfileKeys[];
+  profile: EventsState['profile'];
   editMode: EventsState['editMode'];
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
   eventsDispatch: Dispatch<EventsReducerActions>;
@@ -31,22 +31,22 @@ const requiredFields: UserRequiredFields & string[] = [
 export function Form({
   popup,
   pointsSort,
-  points,
+  profile,
   editMode,
   onChange,
   eventsDispatch,
   validateErrors,
 }: FormProps) {
-  if (!points) return null;
+  if (!profile) return null;
   return (
     <form className={styles.Form}>
       {pointsSort.map((pointName) => {
-        if (!points[pointName]) return;
+        if (!profile[pointName]) return;
         return (
           <Fragment key={pointName}>
             <h6 className={styles.form_name}>{pointName}</h6>
             <div className={styles.form_wrapper}>
-              {Object.entries(points[pointName]).map(([label, valueText]) => {
+              {Object.entries(profile[pointName]).map(([label, valueText]) => {
                 if (label === 'avatar') return;
                 const error = filterValidateErrors(label, validateErrors);
                 return (
@@ -62,7 +62,7 @@ export function Form({
                               value={valueText}
                               popup={popup}
                               pointName={
-                                pointName as keyof EventsState['points']
+                                pointName as keyof EventsState['profile']
                               }
                               eventsDispatch={eventsDispatch}
                             />

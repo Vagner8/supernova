@@ -1,7 +1,7 @@
 import { EventsState } from 'admin/Events/eventsState';
 
-export const isCopyPoints = (
-  copyPoints: EventsState['copyPoints'],
+export const isCopyProfile = (
+  copyProfile: EventsState['copyProfile'],
 ): boolean => {
-  return copyPoints ? true : false;
+  return copyProfile ? true : false;
 };

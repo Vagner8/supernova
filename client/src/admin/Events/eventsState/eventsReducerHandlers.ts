@@ -1,8 +1,8 @@
 import { UseFetchUserByIdResponse } from 'api/users/useFetchUserById';
 import { EventsState } from './eventsReducer';
 
-export type PointsType = UseFetchUserByIdResponse;
-export type FileInputName = keyof PointsType['imgs'];
+export type ProfilesType = UseFetchUserByIdResponse;
+export type FileInputName = keyof ProfilesType['imgs'];
 
 export enum EventsStrAction {
   SavePopup = 'SavePopup',
@@ -11,38 +11,38 @@ export enum EventsStrAction {
   DeleteOneFile = 'DeleteOneFile',
   DeleteAllFiles = 'DeleteAllFiles',
   SaveEventsList = 'SaveEventsList',
-  SavePoints = 'SavePoints',
-  PointsOnChange = 'PointsOnChange',
-  SaveCopyOfPoints = 'SaveCopyOfPoints',
+  SaveProfile = 'SaveProfile',
+  ProfileOnChange = 'ProfileOnChange',
+  SaveProfileCopy = 'SaveProfileCopy',
   SaveRows = 'SaveRows',
-  RestorePoints = 'RestorePoints',
-  CleanupPoints = 'CleanPoints',
+  RestoreProfile = 'RestoreProfile',
+  CleanupProfile = 'CleanPoints',
   SelectRow = 'SelectRow',
 }
 
-export interface PointsOnChange {
-  type: EventsStrAction.PointsOnChange;
-  payload: { name: string; value: string; pointName: keyof PointsType };
+export interface ProfileOnChange {
+  type: EventsStrAction.ProfileOnChange;
+  payload: { name: string; value: string; pointName: keyof ProfilesType };
 }
-export const pointsOnChange = (
+export const profileOnChange = (
   state: EventsState,
-  { name, value, pointName }: PointsOnChange['payload'],
+  { name, value, pointName }: ProfileOnChange['payload'],
 ) => {
-  if (!state.points) return state;
+  if (!state.profile) return state;
   if (pointName === '_id') return state;
   return {
     ...state,
-    points: {
-      ...state.points,
+    profile: {
+      ...state.profile,
       [pointName]: {
-        ...state.points[pointName],
+        ...state.profile[pointName],
         [name]: value,
       },
     },
-    changedPoints: {
-      ...state.changedPoints,
+    changedProfile: {
+      ...state.changedProfile,
       [pointName]: {
-        ...state.points[pointName],
+        ...state.profile[pointName],
         [name]: value,
       },
     },
@@ -70,15 +70,15 @@ export const selectRow = (
   };
 };
 
-export interface CleanupPoints {
-  type: EventsStrAction.CleanupPoints;
+export interface CleanupProfile {
+  type: EventsStrAction.CleanupProfile;
 }
-export const cleanupPoints = (state: EventsState) => {
+export const cleanupProfile = (state: EventsState) => {
   return {
     ...state,
-    copyPoints: null,
-    changedPoints: null,
-    points: null,
+    copyProfile: null,
+    changedProfile: null,
+    profile: null,
     files: null,
     editMode: false,
   };
@@ -119,8 +119,8 @@ export const deleteOneFile = (
   };
 };
 
-interface RestorePoints {
-  type: EventsStrAction.RestorePoints;
+interface RestoreProfile {
+  type: EventsStrAction.RestoreProfile;
 }
 
 interface SaveRows {
@@ -138,9 +138,9 @@ interface SwitchEditMode {
   payload: { editMode: EventsState['editMode'] };
 }
 
-interface SavePoints {
-  type: EventsStrAction.SavePoints;
-  payload: { points: PointsType };
+interface SaveProfile {
+  type: EventsStrAction.SaveProfile;
+  payload: { profile: ProfilesType };
 }
 
 interface SaveEventsList {
@@ -152,21 +152,21 @@ interface DeleteAllFiles {
   type: EventsStrAction.DeleteAllFiles;
 }
 
-interface SaveCopyOfPoints {
-  type: EventsStrAction.SaveCopyOfPoints;
+interface SaveProfileCopy {
+  type: EventsStrAction.SaveProfileCopy;
 }
 
 export type EventsReducerActions =
   | SavePopup
   | SwitchEditMode
-  | SavePoints
-  | PointsOnChange
+  | SaveProfile
+  | ProfileOnChange
   | SaveEventsList
   | SaveFiles
   | DeleteOneFile
   | DeleteAllFiles
-  | SaveCopyOfPoints
+  | SaveProfileCopy
   | SaveRows
-  | RestorePoints
-  | CleanupPoints
+  | RestoreProfile
+  | CleanupProfile
   | SelectRow;

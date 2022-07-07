@@ -1,13 +1,13 @@
 import { UseFetchUsersForTableResponse } from 'api/users/useFetchUsersForTable';
 import { Reducer } from 'react';
 import {
-  cleanupPoints,
+  cleanupProfile,
   deleteOneFile,
   EventsReducerActions,
   EventsStrAction,
   FileInputName,
-  pointsOnChange,
-  PointsType,
+  profileOnChange,
+  ProfilesType,
   saveFiles,
   selectRow,
 } from './eventsReducerHandlers';
@@ -22,24 +22,24 @@ export enum EventNames {
 }
 
 export interface EventsState {
+  rows: UseFetchUsersForTableResponse[] | null;
+  profile: ProfilesType | null;
+  copyProfile: ProfilesType | null;
+  changedProfile: Partial<ProfilesType> | null;
   popup: string | null;
   editMode: boolean;
-  points: PointsType | null;
-  copyPoints: PointsType | null;
-  changedPoints: Partial<PointsType> | null;
   eventsList: null | string[];
   files: File[] | null;
   isFileInputMultiple: boolean;
   fileInputName: FileInputName | null;
-  rows: UseFetchUsersForTableResponse[] | null;
 }
 
 export const eventsInitState: EventsState = {
   popup: null,
   editMode: false,
-  copyPoints: null,
-  points: null,
-  changedPoints: null,
+  copyProfile: null,
+  profile: null,
+  changedProfile: null,
   eventsList: null,
   files: null,
   isFileInputMultiple: false,
@@ -55,11 +55,11 @@ export const eventsReducer: Reducer<EventsState, EventsReducerActions> = (
     case EventsStrAction.SelectRow: {
       return selectRow(state, action.payload);
     }
-    case EventsStrAction.CleanupPoints: {
-      return cleanupPoints(state);
+    case EventsStrAction.CleanupProfile: {
+      return cleanupProfile(state);
     }
-    case EventsStrAction.RestorePoints: {
-      return { ...state, points: state.copyPoints || state.points };
+    case EventsStrAction.RestoreProfile: {
+      return { ...state, profile: state.copyProfile || state.profile };
     }
     case EventsStrAction.SaveRows: {
       return { ...state, rows: action.payload.rows };
@@ -70,14 +70,14 @@ export const eventsReducer: Reducer<EventsState, EventsReducerActions> = (
     case EventsStrAction.SwitchEditMode: {
       return { ...state, editMode: action.payload.editMode };
     }
-    case EventsStrAction.SavePoints: {
-      return { ...state, points: action.payload.points };
+    case EventsStrAction.SaveProfile: {
+      return { ...state, profile: action.payload.profile };
     }
-    case EventsStrAction.SaveCopyOfPoints: {
-      return { ...state, copyPoints: state.points };
+    case EventsStrAction.SaveProfileCopy: {
+      return { ...state, copyProfile: state.profile };
     }
-    case EventsStrAction.PointsOnChange: {
-      return pointsOnChange(state, action.payload)
+    case EventsStrAction.ProfileOnChange: {
+      return profileOnChange(state, action.payload)
     }
     case EventsStrAction.SaveEventsList: {
       return { ...state, eventsList: action.payload.newEventsList };

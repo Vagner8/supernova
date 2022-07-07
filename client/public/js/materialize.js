@@ -1605,7 +1605,7 @@ $jscomp.polyfill = function (e, r, p, m) {
   }function F(a, c) {
     return Math.sqrt(Math.pow(c.x - a.x, 2) + Math.pow(c.y - a.y, 2));
   }function M(a) {
-    a = a.points;for (var c = 0, d, b = 0; b < a.numberOfItems; b++) {
+    a = a.profile;for (var c = 0, d, b = 0; b < a.numberOfItems; b++) {
       var f = a.getItem(b);0 < b && (c += F(d, f));d = f;
     }return c;
   }function N(a) {
@@ -1614,7 +1614,7 @@ $jscomp.polyfill = function (e, r, p, m) {
         return 2 * a.getAttribute("width") + 2 * a.getAttribute("height");case "line":
         return F({ x: a.getAttribute("x1"), y: a.getAttribute("y1") }, { x: a.getAttribute("x2"), y: a.getAttribute("y2") });case "polyline":
         return M(a);case "polygon":
-        var c = a.points;return M(a) + F(c.getItem(c.numberOfItems - 1), c.getItem(0));}
+        var c = a.profile;return M(a) + F(c.getItem(c.numberOfItems - 1), c.getItem(0));}
   }function Y(a, c) {
     function d(b) {
       b = void 0 === b ? 0 : b;return a.el.getPointAtLength(1 <= c + b ? c + b : 0);

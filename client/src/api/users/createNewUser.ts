@@ -4,11 +4,11 @@ import { GoTo, fetcher } from 'api/fetcher';
 import { Dispatch } from 'react';
 
 export async function createNewUser(
-  points: EventsState['points'],
+  profile: EventsState['profile'],
   adminDispatch: Dispatch<AdminReducerActions>,
 ) {
   await fetcher({
-    body: points,
+    body: profile,
     method: 'POST',
     url: `${GoTo.CreateUser}`,
     adminDispatch
