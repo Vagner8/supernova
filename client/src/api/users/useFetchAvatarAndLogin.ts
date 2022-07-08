@@ -2,17 +2,18 @@ import { AdminReducerActions } from 'admin/adminState';
 import { fetcher, GoTo } from 'api/fetcher';
 import { useAdminDispatch } from 'hooks';
 import { Dispatch, useEffect } from 'react';
-import { UserProject, UserType } from '../../../../common/src/userTypes';
-
-const projection: Partial<UserProject> = {
-  login: '$credentials.login',
-  avatar: '$imgs.avatar',
-};
+import { UserType } from '../../../../common/src/userTypes';
+import { Projection } from './useFetchUserById';
 
 export interface UseFetchAvatarAndLoginResponse {
-  login: UserType['credentials']['login'];
+  login: UserType['secret']['login'];
   avatar: UserType['imgs']['avatar'];
 }
+
+const projection: Omit<Projection<UseFetchAvatarAndLoginResponse>, '_id'> = {
+  login: '$secret.login',
+  avatar: '$imgs.avatar'
+};
 
 export function useFetchAvatarAndLogin(
   adminDispatch: Dispatch<AdminReducerActions>,

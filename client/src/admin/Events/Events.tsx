@@ -75,16 +75,19 @@ export function Events({
           if (files?.length) {
             const firebaseUrls = await firebaseStorage.download(files);
             if (!firebaseUrls || !fileInputName) return;
-            await updateData({
-              url: `/${categoryParam}/update/?id=${idParam}`,
-              profile: {
-                imgs: {
-                  [fileInputName]: firebaseUrls,
+            if (profile?.imgs) {
+              await updateData({
+                url: `/${categoryParam}/update/?id=${idParam}`,
+                profile: {
+                  imgs: {
+                    ...profile.imgs,
+                    [fileInputName]: firebaseUrls,
+                  },
                 },
-              },
-              saveOperationResult: adminAction.saveOperationResult,
-              setIsFetching: adminAction.setIsFetching,
-            });
+                saveOperationResult: adminAction.saveOperationResult,
+                setIsFetching: adminAction.setIsFetching,
+              });
+            }
             eventsAction.saveImgs({ firebaseUrls, fileInputName });
             eventsAction.deleteAllFiles();
           }

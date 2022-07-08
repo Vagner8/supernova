@@ -36,7 +36,7 @@ export default function UserProfile({
       <Profile
         isCopyProfile={isCopyProfile}
         popup={popup}
-        pointsSort={['personal', 'credentials', 'contacts', 'address']}
+        pointsSort={['personal', 'secret', 'settings', 'contacts', 'address']}
         isFetching={isFetching}
         editMode={editMode}
         validateErrors={validateErrors}

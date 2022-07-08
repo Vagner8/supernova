@@ -46,48 +46,53 @@ export function Form({
           <Fragment key={pointName}>
             <h6 className={styles.form_name}>{pointName}</h6>
             <div className={styles.form_wrapper}>
-              {Object.entries(profile[pointName]).map(([label, valueText]) => {
-                if (label === 'avatar') return;
-                const error = filterValidateErrors(label, validateErrors);
-                return (
-                  <Point
-                    key={label}
-                    render={() => {
-                      if (editMode) {
-                        if (label === 'rule') {
+              {Object.entries(profile[pointName] as Object).map(
+                ([label, valueText]) => {
+                  if (label === 'avatar') return;
+                  const error = filterValidateErrors(label, validateErrors);
+                  return (
+                    <Point
+                      key={label}
+                      render={() => {
+                        if (editMode) {
+                          if (label === 'rule') {
+                            return (
+                              <Select
+                                selectList={[
+                                  'Admin',
+                                  'User',
+                                  'Viewer',
+                                  'Fired',
+                                ]}
+                                label={label}
+                                value={valueText}
+                                popup={popup}
+                                pointName={
+                                  pointName as keyof EventsState['profile']
+                                }
+                                eventsDispatch={eventsDispatch}
+                              />
+                            );
+                          }
                           return (
-                            <Select
-                              selectList={['Admin', 'User', 'Viewer', 'Fired']}
+                            <InputMemo
+                              type={label === 'password' ? 'password' : 'text'}
                               label={label}
                               value={valueText}
-                              popup={popup}
-                              pointName={
-                                pointName as keyof EventsState['profile']
-                              }
-                              eventsDispatch={eventsDispatch}
+                              pointName={pointName}
+                              onChange={onChange}
+                              fieldError={error?.field}
+                              messageError={error?.message}
+                              required={requiredFields.includes(label)}
                             />
                           );
                         }
-                        return (
-                          <InputMemo
-                            type={label === 'password' ? 'password' : 'text'}
-                            label={label}
-                            value={valueText}
-                            pointName={pointName}
-                            onChange={onChange}
-                            fieldError={error?.field}
-                            messageError={error?.message}
-                            required={requiredFields.includes(label)}
-                          />
-                        );
-                      }
-                      return (
-                        <LabelText label={label} text={valueText} />
-                      );
-                    }}
-                  />
-                );
-              })}
+                        return <LabelText label={label} text={valueText} />;
+                      }}
+                    />
+                  );
+                },
+              )}
             </div>
           </Fragment>
         );

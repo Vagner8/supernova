@@ -7,14 +7,15 @@ import bcrypt from "bcryptjs";
 
 export async function putUser(req: Request, res: Response, next: NextFunction) {
   const { id } = req.query as { id: string };
-  const profile = req.body as Partial<UserProfileType>
-  if (id === 'new' && profile.credentials?.password) {
-    profile.credentials.password = await bcrypt.hash(profile.credentials.password, 10)
+  const profile = req.body as UserProfileType;
+  if (id === "new") {
+    profile.secret.password = await bcrypt.hash(profile.secret.password, 10);
+    profile.settings.timestamp = new Date();
   }
   await putData({
     collectionName: CollectionName.Users,
-    profile: req.body as Partial<UserProfileType>,
-    filter: {userId: id === 'new' ? uuidv4() : id },
+    profile,
+    filter: { userId: id === "new" ? uuidv4() : id },
     res,
     next,
   });

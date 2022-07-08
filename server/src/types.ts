@@ -4,6 +4,7 @@ export enum DataBase {
 
 export enum CollectionName {
   Users = "users",
+  Products = "products"
 }
 
 declare global {

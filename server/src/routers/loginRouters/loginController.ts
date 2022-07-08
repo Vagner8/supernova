@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response } from "express";
 import { CollectionName } from "../../types";
-import { v4 as uuidv4 } from "uuid";
 import { UserType } from "../../../../common/src/userTypes";
 import { loginError } from "../../helpers/errors";
 import bcrypt from "bcryptjs";
@@ -16,9 +15,11 @@ export async function loginController(
 
   try {
     const usersCollection = mongo.getCollection<UserType>(CollectionName.Users);
-    const admin = await usersCollection.findOne({ "credentials.login": login });
+    const admin = await usersCollection.findOne({ "secret.login": login });
     if (!admin) throw loginError();
-    if (!bcrypt.compareSync(password, admin.credentials.password))
+    // if (password !== admin.secret.password) throw loginError();
+    // console.log( password, admin.secret.password )
+    if (!bcrypt.compareSync(password, admin.secret.password))
       throw loginError();
     token.accessSetToCookie(token.sign("accessToken", admin.userId), res);
     token.refreshSave(

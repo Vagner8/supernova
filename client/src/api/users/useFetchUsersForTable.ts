@@ -13,7 +13,7 @@ export interface UseFetchUsersForTableResponse {
   surname: UserType['personal']['surname'];
   email: UserType['contacts']['email'];
   phone: UserType['contacts']['phone'];
-  rule: UserType['credentials']['rule'];
+  rule: UserType['settings']['rule'];
   avatar: UserType['imgs']['avatar'];
   selected?: UserType['selected'];
 }

@@ -1,8 +1,8 @@
 import express from "express";
-import { getProductCertainData } from "./getProductCertainData";
+import { getProduct } from "./getProduct";
 
 const router = express.Router();
 
-router.get("/aggregate", getProductCertainData);
+router.get("/aggregate", getProduct);
 
 export default router;

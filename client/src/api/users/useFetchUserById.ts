@@ -10,31 +10,21 @@ export interface UseFetchUserByIdResponse {
   personal: UserType['personal'];
   contacts: UserType['contacts'];
   address: UserType['address'];
-  imgs: {
-    avatar: UserType['imgs']['avatar'];
-  };
-  credentials: {
-    login: UserType['credentials']['login'];
-    rule: UserType['credentials']['rule'];
-  };
+  settings: UserType['settings'];
+  imgs: UserType['imgs'];
+  secret?: UserType['secret'];
 }
 
 export type Projection<T> = {
   [K in keyof T]: Projection<T[K]> | string;
 };
 
-
 const projection: Omit<Projection<UseFetchUserByIdResponse>, '_id'> = {
   personal: '$personal',
   contacts: '$contacts',
   address: '$address',
-  imgs: {
-    avatar: '$imgs.avatar',
-  },
-  credentials: {
-    login: '$credentials.login',
-    rule: '$credentials.rule',
-  },
+  settings: '$settings',
+  imgs: '$imgs',
 };
 
 export function useFetchUserById(
@@ -42,8 +32,8 @@ export function useFetchUserById(
   eventsDispatch: Dispatch<EventsReducerActions>,
   adminDispatch: Dispatch<AdminReducerActions>,
 ) {
-  const eventsAction = useEventsDispatch(eventsDispatch)
-  const adminAction = useAdminDispatch(adminDispatch)
+  const eventsAction = useEventsDispatch(eventsDispatch);
+  const adminAction = useAdminDispatch(adminDispatch);
   useEffect(() => {
     const asyncer = async () => {
       const profile = await fetcher<UseFetchUserByIdResponse[]>({

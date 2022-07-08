@@ -3,10 +3,9 @@ import { UserType } from "../../../../common/src/userTypes";
 export type NewUserType = Omit<UserType, "_id" | "refreshToken" | "userId" | 'timestamp'>
 
 export const newUser: NewUserType = {
-  credentials: {
-    login: "",
-    password: "",
+  settings: {
     rule: "New",
+    timestamp: new Date()
   },
   personal: {
     name: "",
@@ -26,4 +25,8 @@ export const newUser: NewUserType = {
     avatar: [],
     photos: [],
   },
+  secret: {
+    login: "",
+    password: "",
+  }
 };

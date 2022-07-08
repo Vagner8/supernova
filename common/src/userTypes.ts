@@ -9,10 +9,14 @@ export type UserStatus =
   | "New"
   | "developer";
 
-export interface UserConfigsType {
+export interface UserSecretType {
   login: string;
   password: string;
+}
+
+export interface UserSettingsType {
   rule: UserStatus;
+  timestamp: Date;
 }
 
 export interface UserPersonalType {
@@ -36,12 +40,12 @@ export interface UserImgsType extends ImgsType {}
 
 export interface UserType {
   _id: Object;
-  selected?: boolean;
   userId: string;
   refreshToken: string;
-  timestamp: string;
+  selected?: boolean;
 
-  credentials: UserConfigsType;
+  secret: UserSecretType;
+  settings: UserSettingsType;
   personal: UserPersonalType;
   contacts: UserContactsType;
   address: UserAddressType;
@@ -50,12 +54,18 @@ export interface UserType {
 
 export type UserProfileType = Pick<
   UserType,
-  "personal" | "contacts" | "address" | "imgs" | "credentials"
+  | "personal"
+  | "contacts"
+  | "address"
+  | "imgs"
+  | "settings"
+  | "secret"
 >;
 
 export type UserProfileKeys = keyof UserProfileType;
 
-export type ValidatedFields = UserConfigsType &
+export type ValidatedFields = UserSecretType &
+  UserSettingsType &
   UserPersonalType &
   UserContactsType &
   UserAddressType;
@@ -68,18 +78,5 @@ export type UserRequiredFields = [
   "email",
   "name",
   "surname",
-  "phone",
+  "phone"
 ];
-
-export type Project<T, S extends string| 0> = {
-  [Key in keyof T]: S extends string
-    ? `$${Lowercase<S & string>}.${Key & string}`
-    : `$${Key & string}`;
-};
-
-export type UserProject = Project<UserType, 0> &
-  Project<UserImgsType, "imgs"> &
-  Project<UserConfigsType, "credentials"> &
-  Project<UserPersonalType, "personal"> &
-  Project<UserContactsType, "contacts"> &
-  Project<UserAddressType, "address">;
