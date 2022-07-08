@@ -1,7 +1,3 @@
-import {
-  AdminReducerActions,
-  saveOperationResult,
-} from 'admin/adminReducer';
 import { initializeApp } from 'firebase/app';
 import { getDownloadURL, getStorage, uploadBytes } from 'firebase/storage';
 import { Dispatch, useMemo } from 'react';
@@ -9,10 +5,11 @@ import { deleteObject, listAll, ref } from 'firebase/storage';
 import { v4 as uuidv4 } from 'uuid';
 import { useAdminDispatch } from './useAdminDispatch';
 import { EventsState } from 'admin/Events/eventsState';
+import { AdminReducerActions } from 'admin/adminState';
 
 const isStringArray = (arr: (string | undefined | null)[]): arr is string[] => {
-  return arr.every(item => typeof item === 'string')
-}
+  return arr.every((item) => typeof item === 'string');
+};
 
 const firebaseConfig = {
   apiKey: 'AIzaSyDnqMrio0bJ4sHZm6sT3X_T3-Um_vUgUFA',
@@ -41,25 +38,27 @@ export function useFirebaseStorage({
     return {
       async download(files: File[]) {
         try {
-          adminAction.setIsFetching(true);
+          adminAction.setIsFetching({ isFetching: true });
           if (!isFileInputMultiple) {
             await this.deleteAllFilesInFolder(paths.join('/'));
           }
           return await this.saveFiles(files);
         } catch (err) {
-          saveOperationResult(adminDispatch, {
-            status: 'firebase error',
-            message: 'bad files download',
+          adminAction.saveOperationResult({
+            operationResult: {
+              status: 'firebase error',
+              message: 'bad files download',
+            },
           });
         } finally {
-          adminAction.setIsFetching(false);
+          adminAction.setIsFetching({ isFetching: false });
         }
       },
 
       async saveFiles(files: File[]) {
         try {
           const newRefs = this.createNewRefs(files);
-          if (!newRefs) return
+          if (!newRefs) return;
           await Promise.all(
             newRefs.map((newRef) =>
               uploadBytes(newRef.storageRef, newRef.file),
@@ -70,14 +69,16 @@ export function useFirebaseStorage({
           );
         } catch (err) {
           adminAction.saveOperationResult({
-            status: 'firebase error',
-            message: 'bad files saving',
+            operationResult: {
+              status: 'firebase error',
+              message: 'bad files saving',
+            },
           });
         }
       },
 
       createNewRefs(files: File[]) {
-        if (!isStringArray(paths)) return
+        if (!isStringArray(paths)) return;
         return files.map((file) => ({
           storageRef: ref(storage, `${paths.join('/')}/${uuidv4()}`),
           file,
@@ -93,11 +94,13 @@ export function useFirebaseStorage({
           );
         } catch (err) {
           adminAction.saveOperationResult({
-            status: 'firebase error',
-            message: 'bad files deletion',
+            operationResult: {
+              status: 'firebase error',
+              message: 'bad files deletion',
+            },
           });
         }
       },
     };
-  }, [adminAction, isFileInputMultiple, paths, adminDispatch]);
+  }, [adminAction, isFileInputMultiple, paths]);
 }

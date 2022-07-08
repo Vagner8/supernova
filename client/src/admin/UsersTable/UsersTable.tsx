@@ -1,4 +1,4 @@
-import { AdminReducerActions } from 'admin/adminReducer';
+import { AdminReducerActions } from 'admin/adminState';
 import { EventsReducerActions, EventsState } from 'admin/Events/eventsState';
 import { useFetchUsersForTable } from 'api/users/useFetchUsersForTable';
 import { Dispatch } from 'react';
@@ -6,7 +6,7 @@ import { Table } from 'UIKit';
 import styles from './usersTable.module.css';
 
 interface UsersProps {
-  users: EventsState['rows'];
+  users: EventsState['tableRows'];
   eventsDispatch: Dispatch<EventsReducerActions>;
   adminDispatch: Dispatch<AdminReducerActions>;
 }

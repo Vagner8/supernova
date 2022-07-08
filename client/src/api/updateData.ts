@@ -1,23 +1,27 @@
-import { AdminReducerActions } from 'admin/adminReducer';
+import { SaveOperationResult, SetIsFetching } from 'admin/adminState';
 import { EventsState } from 'admin/Events/eventsState';
-import { Dispatch } from 'react';
 import { fetcher } from './fetcher';
 
 interface UpdateData {
-  adminDispatch: Dispatch<AdminReducerActions>;
   url: string;
   profile: EventsState['changedProfile'];
+  setIsFetching: ({ isFetching }: SetIsFetching['payload']) => void;
+  saveOperationResult: ({
+    operationResult,
+  }: SaveOperationResult['payload']) => void;
 }
 
 export async function updateData({
-  adminDispatch,
   profile,
   url,
+  setIsFetching,
+  saveOperationResult,
 }: UpdateData) {
   await fetcher({
     body: profile,
     method: 'PUT',
     url,
-    adminDispatch
+    setIsFetching,
+    saveOperationResult,
   });
 }

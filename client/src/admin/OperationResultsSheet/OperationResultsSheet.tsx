@@ -1,4 +1,4 @@
-import { AdminReducerActions, AdminState } from 'admin/adminReducer';
+import { AdminReducerActions, AdminState } from 'admin/adminState';
 import { Dispatch } from 'react';
 import { Snackbar } from 'UIKit';
 import { v4 as uuidv4 } from 'uuid';

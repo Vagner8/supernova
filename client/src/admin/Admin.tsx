@@ -4,22 +4,22 @@ import { Auth } from './Auth/Auth';
 import {
   adminInitState,
   adminReducer,
-  AdminReducerActions,
   AdminState,
-} from './adminReducer';
+} from './adminState/adminReducer';
 import { Container, Drawer, Linear, Navbar } from 'UIKit';
-import {
-  eventsInitState,
-  eventsReducer,
-  EventsState,
-} from './Events/eventsState/eventsReducer';
 import { MemoFilesSheet } from './FilesSheet/FilesSheet';
 import { Events } from './Events/Events';
 import { OperationResultsSheet } from './OperationResultsSheet/OperationResultsSheet';
 import { useValidateErrors, useWindowClick } from 'hooks';
 import { useFetchAvatarAndLogin } from 'api/users/useFetchAvatarAndLogin';
 import { isCopyProfile } from 'helpers';
-import { EventsReducerActions } from './Events/eventsState';
+import {
+  eventsInitState,
+  eventsReducer,
+  EventsReducerActions,
+  EventsState,
+} from './Events/eventsState';
+import { AdminReducerActions } from './adminState';
 
 const Home = lazy(() => import('./Home/Home'));
 const UserProfile = lazy(() => import('./UserProfile/UserProfile'));
@@ -88,7 +88,7 @@ function AdminRoutes({
         files={eventsState.files}
         fileInputName={eventsState.fileInputName}
         isFileInputMultiple={eventsState.isFileInputMultiple}
-        isSomeRowSelected={eventsState.rows?.some((row) => row.selected)}
+        isSomeRowSelected={eventsState.tableRows?.some((row) => row.selected)}
         adminDispatch={adminDispatch}
         eventsDispatch={eventsDispatch}
       />
@@ -110,7 +110,7 @@ function AdminRoutes({
               path="/users"
               element={
                 <UsersTable
-                  users={eventsState.rows}
+                  users={eventsState.tableRows}
                   eventsDispatch={eventsDispatch}
                   adminDispatch={adminDispatch}
                 />
@@ -135,7 +135,7 @@ function AdminRoutes({
               path="/products"
               element={
                 <ProductTable
-                  products={eventsState.rows}
+                  products={eventsState.tableRows}
                   eventsDispatch={eventsDispatch}
                 />
               }

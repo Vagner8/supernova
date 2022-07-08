@@ -1,26 +1,32 @@
-import { AdminReducerActions, AdminStrAction } from 'admin/adminReducer';
-import { UseFetchAvatarAndLoginResponse } from 'api/users/useFetchAvatarAndLogin';
+import {
+  AdminReducerActions,
+  AdminStrAction,
+  DeleteOperationResult,
+  SaveAdminId,
+  SaveAvatarAndLogin,
+  SaveOperationResult,
+  SetIsFetching,
+} from 'admin/adminState';
 import { Dispatch, useMemo } from 'react';
-import { OperationResultType } from '../../../common/src/operationResultType';
 
 export function useAdminDispatch(adminDispatch: Dispatch<AdminReducerActions>) {
   return useMemo(() => {
     return {
-      setIsFetching(isFetching: boolean) {
+      setIsFetching({ isFetching }: SetIsFetching['payload']) {
         adminDispatch({
           type: AdminStrAction.SetIsFetching,
           payload: { isFetching },
         });
       },
 
-      saveOperationResult(operationResult: OperationResultType) {
+      saveOperationResult({ operationResult }: SaveOperationResult['payload']) {
         adminDispatch({
           type: AdminStrAction.SaveOperationResult,
           payload: { operationResult },
         });
       },
 
-      deleteOperationResult(index: number) {
+      deleteOperationResult({ index }: DeleteOperationResult['payload']) {
         adminDispatch({
           type: AdminStrAction.DeleteOperationResult,
           payload: { index },
@@ -33,20 +39,21 @@ export function useAdminDispatch(adminDispatch: Dispatch<AdminReducerActions>) {
         });
       },
 
-      saveAdminId(adminId: string) {
+      saveAdminId({ adminId }: SaveAdminId['payload']) {
         adminDispatch({
           type: AdminStrAction.SaveAdminId,
           payload: { adminId },
         });
       },
 
-      saveOwnerNameAndAvatar(avatarAndLogin: UseFetchAvatarAndLoginResponse) {
+      saveOwnerNameAndAvatar({
+        avatarAndLogin,
+      }: SaveAvatarAndLogin['payload']) {
         adminDispatch({
           type: AdminStrAction.SaveAvatarAndLogin,
           payload: { avatarAndLogin },
         });
       },
     };
-    
   }, [adminDispatch]);
 }

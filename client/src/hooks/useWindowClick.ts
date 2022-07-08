@@ -1,4 +1,8 @@
-import { EventsReducerActions, EventsState } from 'admin/Events/eventsState';
+import {
+  EventsReducerActions,
+  EventsState,
+  SavePopup,
+} from 'admin/Events/eventsState';
 import { Dispatch, useEffect } from 'react';
 import { useEventsDispatch } from './useEventsDispatch';
 
@@ -21,7 +25,7 @@ export function useWindowClick({ eventsDispatch, popup }: UseWindowClick) {
 const managePopups = (
   target: EventTarget | null,
   popup: EventsState['popup'],
-  savePopup: (popup: string | null) => void,
+  savePopup: (popup: SavePopup['payload']) => void,
 ) => {
   if (target) {
     const closestElement = (target as HTMLElement).closest('[data-popup]');
@@ -29,8 +33,8 @@ const managePopups = (
       const dataPopup = closestElement.getAttribute(
         'data-popup',
       ) as EventsState['popup'];
-      return savePopup(dataPopup);
+      return savePopup({ popup: dataPopup });
     }
   }
-  if (popup) savePopup(null);
+  if (popup) savePopup({ popup: null });
 };

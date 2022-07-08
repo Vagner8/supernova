@@ -24,7 +24,7 @@ export function useEventsList({
     const editEvent = () => (editMode ? EventNames.EditOff : EventNames.Edit);
     const copyEvent = () => {
       if (!isSomeRowSelected) return '';
-      return EventNames.Copy
+      return EventNames.Copy;
     };
     const deleteEvent = () => {
       if (!isSomeRowSelected) return '';
@@ -33,12 +33,14 @@ export function useEventsList({
     };
     const saveEvent = () => (editMode ? EventNames.Save : '');
 
-    eventsAction.saveEventsList([
-      EventNames.New,
-      editEvent(),
-      copyEvent(),
-      deleteEvent(),
-      saveEvent(),
-    ]);
+    eventsAction.saveEventsList({
+      newEventsList: [
+        EventNames.New,
+        editEvent(),
+        copyEvent(),
+        deleteEvent(),
+        saveEvent(),
+      ],
+    });
   }, [editMode, idParam, adminId, eventsAction, isSomeRowSelected]);
 }

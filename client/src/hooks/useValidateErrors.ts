@@ -1,4 +1,4 @@
-import { AdminState } from 'admin/adminReducer';
+import { AdminState } from 'admin/adminState/adminReducer';
 import { useEffect, useState } from 'react';
 import { ValidateError } from '../../../common/src/operationResultType';
 

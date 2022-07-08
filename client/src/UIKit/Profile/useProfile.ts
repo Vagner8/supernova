@@ -14,6 +14,6 @@ export function useProfile(eventsDispatch: Dispatch<EventsReducerActions>) {
   }, [eventsAction, location]);
 
   useEffect(() => {
-    if (idParam === 'new') eventsAction.switchEditMode(true);
+    if (idParam === 'new') eventsAction.switchEditMode({ editMode: true });
   }, [eventsAction, idParam]);
 }

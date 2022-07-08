@@ -1,20 +1,35 @@
-import { AdminReducerActions, saveAdminId } from 'admin/adminReducer';
+import {
+  SaveAdminId,
+  SaveOperationResult,
+  SetIsFetching,
+} from 'admin/adminState';
 import { fetcher } from 'api/fetcher';
-import { Dispatch } from 'react';
 
-export async function login(
-  adminDispatch: Dispatch<AdminReducerActions>,
+interface Login {
   body: {
-    login: string,
-    password: string,
-  }
-) {
-  const res = (await fetcher({
+    login: string;
+    password: string;
+  };
+  saveAdminId: ({ adminId }: SaveAdminId['payload']) => void;
+  setIsFetching: ({ isFetching }: SetIsFetching['payload']) => void;
+  saveOperationResult: ({
+    operationResult,
+  }: SaveOperationResult['payload']) => void;
+}
+
+export async function login({
+  saveAdminId,
+  setIsFetching,
+  saveOperationResult,
+  body,
+}: Login) {
+  const response = (await fetcher({
     method: 'POST',
     url: '/login',
-    adminDispatch,
+    setIsFetching,
+    saveOperationResult,
     body,
   })) as undefined | { adminId: string };
-  if (!res) return;
-  saveAdminId(adminDispatch, res.adminId);
+  if (!response) return;
+  saveAdminId({ adminId: response.adminId });
 }

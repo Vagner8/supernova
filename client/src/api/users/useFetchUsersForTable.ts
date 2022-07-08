@@ -1,7 +1,7 @@
-import { AdminReducerActions } from 'admin/adminReducer';
+import { AdminReducerActions } from 'admin/adminState';
 import { EventsReducerActions } from 'admin/Events/eventsState';
 import { GoTo, fetcher } from 'api/fetcher';
-import { useEventsDispatch } from 'hooks';
+import { useAdminDispatch, useEventsDispatch } from 'hooks';
 import { Dispatch, useEffect } from 'react';
 import { UserType } from '../../../../common/src/userTypes';
 import { Projection } from './useFetchUserById';
@@ -15,7 +15,7 @@ export interface UseFetchUsersForTableResponse {
   phone: UserType['contacts']['phone'];
   rule: UserType['credentials']['rule'];
   avatar: UserType['imgs']['avatar'];
-  selected?: UserType['selected']
+  selected?: UserType['selected'];
 }
 
 const projection: Omit<Projection<UseFetchUsersForTableResponse>, '_id'> = {
@@ -32,17 +32,19 @@ export function useFetchUsersForTable(
   eventsDispatch: Dispatch<EventsReducerActions>,
   adminDispatch: Dispatch<AdminReducerActions>,
 ) {
-  const eventsAction = useEventsDispatch(eventsDispatch)
+  const eventsAction = useEventsDispatch(eventsDispatch);
+  const adminAction = useAdminDispatch(adminDispatch)
   useEffect(() => {
     const asyncer = async () => {
-      const response = await fetcher<UseFetchUsersForTableResponse[]>({
+      const tableRows = await fetcher<UseFetchUsersForTableResponse[]>({
         method: 'GET',
         url: `${GoTo.Aggregate}/?projection=${JSON.stringify(projection)}`,
-        adminDispatch,
+        saveOperationResult: adminAction.saveOperationResult,
+        setIsFetching: adminAction.setIsFetching,
       });
-      if (!response) return;
-      eventsAction.saveUsers(response);
+      if (!tableRows) return;
+      eventsAction.saveUsers({ tableRows });
     };
     asyncer();
-  }, [adminDispatch, eventsAction]);
+  }, [eventsAction, adminAction]);
 }

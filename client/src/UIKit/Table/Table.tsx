@@ -21,7 +21,7 @@ interface RowProps {
 }
 
 interface ColProps {
-  className: string
+  className: string;
   children: () => ReactNode;
 }
 
@@ -38,9 +38,7 @@ const Rule = {
 };
 
 const Col = ({ className, children }: ColProps) => {
-  return (
-    <div className={`${styles.Col} ${className}`}>{children()}</div>
-  );
+  return <div className={`${styles.Col} ${className}`}>{children()}</div>;
 };
 
 const Row = ({ row, sort, onClickCheckbox }: RowProps) => {
@@ -71,12 +69,11 @@ const Row = ({ row, sort, onClickCheckbox }: RowProps) => {
 };
 
 export function Table({ rows, sort, eventsDispatch }: TableProps) {
-  const eventsAction = useEventsDispatch(eventsDispatch)
+  const eventsAction = useEventsDispatch(eventsDispatch);
   if (!rows) return null;
   const onClickCheckbox = (rowId: string, checked: boolean) => {
-    console.log('onClickCheckbox')
-    eventsAction.selectRow(rowId, checked)
-  }
+    eventsAction.selectTableRow({ rowId, select: checked });
+  };
   return (
     <div className={styles.Table}>
       {rows.map((row) => (

@@ -1,4 +1,4 @@
-import { AdminReducerActions } from 'admin/adminReducer';
+import { AdminReducerActions } from 'admin/adminState';
 import { updateData } from 'api/updateData';
 import {
   useAdminDispatch,
@@ -63,11 +63,11 @@ export function Events({
           break;
         }
         case EventNames.Edit: {
-          eventsAction.switchEditMode(true);
+          eventsAction.switchEditMode({ editMode: true });
           break;
         }
         case EventNames.EditOff: {
-          eventsAction.switchEditMode(false);
+          eventsAction.switchEditMode({ editMode: false });
           eventsAction.restoreProfile();
           break;
         }
@@ -76,21 +76,24 @@ export function Events({
             const firebaseUrls = await firebaseStorage.download(files);
             if (!firebaseUrls || !fileInputName) return;
             await updateData({
-              adminDispatch,
               url: `/${categoryParam}/update/?id=${idParam}`,
               profile: {
                 imgs: {
                   [fileInputName]: firebaseUrls,
                 },
               },
+              saveOperationResult: adminAction.saveOperationResult,
+              setIsFetching: adminAction.setIsFetching,
             });
+            eventsAction.saveImgs({ firebaseUrls, fileInputName });
             eventsAction.deleteAllFiles();
           }
           if (changedProfile) {
             await updateData({
-              adminDispatch,
               url: `/${categoryParam}/update/?id=${idParam}`,
               profile: idParam === 'new' ? profile : changedProfile,
+              saveOperationResult: adminAction.saveOperationResult,
+              setIsFetching: adminAction.setIsFetching,
             });
           }
           break;

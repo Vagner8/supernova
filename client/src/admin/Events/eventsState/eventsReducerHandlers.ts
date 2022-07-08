@@ -14,10 +14,11 @@ export enum EventsStrAction {
   SaveProfile = 'SaveProfile',
   ProfileOnChange = 'ProfileOnChange',
   SaveProfileCopy = 'SaveProfileCopy',
-  SaveRows = 'SaveRows',
+  SaveTableRows = 'SaveTableRows',
   RestoreProfile = 'RestoreProfile',
   CleanupProfile = 'CleanPoints',
-  SelectRow = 'SelectRow',
+  SelectTableRow = 'SelectTableRow',
+  SaveImgs = 'SaveImgs',
 }
 
 export interface ProfileOnChange {
@@ -49,18 +50,18 @@ export const profileOnChange = (
   };
 };
 
-export interface SelectRow {
-  type: EventsStrAction.SelectRow;
+export interface SelectTableRow {
+  type: EventsStrAction.SelectTableRow;
   payload: { rowId: string; select: boolean };
 }
-export const selectRow = (
+export const selectTableRow = (
   state: EventsState,
-  { rowId, select }: SelectRow['payload'],
+  { rowId, select }: SelectTableRow['payload'],
 ) => {
-  if (!state.rows) return state;
+  if (!state.tableRows) return state;
   return {
     ...state,
-    rows: state.rows.map((row) => {
+    rows: state.tableRows.map((row) => {
       if (rowId === row._id) {
         row.selected = select;
         return row;
@@ -119,40 +120,61 @@ export const deleteOneFile = (
   };
 };
 
-interface RestoreProfile {
+export interface SaveImgs {
+  type: EventsStrAction.SaveImgs;
+  payload: { firebaseUrls: string[], fileInputName: string };
+}
+export const saveImgs = (
+  state: EventsState,
+  { firebaseUrls, fileInputName }: SaveImgs['payload']
+) => {
+  if (!state.profile?.imgs) return state
+  return {
+    ...state,
+    profile: {
+      ...state.profile,
+      imgs: {
+        ...state.profile.imgs,
+        [fileInputName]: firebaseUrls
+      }
+    }
+  }
+}
+
+export interface RestoreProfile {
   type: EventsStrAction.RestoreProfile;
 }
 
-interface SaveRows {
-  type: EventsStrAction.SaveRows;
-  payload: { rows: EventsState['rows'] };
+export interface SaveTableRows {
+  type: EventsStrAction.SaveTableRows;
+  payload: { tableRows: EventsState['tableRows'] };
 }
-
-interface SavePopup {
+ 
+export interface SavePopup {
   type: EventsStrAction.SavePopup;
   payload: { popup: EventsState['popup'] };
 }
 
-interface SwitchEditMode {
+export interface SwitchEditMode {
   type: EventsStrAction.SwitchEditMode;
   payload: { editMode: EventsState['editMode'] };
 }
 
-interface SaveProfile {
+export interface SaveProfile {
   type: EventsStrAction.SaveProfile;
   payload: { profile: ProfilesType };
 }
 
-interface SaveEventsList {
+export interface SaveEventsList {
   type: EventsStrAction.SaveEventsList;
   payload: { newEventsList: EventsState['eventsList'] };
 }
 
-interface DeleteAllFiles {
+export interface DeleteAllFiles {
   type: EventsStrAction.DeleteAllFiles;
 }
 
-interface SaveProfileCopy {
+export interface SaveProfileCopy {
   type: EventsStrAction.SaveProfileCopy;
 }
 
@@ -166,7 +188,8 @@ export type EventsReducerActions =
   | DeleteOneFile
   | DeleteAllFiles
   | SaveProfileCopy
-  | SaveRows
+  | SaveTableRows
   | RestoreProfile
   | CleanupProfile
-  | SelectRow;
+  | SelectTableRow
+  | SaveImgs;

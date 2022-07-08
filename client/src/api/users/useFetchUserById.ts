@@ -1,7 +1,7 @@
-import { AdminReducerActions } from 'admin/adminReducer';
+import { AdminReducerActions } from 'admin/adminState';
 import { EventsReducerActions } from 'admin/Events/eventsState';
 import { GoTo, fetcher } from 'api/fetcher';
-import { useEventsDispatch } from 'hooks';
+import { useAdminDispatch, useEventsDispatch } from 'hooks';
 import { Dispatch, useEffect } from 'react';
 import { UserType } from '../../../../common/src/userTypes';
 
@@ -43,18 +43,20 @@ export function useFetchUserById(
   adminDispatch: Dispatch<AdminReducerActions>,
 ) {
   const eventsAction = useEventsDispatch(eventsDispatch)
+  const adminAction = useAdminDispatch(adminDispatch)
   useEffect(() => {
     const asyncer = async () => {
-      const response = await fetcher<UseFetchUserByIdResponse[]>({
+      const profile = await fetcher<UseFetchUserByIdResponse[]>({
         method: 'GET',
         url: `${GoTo.Aggregate}/?projection=${JSON.stringify(
           projection,
         )}&userId=${userId}`,
-        adminDispatch,
+        saveOperationResult: adminAction.saveOperationResult,
+        setIsFetching: adminAction.setIsFetching,
       });
-      if (!response) return;
-      eventsAction.savePoints(response[0]);
+      if (!profile) return;
+      eventsAction.savePoints({ profile: profile[0] });
     };
     asyncer();
-  }, [adminDispatch, eventsAction, userId]);
+  }, [adminAction, eventsAction, userId]);
 }

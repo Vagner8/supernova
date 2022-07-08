@@ -9,7 +9,8 @@ import {
   profileOnChange,
   ProfilesType,
   saveFiles,
-  selectRow,
+  saveImgs,
+  selectTableRow,
 } from './eventsReducerHandlers';
 
 export enum EventNames {
@@ -22,7 +23,7 @@ export enum EventNames {
 }
 
 export interface EventsState {
-  rows: UseFetchUsersForTableResponse[] | null;
+  tableRows: UseFetchUsersForTableResponse[] | null;
   profile: ProfilesType | null;
   copyProfile: ProfilesType | null;
   changedProfile: Partial<ProfilesType> | null;
@@ -44,7 +45,7 @@ export const eventsInitState: EventsState = {
   files: null,
   isFileInputMultiple: false,
   fileInputName: null,
-  rows: null,
+  tableRows: null,
 };
 
 export const eventsReducer: Reducer<EventsState, EventsReducerActions> = (
@@ -52,8 +53,11 @@ export const eventsReducer: Reducer<EventsState, EventsReducerActions> = (
   action,
 ) => {
   switch (action.type) {
-    case EventsStrAction.SelectRow: {
-      return selectRow(state, action.payload);
+    case EventsStrAction.SaveImgs: {
+      return saveImgs(state, action.payload)
+    }
+    case EventsStrAction.SelectTableRow: {
+      return selectTableRow(state, action.payload);
     }
     case EventsStrAction.CleanupProfile: {
       return cleanupProfile(state);
@@ -61,8 +65,8 @@ export const eventsReducer: Reducer<EventsState, EventsReducerActions> = (
     case EventsStrAction.RestoreProfile: {
       return { ...state, profile: state.copyProfile || state.profile };
     }
-    case EventsStrAction.SaveRows: {
-      return { ...state, rows: action.payload.rows };
+    case EventsStrAction.SaveTableRows: {
+      return { ...state, tableRows: action.payload.tableRows };
     }
     case EventsStrAction.SavePopup: {
       return { ...state, popup: action.payload.popup };

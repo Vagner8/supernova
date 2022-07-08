@@ -12,14 +12,11 @@ import {
   saveAuthInputsOutputs,
 } from 'admin/Auth/authReducer';
 import { Button, Icon, Linear, InputMemo } from 'UIKit';
-import {
-  AdminReducerActions,
-  AdminState,
-  deleteAllOperationResults,
-} from 'admin/adminReducer';
 import { login } from './authApi';
 import { OperationResultsSheet } from 'admin/OperationResultsSheet/OperationResultsSheet';
 import { OperationResultType } from '../../../../common/src/operationResultType';
+import { AdminReducerActions, AdminState } from 'admin/adminState';
+import { useAdminDispatch } from 'hooks';
 import { filterValidateErrors } from 'helpers';
 
 interface AuthProps {
@@ -36,21 +33,27 @@ export function Auth({
   adminDispatch,
 }: AuthProps) {
   const [authState, authDispatch] = useReducer(authReducer, authInitState);
+  const actionAdmin = useAdminDispatch(adminDispatch);
 
   const onChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
       const { name, value } = e.target;
       saveAuthInputsOutputs(authDispatch, name, value);
-      deleteAllOperationResults(adminDispatch);
+      actionAdmin.deleteAllOperationResults();
     },
-    [adminDispatch],
+    [actionAdmin],
   );
 
   const onClick = async (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    login(adminDispatch, {
-      login: authState.inputs[0].value,
-      password: authState.inputs[1].value,
+    login({
+      body: {
+        login: authState.inputs[0].value,
+        password: authState.inputs[1].value,
+      },
+      saveAdminId: actionAdmin.saveAdminId,
+      saveOperationResult: actionAdmin.saveOperationResult,
+      setIsFetching: actionAdmin.setIsFetching,
     });
   };
 
@@ -62,7 +65,7 @@ export function Auth({
           <h4>Log in</h4>
           <form>
             {authState.inputs.map((input) => {
-              const error = filterValidateErrors(input.label, validateErrors)
+              const error = filterValidateErrors(input.label, validateErrors);
               return (
                 <InputMemo
                   key={input.label}

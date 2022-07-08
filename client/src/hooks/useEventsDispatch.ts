@@ -1,9 +1,16 @@
 import {
   EventsStrAction,
-  FileInputName,
-  ProfilesType,
   EventsReducerActions,
-  EventsState,
+  SaveImgs,
+  SelectTableRow,
+  SaveTableRows,
+  ProfileOnChange,
+  SaveEventsList,
+  SaveProfile,
+  SavePopup,
+  SaveFiles,
+  DeleteOneFile,
+  SwitchEditMode,
 } from 'admin/Events/eventsState';
 import { Dispatch, useMemo } from 'react';
 
@@ -18,14 +25,14 @@ export function useEventsDispatch(
         });
       },
 
-      savePopup(popup: EventsState['popup']) {
+      savePopup({ popup }: SavePopup['payload']) {
         eventsDispatch({
           type: EventsStrAction.SavePopup,
           payload: { popup },
         });
       },
 
-      savePoints(profile: ProfilesType) {
+      savePoints({ profile }: SaveProfile['payload']) {
         eventsDispatch({
           type: EventsStrAction.SaveProfile,
           payload: { profile },
@@ -36,22 +43,14 @@ export function useEventsDispatch(
         eventsDispatch({ type: EventsStrAction.SaveProfileCopy });
       },
 
-      profileOnChange({
-        name,
-        value,
-        pointName,
-      }: {
-        name: string;
-        value: string;
-        pointName: keyof EventsState['profile'];
-      }) {
+      profileOnChange({ name, value, pointName }: ProfileOnChange['payload']) {
         eventsDispatch({
           type: EventsStrAction.ProfileOnChange,
           payload: { name, value, pointName },
         });
       },
 
-      saveEventsList(newEventsList: EventsState['eventsList']) {
+      saveEventsList({ newEventsList }: SaveEventsList['payload']) {
         eventsDispatch({
           type: EventsStrAction.SaveEventsList,
           payload: { newEventsList },
@@ -62,18 +61,14 @@ export function useEventsDispatch(
         files,
         isFileInputMultiple,
         fileInputName,
-      }: {
-        files: File[];
-        isFileInputMultiple: boolean;
-        fileInputName: FileInputName;
-      }) {
+      }: SaveFiles['payload']) {
         eventsDispatch({
           type: EventsStrAction.SaveFiles,
           payload: { files, fileInputName, isFileInputMultiple },
         });
       },
 
-      deleteOneFile(fileName: string) {
+      deleteOneFile({ fileName }: DeleteOneFile['payload']) {
         eventsDispatch({
           type: EventsStrAction.DeleteOneFile,
           payload: { fileName },
@@ -86,17 +81,17 @@ export function useEventsDispatch(
         });
       },
 
-      switchEditMode(editMode: EventsState['editMode']) {
+      switchEditMode({ editMode }: SwitchEditMode['payload']) {
         eventsDispatch({
           type: EventsStrAction.SwitchEditMode,
           payload: { editMode },
         });
       },
 
-      saveUsers(rows: EventsState['rows']) {
+      saveUsers({ tableRows }: SaveTableRows['payload']) {
         eventsDispatch({
-          type: EventsStrAction.SaveRows,
-          payload: { rows },
+          type: EventsStrAction.SaveTableRows,
+          payload: { tableRows },
         });
       },
 
@@ -104,10 +99,17 @@ export function useEventsDispatch(
         eventsDispatch({ type: EventsStrAction.RestoreProfile });
       },
 
-      selectRow(rowId: string, select: boolean) {
+      selectTableRow({ rowId, select }: SelectTableRow['payload']) {
         eventsDispatch({
-          type: EventsStrAction.SelectRow,
+          type: EventsStrAction.SelectTableRow,
           payload: { rowId, select },
+        });
+      },
+
+      saveImgs({ firebaseUrls, fileInputName }: SaveImgs['payload']) {
+        eventsDispatch({
+          type: EventsStrAction.SaveImgs,
+          payload: { firebaseUrls, fileInputName },
         });
       },
     };

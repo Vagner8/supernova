@@ -4,7 +4,7 @@ import { Table } from 'UIKit';
 import styles from './productTable.module.css';
 
 interface ProductTableProps {
-  products: EventsState['rows'];
+  products: EventsState['tableRows'];
   eventsDispatch: Dispatch<EventsReducerActions>;
 }
 

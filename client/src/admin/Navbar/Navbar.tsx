@@ -1,4 +1,4 @@
-import { AdminState } from 'admin/adminReducer';
+import { AdminState } from 'admin/adminState/adminReducer';
 import { useLocalStorageData } from 'hooks';
 import { NavLink } from 'react-router-dom';
 import { Avatar, ButtonIcon } from 'UIKit';

@@ -1,4 +1,4 @@
-import { AdminReducerActions, AdminState } from 'admin/adminReducer';
+import { AdminReducerActions, AdminState } from 'admin/adminState';
 import { EventsReducerActions, EventsState } from 'admin/Events/eventsState';
 import { useFetchUserById } from 'api/users/useFetchUserById';
 import { Dispatch } from 'react';

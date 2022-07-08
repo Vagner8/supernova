@@ -1,12 +1,5 @@
-import {
-  AdminReducerActions,
-  saveOperationResult,
-  setIsFetching,
-} from 'admin/adminReducer';
-import { Dispatch } from 'react';
+import { SaveOperationResult, SetIsFetching } from 'admin/adminState';
 import { OperationResultType } from '../../../common/src/operationResultType';
-
-// export type FetcherResult = undefined | OperationResultType | Object;
 
 export enum GoTo {
   Login = '/login',
@@ -18,17 +11,21 @@ export enum GoTo {
 export interface Fetcher {
   method: 'POST' | 'DELETE' | 'PUT' | 'GET';
   url: string;
-  adminDispatch: Dispatch<AdminReducerActions>;
+  setIsFetching: ({ isFetching }: SetIsFetching['payload']) => void;
+  saveOperationResult: ({
+    operationResult,
+  }: SaveOperationResult['payload']) => void;
   body?: any;
 }
 
 export async function fetcher<Res>({
   method,
   url,
-  adminDispatch,
+  setIsFetching,
+  saveOperationResult,
   body,
 }: Fetcher) {
-  setIsFetching(adminDispatch, true);
+  setIsFetching({ isFetching: true });
   try {
     const response = await fetch(url, {
       method,
@@ -44,24 +41,28 @@ export async function fetcher<Res>({
       | OperationResultType
       | Res;
     if (!json) {
-      saveOperationResult(adminDispatch, {
-        status: 'server error',
-        message: 'no result',
+      saveOperationResult({
+        operationResult: {
+          status: 'server error',
+          message: 'no result',
+        },
       });
       return undefined;
     }
     if ('status' in json) {
-      saveOperationResult(adminDispatch, json);
+      saveOperationResult({ operationResult: json });
       return undefined;
     }
     return json;
   } catch (err) {
     console.error(err);
-    saveOperationResult(adminDispatch, {
-      status: 'server error',
-      message: 'unexpected error',
+    saveOperationResult({
+      operationResult: {
+        status: 'server error',
+        message: 'unexpected error',
+      },
     });
   } finally {
-    setIsFetching(adminDispatch, false);
+    setIsFetching({ isFetching: false });
   }
 }

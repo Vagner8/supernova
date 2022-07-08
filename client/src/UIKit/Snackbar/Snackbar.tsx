@@ -1,4 +1,4 @@
-import { AdminReducerActions } from 'admin/adminReducer';
+import { AdminReducerActions } from 'admin/adminState';
 import { useAdminDispatch } from 'hooks';
 import { Dispatch, useEffect } from 'react';
 import { ButtonIcon, Headerblock } from 'UIKit';
@@ -31,12 +31,12 @@ export function Snackbar({
   useEffect(() => {
     if (!status?.match(/error/i)) {
       setTimeout(() => {
-        adminAction.deleteOperationResult(index);
+        adminAction.deleteOperationResult({ index });
       }, 3000);
     }
   }, [adminDispatch, index, status, adminAction]);
 
-  const onClick = () => adminAction.deleteOperationResult(index);
+  const onClick = () => adminAction.deleteOperationResult({ index });
 
   if (!message || !status || status === 'validate error') return null;
 
