@@ -10,7 +10,7 @@ export async function putUser(req: Request, res: Response, next: NextFunction) {
   const profile = req.body as UserProfileType;
   if (id === "new") {
     profile.secret.password = await bcrypt.hash(profile.secret.password, 10);
-    profile.settings.timestamp = new Date();
+    profile.created = new Date().toLocaleString();
   }
   await putData({
     collectionName: CollectionName.Users,

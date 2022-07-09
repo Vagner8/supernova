@@ -30,7 +30,6 @@ export default function UserProfile({
 }: UserProfileProps) {
   const { userId } = useParams();
   useFetchUserById(userId, eventsDispatch, adminDispatch);
-
   return (
     <div className={styles.UserProfile}>
       <Profile

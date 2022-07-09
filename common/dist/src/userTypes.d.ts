@@ -6,7 +6,6 @@ export interface UserSecretType {
 }
 export interface UserSettingsType {
     rule: UserStatus;
-    timestamp: Date;
 }
 export interface UserPersonalType {
     name: string;
@@ -29,6 +28,7 @@ export interface UserType {
     userId: string;
     refreshToken: string;
     selected?: boolean;
+    created: string;
     secret: UserSecretType;
     settings: UserSettingsType;
     personal: UserPersonalType;
@@ -36,7 +36,7 @@ export interface UserType {
     address: UserAddressType;
     imgs: UserImgsType;
 }
-export declare type UserProfileType = Pick<UserType, "personal" | "contacts" | "address" | "imgs" | "settings" | "secret">;
+export declare type UserProfileType = Pick<UserType, "personal" | "contacts" | "address" | "imgs" | "settings" | "secret" | "created" | "userId">;
 export declare type UserProfileKeys = keyof UserProfileType;
 export declare type ValidatedFields = UserSecretType & UserSettingsType & UserPersonalType & UserContactsType & UserAddressType;
 export declare type ValidatedFieldsKeys = keyof ValidatedFields;

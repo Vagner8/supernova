@@ -16,7 +16,6 @@ export interface UserSecretType {
 
 export interface UserSettingsType {
   rule: UserStatus;
-  timestamp: Date;
 }
 
 export interface UserPersonalType {
@@ -43,6 +42,7 @@ export interface UserType {
   userId: string;
   refreshToken: string;
   selected?: boolean;
+  created: string;
 
   secret: UserSecretType;
   settings: UserSettingsType;
@@ -60,6 +60,8 @@ export type UserProfileType = Pick<
   | "imgs"
   | "settings"
   | "secret"
+  | "created"
+  | "userId"
 >;
 
 export type UserProfileKeys = keyof UserProfileType;

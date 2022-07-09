@@ -31,6 +31,8 @@ export const profileOnChange = (
 ) => {
   if (!state.profile) return state;
   if (pointName === '_id') return state;
+  if (pointName === 'created') return state;
+  if (pointName === 'userId') return state;
   return {
     ...state,
     profile: {

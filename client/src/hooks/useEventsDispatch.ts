@@ -19,7 +19,7 @@ export function useEventsDispatch(
 ) {
   return useMemo(() => {
     return {
-      CleanupProfile() {
+      cleanupProfile() {
         eventsDispatch({
           type: EventsStrAction.CleanupProfile,
         });

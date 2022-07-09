@@ -89,6 +89,7 @@ function AdminRoutes({
         fileInputName={eventsState.fileInputName}
         isFileInputMultiple={eventsState.isFileInputMultiple}
         isSomeRowSelected={eventsState.tableRows?.some((row) => row.selected)}
+        selectedTableRows={eventsState.tableRows?.filter((row) => row.selected)}
         adminDispatch={adminDispatch}
         eventsDispatch={eventsDispatch}
       />

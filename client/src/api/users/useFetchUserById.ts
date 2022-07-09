@@ -7,6 +7,8 @@ import { UserType } from '../../../../common/src/userTypes';
 
 export interface UseFetchUserByIdResponse {
   _id: string;
+  userId: UserType['userId'];
+  created: UserType['created'];
   personal: UserType['personal'];
   contacts: UserType['contacts'];
   address: UserType['address'];
@@ -20,6 +22,8 @@ export type Projection<T> = {
 };
 
 const projection: Omit<Projection<UseFetchUserByIdResponse>, '_id'> = {
+  userId: '$userId',
+  created: '$created',
   personal: '$personal',
   contacts: '$contacts',
   address: '$address',

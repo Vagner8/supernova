@@ -24,7 +24,7 @@ const projection: Omit<Projection<UseFetchUsersForTableResponse>, '_id'> = {
   surname: '$personal.surname',
   email: '$contacts.email',
   phone: '$contacts.phone',
-  rule: '$credentials.rule',
+  rule: '$settings.rule',
   avatar: '$imgs.avatar',
 };
 

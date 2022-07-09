@@ -1,4 +1,5 @@
 import { AdminReducerActions } from 'admin/adminState';
+import { deleteData } from 'api/deleteData';
 import { updateData } from 'api/updateData';
 import {
   useAdminDispatch,
@@ -23,6 +24,7 @@ interface EventsProps {
   fileInputName: EventsState['fileInputName'];
   isFileInputMultiple: EventsState['isFileInputMultiple'];
   isSomeRowSelected: boolean | undefined;
+  selectedTableRows?: EventsState['tableRows']
   eventsDispatch: Dispatch<EventsReducerActions>;
   adminDispatch: Dispatch<AdminReducerActions>;
 }
@@ -37,6 +39,7 @@ export function Events({
   fileInputName,
   isFileInputMultiple,
   isSomeRowSelected,
+  selectedTableRows,
   adminDispatch,
   eventsDispatch,
 }: EventsProps) {
@@ -99,6 +102,15 @@ export function Events({
               setIsFetching: adminAction.setIsFetching,
             });
           }
+          break;
+        }
+        case EventNames.Delete: {
+          await deleteData({
+            url: `/${categoryParam}/delete/?id=${idParam}`,
+            saveOperationResult: adminAction.saveOperationResult,
+            setIsFetching: adminAction.setIsFetching,
+            selectedTableRows,
+          });
           break;
         }
       }
