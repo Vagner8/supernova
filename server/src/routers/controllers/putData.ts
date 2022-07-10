@@ -1,9 +1,9 @@
 import { NextFunction, Response } from "express";
-import { UserProfileType } from "../../../../common/src/userTypes";
-import { mongo } from "../../helpers/mongo";
+import { UserProfileType, UserType } from "../../../../common/src/userTypes";
 import { CollectionName } from "../../types";
 import { serverError } from "../../helpers/errors";
 import { OperationResultType } from "../../../../common/src/operationResultType";
+import { db } from "../../app";
 
 interface PutData {
   profile: Partial<UserProfileType>;
@@ -17,7 +17,7 @@ interface PutData {
 
 export async function putData({ profile, collectionName, filter, res, next }: PutData) {
   try {
-    const usersCollection = mongo.getCollection(collectionName);
+    const usersCollection = db.collection<UserType>(collectionName);
     const result = await usersCollection.updateOne(
       filter,
       { $set: profile },

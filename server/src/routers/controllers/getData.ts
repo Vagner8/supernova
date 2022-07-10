@@ -1,6 +1,6 @@
 import { NextFunction, Response } from "express";
+import { db } from "../../app";
 import { serverError } from "../../helpers/errors";
-import { mongo } from "../../helpers/mongo";
 import { CollectionName } from "../../types";
 import { NewUserType } from "../newItems/newUser";
 
@@ -26,7 +26,7 @@ export async function getData({
   try {
     if (newItem) return res.status(200).json([newItem]);
     if (!projection) return serverError("no projection");
-    const usersCollection = mongo.getCollection(collectionName);
+    const usersCollection = db.collection(collectionName);
     const result = await usersCollection
       .aggregate([{ $match: match }, { $project: JSON.parse(projection) }])
       .toArray();

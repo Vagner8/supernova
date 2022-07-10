@@ -1,13 +1,17 @@
-import { MONGO_DB } from "../middleware/connectMongo";
-import { serverError } from "./errors";
+import { Db, MongoClient } from "mongodb";
+import { DataBase } from "../types";
 
-class Mongo {
-  getCollection<Coll>(nameCollection: string) {
-    if (!MONGO_DB) throw serverError(`no data base connection`);
-    const collection = MONGO_DB.collection<Coll>(nameCollection);
-    if (!collection) throw serverError(`bad connection ${nameCollection}`);
-    return collection;
+const password = encodeURIComponent(process.env.MONGO_PASSWORD);
+const url = `mongodb+srv://vagner:${password}@supernova.1nqe9.mongodb.net/?retryWrites=true&w=majority`
+
+export function mongoConnection() {
+  let db: Db | null = null
+  return async function() {
+    if (db) return db
+    console.log('Mongo db connected')
+    const client = new MongoClient(url)
+    await client.connect();
+    db = client.db(DataBase.Supernova);
+    return db
   }
 }
-
-export const mongo = new Mongo();

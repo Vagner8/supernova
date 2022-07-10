@@ -1,11 +1,35 @@
 import jwt from "jsonwebtoken";
 import { UserType } from "../../../common/src/userTypes";
-import { MONGO_DB } from "../middleware/connectMongo";
 import { CollectionName } from "../types";
 import { accessError, serverError } from "./errors";
 import { Response, NextFunction } from "express";
 import { Collection } from "mongodb";
-import { mongo } from "./mongo";
+import { db } from "../app";
+
+interface FindRefresh {
+  adminId: string;
+  next: NextFunction;
+}
+
+interface AccessCheck {
+  adminId: string | string[] | undefined;
+  accessToken: string;
+  res: Response;
+  next: NextFunction;
+}
+
+interface RefreshCheck {
+  adminId: string | string[] | undefined;
+  res: Response;
+  next: NextFunction;
+}
+
+interface RefreshSave {
+  adminId: string;
+  refreshToken: string;
+  usersCollection: Collection<UserType>;
+  next: NextFunction;
+}
 
 class Token {
   accessExpiresIn: number = 60 * 15;
@@ -24,14 +48,18 @@ class Token {
         });
   }
 
-  async findRefresh(adminId: string) {
-    const usersCollection = mongo.getCollection<UserType>(CollectionName.Users);
-    const result = await usersCollection.findOne<{ refreshToken: string }>(
-      { userId: adminId },
-      { projection: { _id: 0, refreshToken: 1 } }
-    );
-    if (!result) throw accessError({ message: "no token", logout: true });
-    return result;
+  async findRefresh({ adminId, next }: FindRefresh) {
+    try {
+      const usersCollection = db.collection<UserType>(CollectionName.Users);
+      const result = await usersCollection.findOne<{ refreshToken: string }>(
+        { userId: adminId },
+        { projection: { _id: 0, refreshToken: 1 } }
+      );
+      if (!result) throw accessError({ message: "no token", logout: true });
+      return result.refreshToken;
+    } catch (err) {
+      next(err);
+    }
   }
 
   accessSetToCookie(accessToken: string, res: Response) {
@@ -42,79 +70,50 @@ class Token {
     });
   }
 
-  accessCheck({
-    adminId,
-    accessToken,
-    res,
-    next,
-  }: {
-    adminId: string | string[] | undefined;
-    accessToken: string;
-    res: Response;
-    next: NextFunction;
-  }) {
+  accessCheck({ adminId, accessToken, res, next }: AccessCheck) {
     jwt.verify(accessToken, process.env.ACCESS_SECRET, async (err: any) => {
       if (err) return await this.refreshCheck({ adminId, res, next });
       return next();
     });
   }
 
-  async refreshCheck({
+  async refreshCheck({ adminId, res, next }: RefreshCheck) {
+    try {
+      if (typeof adminId !== "string")
+        throw accessError({ message: "no admin id", logout: true });
+      const refreshToken = await this.findRefresh({ adminId, next });
+      if (!refreshToken)
+        throw accessError({ message: "no refresh token", logout: true });
+      jwt.verify(
+        refreshToken,
+        process.env.REFRESH_SECRET,
+        async (err: any) => {
+          if (err) return next(err);
+          const newAccessToken = this.sign("accessToken", adminId);
+          this.accessSetToCookie(newAccessToken, res);
+          return next();
+        }
+      );
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  async refreshSave({
     adminId,
-    res,
-    next,
-  }: {
-    adminId: string | string[] | undefined;
-    res: Response;
-    next: NextFunction;
-  }) {
-    if (typeof adminId !== "string")
-      throw accessError({ message: "no admin id", logout: true });
-    const { refreshToken } = await this.findRefresh(adminId);
-    jwt.verify(refreshToken, process.env.REFRESH_SECRET, async (err: any) => {
-      if (err) return next(err);
-      const newAccessToken = this.sign("accessToken", adminId);
-      this.accessSetToCookie(newAccessToken, res);
-      return next();
-    });
-  }
-
-  async refreshSave(
-    adminId: string,
-    refreshToken: string,
-    usersCollection: Collection<UserType>
-  ) {
-    const result = await usersCollection.updateOne(
-      { userId: adminId },
-      { $set: { refreshToken } }
-    );
-    if (!result.acknowledged) throw serverError("bad token update");
-  }
-
-  async saveCredentials({
-    usersCollection,
-    login,
     refreshToken,
-    encryptedPassword,
-    uniqueId,
-  }: {
-    usersCollection: Collection<UserType>;
-    login: string;
-    refreshToken: string;
-    encryptedPassword: string;
-    uniqueId: string;
-  }) {
-    const result = await usersCollection.updateOne(
-      { "credentials.login": login },
-      {
-        $set: {
-          refreshToken,
-          userId: uniqueId,
-          "credentials.password": encryptedPassword,
-        },
-      }
-    );
-    if (!result.acknowledged) throw serverError("bad credentials update");
+    usersCollection,
+    next,
+  }: RefreshSave) {
+    try {
+      const result = await usersCollection.updateOne(
+        { userId: adminId },
+        { $set: { refreshToken } }
+      );
+      if (!result.acknowledged) throw serverError("bad token update");
+    } catch (err) {
+      next(err);
+    }
   }
 }
 
