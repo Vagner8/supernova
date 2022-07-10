@@ -142,7 +142,21 @@ function AdminRoutes({
                 />
               }
             />
-            <Route path="/products/:productId" element={<ProductProfile />} />
+            <Route
+              path="/products/:productId"
+              element={
+                <ProductProfile
+                  popup={eventsState.popup}
+                  isFetching={adminState.isFetching}
+                  editMode={eventsState.editMode}
+                  profile={eventsState.profile}
+                  isProfileCopied={isProfileCopied(eventsState.copyProfile)}
+                  eventsDispatch={eventsDispatch}
+                  adminDispatch={adminDispatch}
+                  validateErrors={validateErrors}
+                />
+              }
+            />
           </Routes>
         </Container>
       </Suspense>

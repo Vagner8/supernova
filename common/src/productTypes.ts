@@ -6,13 +6,13 @@ interface ProductCardType {
   description: string;
 }
 
-interface ProductProfileType {
+interface ProductProfilePointsType {
   description: string;
   parameters: [string, string][]
 }
 
 interface ProductSettingsType {
-  category: 'dress' | 'trips' | 'devices'
+  category: 'new' | 'dress' | 'trips' | 'devices'
   currency: string;
   disabled: boolean;
   discount: string;
@@ -26,10 +26,13 @@ export interface ProductType {
   _id: Object;
   productId: string;
   selected?: boolean;
-  timestamp: string;
+  created: string;
 
   card: ProductCardType;
-  profile: ProductProfileType;
+  profile: ProductProfilePointsType;
   settings: ProductSettingsType;
   imgs: ProductImgsType;
 }
+
+export type ProductProfileType = Omit<ProductType, '_id' | 'selected'>
+export type ProductProfileKeys = keyof ProductProfileType

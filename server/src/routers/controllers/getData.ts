@@ -2,10 +2,11 @@ import { NextFunction, Response } from "express";
 import { db } from "../../app";
 import { serverError } from "../../helpers/errors";
 import { CollectionName } from "../../types";
+import { NewProductType } from "../newItems/newProduct";
 import { NewUserType } from "../newItems/newUser";
 
 interface GetCertainData {
-  newItem: NewUserType | null;
+  newItem: NewUserType | NewProductType | null;
   res: Response;
   collectionName: CollectionName;
   projection: string;

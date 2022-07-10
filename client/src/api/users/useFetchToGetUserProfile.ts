@@ -5,7 +5,7 @@ import { useAdminDispatch, useEventsDispatch } from 'hooks';
 import { Dispatch, useEffect } from 'react';
 import { UserType } from '../../../../common/src/userTypes';
 
-export interface UseFetchUserByIdResponse {
+export interface UseFetchToGetUserProfileResponse {
   _id: string;
   userId: UserType['userId'];
   created: UserType['created'];
@@ -21,7 +21,7 @@ export type Projection<T> = {
   [K in keyof T]: Projection<T[K]> | string;
 };
 
-const projection: Omit<Projection<UseFetchUserByIdResponse>, '_id'> = {
+const projection: Omit<Projection<UseFetchToGetUserProfileResponse>, '_id'> = {
   userId: '$userId',
   created: '$created',
   personal: '$personal',
@@ -31,7 +31,7 @@ const projection: Omit<Projection<UseFetchUserByIdResponse>, '_id'> = {
   imgs: '$imgs',
 };
 
-export function useFetchUserById(
+export function useFetchToGetUserProfile(
   userId: string | undefined,
   eventsDispatch: Dispatch<EventsReducerActions>,
   adminDispatch: Dispatch<AdminReducerActions>,
@@ -40,9 +40,9 @@ export function useFetchUserById(
   const adminAction = useAdminDispatch(adminDispatch);
   useEffect(() => {
     const asyncer = async () => {
-      const profile = await fetcher<UseFetchUserByIdResponse[]>({
+      const profile = await fetcher<UseFetchToGetUserProfileResponse[]>({
         method: 'GET',
-        url: `${GoTo.Aggregate}/?projection=${JSON.stringify(
+        url: `${GoTo.UserAggregate}/?projection=${JSON.stringify(
           projection,
         )}&userId=${userId}`,
         saveOperationResult: adminAction.saveOperationResult,

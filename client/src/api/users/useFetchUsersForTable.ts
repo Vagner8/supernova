@@ -4,7 +4,7 @@ import { GoTo, fetcher } from 'api/fetcher';
 import { useAdminDispatch, useEventsDispatch } from 'hooks';
 import { Dispatch, useEffect } from 'react';
 import { UserType } from '../../../../common/src/userTypes';
-import { Projection } from './useFetchUserById';
+import { Projection } from './useFetchToGetUserProfile';
 
 export interface UseFetchUsersForTableResponse {
   _id: string;
@@ -38,7 +38,7 @@ export function useFetchUsersForTable(
     const asyncer = async () => {
       const tableRows = await fetcher<UseFetchUsersForTableResponse[]>({
         method: 'GET',
-        url: `${GoTo.Aggregate}/?projection=${JSON.stringify(projection)}`,
+        url: `${GoTo.UserAggregate}/?projection=${JSON.stringify(projection)}`,
         saveOperationResult: adminAction.saveOperationResult,
         setIsFetching: adminAction.setIsFetching,
       });

@@ -4,12 +4,12 @@ interface ProductCardType {
     price: string;
     description: string;
 }
-interface ProductProfileType {
+interface ProductProfilePointsType {
     description: string;
     parameters: [string, string][];
 }
 interface ProductSettingsType {
-    category: 'dress' | 'trips' | 'devices';
+    category: 'new' | 'dress' | 'trips' | 'devices';
     currency: string;
     disabled: boolean;
     discount: string;
@@ -22,11 +22,13 @@ export interface ProductType {
     _id: Object;
     productId: string;
     selected?: boolean;
-    timestamp: string;
+    created: string;
     card: ProductCardType;
-    profile: ProductProfileType;
+    profile: ProductProfilePointsType;
     settings: ProductSettingsType;
     imgs: ProductImgsType;
 }
+export declare type ProductProfileType = Omit<ProductType, '_id' | 'selected'>;
+export declare type ProductProfileKeys = keyof ProductProfileType;
 export {};
 //# sourceMappingURL=productTypes.d.ts.map

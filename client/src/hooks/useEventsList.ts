@@ -27,6 +27,7 @@ export function useEventsList({
       return EventNames.Copy;
     };
     const deleteEvent = () => {
+      if (idParam && idParam !== adminId) return EventNames.Delete;
       if (!isSomeRowSelected) return '';
       if (idParam === adminId) return '';
       return EventNames.Delete;

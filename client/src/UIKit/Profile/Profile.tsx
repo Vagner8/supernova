@@ -7,10 +7,11 @@ import { UserProfileKeys } from '../../../../common/src/userTypes';
 import { useAdminDispatch, useEventsDispatch, useSplitParams } from 'hooks';
 import { useProfile } from './useProfile';
 import { AdminReducerActions, AdminState } from 'admin/adminState';
+import { ProductProfileKeys } from '../../../../common/src/productTypes';
 
 interface ProfileProps {
   popup: EventsState['popup'];
-  pointsSort: UserProfileKeys[];
+  pointsSort: UserProfileKeys[] | ProductProfileKeys[];
   editMode: EventsState['editMode'];
   profile: EventsState['profile'];
   isFetching: AdminState['isFetching'];
@@ -59,14 +60,10 @@ export function Profile({
   };
 
   if (!profile || isFetching) return null;
-  const { personal, imgs } = profile;
   return (
     <div className={styles.Profile}>
       <div className={styles.lift}>
-        <Avatar url={imgs.avatar[0]} size="m" />
-        <h5>
-          {personal.name || '-'} {personal.surname || '-'}
-        </h5>
+        <Avatar url={profile.imgs.avatar[0]} size="m" />
         {editMode && idParam !== 'new' ? (
           <FileInput name="avatar" multiple={false} onChange={onChangeFiles} />
         ) : null}

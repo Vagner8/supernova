@@ -1,7 +1,15 @@
-import { UseFetchUserByIdResponse } from 'api/users/useFetchUserById';
+import { ProductProfileResponse } from 'admin/ProductProfile/useProductProfile';
+import { UseFetchToGetUserProfileResponse } from 'api/users/useFetchToGetUserProfile';
 import { EventsState } from './eventsReducer';
 
-export type ProfilesType = UseFetchUserByIdResponse;
+export type ProfilesType =
+   UseFetchToGetUserProfileResponse |
+   ProductProfileResponse;
+
+type ProfilesTypeKeys =
+  | keyof UseFetchToGetUserProfileResponse
+  | keyof ProductProfileResponse;
+
 export type FileInputName = keyof ProfilesType['imgs'];
 
 export enum EventsStrAction {
@@ -23,7 +31,7 @@ export enum EventsStrAction {
 
 export interface ProfileOnChange {
   type: EventsStrAction.ProfileOnChange;
-  payload: { name: string; value: string; pointName: keyof ProfilesType };
+  payload: { name: string; value: string; pointName: ProfilesTypeKeys };
 }
 export const profileOnChange = (
   state: EventsState,
@@ -33,19 +41,20 @@ export const profileOnChange = (
   if (pointName === '_id') return state;
   if (pointName === 'created') return state;
   if (pointName === 'userId') return state;
+  if (pointName === 'productId') return state
   return {
     ...state,
     profile: {
       ...state.profile,
       [pointName]: {
-        ...state.profile[pointName],
+        ...state.profile[pointName as keyof EventsState['profile']] as Object,
         [name]: value,
       },
     },
     changedProfile: {
       ...state.changedProfile,
       [pointName]: {
-        ...state.profile[pointName],
+        ...state.profile[pointName as keyof EventsState['profile']] as Object,
         [name]: value,
       },
     },
@@ -124,24 +133,24 @@ export const deleteOneFile = (
 
 export interface SaveImgs {
   type: EventsStrAction.SaveImgs;
-  payload: { firebaseUrls: string[], fileInputName: string };
+  payload: { firebaseUrls: string[]; fileInputName: string };
 }
 export const saveImgs = (
   state: EventsState,
-  { firebaseUrls, fileInputName }: SaveImgs['payload']
+  { firebaseUrls, fileInputName }: SaveImgs['payload'],
 ) => {
-  if (!state.profile?.imgs) return state
+  if (!state.profile?.imgs) return state;
   return {
     ...state,
     profile: {
       ...state.profile,
       imgs: {
         ...state.profile.imgs,
-        [fileInputName]: firebaseUrls
-      }
-    }
-  }
-}
+        [fileInputName]: firebaseUrls,
+      },
+    },
+  };
+};
 
 export interface RestoreProfile {
   type: EventsStrAction.RestoreProfile;
@@ -151,7 +160,7 @@ export interface SaveTableRows {
   type: EventsStrAction.SaveTableRows;
   payload: { tableRows: EventsState['tableRows'] };
 }
- 
+
 export interface SavePopup {
   type: EventsStrAction.SavePopup;
   payload: { popup: EventsState['popup'] };

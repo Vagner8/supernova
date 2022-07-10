@@ -6,7 +6,8 @@ export enum GoTo {
   GetUsers = '/users',
   CreateUser = '/users/new',
   UpdateUsers = '/users/update',
-  Aggregate = '/users/aggregate',
+  UserAggregate = '/users/aggregate',
+  ProductAggregate = '/product/aggregate',
 }
 export interface Fetcher {
   method: 'POST' | 'DELETE' | 'PUT' | 'GET';

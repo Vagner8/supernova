@@ -1,6 +1,6 @@
 import { AdminReducerActions, AdminState } from 'admin/adminState';
 import { EventsReducerActions, EventsState } from 'admin/Events/eventsState';
-import { useFetchUserById } from 'api/users/useFetchUserById';
+import { useFetchToGetUserProfile } from 'api/users/useFetchToGetUserProfile';
 import { Dispatch } from 'react';
 import { useParams } from 'react-router-dom';
 import { Profile } from 'UIKit';
@@ -29,7 +29,7 @@ export default function UserProfile({
   validateErrors,
 }: UserProfileProps) {
   const { userId } = useParams();
-  useFetchUserById(userId, eventsDispatch, adminDispatch);
+  useFetchToGetUserProfile(userId, eventsDispatch, adminDispatch);
   return (
     <div className={styles.UserProfile}>
       <Profile

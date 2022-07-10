@@ -79,3 +79,9 @@ const list = new LinkedList()
 list.insert('dima')
 list.insert('alena')
 list.print()
+
+let cursor = 0
+
+console.log(
+  cursor > 1 && "s"
+)
