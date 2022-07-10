@@ -14,7 +14,7 @@ interface ProfileProps {
   editMode: EventsState['editMode'];
   profile: EventsState['profile'];
   isFetching: AdminState['isFetching'];
-  isCopyProfile: boolean;
+  isProfileCopied: boolean;
   eventsDispatch: Dispatch<EventsReducerActions>;
   adminDispatch: Dispatch<AdminReducerActions>;
   validateErrors?: OperationResultType['validateErrors'];
@@ -26,7 +26,7 @@ export function Profile({
   isFetching,
   profile,
   editMode,
-  isCopyProfile,
+  isProfileCopied,
   eventsDispatch,
   adminDispatch,
   validateErrors,
@@ -39,14 +39,14 @@ export function Profile({
   const onChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
       adminAction.deleteAllOperationResults();
-      if (!isCopyProfile) eventsAction.saveProfileCopy();
+      if (!isProfileCopied) eventsAction.saveProfileCopy();
       eventsAction.profileOnChange({
         name: e.target.name,
         value: e.target.value,
         pointName: e.target.dataset.pointName as keyof EventsState['profile'],
       });
     },
-    [adminAction, eventsAction, isCopyProfile],
+    [adminAction, eventsAction, isProfileCopied],
   );
 
   const onChangeFiles = (e: ChangeEvent<HTMLInputElement>) => {

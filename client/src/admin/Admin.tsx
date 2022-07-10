@@ -10,9 +10,8 @@ import { Container, Drawer, Linear, Navbar } from 'UIKit';
 import { MemoFilesSheet } from './FilesSheet/FilesSheet';
 import { Events } from './Events/Events';
 import { OperationResultsSheet } from './OperationResultsSheet/OperationResultsSheet';
-import { useValidateErrors, useWindowClick } from 'hooks';
+import { useEventsSelector, useValidateErrors, useWindowClick } from 'hooks';
 import { useFetchAvatarAndLogin } from 'api/users/useFetchAvatarAndLogin';
-import { isCopyProfile } from 'helpers';
 import {
   eventsInitState,
   eventsReducer,
@@ -75,6 +74,8 @@ function AdminRoutes({
   useFetchAvatarAndLogin(adminDispatch);
   useWindowClick({ eventsDispatch, popup: eventsState.popup });
   const validateErrors = useValidateErrors(adminState.operationResults);
+  const { selectTableRowsIds, isSomeRowSelected, isProfileCopied } =
+    useEventsSelector();
 
   return (
     <>
@@ -88,8 +89,8 @@ function AdminRoutes({
         files={eventsState.files}
         fileInputName={eventsState.fileInputName}
         isFileInputMultiple={eventsState.isFileInputMultiple}
-        isSomeRowSelected={eventsState.tableRows?.some((row) => row.selected)}
-        selectedTableRows={eventsState.tableRows?.filter((row) => row.selected)}
+        isSomeRowSelected={isSomeRowSelected(eventsState.tableRows)}
+        selectTableRowsIds={selectTableRowsIds(eventsState.tableRows)}
         adminDispatch={adminDispatch}
         eventsDispatch={eventsDispatch}
       />
@@ -125,7 +126,7 @@ function AdminRoutes({
                   isFetching={adminState.isFetching}
                   editMode={eventsState.editMode}
                   profile={eventsState.profile}
-                  isCopyProfile={isCopyProfile(eventsState.copyProfile)}
+                  isProfileCopied={isProfileCopied(eventsState.copyProfile)}
                   eventsDispatch={eventsDispatch}
                   adminDispatch={adminDispatch}
                   validateErrors={validateErrors}

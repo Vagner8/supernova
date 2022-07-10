@@ -3,11 +3,11 @@ import styles from './form.module.css';
 import { ChangeEvent, Dispatch, Fragment, ReactNode } from 'react';
 import { EventsReducerActions, EventsState } from 'admin/Events/eventsState';
 import { OperationResultType } from '../../../../common/src/operationResultType';
-import { filterValidateErrors } from 'helpers';
 import {
   UserRequiredFields,
   UserProfileKeys,
 } from '../../../../common/src/userTypes';
+import { useEventsSelector } from 'hooks';
 
 interface FormProps {
   popup: EventsState['popup'];
@@ -37,6 +37,7 @@ export function Form({
   eventsDispatch,
   validateErrors,
 }: FormProps) {
+  const { selectFieldErrorByLabel } = useEventsSelector();
   if (!profile) return null;
   return (
     <form className={styles.Form}>
@@ -49,7 +50,7 @@ export function Form({
               {Object.entries(profile[pointName] as Object).map(
                 ([label, valueText]) => {
                   if (label === 'avatar') return;
-                  const error = filterValidateErrors(label, validateErrors);
+                  const error = selectFieldErrorByLabel(label, validateErrors);
                   return (
                     <Point
                       key={label}

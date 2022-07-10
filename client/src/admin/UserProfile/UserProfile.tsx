@@ -12,7 +12,7 @@ interface UserProfileProps {
   editMode: EventsState['editMode'];
   profile: EventsState['profile'];
   isFetching: AdminState['isFetching'];
-  isCopyProfile: boolean;
+  isProfileCopied: boolean;
   eventsDispatch: Dispatch<EventsReducerActions>;
   adminDispatch: Dispatch<AdminReducerActions>;
   validateErrors?: OperationResultType['validateErrors'];
@@ -23,7 +23,7 @@ export default function UserProfile({
   isFetching,
   profile,
   editMode,
-  isCopyProfile,
+  isProfileCopied,
   adminDispatch,
   eventsDispatch,
   validateErrors,
@@ -33,7 +33,7 @@ export default function UserProfile({
   return (
     <div className={styles.UserProfile}>
       <Profile
-        isCopyProfile={isCopyProfile}
+        isProfileCopied={isProfileCopied}
         popup={popup}
         pointsSort={['personal', 'secret', 'settings', 'contacts', 'address']}
         isFetching={isFetching}

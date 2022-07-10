@@ -6,3 +6,4 @@ export { useEventsDispatch } from './useEventsDispatch';
 export { useSplitParams } from './useSplitParams';
 export { useFirebaseStorage } from './useFirebaseStorage';
 export { useEventsList } from './useEventsList';
+export { useEventsSelector } from './useEventsSelector';

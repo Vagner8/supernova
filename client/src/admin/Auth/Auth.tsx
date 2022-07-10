@@ -16,8 +16,7 @@ import { login } from './authApi';
 import { OperationResultsSheet } from 'admin/OperationResultsSheet/OperationResultsSheet';
 import { OperationResultType } from '../../../../common/src/operationResultType';
 import { AdminReducerActions, AdminState } from 'admin/adminState';
-import { useAdminDispatch } from 'hooks';
-import { filterValidateErrors } from 'helpers';
+import { useAdminDispatch, useEventsSelector } from 'hooks';
 
 interface AuthProps {
   isFetching: AdminState['isFetching'];
@@ -34,6 +33,7 @@ export function Auth({
 }: AuthProps) {
   const [authState, authDispatch] = useReducer(authReducer, authInitState);
   const actionAdmin = useAdminDispatch(adminDispatch);
+  const { selectFieldErrorByLabel } = useEventsSelector();
 
   const onChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
@@ -65,7 +65,10 @@ export function Auth({
           <h4>Log in</h4>
           <form>
             {authState.inputs.map((input) => {
-              const error = filterValidateErrors(input.label, validateErrors);
+              const error = selectFieldErrorByLabel(
+                input.label,
+                validateErrors,
+              );
               return (
                 <InputMemo
                   key={input.label}

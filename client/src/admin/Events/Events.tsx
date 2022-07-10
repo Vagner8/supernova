@@ -24,9 +24,9 @@ interface EventsProps {
   fileInputName: EventsState['fileInputName'];
   isFileInputMultiple: EventsState['isFileInputMultiple'];
   isSomeRowSelected: boolean | undefined;
-  selectedTableRows?: EventsState['tableRows']
   eventsDispatch: Dispatch<EventsReducerActions>;
   adminDispatch: Dispatch<AdminReducerActions>;
+  selectTableRowsIds?: string[]
 }
 
 export function Events({
@@ -39,9 +39,9 @@ export function Events({
   fileInputName,
   isFileInputMultiple,
   isSomeRowSelected,
-  selectedTableRows,
   adminDispatch,
   eventsDispatch,
+  selectTableRowsIds,
 }: EventsProps) {
   const eventsAction = useEventsDispatch(eventsDispatch);
   const adminAction = useAdminDispatch(adminDispatch);
@@ -109,7 +109,7 @@ export function Events({
             url: `/${categoryParam}/delete/?id=${idParam}`,
             saveOperationResult: adminAction.saveOperationResult,
             setIsFetching: adminAction.setIsFetching,
-            selectedTableRows,
+            selectTableRowsIds,
           });
           break;
         }

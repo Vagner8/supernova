@@ -1,5 +1,4 @@
 import { SaveOperationResult, SetIsFetching } from 'admin/adminState';
-import { EventsState } from 'admin/Events/eventsState';
 import { fetcher } from './fetcher';
 
 interface DeleteData {
@@ -8,20 +7,20 @@ interface DeleteData {
   saveOperationResult: ({
     operationResult,
   }: SaveOperationResult['payload']) => void;
-  selectedTableRows?: EventsState['tableRows']
+  selectTableRowsIds?: string[]
 }
 
 export async function deleteData({
   url,
   setIsFetching,
   saveOperationResult,
-  selectedTableRows,
+  selectTableRowsIds,
 }: DeleteData) {
   await fetcher({
     method: 'DELETE',
     url,
     setIsFetching,
     saveOperationResult,
-    body: selectedTableRows
+    body: selectTableRowsIds
   });
 }
