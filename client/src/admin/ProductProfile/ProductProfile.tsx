@@ -3,9 +3,9 @@ import { EventsReducerActions, EventsState } from 'admin/Events/eventsState';
 import { Dispatch } from 'react';
 import { useParams } from 'react-router-dom';
 import { Profile } from 'UIKit';
-import { OperationResultType } from '../../../../common/src/operationResultType';
+import { OperationResultType } from '../../../../common/src/commonTypes';
 import styles from './productProfile.module.css';
-import { useProductProfile } from './useProductProfile';
+import { useFetchToGetProductProfile } from './productProfileHooks/useFetchToGetProductProfile';
 
 interface UserProfileProps {
   popup: EventsState['popup'];
@@ -29,7 +29,7 @@ export default function ProductProfile({
   validateErrors,
 }: UserProfileProps) {
   const { productId } = useParams();
-  useProductProfile({ productId, eventsDispatch, adminDispatch });
+  useFetchToGetProductProfile({ productId, eventsDispatch, adminDispatch });
   return (
     <div className={styles.UserProfile}>
       <Profile

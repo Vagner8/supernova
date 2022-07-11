@@ -1,32 +1,23 @@
 import { InputMemo, LabelText, Select } from 'UIKit';
 import styles from './form.module.css';
-import { ChangeEvent, Dispatch, Fragment, ReactNode } from 'react';
+import { ChangeEvent, Dispatch, ReactNode } from 'react';
 import {
   EventsReducerActions,
   EventsState,
   ProfilesType,
 } from 'admin/Events/eventsState';
-import { OperationResultType } from '../../../../common/src/operationResultType';
-import { UserRequiredFields } from '../../../../common/src/userTypes';
 import { useEventsSelector } from 'hooks';
+import { OperationResultType } from '../../../../common/src/commonTypes';
+import { useFields } from './formHooks/usFields';
 
 interface FormProps {
   popup: EventsState['popup'];
   profile: ProfilesType;
   editMode: EventsState['editMode'];
-  onChange: (e: ChangeEvent<HTMLInputElement>) => void;
+  onChange: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   eventsDispatch: Dispatch<EventsReducerActions>;
   validateErrors?: OperationResultType['validateErrors'];
 }
-
-const requiredFields: UserRequiredFields & string[] = [
-  'login',
-  'password',
-  'email',
-  'name',
-  'surname',
-  'phone',
-];
 
 export function Form({
   popup,
@@ -37,6 +28,13 @@ export function Form({
   validateErrors,
 }: FormProps) {
   const { selectFieldErrorByLabel, selectProfilePoints } = useEventsSelector();
+  const {
+    requiredFields,
+    getSelectList,
+    isTextareaField,
+    isPasswordField,
+    isLabelPartialValidatedFieldsType,
+  } = useFields();
   if (!profile) return null;
   const profilePoints = selectProfilePoints(profile);
   return (
@@ -47,16 +45,17 @@ export function Form({
             <h6 className={styles.form_name}>{pointName}</h6>
             <div className={styles.form_wrapper}>
               {Object.entries(point).map(([label, valueText]) => {
+                if (!isLabelPartialValidatedFieldsType(label)) return;
                 const error = selectFieldErrorByLabel(label, validateErrors);
                 return (
                   <Point
                     key={label}
                     render={() => {
                       if (editMode) {
-                        if (label === 'rule') {
+                        if (label === 'rule' || label === 'category') {
                           return (
                             <Select
-                              selectList={['Admin', 'User', 'Viewer', 'Fired']}
+                              selectList={getSelectList(label)}
                               label={label}
                               value={valueText}
                               popup={popup}
@@ -67,10 +66,11 @@ export function Form({
                         }
                         return (
                           <InputMemo
-                            type={label === 'password' ? 'password' : 'text'}
+                            type={isPasswordField(label)}
                             label={label}
                             value={valueText}
                             pointName={pointName}
+                            isTextareaField={isTextareaField(label)}
                             onChange={onChange}
                             fieldError={error?.field}
                             messageError={error?.message}

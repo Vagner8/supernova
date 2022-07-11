@@ -1,5 +1,5 @@
 import { UseFetchAvatarAndLoginResponse } from "api/users/useFetchAvatarAndLogin";
-import { OperationResultType } from "../../../../common/src/operationResultType";
+import { OperationResultType } from "../../../../common/src/commonTypes";
 
 export enum AdminStrAction {
   SaveAdminId = 'SaveAdminId',

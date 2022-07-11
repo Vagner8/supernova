@@ -1,3 +1,8 @@
+.Form {
+  display: flex;
+  flex-direction: column;
+}
+
 .form_wrapper {
   border: 1px solid rgba(0, 0, 0, 0.12);
   border-radius: 4px;
@@ -6,4 +11,26 @@
 
 .form_name {
   text-transform: capitalize;
+}
+
+.personal,
+.card {
+  order: 1;
+}
+
+.secret,
+.profile {
+  order: 2;
+}
+
+.contacts {
+  order: 3;
+}
+
+.settings {
+  order: 4;
+}
+
+.address {
+  order: 5;
 }

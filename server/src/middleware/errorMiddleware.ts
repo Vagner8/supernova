@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { TokenExpiredError } from "jsonwebtoken";
-import { OperationResultType } from "../../../common/src/operationResultType";
+import { OperationResultType } from "../../../common/src/commonTypes";
 
 export class CustomError extends Error {
   constructor(public description: OperationResultType) {

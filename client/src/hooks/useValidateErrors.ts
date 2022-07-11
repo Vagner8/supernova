@@ -1,6 +1,6 @@
 import { AdminState } from 'admin/adminState/adminReducer';
 import { useEffect, useState } from 'react';
-import { ValidateError } from '../../../common/src/operationResultType';
+import { ValidateError } from '../../../common/src/commonTypes';
 
 export function useValidateErrors(
   operationResults: AdminState['operationResults'],

@@ -1,5 +1,5 @@
-import { ValidateError } from "../../../common/src/operationResultType";
-import { UserType, ValidatedFields } from "../../../common/src/userTypes";
+import { ValidatedFields, ValidateError } from "../../../common/src/commonTypes";
+import { UserType } from "../../../common/src/userTypes";
 
 export type BodyFields = keyof UserType;
 

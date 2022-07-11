@@ -1,5 +1,5 @@
 import { SaveOperationResult, SetIsFetching } from 'admin/adminState';
-import { OperationResultType } from '../../../common/src/operationResultType';
+import { OperationResultType } from '../../../common/src/commonTypes';
 
 export enum GoTo {
   Login = '/login',
@@ -7,7 +7,7 @@ export enum GoTo {
   CreateUser = '/users/new',
   UpdateUsers = '/users/update',
   UserAggregate = '/users/aggregate',
-  ProductAggregate = '/product/aggregate',
+  ProductAggregate = '/products/aggregate',
 }
 export interface Fetcher {
   method: 'POST' | 'DELETE' | 'PUT' | 'GET';

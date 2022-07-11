@@ -3,7 +3,7 @@ import { EventsReducerActions, EventsState } from 'admin/Events/eventsState';
 import { Dispatch } from 'react';
 import { useParams } from 'react-router-dom';
 import { Profile } from 'UIKit';
-import { OperationResultType } from '../../../../common/src/operationResultType';
+import { OperationResultType } from '../../../../common/src/commonTypes';
 import styles from './userProfile.module.css';
 import { useUserProfile } from './useUserProfile';
 

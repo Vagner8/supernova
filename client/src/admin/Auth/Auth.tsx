@@ -14,9 +14,9 @@ import {
 import { Button, Icon, Linear, InputMemo } from 'UIKit';
 import { login } from './authApi';
 import { OperationResultsSheet } from 'admin/OperationResultsSheet/OperationResultsSheet';
-import { OperationResultType } from '../../../../common/src/operationResultType';
 import { AdminReducerActions, AdminState } from 'admin/adminState';
 import { useAdminDispatch, useEventsSelector } from 'hooks';
+import { OperationResultType } from '../../../../common/src/commonTypes';
 
 interface AuthProps {
   isFetching: AdminState['isFetching'];
@@ -36,7 +36,7 @@ export function Auth({
   const { selectFieldErrorByLabel } = useEventsSelector();
 
   const onChange = useCallback(
-    (e: ChangeEvent<HTMLInputElement>) => {
+    (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
       const { name, value } = e.target;
       saveAuthInputsOutputs(authDispatch, name, value);
       actionAdmin.deleteAllOperationResults();

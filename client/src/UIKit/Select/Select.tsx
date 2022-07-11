@@ -2,6 +2,7 @@ import { EventsReducerActions, EventsState } from 'admin/Events/eventsState';
 import { useEventsDispatch } from 'hooks';
 import { Dispatch, MouseEvent, useState } from 'react';
 import { Icon, ButtonLi } from 'UIKit';
+import { ProductSettingsType } from '../../../../common/src/productTypes';
 import { UserStatus } from '../../../../common/src/userTypes';
 import styles from './select.module.css';
 
@@ -10,7 +11,7 @@ interface SelectProps {
   popup: EventsState['popup'];
   value: string;
   label: string;
-  selectList: UserStatus[];
+  selectList: UserStatus[] | ProductSettingsType['category'][];
   eventsDispatch: Dispatch<EventsReducerActions>;
 }
 

@@ -1,18 +1,18 @@
 import { ImgsType } from "./commonTypes";
 
-interface ProductCardType {
+export interface ProductCardType {
   name: string;
   price: string;
   description: string;
 }
 
-interface ProductProfilePointsType {
+export interface ProductProfilePointsType {
   description: string;
   parameters: [string, string][]
 }
 
-interface ProductSettingsType {
-  category: 'new' | 'dress' | 'trips' | 'devices'
+export interface ProductSettingsType {
+  category: 'New' | 'Dress' | 'Trips' | 'Devices'
   currency: string;
   disabled: boolean;
   discount: string;

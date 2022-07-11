@@ -1,5 +1,5 @@
 import { NextFunction, Response, Request } from "express";
-import { OperationResultType } from "../../../../common/src/operationResultType";
+import { OperationResultType } from "../../../../common/src/commonTypes";
 import { UserType } from "../../../../common/src/userTypes";
 import { db } from "../../app";
 import { serverError } from "../../helpers/errors";

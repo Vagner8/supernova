@@ -1,6 +1,6 @@
 import { EventsState, ProfilesType } from 'admin/Events/eventsState';
 import { useMemo } from 'react';
-import { ValidateError } from '../../../common/src/operationResultType';
+import { ValidateError } from '../../../common/src/commonTypes';
 
 export function useEventsSelector() {
   return useMemo(

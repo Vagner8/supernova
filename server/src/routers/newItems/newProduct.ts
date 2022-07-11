@@ -11,11 +11,11 @@ export const newProduct: NewProductType = {
   },
   profile: {
     description: "",
-    parameters: []
+    parameters: [],
   },
   settings: {
-    category: 'new',
-    currency: "",
+    category: "New",
+    currency: "usd",
     disabled: false,
     discount: "0",
     discountStart: "",

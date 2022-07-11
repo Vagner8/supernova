@@ -1,11 +1,15 @@
-import { EventsReducerActions, EventsState, FileInputName } from 'admin/Events/eventsState';
+import {
+  EventsReducerActions,
+  EventsState,
+  FileInputName,
+} from 'admin/Events/eventsState';
 import { ChangeEvent, Dispatch, useCallback } from 'react';
 import { Avatar, FileInput, Form } from 'UIKit';
 import styles from './profile.module.css';
-import { OperationResultType } from '../../../../common/src/operationResultType';
 import { useAdminDispatch, useEventsDispatch, useSplitParams } from 'hooks';
 import { useProfile } from './useProfile';
 import { AdminReducerActions, AdminState } from 'admin/adminState';
+import { OperationResultType } from '../../../../common/src/commonTypes';
 
 interface ProfileProps {
   popup: EventsState['popup'];
@@ -34,7 +38,7 @@ export function Profile({
   useProfile(eventsDispatch);
 
   const onChange = useCallback(
-    (e: ChangeEvent<HTMLInputElement>) => {
+    (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
       adminAction.deleteAllOperationResults();
       if (!isProfileCopied) eventsAction.saveProfileCopy();
       eventsAction.profileOnChange({
@@ -46,7 +50,9 @@ export function Profile({
     [adminAction, eventsAction, isProfileCopied],
   );
 
-  const onChangeFiles = (e: ChangeEvent<HTMLInputElement>) => {
+  const onChangeFiles = (
+    e: ChangeEvent<HTMLInputElement>,
+  ) => {
     eventsAction.saveFiles({
       files: Array.from(e.target.files || []),
       isFileInputMultiple: e.target.multiple,

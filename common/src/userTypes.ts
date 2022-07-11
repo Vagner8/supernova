@@ -7,7 +7,7 @@ export type UserStatus =
   | "Viewer"
   | "Fired"
   | "New"
-  | "developer";
+  | "Developer";
 
 export interface UserSecretType {
   login: string;
@@ -51,18 +51,3 @@ export interface UserType {
   address: UserAddressType;
   imgs: UserImgsType;
 }
-
-export type ValidatedFields = UserSecretType &
-  UserSettingsType &
-  UserPersonalType &
-  UserContactsType &
-  UserAddressType;
-
-export type UserRequiredFields = [
-  "login",
-  "password",
-  "email",
-  "name",
-  "surname",
-  "phone"
-];

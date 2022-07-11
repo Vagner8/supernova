@@ -4,7 +4,7 @@ import { Projection } from 'admin/UserProfile/useUserProfile';
 import { fetcher, GoTo } from 'api/fetcher';
 import { useAdminDispatch, useEventsDispatch } from 'hooks';
 import { Dispatch, useEffect } from 'react';
-import { ProductType } from '../../../../common/src/productTypes';
+import { ProductType } from '../../../../../common/src/productTypes';
 
 export type ProductProfileResponse = Omit<ProductType, 'selected'>;
 
@@ -23,7 +23,7 @@ interface UseProductProfile {
   adminDispatch: Dispatch<AdminReducerActions>;
 }
 
-export function useProductProfile({
+export function useFetchToGetProductProfile({
   productId,
   eventsDispatch,
   adminDispatch,

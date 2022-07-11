@@ -1,5 +1,5 @@
 import { Reducer } from 'react';
-import { OperationResultType } from '../../../../common/src/operationResultType';
+import { OperationResultType } from '../../../../common/src/commonTypes';
 import { AdminReducerActions, AdminStrAction } from './adminReducerHandlers';
 
 

@@ -2,7 +2,7 @@ import { AdminReducerActions } from 'admin/adminState';
 import { useAdminDispatch } from 'hooks';
 import { Dispatch, useEffect } from 'react';
 import { ButtonIcon, Headerblock } from 'UIKit';
-import { OperationResultType } from '../../../../common/src/operationResultType';
+import { OperationResultType } from '../../../../common/src/commonTypes';
 import styles from './snackbar.module.css';
 
 export interface SnackbarProps {

@@ -1,5 +1,5 @@
 import { ImgsType } from "./commonTypes";
-export declare type UserStatus = "Owner" | "Admin" | "User" | "Viewer" | "Fired" | "New" | "developer";
+export declare type UserStatus = "Owner" | "Admin" | "User" | "Viewer" | "Fired" | "New" | "Developer";
 export interface UserSecretType {
     login: string;
     password: string;
@@ -36,13 +36,4 @@ export interface UserType {
     address: UserAddressType;
     imgs: UserImgsType;
 }
-export declare type ValidatedFields = UserSecretType & UserSettingsType & UserPersonalType & UserContactsType & UserAddressType;
-export declare type UserRequiredFields = [
-    "login",
-    "password",
-    "email",
-    "name",
-    "surname",
-    "phone"
-];
 //# sourceMappingURL=userTypes.d.ts.map

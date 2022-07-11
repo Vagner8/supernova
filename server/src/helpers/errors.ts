@@ -1,4 +1,4 @@
-import { ValidateError } from "../../../common/src/operationResultType";
+import { ValidateError } from "../../../common/src/commonTypes";
 import { CustomError } from "../middleware/errorMiddleware";
 
 export function loginError() {

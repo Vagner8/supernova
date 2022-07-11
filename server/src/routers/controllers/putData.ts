@@ -1,8 +1,8 @@
 import { NextFunction, Response } from "express";
 import { CollectionName } from "../../types";
 import { serverError } from "../../helpers/errors";
-import { OperationResultType } from "../../../../common/src/operationResultType";
 import { db } from "../../app";
+import { OperationResultType } from "../../../../common/src/commonTypes";
 
 interface PutData {
   profile: any;

@@ -1,4 +1,4 @@
-import { ProductProfileResponse } from 'admin/ProductProfile/useProductProfile';
+import { ProductProfileResponse } from 'admin/ProductProfile/productProfileHooks/useFetchToGetProductProfile';
 import { UserProfileResponse } from 'admin/UserProfile/useUserProfile';
 import { EventsState } from './eventsReducer';
 

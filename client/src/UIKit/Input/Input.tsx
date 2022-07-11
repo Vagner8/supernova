@@ -7,14 +7,15 @@ export interface InputProps {
   label: string;
   value: string;
   type: 'password' | 'text';
-  onChange: (e: ChangeEvent<HTMLInputElement>) => void;
+  onChange: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   fieldError?: string;
   messageError?: string;
   pointName?: string;
   required?: boolean;
+  isTextareaField?: boolean;
 }
 
-type PassType = 'password' | 'text'
+type PassType = 'password' | 'text';
 
 export function Input({
   type,
@@ -25,13 +26,14 @@ export function Input({
   messageError,
   pointName,
   required,
+  isTextareaField,
 }: InputProps) {
   const [passType, setPassType] = useState<PassType>('password');
   const [activeClass, setActiveClass] = useActiveClass(value);
   const strMessageError = useErrorMessage(messageError);
 
   const onFocus = () => setActiveClass('active');
-  const onBlur = (e: FocusEvent<HTMLInputElement>) =>
+  const onBlur = (e: FocusEvent<HTMLInputElement | HTMLTextAreaElement>) =>
     e.target.value || setActiveClass('');
   const onClick = () => setPassType(passType === 'text' ? 'password' : 'text');
 
@@ -44,17 +46,31 @@ export function Input({
         {label} {strMessageError}
         <Star required={required} />
       </label>
-      <input
-        id={label}
-        className={`${styles.field} ${styles[activeClass]}`}
-        name={label}
-        type={type === 'password' ? passType : type}
-        value={value}
-        data-point-name={pointName}
-        onChange={onChange}
-        onFocus={onFocus}
-        onBlur={onBlur}
-      />
+      {isTextareaField ? (
+        <textarea
+          rows={0}
+          id={label}
+          className={`${styles.field} ${styles[activeClass]}`}
+          name={label}
+          value={value}
+          data-point-name={pointName}
+          onChange={onChange}
+          onFocus={onFocus}
+          onBlur={onBlur}
+        />
+      ) : (
+        <input
+          id={label}
+          className={`${styles.field} ${styles[activeClass]}`}
+          name={label}
+          type={type === 'password' ? passType : type}
+          value={value}
+          data-point-name={pointName}
+          onChange={onChange}
+          onFocus={onFocus}
+          onBlur={onBlur}
+        />
+      )}
       {type === 'password' && (
         <ButtonIcon
           onClick={onClick}
