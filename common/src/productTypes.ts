@@ -23,7 +23,7 @@ interface ProductSettingsType {
 export interface ProductImgsType extends ImgsType {}
 
 export interface ProductType {
-  _id: Object;
+  _id: string;
   productId: string;
   selected?: boolean;
   created: string;
@@ -33,6 +33,3 @@ export interface ProductType {
   settings: ProductSettingsType;
   imgs: ProductImgsType;
 }
-
-export type ProductProfileType = Omit<ProductType, '_id' | 'selected'>
-export type ProductProfileKeys = keyof ProductProfileType

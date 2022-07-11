@@ -19,7 +19,7 @@ interface ProductSettingsType {
 export interface ProductImgsType extends ImgsType {
 }
 export interface ProductType {
-    _id: Object;
+    _id: string;
     productId: string;
     selected?: boolean;
     created: string;
@@ -28,7 +28,5 @@ export interface ProductType {
     settings: ProductSettingsType;
     imgs: ProductImgsType;
 }
-export declare type ProductProfileType = Omit<ProductType, '_id' | 'selected'>;
-export declare type ProductProfileKeys = keyof ProductProfileType;
 export {};
 //# sourceMappingURL=productTypes.d.ts.map

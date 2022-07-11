@@ -6,7 +6,7 @@ import { UserStatus } from '../../../../common/src/userTypes';
 import styles from './select.module.css';
 
 interface SelectProps {
-  pointName: keyof EventsState['profile'];
+  pointName: string;
   popup: EventsState['popup'];
   value: string;
   label: string;
@@ -32,7 +32,11 @@ export function Select({
     );
     if (!btnName) return;
     setSelectValue(btnName);
-    eventsAction.profileOnChange({ name: label, value: btnName, pointName });
+    eventsAction.profileOnChange({
+      name: label,
+      value: btnName,
+      pointName: pointName as keyof EventsState['profile'],
+    });
   };
 
   return (

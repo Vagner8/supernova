@@ -1,9 +1,5 @@
 import { ValidateError } from "../../../common/src/operationResultType";
-import {
-  UserType,
-  ValidatedFields,
-  ValidatedFieldsKeys,
-} from "../../../common/src/userTypes";
+import { UserType, ValidatedFields } from "../../../common/src/userTypes";
 
 export type BodyFields = keyof UserType;
 
@@ -19,8 +15,8 @@ type ValidateOptions<T> = {
 };
 
 class Validator {
-  map: Map<ValidatedFieldsKeys, string> = new Map();
-  validateFields: ValidatedFieldsKeys[] = [
+  map: Map<keyof ValidatedFields, string> = new Map();
+  validateFields: (keyof ValidatedFields)[] = [
     "login",
     "password",
     "email",
@@ -65,8 +61,8 @@ class Validator {
   set(body: UserType) {
     Object.entries(body).forEach(([key, value]) => {
       if (typeof value === "object") this.set(value);
-      if (this.validateFields.includes(key as ValidatedFieldsKeys)) {
-        this.map.set(key as ValidatedFieldsKeys, value);
+      if (this.validateFields.includes(key as keyof ValidatedFields)) {
+        this.map.set(key as keyof ValidatedFields, value);
       }
     });
     return this.map;
@@ -83,7 +79,7 @@ class Validator {
     return errs;
   }
 
-  checkFields(value: string, field: ValidatedFieldsKeys) {
+  checkFields(value: string, field: keyof ValidatedFields) {
     const opt = this.options[field];
     if (!opt) return;
     if (value.length === 0 && opt.required)

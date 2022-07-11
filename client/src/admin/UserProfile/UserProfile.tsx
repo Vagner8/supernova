@@ -1,11 +1,11 @@
 import { AdminReducerActions, AdminState } from 'admin/adminState';
 import { EventsReducerActions, EventsState } from 'admin/Events/eventsState';
-import { useFetchToGetUserProfile } from 'api/users/useFetchToGetUserProfile';
 import { Dispatch } from 'react';
 import { useParams } from 'react-router-dom';
 import { Profile } from 'UIKit';
 import { OperationResultType } from '../../../../common/src/operationResultType';
 import styles from './userProfile.module.css';
+import { useUserProfile } from './useUserProfile';
 
 interface UserProfileProps {
   popup: EventsState['popup'];
@@ -29,13 +29,12 @@ export default function UserProfile({
   validateErrors,
 }: UserProfileProps) {
   const { userId } = useParams();
-  useFetchToGetUserProfile(userId, eventsDispatch, adminDispatch);
+  useUserProfile({ userId, eventsDispatch, adminDispatch });
   return (
     <div className={styles.UserProfile}>
       <Profile
         isProfileCopied={isProfileCopied}
         popup={popup}
-        pointsSort={['personal', 'secret', 'settings', 'contacts', 'address']}
         isFetching={isFetching}
         editMode={editMode}
         validateErrors={validateErrors}

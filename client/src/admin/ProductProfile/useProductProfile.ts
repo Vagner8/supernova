@@ -1,17 +1,14 @@
 import { AdminReducerActions } from 'admin/adminState';
 import { EventsReducerActions } from 'admin/Events/eventsState';
+import { Projection } from 'admin/UserProfile/useUserProfile';
 import { fetcher, GoTo } from 'api/fetcher';
-import { Projection } from 'api/users/useFetchToGetUserProfile';
 import { useAdminDispatch, useEventsDispatch } from 'hooks';
 import { Dispatch, useEffect } from 'react';
 import { ProductType } from '../../../../common/src/productTypes';
 
 export type ProductProfileResponse = Omit<ProductType, 'selected'>;
 
-const projection: Omit<
-  Projection<ProductProfileResponse>,
-  '_id'
-> = {
+const projection: Omit<Projection<ProductProfileResponse>, '_id'> = {
   productId: '$productId',
   created: '$created',
   card: '$card',

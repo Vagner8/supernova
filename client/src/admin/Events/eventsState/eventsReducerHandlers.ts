@@ -1,13 +1,11 @@
 import { ProductProfileResponse } from 'admin/ProductProfile/useProductProfile';
-import { UseFetchToGetUserProfileResponse } from 'api/users/useFetchToGetUserProfile';
+import { UserProfileResponse } from 'admin/UserProfile/useUserProfile';
 import { EventsState } from './eventsReducer';
 
-export type ProfilesType =
-   UseFetchToGetUserProfileResponse |
-   ProductProfileResponse;
+export type ProfilesType = UserProfileResponse | ProductProfileResponse;
 
-type ProfilesTypeKeys =
-  | keyof UseFetchToGetUserProfileResponse
+export type ProfilesKeysType =
+  | keyof UserProfileResponse
   | keyof ProductProfileResponse;
 
 export type FileInputName = keyof ProfilesType['imgs'];
@@ -31,7 +29,7 @@ export enum EventsStrAction {
 
 export interface ProfileOnChange {
   type: EventsStrAction.ProfileOnChange;
-  payload: { name: string; value: string; pointName: ProfilesTypeKeys };
+  payload: { name: string; value: string; pointName: ProfilesKeysType };
 }
 export const profileOnChange = (
   state: EventsState,
@@ -41,20 +39,21 @@ export const profileOnChange = (
   if (pointName === '_id') return state;
   if (pointName === 'created') return state;
   if (pointName === 'userId') return state;
-  if (pointName === 'productId') return state
+  if (pointName === 'productId') return state;
+  if (pointName === 'imgs') return state;
   return {
     ...state,
     profile: {
       ...state.profile,
       [pointName]: {
-        ...state.profile[pointName as keyof EventsState['profile']] as Object,
+        ...(state.profile[pointName as keyof EventsState['profile']] as Object),
         [name]: value,
       },
     },
     changedProfile: {
       ...state.changedProfile,
       [pointName]: {
-        ...state.profile[pointName as keyof EventsState['profile']] as Object,
+        ...(state.profile[pointName as keyof EventsState['profile']] as Object),
         [name]: value,
       },
     },

@@ -1,13 +1,11 @@
 import { NextFunction, Response } from "express";
-import { UserProfileType, UserType } from "../../../../common/src/userTypes";
 import { CollectionName } from "../../types";
 import { serverError } from "../../helpers/errors";
 import { OperationResultType } from "../../../../common/src/operationResultType";
 import { db } from "../../app";
-import { ProductProfileType } from "../../../../common/src/productTypes";
 
 interface PutData {
-  profile: Partial<UserProfileType> | Partial<ProductProfileType>;
+  profile: any;
   collectionName: CollectionName;
   filter: {
     [index: string]: string

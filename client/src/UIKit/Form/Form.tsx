@@ -1,19 +1,18 @@
 import { InputMemo, LabelText, Select } from 'UIKit';
 import styles from './form.module.css';
 import { ChangeEvent, Dispatch, Fragment, ReactNode } from 'react';
-import { EventsReducerActions, EventsState } from 'admin/Events/eventsState';
-import { OperationResultType } from '../../../../common/src/operationResultType';
 import {
-  UserRequiredFields,
-  UserProfileKeys,
-} from '../../../../common/src/userTypes';
+  EventsReducerActions,
+  EventsState,
+  ProfilesType,
+} from 'admin/Events/eventsState';
+import { OperationResultType } from '../../../../common/src/operationResultType';
+import { UserRequiredFields } from '../../../../common/src/userTypes';
 import { useEventsSelector } from 'hooks';
-import { ProductProfileKeys } from '../../../../common/src/productTypes';
 
 interface FormProps {
   popup: EventsState['popup'];
-  pointsSort: UserProfileKeys[] | ProductProfileKeys[];
-  profile: EventsState['profile'];
+  profile: ProfilesType;
   editMode: EventsState['editMode'];
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
   eventsDispatch: Dispatch<EventsReducerActions>;
@@ -31,27 +30,23 @@ const requiredFields: UserRequiredFields & string[] = [
 
 export function Form({
   popup,
-  pointsSort,
   profile,
   editMode,
   onChange,
   eventsDispatch,
   validateErrors,
 }: FormProps) {
-  const { selectFieldErrorByLabel } = useEventsSelector();
+  const { selectFieldErrorByLabel, selectProfilePoints } = useEventsSelector();
   if (!profile) return null;
+  const profilePoints = selectProfilePoints(profile);
   return (
     <form className={styles.Form}>
-      {pointsSort.map((pointName) => {
-        if (!profile[pointName as keyof typeof profile]) return;
+      {profilePoints.map(([pointName, point]) => {
         return (
-          <Fragment key={pointName}>
+          <div key={pointName} className={styles[pointName]}>
             <h6 className={styles.form_name}>{pointName}</h6>
             <div className={styles.form_wrapper}>
-              {Object.entries(
-                profile[pointName as keyof typeof profile],
-              ).map(([label, valueText]) => {
-                if (label === 'avatar') return;
+              {Object.entries(point).map(([label, valueText]) => {
                 const error = selectFieldErrorByLabel(label, validateErrors);
                 return (
                   <Point
@@ -65,9 +60,7 @@ export function Form({
                               label={label}
                               value={valueText}
                               popup={popup}
-                              pointName={
-                                pointName as keyof EventsState['profile']
-                              }
+                              pointName={pointName}
                               eventsDispatch={eventsDispatch}
                             />
                           );
@@ -91,7 +84,7 @@ export function Form({
                 );
               })}
             </div>
-          </Fragment>
+          </div>
         );
       })}
     </form>

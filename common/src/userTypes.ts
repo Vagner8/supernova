@@ -38,11 +38,11 @@ export interface UserAddressType {
 export interface UserImgsType extends ImgsType {}
 
 export interface UserType {
-  _id: Object;
+  _id?: string;
   userId: string;
   refreshToken: string;
-  selected?: boolean;
   created: string;
+  selected?: boolean;
 
   secret: UserSecretType;
   settings: UserSettingsType;
@@ -52,27 +52,11 @@ export interface UserType {
   imgs: UserImgsType;
 }
 
-export type UserProfileType = Pick<
-  UserType,
-  | "personal"
-  | "contacts"
-  | "address"
-  | "imgs"
-  | "settings"
-  | "secret"
-  | "created"
-  | "userId"
->;
-
-export type UserProfileKeys = keyof UserProfileType;
-
 export type ValidatedFields = UserSecretType &
   UserSettingsType &
   UserPersonalType &
   UserContactsType &
   UserAddressType;
-
-export type ValidatedFieldsKeys = keyof ValidatedFields;
 
 export type UserRequiredFields = [
   "login",

@@ -1,10 +1,10 @@
 import { AdminReducerActions } from 'admin/adminState';
 import { EventsReducerActions } from 'admin/Events/eventsState';
+import { Projection } from 'admin/UserProfile/useUserProfile';
 import { GoTo, fetcher } from 'api/fetcher';
 import { useAdminDispatch, useEventsDispatch } from 'hooks';
 import { Dispatch, useEffect } from 'react';
 import { UserType } from '../../../../common/src/userTypes';
-import { Projection } from './useFetchToGetUserProfile';
 
 export interface UseFetchUsersForTableResponse {
   _id: string;

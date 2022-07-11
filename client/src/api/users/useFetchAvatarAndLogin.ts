@@ -1,9 +1,9 @@
 import { AdminReducerActions } from 'admin/adminState';
+import { Projection } from 'admin/UserProfile/useUserProfile';
 import { fetcher, GoTo } from 'api/fetcher';
 import { useAdminDispatch } from 'hooks';
 import { Dispatch, useEffect } from 'react';
 import { UserType } from '../../../../common/src/userTypes';
-import { Projection } from './useFetchToGetUserProfile';
 
 export interface UseFetchAvatarAndLoginResponse {
   login: UserType['secret']['login'];

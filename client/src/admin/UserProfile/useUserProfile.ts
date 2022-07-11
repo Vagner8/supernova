@@ -5,23 +5,20 @@ import { useAdminDispatch, useEventsDispatch } from 'hooks';
 import { Dispatch, useEffect } from 'react';
 import { UserType } from '../../../../common/src/userTypes';
 
-export interface UseFetchToGetUserProfileResponse {
-  _id: string;
-  userId: UserType['userId'];
-  created: UserType['created'];
-  personal: UserType['personal'];
-  contacts: UserType['contacts'];
-  address: UserType['address'];
-  settings: UserType['settings'];
-  imgs: UserType['imgs'];
-  secret?: UserType['secret'];
-}
-
 export type Projection<T> = {
   [K in keyof T]: Projection<T[K]> | string;
 };
 
-const projection: Omit<Projection<UseFetchToGetUserProfileResponse>, '_id'> = {
+export type Optional<T, K extends keyof T> = Pick<Partial<T>, K> & Omit<T, K>;
+
+// export type UserProfileResponse = Optional<
+//   Omit<UserType, 'refreshToken' | 'selected'>,
+//   'secret'
+// >;
+
+export type UserProfileResponse = Omit<UserType, 'refreshToken' | 'selected'>
+
+const projection: Omit<Projection<UserProfileResponse>, '_id' | 'secret'> = {
   userId: '$userId',
   created: '$created',
   personal: '$personal',
@@ -31,16 +28,22 @@ const projection: Omit<Projection<UseFetchToGetUserProfileResponse>, '_id'> = {
   imgs: '$imgs',
 };
 
-export function useFetchToGetUserProfile(
-  userId: string | undefined,
-  eventsDispatch: Dispatch<EventsReducerActions>,
-  adminDispatch: Dispatch<AdminReducerActions>,
-) {
+interface UseUserProfile {
+  userId: string | undefined;
+  eventsDispatch: Dispatch<EventsReducerActions>;
+  adminDispatch: Dispatch<AdminReducerActions>;
+}
+
+export function useUserProfile({
+  userId,
+  eventsDispatch,
+  adminDispatch,
+}: UseUserProfile) {
   const eventsAction = useEventsDispatch(eventsDispatch);
   const adminAction = useAdminDispatch(adminDispatch);
   useEffect(() => {
     const asyncer = async () => {
-      const profile = await fetcher<UseFetchToGetUserProfileResponse[]>({
+      const profile = await fetcher<UserProfileResponse[]>({
         method: 'GET',
         url: `${GoTo.UserAggregate}/?projection=${JSON.stringify(
           projection,

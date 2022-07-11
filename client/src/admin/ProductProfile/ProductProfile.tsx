@@ -35,7 +35,6 @@ export default function ProductProfile({
       <Profile
         isProfileCopied={isProfileCopied}
         popup={popup}
-        pointsSort={['card', 'profile', 'settings']}
         isFetching={isFetching}
         editMode={editMode}
         validateErrors={validateErrors}

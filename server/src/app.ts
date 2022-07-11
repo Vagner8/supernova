@@ -23,7 +23,7 @@ app.use(validateMiddleware());
 app.use("/login", login);
 app.use(accessMiddleware());
 app.use("/users", user);
-app.use("/product", product);
+app.use("/products", product);
 app.use(errorMiddleware);
 
 const serverStart = async () => {

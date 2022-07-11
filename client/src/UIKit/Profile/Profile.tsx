@@ -3,15 +3,12 @@ import { ChangeEvent, Dispatch, useCallback } from 'react';
 import { Avatar, FileInput, Form } from 'UIKit';
 import styles from './profile.module.css';
 import { OperationResultType } from '../../../../common/src/operationResultType';
-import { UserProfileKeys } from '../../../../common/src/userTypes';
 import { useAdminDispatch, useEventsDispatch, useSplitParams } from 'hooks';
 import { useProfile } from './useProfile';
 import { AdminReducerActions, AdminState } from 'admin/adminState';
-import { ProductProfileKeys } from '../../../../common/src/productTypes';
 
 interface ProfileProps {
   popup: EventsState['popup'];
-  pointsSort: UserProfileKeys[] | ProductProfileKeys[];
   editMode: EventsState['editMode'];
   profile: EventsState['profile'];
   isFetching: AdminState['isFetching'];
@@ -23,7 +20,6 @@ interface ProfileProps {
 
 export function Profile({
   popup,
-  pointsSort,
   isFetching,
   profile,
   editMode,
@@ -71,7 +67,6 @@ export function Profile({
       <div className={styles.middle}>
         <Form
           popup={popup}
-          pointsSort={pointsSort}
           editMode={editMode}
           profile={profile}
           onChange={onChange}
