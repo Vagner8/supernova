@@ -1,4 +1,4 @@
-import { ImgsType } from "./commonTypes";
+import { BaseType } from "./commonTypes";
 
 export type UserStatus =
   | "Owner"
@@ -35,19 +35,11 @@ export interface UserAddressType {
   number: string;
 }
 
-export interface UserImgsType extends ImgsType {}
-
-export interface UserType {
-  _id?: string;
-  userId: string;
+export interface UserType extends BaseType {
   refreshToken: string;
-  created: string;
-  selected?: boolean;
-
   secret: UserSecretType;
   settings: UserSettingsType;
   personal: UserPersonalType;
   contacts: UserContactsType;
   address: UserAddressType;
-  imgs: UserImgsType;
 }

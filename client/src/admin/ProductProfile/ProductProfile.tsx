@@ -28,8 +28,8 @@ export default function ProductProfile({
   eventsDispatch,
   validateErrors,
 }: UserProfileProps) {
-  const { productId } = useParams();
-  useFetchToGetProductProfile({ productId, eventsDispatch, adminDispatch });
+  const { itemId } = useParams();
+  useFetchToGetProductProfile({ itemId, eventsDispatch, adminDispatch });
   return (
     <div className={styles.UserProfile}>
       <Profile

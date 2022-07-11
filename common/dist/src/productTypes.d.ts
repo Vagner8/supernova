@@ -1,4 +1,4 @@
-import { ImgsType } from "./commonTypes";
+import { BaseType } from "./commonTypes";
 export interface ProductCardType {
     name: string;
     price: string;
@@ -16,16 +16,9 @@ export interface ProductSettingsType {
     discountStart: string;
     discountEnd: string;
 }
-export interface ProductImgsType extends ImgsType {
-}
-export interface ProductType {
-    _id: string;
-    productId: string;
-    selected?: boolean;
-    created: string;
+export interface ProductType extends BaseType {
     card: ProductCardType;
     profile: ProductProfilePointsType;
     settings: ProductSettingsType;
-    imgs: ProductImgsType;
 }
 //# sourceMappingURL=productTypes.d.ts.map

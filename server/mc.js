@@ -1,7 +1,7 @@
 // console.log(
 //   db.users.aggregate([
 //     {
-//       $match: { userId: 'a2d20632-8d4f-405a-9ba1-f494e169c43d' }
+//       $match: { itemId: 'a2d20632-8d4f-405a-9ba1-f494e169c43d' }
 //     },
 //     {
 //       $project: {
@@ -23,7 +23,7 @@
 // console.log(
 //   db.users.find({},
 //     {
-//       _id: "$userId",
+//       _id: "$itemId",
 //       name: "$personal.name",
 //       surname: "$personal.surname",
 //       email: "$contacts.email",
@@ -34,7 +34,7 @@
 
 
 // console.log(
-//   db.users.findOne({ userId: 'a2d20632-8d4f-405a-9ba1-f494e169c43d' },
+//   db.users.findOne({ itemId: 'a2d20632-8d4f-405a-9ba1-f494e169c43d' },
 //     { personal: 1,  } )
 // )
 

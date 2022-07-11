@@ -5,7 +5,7 @@ import { useParams } from 'react-router-dom';
 import { Profile } from 'UIKit';
 import { OperationResultType } from '../../../../common/src/commonTypes';
 import styles from './userProfile.module.css';
-import { useUserProfile } from './useUserProfile';
+import { useFetchToGetUserProfile } from './userProfileHooks/useFetchToGetUserProfile';
 
 interface UserProfileProps {
   popup: EventsState['popup'];
@@ -28,8 +28,8 @@ export default function UserProfile({
   eventsDispatch,
   validateErrors,
 }: UserProfileProps) {
-  const { userId } = useParams();
-  useUserProfile({ userId, eventsDispatch, adminDispatch });
+  const { itemId } = useParams();
+  useFetchToGetUserProfile({ itemId, eventsDispatch, adminDispatch });
   return (
     <div className={styles.UserProfile}>
       <Profile

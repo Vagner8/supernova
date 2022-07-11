@@ -1,5 +1,5 @@
 import { AdminReducerActions } from 'admin/adminState';
-import { Projection } from 'admin/UserProfile/useUserProfile';
+import { Projection } from 'admin/UserProfile/userProfileHooks/useFetchToGetUserProfile';
 import { fetcher, GoTo } from 'api/fetcher';
 import { useAdminDispatch } from 'hooks';
 import { Dispatch, useEffect } from 'react';
@@ -25,7 +25,7 @@ export function useFetchAvatarAndLogin(
         method: 'GET',
         url: `${GoTo.UserAggregate}?projection=${JSON.stringify(
           projection,
-        )}&userId=${localStorage.getItem('adminId')}`,
+        )}&itemId=${localStorage.getItem('adminId')}`,
         saveOperationResult: adminAction.saveOperationResult,
         setIsFetching: adminAction.setIsFetching,
       });

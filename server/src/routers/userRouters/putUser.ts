@@ -14,7 +14,7 @@ export async function putUser(req: Request, res: Response, next: NextFunction) {
   await putData({
     collectionName: CollectionName.Users,
     profile,
-    filter: { userId: id === "new" ? uuidv4() : id },
+    filter: { itemId: id === "new" ? uuidv4() : id },
     res,
     next,
   });

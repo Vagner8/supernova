@@ -10,7 +10,7 @@ export async function putProduct(req: Request, res: Response, next: NextFunction
   await putData({
     collectionName: CollectionName.Products,
     profile,
-    filter: { userId: id === "new" ? uuidv4() : id },
+    filter: { itemId: id === "new" ? uuidv4() : id },
     res,
     next,
   });

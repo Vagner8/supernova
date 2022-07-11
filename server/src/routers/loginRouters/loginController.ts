@@ -21,14 +21,14 @@ export async function loginController(
     // console.log( password, admin.secret.password )
     if (!bcrypt.compareSync(password, admin.secret.password))
       throw loginError();
-    token.accessSetToCookie(token.sign("accessToken", admin.userId), res);
+    token.accessSetToCookie(token.sign("accessToken", admin.itemId), res);
     token.refreshSave({
-      adminId: admin.userId,
-      refreshToken: token.sign("refreshToken", admin.userId),
+      adminId: admin.itemId,
+      refreshToken: token.sign("refreshToken", admin.itemId),
       usersCollection,
       next,
     });
-    res.status(201).json({ adminId: admin.userId });
+    res.status(201).json({ adminId: admin.itemId });
   } catch (err) {
     next(err);
   }

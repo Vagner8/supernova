@@ -119,7 +119,7 @@ function AdminRoutes({
               }
             />
             <Route
-              path="/users/:userId"
+              path="/users/:itemId"
               element={
                 <UserProfile
                   popup={eventsState.popup}
@@ -143,7 +143,7 @@ function AdminRoutes({
               }
             />
             <Route
-              path="/products/:productId"
+              path="/products/:itemId"
               element={
                 <ProductProfile
                   popup={eventsState.popup}

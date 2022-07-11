@@ -8,13 +8,13 @@ export async function getProduct(
   res: Response,
   next: NextFunction
 ) {
-  const { productId, projection } = req.query as {
-    productId: string;
+  const { itemId, projection } = req.query as {
+    itemId: string;
     projection: string;
   };
   getData({
-    newItem: productId === "new" ? newProduct : null,
-    match: productId ? { productId } : {},
+    newItem: itemId === "new" ? newProduct : null,
+    match: itemId ? { itemId } : {},
     projection,
     collectionName: CollectionName.Products,
     res,

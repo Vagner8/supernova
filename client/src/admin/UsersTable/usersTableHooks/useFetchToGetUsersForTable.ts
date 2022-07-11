@@ -1,14 +1,14 @@
 import { AdminReducerActions } from 'admin/adminState';
 import { EventsReducerActions } from 'admin/Events/eventsState';
-import { Projection } from 'admin/UserProfile/useUserProfile';
+import { Projection } from 'admin/UserProfile/userProfileHooks/useFetchToGetUserProfile';
 import { GoTo, fetcher } from 'api/fetcher';
 import { useAdminDispatch, useEventsDispatch } from 'hooks';
 import { Dispatch, useEffect } from 'react';
-import { UserType } from '../../../../common/src/userTypes';
+import { UserType } from '../../../../../common/src/userTypes';
 
-export interface UseFetchUsersForTableResponse {
+export interface UserForTableResponse {
   _id: string;
-  userId: UserType['userId'];
+  itemId: UserType['itemId'];
   name: UserType['personal']['name'];
   surname: UserType['personal']['surname'];
   email: UserType['contacts']['email'];
@@ -18,8 +18,8 @@ export interface UseFetchUsersForTableResponse {
   selected?: UserType['selected'];
 }
 
-const projection: Omit<Projection<UseFetchUsersForTableResponse>, '_id'> = {
-  userId: '$userId',
+const projection: Omit<Projection<UserForTableResponse>, '_id'> = {
+  itemId: '$itemId',
   name: '$personal.name',
   surname: '$personal.surname',
   email: '$contacts.email',
@@ -28,7 +28,7 @@ const projection: Omit<Projection<UseFetchUsersForTableResponse>, '_id'> = {
   avatar: '$imgs.avatar',
 };
 
-export function useFetchUsersForTable(
+export function useFetchToGetUsersForTable(
   eventsDispatch: Dispatch<EventsReducerActions>,
   adminDispatch: Dispatch<AdminReducerActions>,
 ) {
@@ -36,7 +36,7 @@ export function useFetchUsersForTable(
   const adminAction = useAdminDispatch(adminDispatch)
   useEffect(() => {
     const asyncer = async () => {
-      const tableRows = await fetcher<UseFetchUsersForTableResponse[]>({
+      const tableRows = await fetcher<UserForTableResponse[]>({
         method: 'GET',
         url: `${GoTo.UserAggregate}/?projection=${JSON.stringify(projection)}`,
         saveOperationResult: adminAction.saveOperationResult,

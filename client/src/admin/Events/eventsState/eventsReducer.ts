@@ -1,4 +1,5 @@
-import { UseFetchUsersForTableResponse } from 'api/users/useFetchUsersForTable';
+import { ProductForTableResponse } from 'admin/ProductTable/productTableHooks/useFetchToGetProductsForTable';
+import { UserForTableResponse } from 'admin/UsersTable/usersTableHooks/useFetchToGetUsersForTable';
 import { Reducer } from 'react';
 import {
   cleanupProfile,
@@ -23,7 +24,7 @@ export enum EventNames {
 }
 
 export interface EventsState {
-  tableRows: UseFetchUsersForTableResponse[] | null;
+  tableRows: ProductForTableResponse[] | UserForTableResponse[] | null;
   profile: ProfilesType | null;
   copyProfile: ProfilesType | null;
   changedProfile: Partial<ProfilesType> | null;

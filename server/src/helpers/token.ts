@@ -52,7 +52,7 @@ class Token {
     try {
       const usersCollection = db.collection<UserType>(CollectionName.Users);
       const result = await usersCollection.findOne<{ refreshToken: string }>(
-        { userId: adminId },
+        { itemId: adminId },
         { projection: { _id: 0, refreshToken: 1 } }
       );
       if (!result) throw accessError({ message: "no token", logout: true });
@@ -107,7 +107,7 @@ class Token {
   }: RefreshSave) {
     try {
       const result = await usersCollection.updateOne(
-        { userId: adminId },
+        { itemId: adminId },
         { $set: { refreshToken } }
       );
       if (!result.acknowledged) throw serverError("bad token update");

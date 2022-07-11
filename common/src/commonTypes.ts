@@ -1,9 +1,25 @@
-import { ProductCardType, ProductImgsType, ProductProfilePointsType, ProductSettingsType } from "./productTypes";
-import { UserAddressType, UserContactsType, UserPersonalType, UserSecretType, UserSettingsType } from "./userTypes";
+import {
+  ProductCardType,
+  ProductProfilePointsType,
+  ProductSettingsType,
+} from "./productTypes";
+import {
+  UserAddressType,
+  UserContactsType,
+  UserPersonalType,
+  UserSecretType,
+  UserSettingsType,
+} from "./userTypes";
 
-export interface ImgsType {
-  avatar: string[],
-  photos: string[]
+export interface BaseType {
+  _id?: string;
+  itemId: string;
+  created: string;
+  selected?: boolean;
+  imgs: {
+    avatar: string[];
+    photos: string[];
+  };
 }
 
 export type ValidatedFields = UserSecretType &
@@ -13,8 +29,7 @@ export type ValidatedFields = UserSecretType &
   UserAddressType &
   ProductCardType &
   ProductProfilePointsType &
-  ProductSettingsType &
-  ProductImgsType;
+  ProductSettingsType;
 
 export type UserRequiredFields = [
   "login",
@@ -22,7 +37,7 @@ export type UserRequiredFields = [
   "email",
   "name",
   "surname",
-  "phone",
+  "phone"
 ];
 
 export type CustomErrorStatuses =

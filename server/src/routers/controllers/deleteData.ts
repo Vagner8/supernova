@@ -23,7 +23,7 @@ export async function deleteData({
   try {
     const usersCollection = db.collection<UserType>(collectionName);
     for await (const cur of cursor) {
-      const result = await usersCollection.deleteOne({ userId: cur })
+      const result = await usersCollection.deleteOne({ itemId: cur })
       if (result.deletedCount !== 1) throw serverError('bad deletion')
     }
     res.status(200).json({

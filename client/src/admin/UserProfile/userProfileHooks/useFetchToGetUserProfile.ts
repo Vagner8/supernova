@@ -3,23 +3,16 @@ import { EventsReducerActions } from 'admin/Events/eventsState';
 import { GoTo, fetcher } from 'api/fetcher';
 import { useAdminDispatch, useEventsDispatch } from 'hooks';
 import { Dispatch, useEffect } from 'react';
-import { UserType } from '../../../../common/src/userTypes';
+import { UserType } from '../../../../../common/src/userTypes';
 
 export type Projection<T> = {
   [K in keyof T]: Projection<T[K]> | string;
 };
 
-export type Optional<T, K extends keyof T> = Pick<Partial<T>, K> & Omit<T, K>;
-
-// export type UserProfileResponse = Optional<
-//   Omit<UserType, 'refreshToken' | 'selected'>,
-//   'secret'
-// >;
-
 export type UserProfileResponse = Omit<UserType, 'refreshToken' | 'selected'>
 
 const projection: Omit<Projection<UserProfileResponse>, '_id' | 'secret'> = {
-  userId: '$userId',
+  itemId: '$itemId',
   created: '$created',
   personal: '$personal',
   contacts: '$contacts',
@@ -28,17 +21,17 @@ const projection: Omit<Projection<UserProfileResponse>, '_id' | 'secret'> = {
   imgs: '$imgs',
 };
 
-interface UseUserProfile {
-  userId: string | undefined;
+interface UseFetchToGetUserProfile {
+  itemId: string | undefined;
   eventsDispatch: Dispatch<EventsReducerActions>;
   adminDispatch: Dispatch<AdminReducerActions>;
 }
 
-export function useUserProfile({
-  userId,
+export function useFetchToGetUserProfile({
+  itemId,
   eventsDispatch,
   adminDispatch,
-}: UseUserProfile) {
+}: UseFetchToGetUserProfile) {
   const eventsAction = useEventsDispatch(eventsDispatch);
   const adminAction = useAdminDispatch(adminDispatch);
   useEffect(() => {
@@ -47,7 +40,7 @@ export function useUserProfile({
         method: 'GET',
         url: `${GoTo.UserAggregate}/?projection=${JSON.stringify(
           projection,
-        )}&userId=${userId}`,
+        )}&itemId=${itemId}`,
         saveOperationResult: adminAction.saveOperationResult,
         setIsFetching: adminAction.setIsFetching,
       });
@@ -55,5 +48,5 @@ export function useUserProfile({
       eventsAction.savePoints({ profile: profile[0] });
     };
     asyncer();
-  }, [adminAction, eventsAction, userId]);
+  }, [adminAction, eventsAction, itemId]);
 }

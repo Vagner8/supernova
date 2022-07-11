@@ -1,9 +1,9 @@
 import { AdminReducerActions } from 'admin/adminState';
 import { EventsReducerActions, EventsState } from 'admin/Events/eventsState';
-import { useFetchUsersForTable } from 'api/users/useFetchUsersForTable';
 import { Dispatch } from 'react';
 import { Table } from 'UIKit';
 import styles from './usersTable.module.css';
+import { useFetchToGetUsersForTable } from './usersTableHooks/useFetchToGetUsersForTable';
 
 interface UsersProps {
   users: EventsState['tableRows'];
@@ -16,19 +16,13 @@ export default function Users({
   eventsDispatch,
   adminDispatch,
 }: UsersProps) {
-  useFetchUsersForTable(eventsDispatch, adminDispatch);
+  useFetchToGetUsersForTable(eventsDispatch, adminDispatch);
   return (
     <div className={styles.Users}>
       <div className={styles.right}>
-        <Table
-          rows={users}
-          sort={['avatar', 'name', 'surname', 'phone', 'email', 'rule']}
-          eventsDispatch={eventsDispatch}
-        />
+        <Table rows={users} eventsDispatch={eventsDispatch} />
       </div>
-      <div className={styles.left}>
-
-      </div>
+      <div className={styles.left}></div>
     </div>
   );
 }

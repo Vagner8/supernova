@@ -1,10 +1,16 @@
-import { ProductCardType, ProductImgsType, ProductProfilePointsType, ProductSettingsType } from "./productTypes";
+import { ProductCardType, ProductProfilePointsType, ProductSettingsType } from "./productTypes";
 import { UserAddressType, UserContactsType, UserPersonalType, UserSecretType, UserSettingsType } from "./userTypes";
-export interface ImgsType {
-    avatar: string[];
-    photos: string[];
+export interface BaseType {
+    _id?: string;
+    itemId: string;
+    created: string;
+    selected?: boolean;
+    imgs: {
+        avatar: string[];
+        photos: string[];
+    };
 }
-export declare type ValidatedFields = UserSecretType & UserSettingsType & UserPersonalType & UserContactsType & UserAddressType & ProductCardType & ProductProfilePointsType & ProductSettingsType & ProductImgsType;
+export declare type ValidatedFields = UserSecretType & UserSettingsType & UserPersonalType & UserContactsType & UserAddressType & ProductCardType & ProductProfilePointsType & ProductSettingsType;
 export declare type UserRequiredFields = [
     "login",
     "password",

@@ -8,13 +8,13 @@ export async function getUser(
   res: Response,
   next: NextFunction
 ) {
-  const { userId, projection } = req.query as {
-    userId: string;
+  const { itemId, projection } = req.query as {
+    itemId: string;
     projection: string;
   };
   getData({
-    newItem: userId === "new" ? newUser : null,
-    match: userId ? { userId } : {},
+    newItem: itemId === "new" ? newUser : null,
+    match: itemId ? { itemId } : {},
     projection,
     collectionName: CollectionName.Users,
     res,

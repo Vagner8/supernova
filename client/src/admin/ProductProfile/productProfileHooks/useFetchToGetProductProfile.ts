@@ -1,6 +1,6 @@
 import { AdminReducerActions } from 'admin/adminState';
 import { EventsReducerActions } from 'admin/Events/eventsState';
-import { Projection } from 'admin/UserProfile/useUserProfile';
+import { Projection } from 'admin/UserProfile/userProfileHooks/useFetchToGetUserProfile';
 import { fetcher, GoTo } from 'api/fetcher';
 import { useAdminDispatch, useEventsDispatch } from 'hooks';
 import { Dispatch, useEffect } from 'react';
@@ -9,7 +9,7 @@ import { ProductType } from '../../../../../common/src/productTypes';
 export type ProductProfileResponse = Omit<ProductType, 'selected'>;
 
 const projection: Omit<Projection<ProductProfileResponse>, '_id'> = {
-  productId: '$productId',
+  itemId: '$itemId',
   created: '$created',
   card: '$card',
   profile: '$profile',
@@ -18,13 +18,13 @@ const projection: Omit<Projection<ProductProfileResponse>, '_id'> = {
 };
 
 interface UseProductProfile {
-  productId: string | undefined;
+  itemId: string | undefined;
   eventsDispatch: Dispatch<EventsReducerActions>;
   adminDispatch: Dispatch<AdminReducerActions>;
 }
 
 export function useFetchToGetProductProfile({
-  productId,
+  itemId,
   eventsDispatch,
   adminDispatch,
 }: UseProductProfile) {
@@ -36,7 +36,7 @@ export function useFetchToGetProductProfile({
         method: 'GET',
         url: `${GoTo.ProductAggregate}/?projection=${JSON.stringify(
           projection,
-        )}&productId=${productId}`,
+        )}&itemId=${itemId}`,
         saveOperationResult: adminAction.saveOperationResult,
         setIsFetching: adminAction.setIsFetching,
       });
@@ -44,5 +44,5 @@ export function useFetchToGetProductProfile({
       eventsAction.savePoints({ profile: profile[0] });
     };
     asyncer();
-  }, [adminAction, eventsAction, productId]);
+  }, [adminAction, eventsAction, itemId]);
 }

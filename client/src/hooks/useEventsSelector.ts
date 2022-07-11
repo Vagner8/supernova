@@ -18,10 +18,13 @@ export function useEventsSelector() {
 
       selectTableRowsIds(tableRows: EventsState['tableRows']) {
         if (!tableRows) return;
-        return tableRows.reduce<string[]>((acc, row) => {
-          if (row.selected) acc.push(row.userId);
-          return acc;
-        }, []);
+        let tableRowsIds: string[] = []
+        for (let row of tableRows) {
+          if (row.selected) {
+            tableRowsIds.push(row.itemId)
+          }
+        }
+        return tableRowsIds
       },
 
       selectFieldErrorByLabel(label: string, validateErrors?: ValidateError[]) {

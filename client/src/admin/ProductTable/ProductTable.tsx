@@ -15,11 +15,10 @@ export default function ProductTable({
   return (
     <div className={styles.ProductTable}>
       <div className={styles.right}>
-        {/* <Table
+        <Table
           rows={products}
-          sort={['avatar', 'name', 'surname', 'phone', 'email', 'rule']}
           eventsDispatch={eventsDispatch}
-        /> */}
+        />
       </div>
       <div className={styles.left}></div>
     </div>

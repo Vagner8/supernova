@@ -1,4 +1,4 @@
-import { ImgsType } from "./commonTypes";
+import { BaseType } from "./commonTypes";
 export declare type UserStatus = "Owner" | "Admin" | "User" | "Viewer" | "Fired" | "New" | "Developer";
 export interface UserSecretType {
     login: string;
@@ -21,19 +21,12 @@ export interface UserAddressType {
     street: string;
     number: string;
 }
-export interface UserImgsType extends ImgsType {
-}
-export interface UserType {
-    _id?: string;
-    userId: string;
+export interface UserType extends BaseType {
     refreshToken: string;
-    created: string;
-    selected?: boolean;
     secret: UserSecretType;
     settings: UserSettingsType;
     personal: UserPersonalType;
     contacts: UserContactsType;
     address: UserAddressType;
-    imgs: UserImgsType;
 }
 //# sourceMappingURL=userTypes.d.ts.map
