@@ -139,6 +139,7 @@ function AdminRoutes({
                 <ProductTable
                   products={eventsState.tableRows}
                   eventsDispatch={eventsDispatch}
+                  adminDispatch={adminDispatch}
                 />
               }
             />

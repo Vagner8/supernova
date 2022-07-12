@@ -34,7 +34,7 @@ export function Profile({
 }: ProfileProps) {
   const eventsAction = useEventsDispatch(eventsDispatch);
   const adminAction = useAdminDispatch(adminDispatch);
-  const { idParam } = useSplitParams();
+  const { itemId } = useSplitParams();
   useProfile(eventsDispatch);
 
   const onChange = useCallback(
@@ -66,7 +66,7 @@ export function Profile({
     <div className={styles.Profile}>
       <div className={styles.lift}>
         <Avatar url={profile.imgs.avatar[0]} size="m" />
-        {editMode && idParam !== 'new' ? (
+        {editMode && itemId !== 'new' ? (
           <FileInput name="avatar" multiple={false} onChange={onChangeFiles} />
         ) : null}
       </div>

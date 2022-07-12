@@ -3,15 +3,15 @@ import { useEventsDispatch, useSplitParams } from 'hooks';
 import { Dispatch, useEffect } from 'react';
 
 export function useProfile(eventsDispatch: Dispatch<EventsReducerActions>) {
-  const { idParam } = useSplitParams();
+  const { itemId } = useSplitParams();
   const eventsAction = useEventsDispatch(eventsDispatch);
   useEffect(() => {
     return () => {
       eventsAction.cleanupProfile();
     };
-  }, [eventsAction, idParam]);
+  }, [eventsAction, itemId]);
 
   useEffect(() => {
-    if (idParam === 'new') eventsAction.switchEditMode({ editMode: true });
-  }, [eventsAction, idParam]);
+    if (itemId === 'new') eventsAction.switchEditMode({ editMode: true });
+  }, [eventsAction, itemId]);
 }

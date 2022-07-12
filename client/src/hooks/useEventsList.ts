@@ -17,7 +17,7 @@ export function useEventsList({
   isSomeRowSelected,
   eventsDispatch,
 }: UseEventsList) {
-  const { idParam } = useSplitParams();
+  const { itemId } = useSplitParams();
   const adminId = useLocalStorageData('adminId');
   const eventsAction = useEventsDispatch(eventsDispatch);
   useEffect(() => {
@@ -27,9 +27,9 @@ export function useEventsList({
       return EventNames.Copy;
     };
     const deleteEvent = () => {
-      if (idParam && idParam !== adminId) return EventNames.Delete;
+      if (itemId && itemId !== adminId) return EventNames.Delete;
       if (!isSomeRowSelected) return '';
-      if (idParam === adminId) return '';
+      if (itemId === adminId) return '';
       return EventNames.Delete;
     };
     const saveEvent = () => (editMode ? EventNames.Save : '');
@@ -43,5 +43,5 @@ export function useEventsList({
         saveEvent(),
       ],
     });
-  }, [editMode, idParam, adminId, eventsAction, isSomeRowSelected]);
+  }, [editMode, itemId, adminId, eventsAction, isSomeRowSelected]);
 }

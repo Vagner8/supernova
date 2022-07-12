@@ -46,10 +46,10 @@ export function Events({
   const eventsAction = useEventsDispatch(eventsDispatch);
   const adminAction = useAdminDispatch(adminDispatch);
   useEventsList({ isSomeRowSelected, editMode, eventsDispatch });
-  const { categoryParam, idParam } = useSplitParams();
+  const { categoryParam, itemId } = useSplitParams();
   const navigate = useNavigate();
   const firebaseStorage = useFirebaseStorage({
-    paths: [categoryParam, idParam, fileInputName],
+    paths: [categoryParam, itemId, fileInputName],
     isFileInputMultiple,
     adminDispatch,
   });
@@ -80,7 +80,7 @@ export function Events({
             if (!firebaseUrls || !fileInputName) return;
             if (profile?.imgs) {
               await updateData({
-                url: `/${categoryParam}/update/?id=${idParam}`,
+                url: `/${categoryParam}/update/?id=${itemId}`,
                 profile: {
                   imgs: {
                     ...profile.imgs,
@@ -96,8 +96,8 @@ export function Events({
           }
           if (changedProfile) {
             await updateData({
-              url: `/${categoryParam}/update/?id=${idParam}`,
-              profile: idParam === 'new' ? profile : changedProfile,
+              url: `/${categoryParam}/update/?id=${itemId}`,
+              profile: itemId === 'new' ? profile : changedProfile,
               saveOperationResult: adminAction.saveOperationResult,
               setIsFetching: adminAction.setIsFetching,
             });
@@ -106,7 +106,7 @@ export function Events({
         }
         case EventNames.Delete: {
           await deleteData({
-            url: `/${categoryParam}/delete/?id=${idParam}`,
+            url: `/${categoryParam}/delete/?id=${itemId}`,
             saveOperationResult: adminAction.saveOperationResult,
             setIsFetching: adminAction.setIsFetching,
             selectTableRowsIds,

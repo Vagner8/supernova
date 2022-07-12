@@ -13,6 +13,7 @@ export interface ProductForTableResponse {
   price: ProductType['card']['price'];
   avatar: ProductType['imgs']['avatar'];
   disabled: ProductType['settings']['disabled'];
+  category: ProductType['settings']['category']
   selected?: ProductType['selected'];
 }
 
@@ -22,6 +23,7 @@ const projection: Omit<Projection<ProductForTableResponse>, '_id'> = {
   price: '$card.price',
   avatar: '$imgs.avatar',
   disabled: '$settings.disabled',
+  category: '$settings.category'
 };
 
 export function useFetchToGetProductsForTable(
