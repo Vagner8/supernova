@@ -8,7 +8,7 @@ import { useFetchToGetProductsForTable } from './productTableHooks/useFetchToGet
 interface ProductTableProps {
   products: EventsState['tableRows'];
   eventsDispatch: Dispatch<EventsReducerActions>;
-  adminDispatch: Dispatch<AdminReducerActions>,
+  adminDispatch: Dispatch<AdminReducerActions>;
 }
 
 export default function ProductTable({
@@ -16,16 +16,10 @@ export default function ProductTable({
   eventsDispatch,
   adminDispatch,
 }: ProductTableProps) {
-  useFetchToGetProductsForTable(eventsDispatch, adminDispatch)
+  useFetchToGetProductsForTable(eventsDispatch, adminDispatch);
   return (
     <div className={styles.ProductTable}>
-      <div className={styles.right}>
-        <Table
-          rows={products}
-          eventsDispatch={eventsDispatch}
-        />
-      </div>
-      <div className={styles.left}></div>
+      <Table rows={products} eventsDispatch={eventsDispatch} />
     </div>
   );
 }

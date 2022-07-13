@@ -3,15 +3,15 @@ import { ProductForTableResponse } from 'admin/ProductTable/productTableHooks/us
 import { UserForTableResponse } from 'admin/UsersTable/usersTableHooks/useFetchToGetUsersForTable';
 import { useEventsDispatch } from 'hooks';
 import { Dispatch, useMemo } from 'react';
-import { Avatar, Chip } from 'UIKit';
+import { Avatar, Chip, Switch } from 'UIKit';
 import styles from './../table.module.css';
 
-type ColKeys = keyof UserForTableResponse | keyof ProductForTableResponse;
+type CellKeys = keyof UserForTableResponse | keyof ProductForTableResponse;
 type Rows = UserForTableResponse | ProductForTableResponse;
 
 interface TypeofCol {
   cellValue: string | string[];
-  cellName: ColKeys;
+  cellName: CellKeys;
 }
 
 interface OnClickCheckbox {
@@ -23,27 +23,30 @@ export function useCell(eventsDispatch: Dispatch<EventsReducerActions>) {
   const eventsAction = useEventsDispatch(eventsDispatch);
   return useMemo(
     () => ({
-      onClickCheckbox({rowId, checked}: OnClickCheckbox) {
+      onClickCheckbox({ rowId, checked }: OnClickCheckbox) {
         eventsAction.selectTableRow({ rowId, select: checked });
       },
 
-      avoidSomeCols(key: ColKeys) {
-        if (key === '_id') return true;
-        if (key === 'itemId') return true;
+      avoidedCells(cellName: CellKeys) {
+        const arr: CellKeys[] = ['_id', 'itemId', 'selected']
+        if (arr.includes(cellName)) return true;
         return false;
       },
 
-      isColNameKeysOfRows(row: Rows, cellName: string): cellName is ColKeys {
+      isColNameKeysOfRows(row: Rows, cellName: string): cellName is CellKeys {
         if (cellName in row) return true;
         return false;
       },
 
       typeofCells({ cellName, cellValue }: TypeofCol) {
+        if (cellName === 'disabled') {
+          return <Switch />;
+        }
         if (cellName === 'avatar') {
           return <Avatar url={cellValue[0]} size="xs" />;
         }
-        if (typeof cellValue !== 'string') return;
         if (cellName === 'rule' || cellName === 'category') {
+          if (typeof cellValue !== 'string') return;
           return <Chip text={cellValue} className={styles.chip} />;
         }
         return cellValue;

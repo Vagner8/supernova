@@ -24,6 +24,7 @@ export * from './Select/Select';
 export * from './ButtonLi/ButtonLi';
 export * from './Checkbox/Checkbox';
 export * from './Chip/Chip';
+export * from './Switch/Switch';
 
 export * from './Typography/Text/Text';
 export * from './Typography/Title/Title';

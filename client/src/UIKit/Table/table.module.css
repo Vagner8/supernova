@@ -1,14 +1,63 @@
+.Table {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+}
+
+.right {
+  display: grid;
+  grid-template-rows: auto;
+  gap: 1.25rem;
+}
+
 .Row {
-  display: flex;
+  display: grid;
+  grid-template-columns: auto 1fr;
   align-items: center;
-  height: 52px;
+}
+
+.avatar {
+  grid-area: avatar;
+}
+
+.name {
+  grid-area: name;
+}
+
+.surname {
+  grid-area: surname;
+}
+
+.phone {
+  grid-area: phone;
+}
+
+.email {
+  grid-area: email;
+}
+
+.rule {
+  grid-area: rule;
+}
+
+.price {
+  grid-area: price;
+}
+
+.category {
+  grid-area: category;
+}
+
+.disabled {
+  grid-area: disabled;
 }
 
 .row_link {
-  display: flex;
-  align-items: center;
+  display: grid;
+  grid-template-columns: repeat(14, 1fr);
+  place-items: center stretch;
+  grid-template-areas:
+    "avatar name name price disabled disabled category category surname surname phone phone phone email email email email rule rule";
   color: inherit;
-  width: 100%;
 }
 
 .row_checkbox {
@@ -23,33 +72,6 @@
   padding: 0 var(--l-rem);
 }
 
-.Table .chip {
-  padding-left: 0;
-  padding-right: 0;
+.chip {
   justify-content: center;
-  width: 100%;
-}
-
-.avatar {
-  order: 1;
-  width: auto;
-}
-
-.name,
-.surname {
-  order: 2;
-  width: 150px;
-}
-
-.phone,
-.email,
-.price {
-  order: 3;
-  width: 200px;
-}
-
-.rule,
-.category {
-  order: 4;
-  width: 50px;
 }

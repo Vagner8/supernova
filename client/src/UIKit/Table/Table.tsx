@@ -46,29 +46,32 @@ export function Table({ rows, eventsDispatch }: TableProps) {
   const fromUseCell = useCell(eventsDispatch);
   if (!rows) return null;
   const onClickCheckbox = (rowId: string, checked: boolean) =>
-  fromUseCell.onClickCheckbox({ rowId, checked });
+    fromUseCell.onClickCheckbox({ rowId, checked });
   return (
     <div className={styles.Table}>
-      {rows.map((row) => (
-        <Row
-          key={row._id}
-          rowId={row._id}
-          itemId={row.itemId}
-          onClickCheckbox={onClickCheckbox}
-        >
-          {() => {
-            return Object.entries(row).map(([cellName, cellValue]) => {
-              if (!fromUseCell.isColNameKeysOfRows(row, cellName)) return;
-              if (fromUseCell.avoidSomeCols(cellName)) return;
-              return (
-                <Cell className={styles[cellName]} key={cellName}>
-                  {() => fromUseCell.typeofCells({ cellName, cellValue })}
-                </Cell>
-              );
-            });
-          }}
-        </Row>
-      ))}
+      <div className={styles.right}>
+        {rows.map((row) => (
+          <Row
+            key={row._id}
+            rowId={row._id}
+            itemId={row.itemId}
+            onClickCheckbox={onClickCheckbox}
+          >
+            {() => {
+              return Object.entries(row).map(([cellName, cellValue]) => {
+                if (!fromUseCell.isColNameKeysOfRows(row, cellName)) return;
+                if (fromUseCell.avoidedCells(cellName)) return;
+                return (
+                  <Cell className={styles[cellName]} key={cellName}>
+                    {() => fromUseCell.typeofCells({ cellName, cellValue })}
+                  </Cell>
+                );
+              });
+            }}
+          </Row>
+        ))}
+      </div>
+      <div className={styles.right}></div>
     </div>
   );
 }
