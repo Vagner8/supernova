@@ -10,7 +10,7 @@ type CellKeys = keyof UserForTableResponse | keyof ProductForTableResponse;
 type Rows = UserForTableResponse | ProductForTableResponse;
 
 interface TypeofCol {
-  cellValue: string | string[];
+  cellValue: string | string[] | boolean;
   cellName: CellKeys;
 }
 
@@ -40,10 +40,10 @@ export function useCell(eventsDispatch: Dispatch<EventsReducerActions>) {
 
       typeofCells({ cellName, cellValue }: TypeofCol) {
         if (cellName === 'disabled') {
-          return <Switch />;
+          return <Switch label={['off', 'on']} disabled={cellValue as boolean}/>
         }
         if (cellName === 'avatar') {
-          return <Avatar url={cellValue[0]} size="xs" />;
+          return <Avatar url={(cellValue as string[])[0]} size="xs" />;
         }
         if (cellName === 'rule' || cellName === 'category') {
           if (typeof cellValue !== 'string') return;

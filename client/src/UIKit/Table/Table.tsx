@@ -30,14 +30,17 @@ const Cell = ({ className, children }: CellProps) => {
 const Row = ({ itemId, rowId, onClickCheckbox, children }: RowProps) => {
   const { categoryParam } = useSplitParams();
   return (
-    <div className={styles.Row}>
-      <Checkbox rowId={rowId} onClickCheckbox={onClickCheckbox} />
+    <div className={`${styles.Row} ${styles[categoryParam]}`}>
+      <Checkbox
+        className={styles.row_checkbox}
+        rowId={rowId}
+        onClickCheckbox={onClickCheckbox}
+      />
       <Link
         className={styles.row_link}
         to={`/admin/${categoryParam}/${itemId}`}
-      >
-        {children()}
-      </Link>
+      />
+      {children()}
     </div>
   );
 };

@@ -1,6 +1,5 @@
 import { AdminReducerActions } from 'admin/adminState';
 import { EventsState } from 'admin/Events/eventsState';
-import { useAdminDispatch } from 'hooks';
 import { Dispatch } from 'react';
 
 interface HomeProps {
