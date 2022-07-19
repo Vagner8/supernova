@@ -7,9 +7,9 @@ import { ChangeEvent, Dispatch, useCallback } from 'react';
 import { Avatar, FileInput, Form } from 'UIKit';
 import styles from './profile.module.css';
 import { useAdminDispatch, useEventsDispatch, useSplitParams } from 'hooks';
-import { useProfile } from './useProfile';
 import { AdminReducerActions, AdminState } from 'admin/adminState';
 import { OperationResultType } from '../../../../common/src/commonTypes';
+import { useCleanupProfile } from './profileHooks/useCleanupProfile';
 
 interface ProfileProps {
   popup: EventsState['popup'];
@@ -35,7 +35,7 @@ export function Profile({
   const eventsAction = useEventsDispatch(eventsDispatch);
   const adminAction = useAdminDispatch(adminDispatch);
   const { itemId } = useSplitParams();
-  useProfile(eventsDispatch);
+  useCleanupProfile(eventsDispatch);
 
   const onChange = useCallback(
     (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {

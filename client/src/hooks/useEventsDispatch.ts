@@ -11,6 +11,7 @@ import {
   SaveFiles,
   DeleteOneFile,
   SwitchEditMode,
+  SwitchSwitch,
 } from 'admin/Events/eventsState';
 import { Dispatch, useMemo } from 'react';
 
@@ -19,6 +20,13 @@ export function useEventsDispatch(
 ) {
   return useMemo(() => {
     return {
+      switchSwitch({ itemId }: SwitchSwitch['payload']) {
+        eventsDispatch({
+          type: EventsStrAction.SwitchSwitch,
+          payload: { itemId },
+        });
+      },
+
       cleanupProfile() {
         eventsDispatch({
           type: EventsStrAction.CleanupProfile,
@@ -99,10 +107,10 @@ export function useEventsDispatch(
         eventsDispatch({ type: EventsStrAction.RestoreProfile });
       },
 
-      selectTableRow({ rowId, select }: SelectTableRow['payload']) {
+      selectTableRow({ itemId }: SelectTableRow['payload']) {
         eventsDispatch({
           type: EventsStrAction.SelectTableRow,
-          payload: { rowId, select },
+          payload: { itemId },
         });
       },
 

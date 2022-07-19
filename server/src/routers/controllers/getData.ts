@@ -4,6 +4,7 @@ import { serverError } from "../../helpers/errors";
 import { CollectionName } from "../../types";
 import { NewProductType } from "../newItems/newProduct";
 import { NewUserType } from "../newItems/newUser";
+import { v4 as uuidv4 } from "uuid";
 
 interface GetCertainData {
   newItem: NewUserType | NewProductType | null;
@@ -11,7 +12,7 @@ interface GetCertainData {
   collectionName: CollectionName;
   projection: string;
   match: {
-    [index: string]: string
+    [index: string]: string;
   };
   next: NextFunction;
 }
@@ -25,7 +26,10 @@ export async function getData({
   next,
 }: GetCertainData) {
   try {
-    if (newItem) return res.status(200).json([newItem]);
+    if (newItem) {
+      newItem.itemId = uuidv4();
+      return res.status(200).json([newItem]);
+    }
     if (!projection) return serverError("no projection");
     const usersCollection = db.collection(collectionName);
     const result = await usersCollection

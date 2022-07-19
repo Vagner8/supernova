@@ -4,7 +4,7 @@ import { ChangeEvent, Dispatch, ReactNode } from 'react';
 import {
   EventsReducerActions,
   EventsState,
-  ProfilesType,
+  ProfileType,
 } from 'admin/Events/eventsState';
 import { useEventsSelector } from 'hooks';
 import { OperationResultType } from '../../../../common/src/commonTypes';
@@ -12,7 +12,7 @@ import { useFields } from './formHooks/usFields';
 
 interface FormProps {
   popup: EventsState['popup'];
-  profile: ProfilesType;
+  profile: ProfileType;
   editMode: EventsState['editMode'];
   onChange: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   eventsDispatch: Dispatch<EventsReducerActions>;

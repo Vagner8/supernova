@@ -1,8 +1,9 @@
 import { UserType } from "../../../../common/src/userTypes";
 
-export type NewUserType = Omit<UserType, "_id" | "refreshToken" | "itemId" | 'timestamp' | 'created'>
+export type NewUserType = Omit<UserType, "_id" | "refreshToken" | 'timestamp' | 'created'>
 
 export const newUser: NewUserType = {
+  itemId: '',
   settings: {
     rule: "New",
   },

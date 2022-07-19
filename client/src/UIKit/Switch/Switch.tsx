@@ -2,21 +2,22 @@ import { useState } from 'react';
 import styles from './switch.module.css';
 
 interface SwitchProps {
+  itemId: string;
   disabled: boolean;
+  onClick: (itemId: string) => void;
   label?: [string, string];
 }
 
-export function Switch({ label, disabled }: SwitchProps) {
-  const [checkedClass, setCheckedClass] = useState<'' | 'checked'>(() =>
-    disabled ? 'checked' : '',
-  );
-  const onClick = () => setCheckedClass(checkedClass ? '' : 'checked');
+export function Switch({ itemId, label, disabled, onClick }: SwitchProps) {
+  const onClickHandel = () => {
+    onClick(itemId);
+  };
 
   return (
     <button
       type="button"
-      onClick={onClick}
-      className={`${styles.Switch} ${styles[checkedClass]}`}
+      onClick={onClickHandel}
+      className={`${styles.Switch} ${styles[disabled ? '' : 'checked']}`}
     >
       <label>
         {label ? label[0] : null}

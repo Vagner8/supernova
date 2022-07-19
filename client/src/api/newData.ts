@@ -2,7 +2,7 @@ import { SaveOperationResult, SetIsFetching } from 'admin/adminState';
 import { AllPartial, ProfileType } from 'admin/Events/eventsState';
 import { fetcher } from './fetcher';
 
-interface UpdateData {
+interface NewData {
   url: string;
   profile: AllPartial<ProfileType> ;
   setIsFetching: ({ isFetching }: SetIsFetching['payload']) => void;
@@ -11,15 +11,15 @@ interface UpdateData {
   }: SaveOperationResult['payload']) => void;
 }
 
-export async function updateData({
+export async function newData({
   profile,
   url,
   setIsFetching,
   saveOperationResult,
-}: UpdateData) {
+}: NewData) {
   await fetcher({
     body: profile,
-    method: 'PUT',
+    method: 'POST',
     url,
     setIsFetching,
     saveOperationResult,

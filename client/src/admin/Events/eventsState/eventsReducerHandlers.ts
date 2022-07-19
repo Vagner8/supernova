@@ -1,14 +1,46 @@
 import { ProductProfileResponse } from 'admin/ProductProfile/productProfileHooks/useFetchToGetProductProfile';
+import { ProductForTableResponse } from 'admin/ProductTable/productTableHooks/useFetchToGetProductsForTable';
 import { UserProfileResponse } from 'admin/UserProfile/userProfileHooks/useFetchToGetUserProfile';
-import { EventsState } from './eventsReducer';
+import { UserForTableResponse } from 'admin/UsersTable/usersTableHooks/useFetchToGetUsersForTable';
 
-export type ProfilesType = UserProfileResponse | ProductProfileResponse;
+export enum EventNames {
+  New = 'new',
+  Edit = 'edit',
+  EditOff = 'edit off',
+  Copy = 'copy',
+  Delete = 'delete',
+  Save = 'save',
+}
 
-export type ProfilesKeysType =
-  | keyof UserProfileResponse
-  | keyof ProductProfileResponse;
+export type AllPartial<T> = {
+  [K in keyof T]?: T[K] extends {} ? AllPartial<T[K]> : T[K];
+};
 
-export type FileInputName = keyof ProfilesType['imgs'];
+export type ProfileType = UserProfileResponse | ProductProfileResponse;
+export type ProfileOnChangeType = Omit<
+  ProfileType,
+  'itemId' | '_id' | 'created'
+>;
+
+export type TableRowType = ProductForTableResponse | UserForTableResponse;
+export type TableRowTypeAllFields = ProductForTableResponse &
+  UserForTableResponse;
+export type TableRowTypeAllKeys = keyof TableRowTypeAllFields;
+
+export type FileInputName = keyof ProfileType['imgs'];
+
+export interface EventsState {
+  tableRows: TableRowType[] | null;
+  profile: ProfileType | null;
+  copyProfile: ProfileType | null;
+  changedProfile: Partial<ProfileType>;
+  popup: string | null;
+  editMode: boolean;
+  eventsList: null | string[];
+  files: File[] | null;
+  isFileInputMultiple: boolean;
+  fileInputName: FileInputName | null;
+}
 
 export enum EventsStrAction {
   SavePopup = 'SavePopup',
@@ -19,40 +51,42 @@ export enum EventsStrAction {
   SaveEventsList = 'SaveEventsList',
   SaveProfile = 'SaveProfile',
   ProfileOnChange = 'ProfileOnChange',
+  ChangedProfileOnChange = 'ChangedProfileOnChange',
   SaveProfileCopy = 'SaveProfileCopy',
   SaveTableRows = 'SaveTableRows',
   RestoreProfile = 'RestoreProfile',
   CleanupProfile = 'CleanPoints',
   SelectTableRow = 'SelectTableRow',
   SaveImgs = 'SaveImgs',
+  SwitchSwitch = 'SwitchSwitch',
 }
 
 export interface ProfileOnChange {
   type: EventsStrAction.ProfileOnChange;
-  payload: { name: string; value: string; pointName: ProfilesKeysType };
+  payload: {
+    name: string;
+    value: string | File[];
+    pointName: keyof ProfileOnChangeType;
+  };
 }
 export const profileOnChange = (
   state: EventsState,
   { name, value, pointName }: ProfileOnChange['payload'],
 ) => {
   if (!state.profile) return state;
-  if (pointName === '_id') return state;
-  if (pointName === 'created') return state;
-  if (pointName === 'itemId') return state;
-  if (pointName === 'imgs') return state;
   return {
     ...state,
     profile: {
       ...state.profile,
       [pointName]: {
-        ...(state.profile[pointName as keyof EventsState['profile']] as Object),
+        ...state.profile[pointName],
         [name]: value,
       },
     },
     changedProfile: {
       ...state.changedProfile,
       [pointName]: {
-        ...(state.profile[pointName as keyof EventsState['profile']] as Object),
+        ...state.changedProfile[pointName],
         [name]: value,
       },
     },
@@ -61,19 +95,21 @@ export const profileOnChange = (
 
 export interface SelectTableRow {
   type: EventsStrAction.SelectTableRow;
-  payload: { rowId: string; select: boolean };
+  payload: { itemId: string };
 }
 export const selectTableRow = (
   state: EventsState,
-  { rowId, select }: SelectTableRow['payload'],
+  { itemId }: SelectTableRow['payload'],
 ) => {
   if (!state.tableRows) return state;
   return {
     ...state,
-    rows: state.tableRows.map((row) => {
-      if (rowId === row._id) {
-        row.selected = select;
-        return row;
+    tableRows: state.tableRows.map((row) => {
+      if (row.itemId === itemId) {
+        return {
+          ...row,
+          selected: !row.selected,
+        };
       }
       return row;
     }),
@@ -87,7 +123,7 @@ export const cleanupProfile = (state: EventsState) => {
   return {
     ...state,
     copyProfile: null,
-    changedProfile: null,
+    changedProfile: {},
     profile: null,
     files: null,
     editMode: false,
@@ -150,6 +186,29 @@ export const saveImgs = (
   };
 };
 
+export interface SwitchSwitch {
+  type: EventsStrAction.SwitchSwitch;
+  payload: { itemId: string };
+}
+export const switchSwitch = (
+  state: EventsState,
+  { itemId }: SwitchSwitch['payload'],
+) => {
+  if (!state.tableRows) return state;
+  return {
+    ...state,
+    tableRows: state.tableRows.map((row) => {
+      if (itemId === row.itemId && 'disabled' in row) {
+        return {
+          ...row,
+          disabled: !row.disabled,
+        };
+      }
+      return row;
+    }),
+  };
+};
+
 export interface RestoreProfile {
   type: EventsStrAction.RestoreProfile;
 }
@@ -171,7 +230,7 @@ export interface SwitchEditMode {
 
 export interface SaveProfile {
   type: EventsStrAction.SaveProfile;
-  payload: { profile: ProfilesType };
+  payload: { profile: ProfileType };
 }
 
 export interface SaveEventsList {
@@ -201,4 +260,5 @@ export type EventsReducerActions =
   | RestoreProfile
   | CleanupProfile
   | SelectTableRow
-  | SaveImgs;
+  | SaveImgs
+  | SwitchSwitch;

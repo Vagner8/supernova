@@ -6,17 +6,24 @@ interface FileInputProps {
   multiple: boolean;
   name: string;
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
+  className?: string;
 }
 
-export function FileInput({ multiple, name, onChange }: FileInputProps) {
+export function FileInput({
+  multiple,
+  name,
+  onChange,
+  className,
+}: FileInputProps) {
   return (
-    <div className={styles.FileInput}>
+    <div className={`${styles.FileInput} ${className}`}>
       <Button
         title={multiple ? 'pick files' : 'pick file'}
         disabled={false}
         type="button"
       >
         <input
+          data-point-name="imgs"
           multiple={multiple}
           className={styles.input}
           type="file"

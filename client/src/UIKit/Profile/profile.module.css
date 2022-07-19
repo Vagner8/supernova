@@ -4,12 +4,12 @@
 }
 
 .lift {
-  padding-top: var(--m-rem);
   display: flex;
   flex-direction: column;
   align-items: center;
   margin-right: var(--l-rem);
   width: 20%;
+  margin-top: 2.5rem;
 }
 
 .middle, .right {
@@ -22,4 +22,8 @@
   color: var(--white-color);
   background-color: #80deea;
   border-radius: 50%;
+}
+
+.file_input {
+  margin-top: 1.25rem;
 }

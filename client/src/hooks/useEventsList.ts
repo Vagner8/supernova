@@ -28,7 +28,7 @@ export function useEventsList({
     };
     const deleteEvent = () => {
       if (itemId && itemId !== adminId) return EventNames.Delete;
-      if (!isSomeRowSelected) return '';
+      // if (!isSomeRowSelected) return '';
       if (itemId === adminId) return '';
       return EventNames.Delete;
     };

@@ -1,5 +1,13 @@
-import { EventsReducerActions, EventsState } from 'admin/Events/eventsState';
-import { useSplitParams } from 'hooks';
+import { AdminReducerActions } from 'admin/adminState';
+import { EventsReducerActions, EventsState, TableRowType } from 'admin/Events/eventsState';
+import { GoTo } from 'api/fetcher';
+import { updateData } from 'api/updateData';
+import {
+  useAdminDispatch,
+  useEventsDispatch,
+  useEventsSelector,
+  useSplitParams,
+} from 'hooks';
 import { Dispatch, ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import { Checkbox } from 'UIKit';
@@ -7,15 +15,15 @@ import styles from './table.module.css';
 import { useCell } from './tableHooks/useCell';
 
 interface TableProps {
-  rows: EventsState['tableRows'];
+  tableRows: EventsState['tableRows'];
   eventsDispatch: Dispatch<EventsReducerActions>;
+  adminDispatch: Dispatch<AdminReducerActions>;
 }
 
 interface RowProps {
   itemId: string;
-  rowId: string;
   children: () => ReactNode;
-  onClickCheckbox: (rowId: string, checked: boolean) => void;
+  onClickCheckbox: (itemId: string) => void;
 }
 
 interface CellProps {
@@ -27,13 +35,13 @@ const Cell = ({ className, children }: CellProps) => {
   return <div className={`${styles.Cell} ${className}`}>{children()}</div>;
 };
 
-const Row = ({ itemId, rowId, onClickCheckbox, children }: RowProps) => {
+const Row = ({ itemId, onClickCheckbox, children }: RowProps) => {
   const { categoryParam } = useSplitParams();
   return (
     <div className={`${styles.Row} ${styles[categoryParam]}`}>
       <Checkbox
         className={styles.row_checkbox}
-        rowId={rowId}
+        itemId={itemId}
         onClickCheckbox={onClickCheckbox}
       />
       <Link
@@ -45,18 +53,39 @@ const Row = ({ itemId, rowId, onClickCheckbox, children }: RowProps) => {
   );
 };
 
-export function Table({ rows, eventsDispatch }: TableProps) {
-  const fromUseCell = useCell(eventsDispatch);
-  if (!rows) return null;
-  const onClickCheckbox = (rowId: string, checked: boolean) =>
-    fromUseCell.onClickCheckbox({ rowId, checked });
+export function Table({
+  tableRows,
+  eventsDispatch,
+  adminDispatch,
+}: TableProps) {
+  const eventsAction = useEventsDispatch(eventsDispatch);
+  const adminAction = useAdminDispatch(adminDispatch);
+  const { selectDisabledValueByItemId } = useEventsSelector();
+
+  const fromUseCell = useCell();
+  if (!tableRows) return null;
+  const onClickCheckbox = (itemId: string) => {
+    eventsAction.selectTableRow({ itemId });
+  };
+  const onClickSwitch = (itemId: string) => {
+    eventsAction.switchSwitch({ itemId });
+    updateData({
+      profile: {
+        settings: {
+          disabled: !selectDisabledValueByItemId(itemId, tableRows),
+        },
+      },
+      url: `${GoTo.ProductUpdate}/?itemId=${itemId}`,
+      setIsFetching: adminAction.setIsFetching,
+      saveOperationResult: adminAction.saveOperationResult,
+    });
+  };
   return (
     <div className={styles.Table}>
       <div className={styles.right}>
-        {rows.map((row) => (
+        {tableRows.map((row) => (
           <Row
             key={row._id}
-            rowId={row._id}
             itemId={row.itemId}
             onClickCheckbox={onClickCheckbox}
           >
@@ -66,7 +95,14 @@ export function Table({ rows, eventsDispatch }: TableProps) {
                 if (fromUseCell.avoidedCells(cellName)) return;
                 return (
                   <Cell className={styles[cellName]} key={cellName}>
-                    {() => fromUseCell.typeofCells({ cellName, cellValue })}
+                    {() =>
+                      fromUseCell.typeofCells({
+                        itemId: row.itemId,
+                        cellName,
+                        cellValue,
+                        onClickSwitch,
+                      })
+                    }
                   </Cell>
                 );
               });

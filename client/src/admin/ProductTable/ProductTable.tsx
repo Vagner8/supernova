@@ -19,7 +19,11 @@ export default function ProductTable({
   useFetchToGetProductsForTable(eventsDispatch, adminDispatch);
   return (
     <div className={styles.ProductTable}>
-      <Table rows={products} eventsDispatch={eventsDispatch} />
+      <Table
+        tableRows={products}
+        eventsDispatch={eventsDispatch}
+        adminDispatch={adminDispatch}
+      />
     </div>
   );
 }

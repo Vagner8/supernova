@@ -1,34 +1,24 @@
-import { EventsReducerActions } from 'admin/Events/eventsState';
 import { ProductForTableResponse } from 'admin/ProductTable/productTableHooks/useFetchToGetProductsForTable';
 import { UserForTableResponse } from 'admin/UsersTable/usersTableHooks/useFetchToGetUsersForTable';
-import { useEventsDispatch } from 'hooks';
-import { Dispatch, useMemo } from 'react';
+import { useMemo } from 'react';
 import { Avatar, Chip, Switch } from 'UIKit';
 import styles from './../table.module.css';
 
 type CellKeys = keyof UserForTableResponse | keyof ProductForTableResponse;
 type Rows = UserForTableResponse | ProductForTableResponse;
 
-interface TypeofCol {
+interface TypeofCells {
+  itemId: string;
   cellValue: string | string[] | boolean;
   cellName: CellKeys;
+  onClickSwitch: (itemId: string) => void;
 }
 
-interface OnClickCheckbox {
-  rowId: string;
-  checked: boolean;
-}
-
-export function useCell(eventsDispatch: Dispatch<EventsReducerActions>) {
-  const eventsAction = useEventsDispatch(eventsDispatch);
+export function useCell() {
   return useMemo(
     () => ({
-      onClickCheckbox({ rowId, checked }: OnClickCheckbox) {
-        eventsAction.selectTableRow({ rowId, select: checked });
-      },
-
       avoidedCells(cellName: CellKeys) {
-        const arr: CellKeys[] = ['_id', 'itemId', 'selected']
+        const arr: CellKeys[] = ['_id', 'itemId', 'selected'];
         if (arr.includes(cellName)) return true;
         return false;
       },
@@ -38,9 +28,16 @@ export function useCell(eventsDispatch: Dispatch<EventsReducerActions>) {
         return false;
       },
 
-      typeofCells({ cellName, cellValue }: TypeofCol) {
+      typeofCells({ cellName, cellValue, itemId, onClickSwitch }: TypeofCells) {
         if (cellName === 'disabled') {
-          return <Switch label={['off', 'on']} disabled={cellValue as boolean}/>
+          return (
+            <Switch
+              itemId={itemId}
+              label={['off', 'on']}
+              disabled={cellValue as boolean}
+              onClick={onClickSwitch}
+            />
+          );
         }
         if (cellName === 'avatar') {
           return <Avatar url={(cellValue as string[])[0]} size="xs" />;
@@ -52,6 +49,6 @@ export function useCell(eventsDispatch: Dispatch<EventsReducerActions>) {
         return cellValue;
       },
     }),
-    [eventsAction],
+    [],
   );
 }

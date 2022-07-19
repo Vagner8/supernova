@@ -75,6 +75,8 @@
 }
 
 .products .disabled {
+  display: flex;
+  height: 100%;
   z-index: 2;
   grid-column: 6 / 8;
   grid-row: 1 / 1;

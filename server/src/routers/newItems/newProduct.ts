@@ -1,9 +1,9 @@
 import { ProductType } from "../../../../common/src/productTypes";
 
-export type NewProductType = Omit<ProductType, "_id" | "itemId">;
+export type NewProductType = Omit<ProductType, "_id" | "created">;
 
 export const newProduct: NewProductType = {
-  created: "",
+  itemId: '',
   card: {
     name: "",
     price: "",

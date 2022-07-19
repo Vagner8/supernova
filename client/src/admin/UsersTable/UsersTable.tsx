@@ -19,7 +19,11 @@ export default function UsersTable({
   useFetchToGetUsersForTable(eventsDispatch, adminDispatch);
   return (
     <div className={styles.UsersTable}>
-      <Table rows={users} eventsDispatch={eventsDispatch} />
+      <Table
+        tableRows={users}
+        eventsDispatch={eventsDispatch}
+        adminDispatch={adminDispatch}
+      />
     </div>
   );
 }

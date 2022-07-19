@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { CollectionName } from "../../types";
 import { deleteData } from "../controllers/deleteData";
 
-export async function deleteUser(
+export async function deleteProduct(
   req: Request,
   res: Response,
   next: NextFunction
@@ -13,7 +13,7 @@ export async function deleteUser(
   }
   deleteData({
     cursor: bodyOrId(req.query.itemId as string, req.body as string[]),
-    collectionName: CollectionName.Users,
+    collectionName: CollectionName.Products,
     req,
     res,
     next,

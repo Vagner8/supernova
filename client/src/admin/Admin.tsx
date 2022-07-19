@@ -86,9 +86,6 @@ function AdminRoutes({
         eventsList={eventsState.eventsList}
         profile={eventsState.profile}
         changedProfile={eventsState.changedProfile}
-        files={eventsState.files}
-        fileInputName={eventsState.fileInputName}
-        isFileInputMultiple={eventsState.isFileInputMultiple}
         isSomeRowSelected={isSomeRowSelected(eventsState.tableRows)}
         selectTableRowsIds={selectTableRowsIds(eventsState.tableRows)}
         adminDispatch={adminDispatch}

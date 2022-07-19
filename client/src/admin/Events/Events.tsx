@@ -1,17 +1,10 @@
 import { AdminReducerActions } from 'admin/adminState';
-import { deleteData } from 'api/deleteData';
-import { updateData } from 'api/updateData';
-import {
-  useAdminDispatch,
-  useEventsDispatch,
-  useSplitParams,
-  useFirebaseStorage,
-  useEventsList,
-} from 'hooks';
+import { useEventsDispatch, useSplitParams, useEventsList } from 'hooks';
 import { Dispatch, MouseEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ButtonLi, Dropdown } from 'UIKit';
 import styles from './events.module.css';
+import { useEvents } from './eventsHooks.ts/useEvents';
 import { EventNames, EventsReducerActions, EventsState } from './eventsState';
 
 interface EventsProps {
@@ -20,13 +13,10 @@ interface EventsProps {
   profile: EventsState['profile'];
   changedProfile: EventsState['changedProfile'];
   editMode: EventsState['editMode'];
-  files: EventsState['files'];
-  fileInputName: EventsState['fileInputName'];
-  isFileInputMultiple: EventsState['isFileInputMultiple'];
   isSomeRowSelected: boolean | undefined;
   eventsDispatch: Dispatch<EventsReducerActions>;
   adminDispatch: Dispatch<AdminReducerActions>;
-  selectTableRowsIds?: string[]
+  selectTableRowsIds?: string[];
 }
 
 export function Events({
@@ -35,26 +25,23 @@ export function Events({
   changedProfile,
   profile,
   editMode,
-  files,
-  fileInputName,
-  isFileInputMultiple,
   isSomeRowSelected,
   adminDispatch,
   eventsDispatch,
   selectTableRowsIds,
 }: EventsProps) {
   const eventsAction = useEventsDispatch(eventsDispatch);
-  const adminAction = useAdminDispatch(adminDispatch);
   useEventsList({ isSomeRowSelected, editMode, eventsDispatch });
   const { categoryParam, itemId } = useSplitParams();
   const navigate = useNavigate();
-  const firebaseStorage = useFirebaseStorage({
-    paths: [categoryParam, itemId, fileInputName],
-    isFileInputMultiple,
+  const fromUseEvents = useEvents({
+    itemId: profile?.itemId,
     adminDispatch,
+    eventsDispatch,
   });
 
   const onClick = (e: MouseEvent<HTMLButtonElement>) => {
+    console.log('onClick')
     if (!e.target) return;
     const selectedEvent = (e.target as HTMLButtonElement).getAttribute(
       'data-btn-name',
@@ -62,7 +49,9 @@ export function Events({
     const asyncer = async () => {
       switch (selectedEvent) {
         case EventNames.New: {
-          navigate('/admin/users/new');
+          eventsAction.switchEditMode({ editMode: true })
+          navigate(`/admin/${categoryParam}/new`);
+          console.log(editMode)
           break;
         }
         case EventNames.Edit: {
@@ -75,42 +64,16 @@ export function Events({
           break;
         }
         case EventNames.Save: {
-          if (files?.length) {
-            const firebaseUrls = await firebaseStorage.download(files);
-            if (!firebaseUrls || !fileInputName) return;
-            if (profile?.imgs) {
-              await updateData({
-                url: `/${categoryParam}/update/?id=${itemId}`,
-                profile: {
-                  imgs: {
-                    ...profile.imgs,
-                    [fileInputName]: firebaseUrls,
-                  },
-                },
-                saveOperationResult: adminAction.saveOperationResult,
-                setIsFetching: adminAction.setIsFetching,
-              });
-            }
-            eventsAction.saveImgs({ firebaseUrls, fileInputName });
-            eventsAction.deleteAllFiles();
+          if (itemId === 'new') {
+            return await fromUseEvents.newItem(profile);
           }
-          if (changedProfile) {
-            await updateData({
-              url: `/${categoryParam}/update/?id=${itemId}`,
-              profile: itemId === 'new' ? profile : changedProfile,
-              saveOperationResult: adminAction.saveOperationResult,
-              setIsFetching: adminAction.setIsFetching,
-            });
+          if (Object.values(changedProfile).length) {
+            await fromUseEvents.updateItem(changedProfile);
           }
           break;
         }
         case EventNames.Delete: {
-          await deleteData({
-            url: `/${categoryParam}/delete/?id=${itemId}`,
-            saveOperationResult: adminAction.saveOperationResult,
-            setIsFetching: adminAction.setIsFetching,
-            selectTableRowsIds,
-          });
+          await fromUseEvents.deleteItems(selectTableRowsIds);
           break;
         }
       }
@@ -128,11 +91,6 @@ export function Events({
           return (
             <ButtonLi
               key={eventString}
-              linkPath={
-                eventString === EventNames.New
-                  ? `/admin/${categoryParam}/new`
-                  : undefined
-              }
               icon={eventString === EventNames.Save ? 'save' : undefined}
               title={eventString}
               onClick={onClick}

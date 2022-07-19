@@ -1,47 +1,23 @@
-import { ProductForTableResponse } from 'admin/ProductTable/productTableHooks/useFetchToGetProductsForTable';
-import { UserForTableResponse } from 'admin/UsersTable/usersTableHooks/useFetchToGetUsersForTable';
 import { Reducer } from 'react';
 import {
   cleanupProfile,
   deleteOneFile,
   EventsReducerActions,
+  EventsState,
   EventsStrAction,
-  FileInputName,
   profileOnChange,
-  ProfilesType,
   saveFiles,
   saveImgs,
   selectTableRow,
+  switchSwitch,
 } from './eventsReducerHandlers';
-
-export enum EventNames {
-  New = 'new',
-  Edit = 'edit',
-  EditOff = 'edit off',
-  Copy = 'copy',
-  Delete = 'delete',
-  Save = 'save',
-}
-
-export interface EventsState {
-  tableRows: ProductForTableResponse[] | UserForTableResponse[] | null;
-  profile: ProfilesType | null;
-  copyProfile: ProfilesType | null;
-  changedProfile: Partial<ProfilesType> | null;
-  popup: string | null;
-  editMode: boolean;
-  eventsList: null | string[];
-  files: File[] | null;
-  isFileInputMultiple: boolean;
-  fileInputName: FileInputName | null;
-}
 
 export const eventsInitState: EventsState = {
   popup: null,
   editMode: false,
   copyProfile: null,
   profile: null,
-  changedProfile: null,
+  changedProfile: {},
   eventsList: null,
   files: null,
   isFileInputMultiple: false,
@@ -54,8 +30,11 @@ export const eventsReducer: Reducer<EventsState, EventsReducerActions> = (
   action,
 ) => {
   switch (action.type) {
+    case EventsStrAction.SwitchSwitch: {
+      return switchSwitch(state, action.payload);
+    }
     case EventsStrAction.SaveImgs: {
-      return saveImgs(state, action.payload)
+      return saveImgs(state, action.payload);
     }
     case EventsStrAction.SelectTableRow: {
       return selectTableRow(state, action.payload);
@@ -82,16 +61,16 @@ export const eventsReducer: Reducer<EventsState, EventsReducerActions> = (
       return { ...state, copyProfile: state.profile };
     }
     case EventsStrAction.ProfileOnChange: {
-      return profileOnChange(state, action.payload)
+      return profileOnChange(state, action.payload);
     }
     case EventsStrAction.SaveEventsList: {
       return { ...state, eventsList: action.payload.newEventsList };
     }
     case EventsStrAction.SaveFiles: {
-      return saveFiles(state, action.payload)
+      return saveFiles(state, action.payload);
     }
     case EventsStrAction.DeleteOneFile: {
-      return deleteOneFile(state, action.payload)
+      return deleteOneFile(state, action.payload);
     }
     case EventsStrAction.DeleteAllFiles: {
       return { ...state, files: null };

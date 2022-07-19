@@ -5,33 +5,32 @@ import { db } from "../../app";
 import { OperationResultType } from "../../../../common/src/commonTypes";
 import { UserType } from "../../../../common/src/userTypes";
 import { ProductType } from "../../../../common/src/productTypes";
-import { v4 as uuidv4 } from "uuid";
+import bcrypt from "bcryptjs";
 
-interface PutData {
-  profile: Omit<Partial<UserType | ProductType>, "_id">;
+interface PostData {
+  profile: Omit<Partial<UserType>,"_id"> | Omit<Partial<ProductType>, "_id">;
   collectionName: CollectionName;
-  filter: {
-    [index: string]: string;
-  };
   res: Response;
   next: NextFunction;
 }
 
-export async function putData({
+export async function postData({
   profile,
   collectionName,
-  filter,
   res,
   next,
-}: PutData) {
+}: PostData) {
   try {
+    if ('secret' in profile && profile.secret?.password) {
+      profile.secret.password = await bcrypt.hash(profile.secret.password, 10);
+    }
     const usersCollection = db.collection(collectionName);
-    const result = await usersCollection.updateOne(filter, [{ $set: profile }]);
-    if (!result.matchedCount) throw serverError("bad filter");
-    if (!result.modifiedCount) throw serverError("bad update");
-    res.status(200).json({
+    profile.created = Date.now().toString();
+    const result = await usersCollection.insertOne(profile);
+    if (!result.insertedId) throw serverError("bad creation");
+    return res.status(201).json({
       status: "success",
-      message: "item updated",
+      message: "new item created",
     } as OperationResultType);
   } catch (err) {
     next(err);

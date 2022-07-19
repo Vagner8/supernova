@@ -4,6 +4,7 @@ import { Projection } from 'admin/UserProfile/userProfileHooks/useFetchToGetUser
 import { GoTo, fetcher } from 'api/fetcher';
 import { useAdminDispatch, useEventsDispatch } from 'hooks';
 import { Dispatch, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { ProductType } from '../../../../../common/src/productTypes';
 
 export interface ProductForTableResponse {
@@ -32,6 +33,7 @@ export function useFetchToGetProductsForTable(
 ) {
   const eventsAction = useEventsDispatch(eventsDispatch);
   const adminAction = useAdminDispatch(adminDispatch);
+  const location = useLocation()
   useEffect(() => {
     const asyncer = async () => {
       const tableRows = await fetcher<ProductForTableResponse[]>({
@@ -46,5 +48,5 @@ export function useFetchToGetProductsForTable(
       eventsAction.saveUsers({ tableRows });
     };
     asyncer();
-  }, [eventsAction, adminAction]);
+  }, [eventsAction, adminAction, location]);
 }
