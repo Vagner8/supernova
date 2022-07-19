@@ -49,7 +49,7 @@ export function Profile({
   const onChangeFiles = (e: ChangeEvent<HTMLInputElement>) => {
     eventsAction.saveMediaFiles({
       files: Array.from(e.target.files || []),
-      fileName: e.target.name as MediaFile['fileName'],
+      name: e.target.name as MediaFile['name'],
     });
     e.target.value = '';
   };
@@ -60,7 +60,7 @@ export function Profile({
       <div className={styles.lift}>
         <Avatar url={profile.imgs.avatar[0]} size="m" />
         {editMode && itemId !== 'new' ? (
-          <FileInput name="avatar" multiple={false} onChange={onChangeFiles} />
+          <FileInput name="avatar" multiple={true} onChange={onChangeFiles} />
         ) : null}
       </div>
       <div className={styles.middle}>

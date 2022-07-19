@@ -9,7 +9,7 @@ import {
   SaveProfile,
   SavePopup,
   SaveMediaFiles,
-  DeleteOneFile,
+  DeleteOneMediaFile,
   SwitchEditMode,
   SwitchSwitch,
 } from 'admin/Events/eventsState';
@@ -67,18 +67,18 @@ export function useEventsDispatch(
 
       saveMediaFiles({
         files,
-        fileName,
+        name,
       }: SaveMediaFiles['payload']) {
         eventsDispatch({
           type: EventsStrAction.SaveMediaFiles,
-          payload: { files, fileName },
+          payload: { files, name },
         });
       },
 
-      deleteOneFile({ fileName }: DeleteOneFile['payload']) {
+      deleteOneMediaFile({ name }: DeleteOneMediaFile['payload']) {
         eventsDispatch({
-          type: EventsStrAction.DeleteOneFile,
-          payload: { fileName },
+          type: EventsStrAction.DeleteOneMediaFile,
+          payload: { name },
         });
       },
 

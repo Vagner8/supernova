@@ -3,13 +3,19 @@ import styles from './chip.module.css';
 
 interface ChipProps {
   text: string;
-  onClick?: (text: string) => () => void;
+  onClick?: (name: string) => () => void;
   url?: string;
   file?: File;
   className?: string;
 }
 
-export function Chip({ onClick, text, url, file, className }: ChipProps) {
+export function Chip({
+  onClick,
+  text,
+  url,
+  file,
+  className,
+}: ChipProps) {
   return (
     <div
       className={`${className} ${styles.Chip} ${
@@ -20,7 +26,9 @@ export function Chip({ onClick, text, url, file, className }: ChipProps) {
         <Avatar url={file ? URL.createObjectURL(file) : url} size="chips" />
       ) : null}
       <p className={styles.text}>{text}</p>
-      {onClick ? <ButtonIcon icon="cancel" onClick={onClick(text)} /> : null}
+      {onClick ? (
+        <ButtonIcon icon="cancel" onClick={onClick(text)} />
+      ) : null}
     </div>
   );
 }

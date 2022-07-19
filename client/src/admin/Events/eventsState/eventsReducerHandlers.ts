@@ -29,7 +29,7 @@ export type TableRowTypeAllKeys = keyof TableRowTypeAllFields;
 
 export interface MediaFile {
   files: File[];
-  fileName: 'avatar' | 'photos';
+  name: 'avatar' | 'photos';
 }
 
 export interface EventsState {
@@ -47,7 +47,7 @@ export enum EventsStrAction {
   SavePopup = 'SavePopup',
   SwitchEditMode = 'SwitchEditMode',
   SaveMediaFiles = 'SaveMediaFiles',
-  DeleteOneFile = 'DeleteOneFile',
+  DeleteOneMediaFile = 'DeleteOneMediaFile',
   DeleteAllFiles = 'DeleteAllFiles',
   SaveEventsList = 'SaveEventsList',
   SaveProfile = 'SaveProfile',
@@ -145,21 +145,22 @@ export const saveMediaFiles = (
   };
 };
 
-export interface DeleteOneFile {
-  type: EventsStrAction.DeleteOneFile;
-  payload: { fileName: string };
+export interface DeleteOneMediaFile {
+  type: EventsStrAction.DeleteOneMediaFile;
+  payload: { name: string };
 }
-export const deleteOneFile = (
+export const deleteOneMediaFile = (
   state: EventsState,
-  { fileName }: DeleteOneFile['payload'],
+  { name }: DeleteOneMediaFile['payload'],
 ) => {
   return {
     ...state,
-    mediaFiles: {
-      ...state.mediaFiles.filter(
-        (mediaFile) => mediaFile.fileName !== fileName,
-      ),
-    },
+    mediaFiles: state.mediaFiles.map((mediaFile) => {
+      return {
+        ...mediaFile,
+        files: mediaFile.files.filter(file => file.name !== name)
+      }
+    }).filter(mediaFile => !!mediaFile.files.length),
   };
 };
 
@@ -251,7 +252,7 @@ export type EventsReducerActions =
   | ProfileOnChange
   | SaveEventsList
   | SaveMediaFiles
-  | DeleteOneFile
+  | DeleteOneMediaFile
   | DeleteAllFiles
   | SaveProfileCopy
   | SaveTableRows

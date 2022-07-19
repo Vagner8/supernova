@@ -1,7 +1,7 @@
 import { Reducer } from 'react';
 import {
   cleanupProfile,
-  deleteOneFile,
+  deleteOneMediaFile,
   EventsReducerActions,
   EventsState,
   EventsStrAction,
@@ -67,8 +67,8 @@ export const eventsReducer: Reducer<EventsState, EventsReducerActions> = (
     case EventsStrAction.SaveMediaFiles: {
       return saveMediaFiles(state, action.payload);
     }
-    case EventsStrAction.DeleteOneFile: {
-      return deleteOneFile(state, action.payload);
+    case EventsStrAction.DeleteOneMediaFile: {
+      return deleteOneMediaFile(state, action.payload);
     }
     case EventsStrAction.DeleteAllFiles: {
       return { ...state, mediaFiles: [] };

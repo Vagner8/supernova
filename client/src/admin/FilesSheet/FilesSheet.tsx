@@ -1,24 +1,31 @@
-import { EventsReducerActions } from 'admin/Events/eventsState';
+import { EventsReducerActions, EventsState } from 'admin/Events/eventsState';
 import { useEventsDispatch } from 'hooks';
 import { Dispatch, memo } from 'react';
 import { BottomSheetModals, Chip } from 'UIKit';
 
 interface FilesSheetProps {
-  files: File[] | null;
+  mediaFiles: EventsState['mediaFiles'];
   eventsDispatch: Dispatch<EventsReducerActions>;
 }
 
-export function FilesSheet({ files, eventsDispatch }: FilesSheetProps) {
+export function FilesSheet({ mediaFiles, eventsDispatch }: FilesSheetProps) {
   const eventsAction = useEventsDispatch(eventsDispatch);
-  const onClick = (fileName: string) => () => {
-    eventsAction.deleteOneFile({ fileName });
+  const onClick = (name?: string) => () => {
+    if (!name) return
+    eventsAction.deleteOneMediaFile({ name });
   };
-  if (!files) return null;
   return (
-    <BottomSheetModals setting={{ show: Boolean(files.length) }}>
-      {files.map((file) => (
-        <Chip file={file} key={file.name} text={file.name} onClick={onClick} />
-      ))}
+    <BottomSheetModals setting={{ show: Boolean(mediaFiles.length) }}>
+      {mediaFiles.map((mediaFile) =>
+        mediaFile.files.map((file) => (
+          <Chip
+            file={file}
+            key={file.name}
+            text={file.name}
+            onClick={onClick}
+          />
+        )),
+      )}
     </BottomSheetModals>
   );
 }
