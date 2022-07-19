@@ -8,7 +8,7 @@ import {
   SaveEventsList,
   SaveProfile,
   SavePopup,
-  SaveFiles,
+  SaveMediaFiles,
   DeleteOneFile,
   SwitchEditMode,
   SwitchSwitch,
@@ -65,14 +65,13 @@ export function useEventsDispatch(
         });
       },
 
-      saveFiles({
+      saveMediaFiles({
         files,
-        isFileInputMultiple,
-        fileInputName,
-      }: SaveFiles['payload']) {
+        fileName,
+      }: SaveMediaFiles['payload']) {
         eventsDispatch({
-          type: EventsStrAction.SaveFiles,
-          payload: { files, fileInputName, isFileInputMultiple },
+          type: EventsStrAction.SaveMediaFiles,
+          payload: { files, fileName },
         });
       },
 

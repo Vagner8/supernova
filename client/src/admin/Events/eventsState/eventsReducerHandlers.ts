@@ -27,25 +27,26 @@ export type TableRowTypeAllFields = ProductForTableResponse &
   UserForTableResponse;
 export type TableRowTypeAllKeys = keyof TableRowTypeAllFields;
 
-export type FileInputName = keyof ProfileType['imgs'];
+export interface MediaFile {
+  files: File[];
+  fileName: 'avatar' | 'photos';
+}
 
 export interface EventsState {
   tableRows: TableRowType[] | null;
   profile: ProfileType | null;
   copyProfile: ProfileType | null;
   changedProfile: Partial<ProfileType>;
+  mediaFiles: MediaFile[];
   popup: string | null;
   editMode: boolean;
   eventsList: null | string[];
-  files: File[] | null;
-  isFileInputMultiple: boolean;
-  fileInputName: FileInputName | null;
 }
 
 export enum EventsStrAction {
   SavePopup = 'SavePopup',
   SwitchEditMode = 'SwitchEditMode',
-  SaveFiles = 'SaveFiles',
+  SaveMediaFiles = 'SaveMediaFiles',
   DeleteOneFile = 'DeleteOneFile',
   DeleteAllFiles = 'DeleteAllFiles',
   SaveEventsList = 'SaveEventsList',
@@ -125,28 +126,22 @@ export const cleanupProfile = (state: EventsState) => {
     copyProfile: null,
     changedProfile: {},
     profile: null,
-    files: null,
+    mediaFiles: [],
     editMode: false,
   };
 };
 
-export interface SaveFiles {
-  type: EventsStrAction.SaveFiles;
-  payload: {
-    files: File[];
-    isFileInputMultiple: boolean;
-    fileInputName: FileInputName;
-  };
+export interface SaveMediaFiles {
+  type: EventsStrAction.SaveMediaFiles;
+  payload: MediaFile;
 }
-export const saveFiles = (
+export const saveMediaFiles = (
   state: EventsState,
-  { files, isFileInputMultiple, fileInputName }: SaveFiles['payload'],
+  mediaFile: SaveMediaFiles['payload'],
 ) => {
   return {
     ...state,
-    files,
-    isFileInputMultiple,
-    fileInputName,
+    mediaFiles: [...state.mediaFiles, mediaFile],
   };
 };
 
@@ -158,10 +153,13 @@ export const deleteOneFile = (
   state: EventsState,
   { fileName }: DeleteOneFile['payload'],
 ) => {
-  if (!state.files) return state;
   return {
     ...state,
-    files: state.files.filter((file) => file.name !== fileName),
+    mediaFiles: {
+      ...state.mediaFiles.filter(
+        (mediaFile) => mediaFile.fileName !== fileName,
+      ),
+    },
   };
 };
 
@@ -252,7 +250,7 @@ export type EventsReducerActions =
   | SaveProfile
   | ProfileOnChange
   | SaveEventsList
-  | SaveFiles
+  | SaveMediaFiles
   | DeleteOneFile
   | DeleteAllFiles
   | SaveProfileCopy

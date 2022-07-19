@@ -158,10 +158,10 @@ function AdminRoutes({
           </Routes>
         </Container>
       </Suspense>
-      <MemoFilesSheet
+      {/* <MemoFilesSheet
         files={eventsState.files}
         eventsDispatch={eventsDispatch}
-      />
+      /> */}
       <OperationResultsSheet
         operationResults={adminState.operationResults}
         adminDispatch={adminDispatch}

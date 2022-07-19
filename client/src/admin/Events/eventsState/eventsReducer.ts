@@ -6,7 +6,7 @@ import {
   EventsState,
   EventsStrAction,
   profileOnChange,
-  saveFiles,
+  saveMediaFiles,
   saveImgs,
   selectTableRow,
   switchSwitch,
@@ -19,9 +19,7 @@ export const eventsInitState: EventsState = {
   profile: null,
   changedProfile: {},
   eventsList: null,
-  files: null,
-  isFileInputMultiple: false,
-  fileInputName: null,
+  mediaFiles: [],
   tableRows: null,
 };
 
@@ -66,14 +64,14 @@ export const eventsReducer: Reducer<EventsState, EventsReducerActions> = (
     case EventsStrAction.SaveEventsList: {
       return { ...state, eventsList: action.payload.newEventsList };
     }
-    case EventsStrAction.SaveFiles: {
-      return saveFiles(state, action.payload);
+    case EventsStrAction.SaveMediaFiles: {
+      return saveMediaFiles(state, action.payload);
     }
     case EventsStrAction.DeleteOneFile: {
       return deleteOneFile(state, action.payload);
     }
     case EventsStrAction.DeleteAllFiles: {
-      return { ...state, files: null };
+      return { ...state, mediaFiles: [] };
     }
     default:
       return state;

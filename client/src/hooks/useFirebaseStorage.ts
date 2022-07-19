@@ -24,83 +24,81 @@ const storage = getStorage(firebaseApp);
 
 interface UseFirebaseStorage {
   paths: (string | undefined | null)[];
-  isFileInputMultiple: EventsState['isFileInputMultiple'];
   adminDispatch: Dispatch<AdminReducerActions>;
 }
 
 export function useFirebaseStorage({
   paths,
-  isFileInputMultiple,
   adminDispatch,
 }: UseFirebaseStorage) {
   const adminAction = useAdminDispatch(adminDispatch);
   return useMemo(() => {
-    return {
-      async download(files: File[]) {
-        try {
-          adminAction.setIsFetching({ isFetching: true });
-          if (!isFileInputMultiple) {
-            await this.deleteAllFilesInFolder(paths.join('/'));
-          }
-          return await this.saveFiles(files);
-        } catch (err) {
-          adminAction.saveOperationResult({
-            operationResult: {
-              status: 'firebase error',
-              message: 'bad files download',
-            },
-          });
-        } finally {
-          adminAction.setIsFetching({ isFetching: false });
-        }
-      },
+    // return {
+    //   async download(files: File[]) {
+    //     try {
+    //       adminAction.setIsFetching({ isFetching: true });
+    //       if (!isFileInputMultiple) {
+    //         await this.deleteAllFilesInFolder(paths.join('/'));
+    //       }
+    //       return await this.saveMediaFiles(files);
+    //     } catch (err) {
+    //       adminAction.saveOperationResult({
+    //         operationResult: {
+    //           status: 'firebase error',
+    //           message: 'bad files download',
+    //         },
+    //       });
+    //     } finally {
+    //       adminAction.setIsFetching({ isFetching: false });
+    //     }
+    //   },
 
-      async saveFiles(files: File[]) {
-        try {
-          const newRefs = this.createNewRefs(files);
-          if (!newRefs) return;
-          await Promise.all(
-            newRefs.map((newRef) =>
-              uploadBytes(newRef.storageRef, newRef.file),
-            ),
-          );
-          return await Promise.all(
-            newRefs.map((newRef) => getDownloadURL(newRef.storageRef)),
-          );
-        } catch (err) {
-          adminAction.saveOperationResult({
-            operationResult: {
-              status: 'firebase error',
-              message: 'bad files saving',
-            },
-          });
-        }
-      },
+    //   async saveMediaFiles(files: File[]) {
+    //     try {
+    //       const newRefs = this.createNewRefs(files);
+    //       if (!newRefs) return;
+    //       await Promise.all(
+    //         newRefs.map((newRef) =>
+    //           uploadBytes(newRef.storageRef, newRef.file),
+    //         ),
+    //       );
+    //       return await Promise.all(
+    //         newRefs.map((newRef) => getDownloadURL(newRef.storageRef)),
+    //       );
+    //     } catch (err) {
+    //       adminAction.saveOperationResult({
+    //         operationResult: {
+    //           status: 'firebase error',
+    //           message: 'bad files saving',
+    //         },
+    //       });
+    //     }
+    //   },
 
-      createNewRefs(files: File[]) {
-        if (!isStringArray(paths)) return;
-        return files.map((file) => ({
-          storageRef: ref(storage, `${paths.join('/')}/${uuidv4()}`),
-          file,
-        }));
-      },
+    //   createNewRefs(files: File[]) {
+    //     if (!isStringArray(paths)) return;
+    //     return files.map((file) => ({
+    //       storageRef: ref(storage, `${paths.join('/')}/${uuidv4()}`),
+    //       file,
+    //     }));
+    //   },
 
-      async deleteAllFilesInFolder(path: string) {
-        try {
-          const { items } = await listAll(ref(storage, path));
-          const desertRefs = items.map((item) => ref(storage, item.fullPath));
-          await Promise.all(
-            desertRefs.map((desertRef) => deleteObject(desertRef)),
-          );
-        } catch (err) {
-          adminAction.saveOperationResult({
-            operationResult: {
-              status: 'firebase error',
-              message: 'bad files deletion',
-            },
-          });
-        }
-      },
-    };
-  }, [adminAction, isFileInputMultiple, paths]);
+    //   async deleteAllFilesInFolder(path: string) {
+    //     try {
+    //       const { items } = await listAll(ref(storage, path));
+    //       const desertRefs = items.map((item) => ref(storage, item.fullPath));
+    //       await Promise.all(
+    //         desertRefs.map((desertRef) => deleteObject(desertRef)),
+    //       );
+    //     } catch (err) {
+    //       adminAction.saveOperationResult({
+    //         operationResult: {
+    //           status: 'firebase error',
+    //           message: 'bad files deletion',
+    //         },
+    //       });
+    //     }
+    //   },
+    // };
+  }, []);
 }

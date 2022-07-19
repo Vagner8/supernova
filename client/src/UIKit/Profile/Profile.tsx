@@ -1,8 +1,4 @@
-import {
-  EventsReducerActions,
-  EventsState,
-  FileInputName,
-} from 'admin/Events/eventsState';
+import { EventsReducerActions, EventsState, MediaFile } from 'admin/Events/eventsState';
 import { ChangeEvent, Dispatch, useCallback } from 'react';
 import { Avatar, FileInput, Form } from 'UIKit';
 import styles from './profile.module.css';
@@ -50,13 +46,10 @@ export function Profile({
     [adminAction, eventsAction, isProfileCopied],
   );
 
-  const onChangeFiles = (
-    e: ChangeEvent<HTMLInputElement>,
-  ) => {
-    eventsAction.saveFiles({
+  const onChangeFiles = (e: ChangeEvent<HTMLInputElement>) => {
+    eventsAction.saveMediaFiles({
       files: Array.from(e.target.files || []),
-      isFileInputMultiple: e.target.multiple,
-      fileInputName: e.target.name as FileInputName,
+      fileName: e.target.name as MediaFile['fileName'],
     });
     e.target.value = '';
   };
