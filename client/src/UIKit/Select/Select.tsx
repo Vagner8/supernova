@@ -1,5 +1,4 @@
-import { EventsReducerActions, EventsState } from 'admin/Events/eventsState';
-import { useEventsDispatch } from 'hooks';
+import { EventsReducerActions, EventsState, useEventsDispatch } from 'admin/Events/eventsState';
 import { Dispatch, MouseEvent, useState } from 'react';
 import { Icon, ButtonLi } from 'UIKit';
 import { ProductSettingsType } from '../../../../common/src/productTypes';

@@ -1,5 +1,4 @@
-import { AdminReducerActions } from 'admin/adminState';
-import { useAdminDispatch } from 'hooks';
+import { AdminReducerActions, useAdminDispatch } from 'admin/adminState';
 import { Dispatch, useEffect } from 'react';
 import { ButtonIcon, Headerblock } from 'UIKit';
 import { OperationResultType } from '../../../../common/src/commonTypes';

@@ -1,5 +1,5 @@
-import { AdminState } from 'admin/adminState/adminReducer';
-import { useLocalStorageData } from 'hooks';
+import { AdminState } from 'admin/adminState';
+import { useLocalStorage } from 'hooks';
 import { NavLink } from 'react-router-dom';
 import { Avatar, ButtonIcon } from 'UIKit';
 import styles from './navbar.module.css';
@@ -10,7 +10,7 @@ interface NavbarProps {
 }
 
 export function Navbar({ adminLogin, adminAvatar }: NavbarProps) {
-  const adminId = useLocalStorageData('adminId')
+  const adminId = useLocalStorage('adminId')
   return (
     <nav className={styles.Navbar}>
       <div className={styles.lift}>

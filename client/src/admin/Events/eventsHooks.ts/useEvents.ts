@@ -1,16 +1,16 @@
-import { AdminReducerActions } from 'admin/adminState';
+import { AdminReducerActions, useAdminDispatch } from 'admin/adminState';
 import { newData } from 'api/newData';
 import { deleteData } from 'api/deleteData';
 import { updateData } from 'api/updateData';
-import {
-  useAdminDispatch,
-  useEventsDispatch,
-  useFirebaseStorage,
-  useSplitParams,
-} from 'hooks';
+import { useFirebaseStorage, useSplitParams } from 'hooks';
 import { Dispatch, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { EventsReducerActions, EventsState } from '../eventsState';
+import {
+  EventsReducerActions,
+  EventsState,
+  useEventsDispatch,
+} from '../eventsState';
+import { BaseType } from '../../../../../common/src/commonTypes';
 
 interface UseEvents {
   itemId?: string;
@@ -24,10 +24,11 @@ export function useEvents({
   eventsDispatch,
 }: UseEvents) {
   const { categoryParam } = useSplitParams();
-  const { saveOperationResult, setIsFetching } =
+  const { saveOperationResult, setAdminState } =
     useAdminDispatch(adminDispatch);
   const eventsAction = useEventsDispatch(eventsDispatch);
   const navigate = useNavigate();
+  const fireBase = useFirebaseStorage({ adminDispatch });
   return useMemo(() => {
     return {
       async newItem(profile: EventsState['profile']) {
@@ -36,7 +37,7 @@ export function useEvents({
           url: `/${categoryParam}/new/?itemId=${itemId}`,
           profile: profile,
           saveOperationResult,
-          setIsFetching,
+          setAdminState,
         });
         navigate(`/admin/${categoryParam}/${profile.itemId}`);
       },
@@ -45,28 +46,34 @@ export function useEvents({
         await deleteData({
           url: `/${categoryParam}/delete/?itemId=${itemId}`,
           saveOperationResult,
-          setIsFetching,
+          setAdminState,
           selectTableRowsIds,
         });
         navigate(`/admin/${categoryParam}`);
       },
 
-      async updateItem(changedProfile: EventsState['changedProfile']) {
-        eventsAction.switchEditMode({ editMode: false });
+      async updateItem(
+        changedProfile: EventsState['changedProfile'],
+        mediaFiles: EventsState['mediaFiles'],
+      ) {
+        let imgs: Partial<BaseType['imgs']> | undefined;
+        if (mediaFiles.length && itemId) {
+          imgs = await fireBase.download(mediaFiles, itemId);
+        }
         await updateData({
           url: `/${categoryParam}/update/?itemId=${itemId}`,
-          profile: changedProfile,
+          profile: { ...changedProfile, imgs },
           saveOperationResult,
-          setIsFetching,
+          setAdminState,
         });
       },
     };
   }, [
     categoryParam,
-    eventsAction,
+    fireBase,
     itemId,
     navigate,
     saveOperationResult,
-    setIsFetching,
+    setAdminState,
   ]);
 }

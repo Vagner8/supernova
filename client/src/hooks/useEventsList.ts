@@ -1,10 +1,11 @@
-import { useEventsDispatch, useLocalStorageData, useSplitParams } from 'hooks';
 import { Dispatch, useEffect } from 'react';
 import {
   EventNames,
   EventsReducerActions,
   EventsState,
+  useEventsDispatch,
 } from 'admin/Events/eventsState';
+import { useSplitParams, useLocalStorage } from 'hooks';
 
 interface UseEventsList {
   editMode: EventsState['editMode'];
@@ -18,7 +19,7 @@ export function useEventsList({
   eventsDispatch,
 }: UseEventsList) {
   const { itemId } = useSplitParams();
-  const adminId = useLocalStorageData('adminId');
+  const adminId = useLocalStorage('adminId')
   const eventsAction = useEventsDispatch(eventsDispatch);
   useEffect(() => {
     const editEvent = () => (editMode ? EventNames.EditOff : EventNames.Edit);
@@ -27,15 +28,15 @@ export function useEventsList({
       return EventNames.Copy;
     };
     const deleteEvent = () => {
-      if (itemId && itemId !== adminId) return EventNames.Delete;
-      // if (!isSomeRowSelected) return '';
+      // if (itemId && itemId !== adminId) return EventNames.Delete;
+      if (!isSomeRowSelected) return '';
       if (itemId === adminId) return '';
       return EventNames.Delete;
     };
     const saveEvent = () => (editMode ? EventNames.Save : '');
 
-    eventsAction.saveEventsList({
-      newEventsList: [
+    eventsAction.setEventsState({
+      eventsList: [
         EventNames.New,
         editEvent(),
         copyEvent(),
@@ -43,5 +44,5 @@ export function useEventsList({
         saveEvent(),
       ],
     });
-  }, [editMode, itemId, adminId, eventsAction, isSomeRowSelected]);
+  }, [editMode, itemId, eventsAction, isSomeRowSelected]);
 }

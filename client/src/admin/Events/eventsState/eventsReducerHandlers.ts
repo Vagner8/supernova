@@ -40,23 +40,15 @@ export interface EventsState {
   mediaFiles: MediaFile[];
   popup: string | null;
   editMode: boolean;
-  eventsList: null | string[];
+  eventsList: string[] | null;
 }
 
 export enum EventsStrAction {
-  SavePopup = 'SavePopup',
-  SwitchEditMode = 'SwitchEditMode',
+  SetEventsState = 'SetEventsState',
   SaveMediaFiles = 'SaveMediaFiles',
   DeleteOneMediaFile = 'DeleteOneMediaFile',
-  DeleteAllFiles = 'DeleteAllFiles',
-  SaveEventsList = 'SaveEventsList',
-  SaveProfile = 'SaveProfile',
   ProfileOnChange = 'ProfileOnChange',
-  ChangedProfileOnChange = 'ChangedProfileOnChange',
-  SaveProfileCopy = 'SaveProfileCopy',
-  SaveTableRows = 'SaveTableRows',
   RestoreProfile = 'RestoreProfile',
-  CleanupProfile = 'CleanPoints',
   SelectTableRow = 'SelectTableRow',
   SaveImgs = 'SaveImgs',
   SwitchSwitch = 'SwitchSwitch',
@@ -117,17 +109,17 @@ export const selectTableRow = (
   };
 };
 
-export interface CleanupProfile {
-  type: EventsStrAction.CleanupProfile;
+export interface SetEventsState {
+  type: EventsStrAction.SetEventsState;
+  payload: Partial<EventsState>
 }
-export const cleanupProfile = (state: EventsState) => {
+export const setEventsState = (
+  state: EventsState,
+  changes: SetEventsState['payload']
+) => {
   return {
     ...state,
-    copyProfile: null,
-    changedProfile: {},
-    profile: null,
-    mediaFiles: [],
-    editMode: false,
+    ...changes,
   };
 };
 
@@ -168,23 +160,6 @@ export interface SaveImgs {
   type: EventsStrAction.SaveImgs;
   payload: { firebaseUrls: string[]; fileInputName: string };
 }
-export const saveImgs = (
-  state: EventsState,
-  { firebaseUrls, fileInputName }: SaveImgs['payload'],
-) => {
-  if (!state.profile?.imgs) return state;
-  return {
-    ...state,
-    profile: {
-      ...state.profile,
-      imgs: {
-        ...state.profile.imgs,
-        [fileInputName]: firebaseUrls,
-      },
-    },
-  };
-};
-
 export interface SwitchSwitch {
   type: EventsStrAction.SwitchSwitch;
   payload: { itemId: string };
@@ -212,52 +187,12 @@ export interface RestoreProfile {
   type: EventsStrAction.RestoreProfile;
 }
 
-export interface SaveTableRows {
-  type: EventsStrAction.SaveTableRows;
-  payload: { tableRows: EventsState['tableRows'] };
-}
-
-export interface SavePopup {
-  type: EventsStrAction.SavePopup;
-  payload: { popup: EventsState['popup'] };
-}
-
-export interface SwitchEditMode {
-  type: EventsStrAction.SwitchEditMode;
-  payload: { editMode: EventsState['editMode'] };
-}
-
-export interface SaveProfile {
-  type: EventsStrAction.SaveProfile;
-  payload: { profile: ProfileType };
-}
-
-export interface SaveEventsList {
-  type: EventsStrAction.SaveEventsList;
-  payload: { newEventsList: EventsState['eventsList'] };
-}
-
-export interface DeleteAllFiles {
-  type: EventsStrAction.DeleteAllFiles;
-}
-
-export interface SaveProfileCopy {
-  type: EventsStrAction.SaveProfileCopy;
-}
-
 export type EventsReducerActions =
-  | SavePopup
-  | SwitchEditMode
-  | SaveProfile
   | ProfileOnChange
-  | SaveEventsList
   | SaveMediaFiles
   | DeleteOneMediaFile
-  | DeleteAllFiles
-  | SaveProfileCopy
-  | SaveTableRows
   | RestoreProfile
-  | CleanupProfile
+  | SetEventsState
   | SelectTableRow
   | SaveImgs
   | SwitchSwitch;

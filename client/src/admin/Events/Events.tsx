@@ -1,11 +1,11 @@
 import { AdminReducerActions } from 'admin/adminState';
-import { useEventsDispatch, useSplitParams, useEventsList } from 'hooks';
+import { useSplitParams, useEventsList } from 'hooks';
 import { Dispatch, MouseEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ButtonLi, Dropdown } from 'UIKit';
 import styles from './events.module.css';
 import { useEvents } from './eventsHooks.ts/useEvents';
-import { EventNames, EventsReducerActions, EventsState } from './eventsState';
+import { EventNames, EventsReducerActions, EventsState, useEventsDispatch } from './eventsState';
 
 interface EventsProps {
   popup: EventsState['popup'];
@@ -14,6 +14,7 @@ interface EventsProps {
   changedProfile: EventsState['changedProfile'];
   editMode: EventsState['editMode'];
   isSomeRowSelected: boolean | undefined;
+  mediaFiles: EventsState['mediaFiles'];
   eventsDispatch: Dispatch<EventsReducerActions>;
   adminDispatch: Dispatch<AdminReducerActions>;
   selectTableRowsIds?: string[];
@@ -26,6 +27,7 @@ export function Events({
   profile,
   editMode,
   isSomeRowSelected,
+  mediaFiles,
   adminDispatch,
   eventsDispatch,
   selectTableRowsIds,
@@ -41,7 +43,6 @@ export function Events({
   });
 
   const onClick = (e: MouseEvent<HTMLButtonElement>) => {
-    console.log('onClick')
     if (!e.target) return;
     const selectedEvent = (e.target as HTMLButtonElement).getAttribute(
       'data-btn-name',
@@ -49,17 +50,16 @@ export function Events({
     const asyncer = async () => {
       switch (selectedEvent) {
         case EventNames.New: {
-          eventsAction.switchEditMode({ editMode: true })
+          eventsAction.setEventsState({ editMode: true });
           navigate(`/admin/${categoryParam}/new`);
-          console.log(editMode)
           break;
         }
         case EventNames.Edit: {
-          eventsAction.switchEditMode({ editMode: true });
+          eventsAction.setEventsState({ editMode: true });
           break;
         }
         case EventNames.EditOff: {
-          eventsAction.switchEditMode({ editMode: false });
+          eventsAction.setEventsState({ editMode: false });
           eventsAction.restoreProfile();
           break;
         }
@@ -67,8 +67,14 @@ export function Events({
           if (itemId === 'new') {
             return await fromUseEvents.newItem(profile);
           }
-          if (Object.values(changedProfile).length) {
-            await fromUseEvents.updateItem(changedProfile);
+          if (Object.values(changedProfile).length || mediaFiles.length) {
+            await fromUseEvents.updateItem(changedProfile, mediaFiles);
+            eventsAction.setEventsState({
+              copyProfile: null,
+              changedProfile: {},
+              mediaFiles: [],
+              editMode: false,
+            });
           }
           break;
         }

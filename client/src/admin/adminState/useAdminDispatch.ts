@@ -2,20 +2,26 @@ import {
   AdminReducerActions,
   AdminStrAction,
   DeleteOperationResult,
-  SaveAdminId,
-  SaveAvatarAndLogin,
   SaveOperationResult,
-  SetIsFetching,
+  SetAdminState,
+  AuthOnChange
 } from 'admin/adminState';
 import { Dispatch, useMemo } from 'react';
 
 export function useAdminDispatch(adminDispatch: Dispatch<AdminReducerActions>) {
   return useMemo(() => {
     return {
-      setIsFetching({ isFetching }: SetIsFetching['payload']) {
+      authOnChange({ name, value }: AuthOnChange['payload']) {
         adminDispatch({
-          type: AdminStrAction.SetIsFetching,
-          payload: { isFetching },
+          type: AdminStrAction.AuthOnChange,
+          payload: { name, value }
+        })
+      },
+
+      setAdminState(changes: SetAdminState['payload']) {
+        adminDispatch({
+          type: AdminStrAction.SetAdminState,
+          payload: changes
         });
       },
 
@@ -33,27 +39,6 @@ export function useAdminDispatch(adminDispatch: Dispatch<AdminReducerActions>) {
         });
       },
 
-      deleteAllOperationResults() {
-        adminDispatch({
-          type: AdminStrAction.DeleteAllOperationResults,
-        });
-      },
-
-      saveAdminId({ adminId }: SaveAdminId['payload']) {
-        adminDispatch({
-          type: AdminStrAction.SaveAdminId,
-          payload: { adminId },
-        });
-      },
-
-      saveOwnerNameAndAvatar({
-        avatarAndLogin,
-      }: SaveAvatarAndLogin['payload']) {
-        adminDispatch({
-          type: AdminStrAction.SaveAvatarAndLogin,
-          payload: { avatarAndLogin },
-        });
-      },
     };
   }, [adminDispatch]);
 }

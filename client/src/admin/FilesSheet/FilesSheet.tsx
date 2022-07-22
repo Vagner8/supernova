@@ -1,5 +1,4 @@
-import { EventsReducerActions, EventsState } from 'admin/Events/eventsState';
-import { useEventsDispatch } from 'hooks';
+import { EventsReducerActions, EventsState, useEventsDispatch } from 'admin/Events/eventsState';
 import { Dispatch, memo } from 'react';
 import { BottomSheetModals, Chip } from 'UIKit';
 

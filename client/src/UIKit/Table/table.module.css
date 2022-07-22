@@ -3,6 +3,14 @@
   grid-template-columns: 2fr 1fr;
 }
 
+.Row {
+  display: grid;
+  grid-template-columns: 20px repeat(12, 1fr);
+  grid-template-rows: auto;
+  place-items: center stretch;
+  color: inherit;
+}
+
 .right {
   display: grid;
   grid-template-rows: auto;
@@ -93,14 +101,6 @@
   z-index: 1;
   width: 100%;
   height: 100%;
-}
-
-.Row {
-  display: grid;
-  grid-template-columns: 20px repeat(12, 1fr);
-  grid-template-rows: auto;
-  place-items: center stretch;
-  color: inherit;
 }
 
 .row_link:hover {

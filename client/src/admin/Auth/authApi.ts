@@ -1,7 +1,6 @@
 import {
-  SaveAdminId,
   SaveOperationResult,
-  SetIsFetching,
+  SetAdminState,
 } from 'admin/adminState';
 import { fetcher } from 'api/fetcher';
 
@@ -10,26 +9,24 @@ interface Login {
     login: string;
     password: string;
   };
-  saveAdminId: ({ adminId }: SaveAdminId['payload']) => void;
-  setIsFetching: ({ isFetching }: SetIsFetching['payload']) => void;
+  setAdminState: ({ isFetching }: SetAdminState['payload']) => void;
   saveOperationResult: ({
     operationResult,
   }: SaveOperationResult['payload']) => void;
 }
 
 export async function login({
-  saveAdminId,
-  setIsFetching,
+  setAdminState,
   saveOperationResult,
   body,
 }: Login) {
   const response = (await fetcher({
     method: 'POST',
     url: '/login',
-    setIsFetching,
+    setAdminState,
     saveOperationResult,
     body,
   })) as undefined | { adminId: string };
   if (!response) return;
-  saveAdminId({ adminId: response.adminId });
+  localStorage.setItem('adminId', response.adminId)
 }

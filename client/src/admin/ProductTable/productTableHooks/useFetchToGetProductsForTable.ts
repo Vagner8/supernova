@@ -1,8 +1,7 @@
-import { AdminReducerActions } from 'admin/adminState';
-import { EventsReducerActions } from 'admin/Events/eventsState';
+import { AdminReducerActions, useAdminDispatch } from 'admin/adminState';
+import { EventsReducerActions, useEventsDispatch } from 'admin/Events/eventsState';
 import { Projection } from 'admin/UserProfile/userProfileHooks/useFetchToGetUserProfile';
 import { GoTo, fetcher } from 'api/fetcher';
-import { useAdminDispatch, useEventsDispatch } from 'hooks';
 import { Dispatch, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { ProductType } from '../../../../../common/src/productTypes';
@@ -42,10 +41,10 @@ export function useFetchToGetProductsForTable(
           projection,
         )}`,
         saveOperationResult: adminAction.saveOperationResult,
-        setIsFetching: adminAction.setIsFetching,
+        setAdminState: adminAction.setAdminState,
       });
       if (!tableRows) return;
-      eventsAction.saveUsers({ tableRows });
+      eventsAction.setEventsState({ tableRows });
     };
     asyncer();
   }, [eventsAction, adminAction, location]);

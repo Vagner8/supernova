@@ -1,4 +1,4 @@
-import { SaveOperationResult, SetIsFetching } from 'admin/adminState';
+import { SaveOperationResult, SetAdminState } from 'admin/adminState';
 import { OperationResultType } from '../../../common/src/commonTypes';
 
 export enum GoTo {
@@ -13,7 +13,7 @@ export enum GoTo {
 export interface Fetcher {
   method: 'POST' | 'DELETE' | 'PUT' | 'GET';
   url: string;
-  setIsFetching: ({ isFetching }: SetIsFetching['payload']) => void;
+  setAdminState: ({ isFetching }: SetAdminState['payload']) => void;
   saveOperationResult: ({
     operationResult,
   }: SaveOperationResult['payload']) => void;
@@ -23,11 +23,11 @@ export interface Fetcher {
 export async function fetcher<Res>({
   method,
   url,
-  setIsFetching,
+  setAdminState,
   saveOperationResult,
   body,
 }: Fetcher) {
-  setIsFetching({ isFetching: true });
+  setAdminState({ isFetching: true });
   try {
     const response = await fetch(url, {
       method,
@@ -65,6 +65,6 @@ export async function fetcher<Res>({
       },
     });
   } finally {
-    setIsFetching({ isFetching: false });
+    setAdminState({ isFetching: false });
   }
 }

@@ -1,9 +1,9 @@
-import { SaveOperationResult, SetIsFetching } from 'admin/adminState';
+import { SaveOperationResult, SetAdminState } from 'admin/adminState';
 import { fetcher } from './fetcher';
 
 interface DeleteData {
   url: string;
-  setIsFetching: ({ isFetching }: SetIsFetching['payload']) => void;
+  setAdminState: ({ isFetching }: SetAdminState['payload']) => void;
   saveOperationResult: ({
     operationResult,
   }: SaveOperationResult['payload']) => void;
@@ -12,14 +12,14 @@ interface DeleteData {
 
 export async function deleteData({
   url,
-  setIsFetching,
+  setAdminState,
   saveOperationResult,
   selectTableRowsIds,
 }: DeleteData) {
   await fetcher({
     method: 'DELETE',
     url,
-    setIsFetching,
+    setAdminState,
     saveOperationResult,
     body: selectTableRowsIds
   });

@@ -1,16 +1,12 @@
 import { Dispatch, lazy, Suspense, useReducer } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { Auth } from './Auth/Auth';
-import {
-  adminInitState,
-  adminReducer,
-  AdminState,
-} from './adminState/adminReducer';
+import { adminInitState, adminReducer } from './adminState/adminReducer';
 import { Container, Drawer, Linear, Navbar } from 'UIKit';
 import { MemoFilesSheet } from './FilesSheet/FilesSheet';
 import { Events } from './Events/Events';
 import { OperationResultsSheet } from './OperationResultsSheet/OperationResultsSheet';
-import { useEventsSelector, useValidateErrors, useWindowClick } from 'hooks';
+import { useEventsSelector, useLocalStorage, useValidateErrors, useWindowClick } from 'hooks';
 import { useFetchAvatarAndLogin } from 'api/users/useFetchAvatarAndLogin';
 import {
   eventsInitState,
@@ -18,7 +14,7 @@ import {
   EventsReducerActions,
   EventsState,
 } from './Events/eventsState';
-import { AdminReducerActions } from './adminState';
+import { AdminReducerActions, AdminState } from './adminState';
 
 const Home = lazy(() => import('./Home/Home'));
 const UserProfile = lazy(() => import('./UserProfile/UserProfile'));
@@ -32,10 +28,11 @@ export function Admin() {
     eventsReducer,
     eventsInitState,
   );
-  const adminId = localStorage.getItem('adminId');
+  const adminId = localStorage.getItem('adminId')
   if (!adminId || adminId === 'undefined') {
     return (
       <Auth
+        loginInputs={adminState.loginInputs}
         isFetching={adminState.isFetching}
         operationResults={adminState.operationResults}
         adminDispatch={adminDispatch}
@@ -86,6 +83,7 @@ function AdminRoutes({
         eventsList={eventsState.eventsList}
         profile={eventsState.profile}
         changedProfile={eventsState.changedProfile}
+        mediaFiles={eventsState.mediaFiles}
         isSomeRowSelected={isSomeRowSelected(eventsState.tableRows)}
         selectTableRowsIds={selectTableRowsIds(eventsState.tableRows)}
         adminDispatch={adminDispatch}

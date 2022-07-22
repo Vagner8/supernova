@@ -1,17 +1,12 @@
 import {
   EventsStrAction,
   EventsReducerActions,
-  SaveImgs,
   SelectTableRow,
-  SaveTableRows,
   ProfileOnChange,
-  SaveEventsList,
-  SaveProfile,
-  SavePopup,
   SaveMediaFiles,
   DeleteOneMediaFile,
-  SwitchEditMode,
   SwitchSwitch,
+  SetEventsState,
 } from 'admin/Events/eventsState';
 import { Dispatch, useMemo } from 'react';
 
@@ -27,41 +22,17 @@ export function useEventsDispatch(
         });
       },
 
-      cleanupProfile() {
+      setEventsState(changes: SetEventsState['payload']) {
         eventsDispatch({
-          type: EventsStrAction.CleanupProfile,
+          type: EventsStrAction.SetEventsState,
+          payload: changes
         });
-      },
-
-      savePopup({ popup }: SavePopup['payload']) {
-        eventsDispatch({
-          type: EventsStrAction.SavePopup,
-          payload: { popup },
-        });
-      },
-
-      savePoints({ profile }: SaveProfile['payload']) {
-        eventsDispatch({
-          type: EventsStrAction.SaveProfile,
-          payload: { profile },
-        });
-      },
-
-      saveProfileCopy() {
-        eventsDispatch({ type: EventsStrAction.SaveProfileCopy });
       },
 
       profileOnChange({ name, value, pointName }: ProfileOnChange['payload']) {
         eventsDispatch({
           type: EventsStrAction.ProfileOnChange,
           payload: { name, value, pointName },
-        });
-      },
-
-      saveEventsList({ newEventsList }: SaveEventsList['payload']) {
-        eventsDispatch({
-          type: EventsStrAction.SaveEventsList,
-          payload: { newEventsList },
         });
       },
 
@@ -82,26 +53,6 @@ export function useEventsDispatch(
         });
       },
 
-      deleteAllFiles() {
-        eventsDispatch({
-          type: EventsStrAction.DeleteAllFiles,
-        });
-      },
-
-      switchEditMode({ editMode }: SwitchEditMode['payload']) {
-        eventsDispatch({
-          type: EventsStrAction.SwitchEditMode,
-          payload: { editMode },
-        });
-      },
-
-      saveUsers({ tableRows }: SaveTableRows['payload']) {
-        eventsDispatch({
-          type: EventsStrAction.SaveTableRows,
-          payload: { tableRows },
-        });
-      },
-
       restoreProfile() {
         eventsDispatch({ type: EventsStrAction.RestoreProfile });
       },
@@ -110,13 +61,6 @@ export function useEventsDispatch(
         eventsDispatch({
           type: EventsStrAction.SelectTableRow,
           payload: { itemId },
-        });
-      },
-
-      saveImgs({ firebaseUrls, fileInputName }: SaveImgs['payload']) {
-        eventsDispatch({
-          type: EventsStrAction.SaveImgs,
-          payload: { firebaseUrls, fileInputName },
         });
       },
     };

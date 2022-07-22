@@ -36,7 +36,12 @@ export async function getData({
       .aggregate([{ $match: match }, { $project: JSON.parse(projection) }])
       .toArray();
     if (!result) throw serverError("no item");
-    res.status(200).json(result);
+    res.status(200).json(result.filter(item => {
+      if ('isNotAdmin' in item) {
+        return item.isNotAdmin
+      }
+      return item
+    }));
   } catch (err) {
     next(err);
   }

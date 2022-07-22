@@ -1,7 +1,6 @@
-import { AdminReducerActions } from 'admin/adminState';
+import { AdminReducerActions, useAdminDispatch } from 'admin/adminState';
 import { Projection } from 'admin/UserProfile/userProfileHooks/useFetchToGetUserProfile';
 import { fetcher, GoTo } from 'api/fetcher';
-import { useAdminDispatch } from 'hooks';
 import { Dispatch, useEffect } from 'react';
 import { UserType } from '../../../../common/src/userTypes';
 
@@ -12,7 +11,7 @@ export interface UseFetchAvatarAndLoginResponse {
 
 const projection: Omit<Projection<UseFetchAvatarAndLoginResponse>, '_id'> = {
   login: '$secret.login',
-  avatar: '$imgs.avatar'
+  avatar: '$imgs.avatar',
 };
 
 export function useFetchAvatarAndLogin(
@@ -27,10 +26,13 @@ export function useFetchAvatarAndLogin(
           projection,
         )}&itemId=${localStorage.getItem('adminId')}`,
         saveOperationResult: adminAction.saveOperationResult,
-        setIsFetching: adminAction.setIsFetching,
+        setAdminState: adminAction.setAdminState,
       });
       if (!avatarAndLogin) return;
-      adminAction.saveOwnerNameAndAvatar({ avatarAndLogin: avatarAndLogin[0] });
+      adminAction.setAdminState({
+        adminAvatar: avatarAndLogin[0].avatar[0],
+        adminLogin: avatarAndLogin[0].login,
+      });
     };
     asyncer();
   }, [adminAction]);

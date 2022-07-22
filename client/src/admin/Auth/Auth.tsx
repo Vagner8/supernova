@@ -1,26 +1,20 @@
-import {
-  ChangeEvent,
-  Dispatch,
-  MouseEvent,
-  useCallback,
-  useReducer,
-} from 'react';
+import { ChangeEvent, Dispatch, MouseEvent, useCallback } from 'react';
 import styles from './auth.module.css';
-import {
-  authReducer,
-  authInitState,
-  saveAuthInputsOutputs,
-} from 'admin/Auth/authReducer';
 import { Button, Icon, Linear, InputMemo } from 'UIKit';
 import { login } from './authApi';
 import { OperationResultsSheet } from 'admin/OperationResultsSheet/OperationResultsSheet';
-import { AdminReducerActions, AdminState } from 'admin/adminState';
-import { useAdminDispatch, useEventsSelector } from 'hooks';
+import {
+  AdminReducerActions,
+  AdminState,
+  useAdminDispatch,
+} from 'admin/adminState';
+import { useEventsSelector } from 'hooks';
 import { OperationResultType } from '../../../../common/src/commonTypes';
 
 interface AuthProps {
   isFetching: AdminState['isFetching'];
   operationResults: AdminState['operationResults'];
+  loginInputs: AdminState['loginInputs']
   adminDispatch: Dispatch<AdminReducerActions>;
   validateErrors?: OperationResultType['validateErrors'];
 }
@@ -29,17 +23,16 @@ export function Auth({
   validateErrors,
   isFetching,
   operationResults,
+  loginInputs,
   adminDispatch,
 }: AuthProps) {
-  const [authState, authDispatch] = useReducer(authReducer, authInitState);
   const actionAdmin = useAdminDispatch(adminDispatch);
   const { selectFieldErrorByLabel } = useEventsSelector();
 
   const onChange = useCallback(
     (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-      const { name, value } = e.target;
-      saveAuthInputsOutputs(authDispatch, name, value);
-      actionAdmin.deleteAllOperationResults();
+      actionAdmin.authOnChange({ name: e.target.name, value: e.target.value });
+      actionAdmin.setAdminState({ operationResults: null });
     },
     [actionAdmin],
   );
@@ -48,12 +41,11 @@ export function Auth({
     e.preventDefault();
     login({
       body: {
-        login: authState.inputs[0].value,
-        password: authState.inputs[1].value,
+        login: loginInputs[0].value,
+        password: loginInputs[1].value,
       },
-      saveAdminId: actionAdmin.saveAdminId,
       saveOperationResult: actionAdmin.saveOperationResult,
-      setIsFetching: actionAdmin.setIsFetching,
+      setAdminState: actionAdmin.setAdminState,
     });
   };
 
@@ -64,7 +56,7 @@ export function Auth({
         <div>
           <h4>Log in</h4>
           <form>
-            {authState.inputs.map((input) => {
+            {loginInputs.map((input) => {
               const error = selectFieldErrorByLabel(
                 input.label,
                 validateErrors,

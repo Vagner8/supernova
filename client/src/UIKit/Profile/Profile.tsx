@@ -1,11 +1,15 @@
-import { EventsReducerActions, EventsState, MediaFile } from 'admin/Events/eventsState';
+import {
+  EventsReducerActions,
+  EventsState,
+  MediaFile,
+  useEventsDispatch,
+} from 'admin/Events/eventsState';
 import { ChangeEvent, Dispatch, useCallback } from 'react';
 import { Avatar, FileInput, Form } from 'UIKit';
 import styles from './profile.module.css';
-import { useAdminDispatch, useEventsDispatch, useSplitParams } from 'hooks';
-import { AdminReducerActions, AdminState } from 'admin/adminState';
+import { AdminReducerActions, AdminState, useAdminDispatch } from 'admin/adminState';
 import { OperationResultType } from '../../../../common/src/commonTypes';
-import { useCleanupProfile } from './profileHooks/useCleanupProfile';
+import { useProfile } from './profileHooks/useProfile';
 
 interface ProfileProps {
   popup: EventsState['popup'];
@@ -30,20 +34,21 @@ export function Profile({
 }: ProfileProps) {
   const eventsAction = useEventsDispatch(eventsDispatch);
   const adminAction = useAdminDispatch(adminDispatch);
-  const { itemId } = useSplitParams();
-  useCleanupProfile(eventsDispatch);
+  useProfile(eventsDispatch);
 
   const onChange = useCallback(
     (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-      adminAction.deleteAllOperationResults();
-      if (!isProfileCopied) eventsAction.saveProfileCopy();
+      adminAction.setAdminState({operationResults: null});
+      console.log(profile);
+      if (!isProfileCopied)
+        eventsAction.setEventsState({ copyProfile: profile });
       eventsAction.profileOnChange({
         name: e.target.name,
         value: e.target.value,
         pointName: e.target.dataset.pointName as keyof EventsState['profile'],
       });
     },
-    [adminAction, eventsAction, isProfileCopied],
+    [adminAction, eventsAction, isProfileCopied, profile],
   );
 
   const onChangeFiles = (e: ChangeEvent<HTMLInputElement>) => {
@@ -59,9 +64,14 @@ export function Profile({
     <div className={styles.Profile}>
       <div className={styles.lift}>
         <Avatar url={profile.imgs.avatar[0]} size="m" />
-        {editMode && itemId !== 'new' ? (
-          <FileInput name="avatar" multiple={true} onChange={onChangeFiles} />
-        ) : null}
+        {editMode && (
+          <FileInput
+            className={styles.file_input}
+            name="avatar"
+            multiple={true}
+            onChange={onChangeFiles}
+          />
+        )}
       </div>
       <div className={styles.middle}>
         <Form
