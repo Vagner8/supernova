@@ -2,7 +2,7 @@ import { AdminReducerActions, useAdminDispatch } from 'admin/adminState';
 import { newData } from 'api/newData';
 import { deleteData } from 'api/deleteData';
 import { updateData } from 'api/updateData';
-import { useFirebaseStorage, useSplitParams } from 'hooks';
+import { useFirebaseStorage, useSplitPathname } from 'hooks';
 import { Dispatch, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -23,7 +23,7 @@ export function useEvents({
   adminDispatch,
   eventsDispatch,
 }: UseEvents) {
-  const { categoryParam } = useSplitParams();
+  const { categoryParam } = useSplitPathname();
   const { saveOperationResult, setAdminState } =
     useAdminDispatch(adminDispatch);
   const eventsAction = useEventsDispatch(eventsDispatch);

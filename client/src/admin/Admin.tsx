@@ -6,7 +6,7 @@ import { Container, Drawer, Linear, Navbar } from 'UIKit';
 import { MemoFilesSheet } from './FilesSheet/FilesSheet';
 import { Events } from './Events/Events';
 import { OperationResultsSheet } from './OperationResultsSheet/OperationResultsSheet';
-import { useEventsSelector, useLocalStorage, useValidateErrors, useWindowClick } from 'hooks';
+import { useEventsSelector, useValidateErrors, useWindowClick } from 'hooks';
 import { useFetchAvatarAndLogin } from 'api/users/useFetchAvatarAndLogin';
 import {
   eventsInitState,
@@ -61,7 +61,7 @@ interface AdminRoutesProps {
   eventsDispatch: Dispatch<EventsReducerActions>;
 }
 
-function AdminRoutes({
+export function AdminRoutes({
   adminState,
   adminDispatch,
   eventsState,

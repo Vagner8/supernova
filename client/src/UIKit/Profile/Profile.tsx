@@ -10,6 +10,7 @@ import styles from './profile.module.css';
 import { AdminReducerActions, AdminState, useAdminDispatch } from 'admin/adminState';
 import { OperationResultType } from '../../../../common/src/commonTypes';
 import { useProfile } from './profileHooks/useProfile';
+import { useSplitPathname } from 'hooks';
 
 interface ProfileProps {
   popup: EventsState['popup'];

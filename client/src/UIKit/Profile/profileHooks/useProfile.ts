@@ -2,12 +2,12 @@ import {
   EventsReducerActions,
   useEventsDispatch,
 } from 'admin/Events/eventsState';
-import { useSplitParams } from 'hooks';
+import { useSplitPathname } from 'hooks';
 import { Dispatch, useEffect } from 'react';
 
 export function useProfile(eventsDispatch: Dispatch<EventsReducerActions>) {
   const eventsAction = useEventsDispatch(eventsDispatch);
-  const { itemId } = useSplitParams();
+  const { itemId } = useSplitPathname();
   useEffect(() => {
     if (itemId === 'new') eventsAction.setEventsState({ editMode: true });
     return () => {

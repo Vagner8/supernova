@@ -5,7 +5,7 @@ import {
   EventsState,
   useEventsDispatch,
 } from 'admin/Events/eventsState';
-import { useSplitParams, useLocalStorage } from 'hooks';
+import { useSplitPathname, useLocalStorage } from 'hooks';
 
 interface UseEventsList {
   editMode: EventsState['editMode'];
@@ -18,7 +18,7 @@ export function useEventsList({
   isSomeRowSelected,
   eventsDispatch,
 }: UseEventsList) {
-  const { itemId } = useSplitParams();
+  const { itemId } = useSplitPathname();
   const adminId = useLocalStorage('adminId')
   const eventsAction = useEventsDispatch(eventsDispatch);
   useEffect(() => {

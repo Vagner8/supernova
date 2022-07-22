@@ -1,5 +1,5 @@
 import { AdminReducerActions } from 'admin/adminState';
-import { useSplitParams, useEventsList } from 'hooks';
+import { useSplitPathname, useEventsList } from 'hooks';
 import { Dispatch, MouseEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ButtonLi, Dropdown } from 'UIKit';
@@ -34,7 +34,7 @@ export function Events({
 }: EventsProps) {
   const eventsAction = useEventsDispatch(eventsDispatch);
   useEventsList({ isSomeRowSelected, editMode, eventsDispatch });
-  const { categoryParam, itemId } = useSplitParams();
+  const { categoryParam, itemId } = useSplitPathname();
   const navigate = useNavigate();
   const fromUseEvents = useEvents({
     itemId: profile?.itemId,
@@ -50,7 +50,6 @@ export function Events({
     const asyncer = async () => {
       switch (selectedEvent) {
         case EventNames.New: {
-          eventsAction.setEventsState({ editMode: true });
           navigate(`/admin/${categoryParam}/new`);
           break;
         }

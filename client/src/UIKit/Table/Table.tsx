@@ -6,7 +6,7 @@ import {
 } from 'admin/Events/eventsState';
 import { GoTo } from 'api/fetcher';
 import { updateData } from 'api/updateData';
-import { useEventsSelector, useSplitParams } from 'hooks';
+import { useEventsSelector, useSplitPathname } from 'hooks';
 import { Dispatch, ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import { Checkbox } from 'UIKit';
@@ -35,7 +35,8 @@ const Cell = ({ className, children }: CellProps) => {
 };
 
 const Row = ({ itemId, onClickCheckbox, children }: RowProps) => {
-  const { categoryParam } = useSplitParams();
+  const { categoryParam } = useSplitPathname();
+
   if (!itemId) return null
   return (
     <div className={`${styles.Row} ${styles[categoryParam]}`}>
