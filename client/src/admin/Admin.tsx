@@ -67,7 +67,7 @@ export function AdminRoutes({
   eventsState,
   eventsDispatch,
 }: AdminRoutesProps) {
-  console.log('AdminRoutes');
+  // console.log('AdminRoutes');
   useFetchAvatarAndLogin(adminDispatch);
   useWindowClick({ eventsDispatch, popup: eventsState.popup });
   const validateErrors = useValidateErrors(adminState.operationResults);

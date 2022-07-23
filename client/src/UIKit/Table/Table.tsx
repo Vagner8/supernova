@@ -12,6 +12,7 @@ import { Link } from 'react-router-dom';
 import { Checkbox } from 'UIKit';
 import styles from './table.module.css';
 import { useCell } from './tableHooks/useCell';
+import { useTable } from './tableHooks/useTable';
 
 interface TableProps {
   tableRows: EventsState['tableRows'];
@@ -62,7 +63,7 @@ export function Table({
   const eventsAction = useEventsDispatch(eventsDispatch);
   const adminAction = useAdminDispatch(adminDispatch);
   const { selectDisabledValueByItemId } = useEventsSelector();
-
+  useTable(eventsDispatch)
   const fromUseCell = useCell();
   if (!tableRows) return null;
   const onClickCheckbox = (itemId: string) => {

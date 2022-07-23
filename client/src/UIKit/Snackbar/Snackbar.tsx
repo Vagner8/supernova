@@ -28,11 +28,13 @@ export function Snackbar({
   };
 
   useEffect(() => {
+    let timerId: any
     if (!status?.match(/error/i)) {
-      setTimeout(() => {
+      timerId = setTimeout(() => {
         adminAction.deleteOperationResult({ index });
       }, 3000);
     }
+    return () => clearTimeout(timerId)
   }, [adminDispatch, index, status, adminAction]);
 
   const onClick = () => adminAction.deleteOperationResult({ index });

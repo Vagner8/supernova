@@ -12,11 +12,14 @@ export function useSplitPathname() {
   });
   useEffect(() => {
     const splitPathname = pathname.split('/');
+    const categoryParam =
+      splitPathname.find((item) => item === 'users' || item === 'products') ||
+      '';
+    const itemIdIndex = splitPathname.indexOf(categoryParam) + 1;
+    const itemId = itemIdIndex > 0 ? splitPathname[itemIdIndex] : '';
     setState({
-      categoryParam: splitPathname.find(
-        (item) => item === 'users' || item === 'products',
-      ) || '',
-      itemId: splitPathname[splitPathname.length - 1],
+      categoryParam,
+      itemId,
     });
   }, [pathname]);
 

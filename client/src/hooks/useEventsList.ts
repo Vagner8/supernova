@@ -19,7 +19,7 @@ export function useEventsList({
   eventsDispatch,
 }: UseEventsList) {
   const { itemId } = useSplitPathname();
-  const adminId = useLocalStorage('adminId')
+  const adminId = useLocalStorage('adminId');
   const eventsAction = useEventsDispatch(eventsDispatch);
   useEffect(() => {
     const editEvent = () => (editMode ? EventNames.EditOff : EventNames.Edit);
@@ -28,9 +28,13 @@ export function useEventsList({
       return EventNames.Copy;
     };
     const deleteEvent = () => {
-      // if (itemId && itemId !== adminId) return EventNames.Delete;
-      if (!isSomeRowSelected) return '';
-      if (itemId === adminId) return '';
+      if (itemId) {
+        if (itemId === adminId) return '';
+        if (itemId === 'new') return '';
+      }
+      if (!itemId) {
+        if (!isSomeRowSelected) return '';
+      }
       return EventNames.Delete;
     };
     const saveEvent = () => (editMode ? EventNames.Save : '');
@@ -44,5 +48,5 @@ export function useEventsList({
         saveEvent(),
       ],
     });
-  }, [editMode, itemId, eventsAction, isSomeRowSelected]);
+  }, [adminId, editMode, eventsAction, isSomeRowSelected, itemId]);
 }
